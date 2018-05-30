@@ -4,6 +4,9 @@
   "workspaces": [
     "packages/*"
   ],
+  "bin": {
+    "autotools": "bin/runner.js"
+  },
   "scripts": {
     "clean": "lerna run clean --stream",
     "build": "lerna run build --stream",
@@ -23,6 +26,7 @@
     "babel-cli": "^6.26.0",
     "chai": "^4.1.2",
     "chai-subset": "^1.6.0",
+    "commander": "^2.15.1",
     "express": "^4.16.3",
     "file-loader": "^1.1.11",
     "flat": "^4.0.0",

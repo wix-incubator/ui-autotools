@@ -10,6 +10,7 @@ import {expect} from 'chai';
 export const autoSSR = () => {
     describe('AutoSSR tests', () => {
         it('should be run in an environment without document and window', () => {
+            // TODO: check node context
             expect(() => window).to.throw();
             expect(() => document).to.throw();
         });

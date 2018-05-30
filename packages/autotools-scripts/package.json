@@ -1,0 +1,37 @@
+{
+  "name": "autotools-scripts",
+  "version": "1.0.0",
+  "main": "cjs/index.js",
+  "types": "cjs/index.d.ts",
+  "bin": {
+    "autotools": "bin/cli.js"
+  },
+  "scripts": {
+    "clean": "rimraf ./cjs ./esm",
+    "build": "tsc --project src --outDir cjs --module commonjs",
+    "lint": "run-p lint:src lint:test",
+    "lint:src": "tslint --project src",
+    "lint:test": "tslint --project test",
+    "test": "mocha -r node-typescript-support/register \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
+  },
+  "files": [
+    "cjs"
+  ],
+  "engines": {
+    "node": ">=8"
+  },
+  "repository": "git@github.com:wix/ui-autotools.git",
+  "author": "Wix.com",
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "auto-ssr": "*",
+    "commander": "^2.15.1",
+    "meta-data-tools": "*"
+  },
+  "devDependencies": {
+    "@types/react": "^16.3.14",
+    "@types/react-dom": "^16.0.5",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0"
+  }
+}

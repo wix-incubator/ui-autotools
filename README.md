@@ -1,7 +1,7 @@
 # ui-autotools
 A set of tools designed to automate and improve the process of developing components.
 
-These tools rely on `*.meta.tsx` files next to each component. 
+These tools rely on `*.meta.tsx` files in the project. 
 
 The tools use a similiar command-line pattern:
 ```
@@ -12,13 +12,13 @@ For example:
 $ auto-tools sanity --files ./components/**/*.meta.ts
 ```
 Common CLI parameters:
-- `files` - meta files matching glob (default: './**/*.meta.ts')
+- `files` - meta files matching glob (default: './**/*.meta.ts[x?]')
 - `debug` - true/false (default: false)
 
 ## Available Tools
 
 - `sanity` - component sanity test suite:
-    - renders component in <React.StrictMode />
+    - renders component in <React.StrictMode /> (add link here)
     - SSR rendering in Node
     - client side hydration on SSR result
     - fails for any console message
@@ -28,7 +28,7 @@ Common CLI parameters:
 - `a11y` - accessibility test:
     - checks component render result for accessibility using axe-core
 - `website`
-    - auto generated documentation and playgrounds.
+    - auto generated static documentation and playgrounds site.
     - dev mode - fast reloading of changed resources
 
 we encourge anyone to add more tools that utilize this meta-data repo.
@@ -37,8 +37,8 @@ please pull request with tools and issues with half baked dreams :)
 
 ## MetaData registry
 
-the metadata registry allows you to write your component metadata data once and use it many times.
- ? the metadata registry allows you to write component metadata data that may be reused in several tools.
+the metadata registry allows you to write your component metadata once and use it many times.
+ ? the metadata registry allows you to write component metadata that may be reused in several tools.
 
 registering metadata is done by requiring the Registry and creating a component description.
 
@@ -51,12 +51,13 @@ desc.addSimulation('empty',{
     items:[]
 });
 
-desc.addDocumentation('accesability','./accesability.md');
+desc.addDocumentation('accesability','some inline documenttion here');
 ```
 
+(missing context)
 many of the fields can be auto added using tools in this repo:
 
-- **AssetsExtrct** - scans assets provided by library according to configuration
+- **AssetsExtrct** - scans global assets provided by library according to configuration
 - **DocsExtrct** - adds documentation extracted from code to the registry
 - **SchemaExtrct** - adds JSON schema extracted from code to the registry
 
@@ -97,12 +98,12 @@ does not open browser automaticly but allows a developer to open it.
 #### usage
 
 ```
-$ auto-tools sanity --files ./components/**/*.meta.ts
+$ auto-tools sanity --debug --files ./components/**/*.meta.ts
 
 ```
 
 
-### Eyes tester
+### image compare tester
 checks component visual snapshots simulating its:
 - props
 - styles
@@ -128,7 +129,7 @@ $ auto-tools eyes --files ./components/**/*.meta.ts --images ./.test-images
 
 ### Ally
 
-renders components with different simulations, runs them through x-core
+renders components with different simulations, runs them through x-core (add link)
 
 
 #### debug mode

@@ -12,7 +12,7 @@ program
   const searchPattern = options.grep || '';
   // // const moreSearch = options.otherDirs || [];
   console.log('Running auto-ssr for', searchPattern);
-  importMeta();
+  importMeta(options.grep);
   autoSSRTest();
 });
 

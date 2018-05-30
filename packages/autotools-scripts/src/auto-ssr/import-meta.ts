@@ -10,8 +10,9 @@ require.extensions['.ts'] = require.extensions['.tsx'] = nodeTsService.requireEx
 
 const rootPath = process.cwd();
 
-const importMeta = () => {
-  fromDir(rootPath ,/[.]meta/, function(filename: string){
+const importMeta = (filePattern: string) => {
+  const grepPattern = filePattern ? `${filePattern}[.]meta` : '[.]meta';
+  fromDir(rootPath , new RegExp(grepPattern), function(filename: string){
     console.log(filename);
     require(filename);
   });

@@ -37,7 +37,7 @@ please pull request with tools and issues with half baked dreams :)
 
 ## MetaData registry
 
-offers a common API for code metadata.
+offers a [common API](./docs/registry.md) for code metadata.
 this allows many different tools to use this metadata as their configuration.
 
 
@@ -64,22 +64,6 @@ many of the fields can be auto added using tools in this repo:
 - **AssetsExtrct** - scans global assets provided by library according to configuration
 - **DocsExtrct** - adds documentation extracted from code to the registry
 - **SchemaExtrct** - adds JSON schema extracted from code to the registry
-
-
-## Metadata fields:
-
-| Field | Type | auto extraction | description |
-|-------|------|-----------------|-------------|
-| entity |  useally a react component | no |  the component class or function |
-| title | string | using docsExtrct and comments |  |
-| description | string | using docsExtrct and comments | |
-| type | 'react-comp', 'class', 'function' | using docsExtrct and comments | |
-| documentation | structured list of entries with title and md format |  using docsExtrct and comment with ability to add more | 
-| simulations | according to entity |  no | example props of the component, or example arguments of a function, constructor arguments for a class | 
-| simulation assets | list of "code" assets  |  with assetsExctrt config  | as example icon list, component style variants, date-formatter |
-| EntitySchema | JSON Schema | Using schema extract with optional comments | JSON schema of public api and props
-| visualStates | list of partial state simulations |  no | used exclusivly for eyes tests, relevant react components only | 
-| browser tests | list of file paths | using docsExtrct and comments | used for running unit tests in website | 
 
 ### Sanity tester
 

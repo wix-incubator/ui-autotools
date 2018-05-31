@@ -11,7 +11,9 @@ program
 .action(function(options){
   const searchString = arguments.length === 1 ? '' : options;
   console.log('Running auto-ssr for', searchString);
+  // Load metadata for each component that should be sanity tested
   importMeta(searchString);
+  // Run the sanity tests for each loaded metadata
   autoSSRTest();
 });
 

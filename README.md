@@ -12,7 +12,7 @@ For example:
 $ auto-tools sanity --files ./components/**/*.meta.ts
 ```
 Common CLI parameters:
-- `files` - meta files matching glob (default: './**/*.meta.ts[x?]')
+- `files` - meta files matching glob (default: './**/*.meta.tsx')
 - `debug` - true/false (default: false)
 
 ## Available Tools
@@ -23,7 +23,7 @@ Common CLI parameters:
     - client side hydration on SSR result
     - fails for any console message
     - fails for every event listener left after component unmounts
-- `eyes` - eyes/snapshot test:
+- `photoshoot` - eyes/snapshot test:
     - compares already saved component image snapshots to current view
 - `a11y` - accessibility test:
     - checks component render result for accessibility using axe-core
@@ -37,21 +37,25 @@ please pull request with tools and issues with half baked dreams :)
 
 ## MetaData registry
 
-the metadata registry allows you to write your component metadata once and use it many times.
- ? the metadata registry allows you to write component metadata that may be reused in several tools.
+offers a common API for code metadata.
+this allows many different tools to use this metadata as their configuration.
+
 
 registering metadata is done by requiring the Registry and creating a component description.
 
 ```ts
 import MetaData from 'ui-autotools';
 import MyComp from './my-comp.tsx';
+import mdFile from './my-comp-usage.md';
+
 
 const desc = MetaData.describe(MyComp);
 desc.addSimulation('empty',{
     items:[]
 });
 
-desc.addDocumentation('accesability','some inline documenttion here');
+desc.addDocumentation('Accesability','some inline documenttion here');
+desc.addDocumentation('Usage',mdFile);
 ```
 
 (missing context)
@@ -69,14 +73,13 @@ many of the fields can be auto added using tools in this repo:
 | entity |  useally a react component | no |  the component class or function |
 | title | string | using docsExtrct and comments |  |
 | description | string | using docsExtrct and comments | |
+| type | 'react-comp', 'class', 'function' | using docsExtrct and comments | |
 | documentation | structured list of entries with title and md format |  using docsExtrct and comment with ability to add more | 
-| simulations | component props type + metadata |  no | example props of the component | 
-| simulation assets | list of "code" assets  |  no | as example icon list, component style variants, date-formatter |
-| EntitySchema | JSON Schema | Using schema extract with optional comments | JSON schema of the components public api and props
-| visualStates | list of partial state simulations |  no | used exclusivly for eyes tests | 
-| browser tests | list of file paths | using docsExtrct and comments | used for running unit tests in book | 
-
-? different metadata fields for React? component / class / function
+| simulations | according to entity |  no | example props of the component, or example arguments of a function, constructor arguments for a class | 
+| simulation assets | list of "code" assets  |  with assetsExctrt config  | as example icon list, component style variants, date-formatter |
+| EntitySchema | JSON Schema | Using schema extract with optional comments | JSON schema of public api and props
+| visualStates | list of partial state simulations |  no | used exclusivly for eyes tests, relevant react components only | 
+| browser tests | list of file paths | using docsExtrct and comments | used for running unit tests in website | 
 
 ### Sanity tester
 
@@ -103,7 +106,7 @@ $ auto-tools sanity --debug --files ./components/**/*.meta.ts
 ```
 
 
-### image compare tester
+### photoshoot tester
 checks component visual snapshots simulating its:
 - props
 - styles
@@ -149,7 +152,6 @@ builds and displays component info page, including:
 - title
 - description
 - preview
-    - reset state
 - api documentation 
 - simulation panel allowing:
     - choose between different simulations 

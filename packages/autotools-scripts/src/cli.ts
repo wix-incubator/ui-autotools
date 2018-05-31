@@ -7,12 +7,11 @@ const program = new Command();
 program
 .command('sanity')
 .description('run sanity checks on all components with a metadata description')
-.option("-g, --grep <pattern>", "Grep file")
+.option("-f, --files [pattern]", "Grep file")
 .action(function(options){
-  const searchPattern = options.grep || '';
-  // // const moreSearch = options.otherDirs || [];
-  console.log('Running auto-ssr for', searchPattern);
-  importMeta(options.grep);
+  const searchString = arguments.length === 1 ? '' : options;
+  console.log('Running auto-ssr for', searchString);
+  importMeta(searchString);
   autoSSRTest();
 });
 

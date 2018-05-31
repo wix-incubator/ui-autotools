@@ -19,11 +19,11 @@ Common CLI parameters:
 
 - `sanity` - component sanity test suite:
     - renders component in <React.StrictMode /> (add link here)
-    - SSR rendering in Node
+    - Checks server side rendering
     - client side hydration on SSR result
     - fails for any console message
     - fails for every event listener left after component unmounts
-- `photoshoot` - eyes/snapshot test:
+- `photoshoot` - tools for generating and testing component images
     - compares already saved component image snapshots to current view
 - `a11y` - accessibility test:
     - checks component render result for accessibility using axe-core

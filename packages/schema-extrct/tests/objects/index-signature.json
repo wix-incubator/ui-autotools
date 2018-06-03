@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$id":"ui-autotools/objects/main",
+    "$ref":"common/module",
+    "properties":{
+        "declared_object_with_index":{
+            "type":"object",
+            "additionalProperties": {
+                "type":"string"
+            }
+        },
+        "declared_object_with_index_and_prop":{
+            "type":"object",
+            "properties": {
+                "cnst":{
+                    "type":"string"
+                }
+            },
+            "additionalProperties": {
+                "type":"string"
+            }
+        }
+    }
+}

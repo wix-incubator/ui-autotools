@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$id":"ui-autotools/objects/main",
+    "$ref":"common/module",
+    "properties":{
+        "declared_object" : {
+            "type":"object"
+        },
+        "declared_object_with_prop":{
+            "type":"object",
+            "properties":{
+                "prop":{
+                    "type":"string"
+                }   
+            }
+        },
+        "infered_object":{
+            "type":"object",
+            "default":{}
+        },
+        "infered_object_with_prop":{
+            "type":"object",
+            "properties":{
+                "prop":{
+                    "type":"string"
+                }   
+            },
+            "default":{
+                "prop":""   
+            }
+        }
+    }
+}

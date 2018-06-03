@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$id":"ui-autotools/type-declarations/main",
+    "$ref":"common/module",
+    "definitions":{
+        "MyType" : {
+            "type":"object",
+            "properties": {
+                "title":{
+                    "type":"string"
+                }
+            }
+        }
+    },
+    "properties": {
+        "param":{
+            "$ref":"#MyType"
+        }
+    }
+}

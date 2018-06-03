@@ -1,0 +1,23 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$id":"ui-autotools/functions/main",
+    "$ref":"common/module",
+    "properties": {
+        "functionWithRestParams":{
+            "$ref":"common/function",
+            "arguments":[
+                {
+                    "type":"string",
+                    "name":"str"
+                }
+            ],
+            "restParams":{
+                "name":"rest",
+                "type":"number"
+            },
+            "returns":{
+                "type":"string"
+            }
+        }
+    }
+}

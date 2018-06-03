@@ -1,0 +1,31 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$id":"ui-autotools/functions/main",
+    "$ref":"common/module",
+    "properties": {
+        "inferedFunction":{
+            "$ref":"common/function",
+            "arguments":[
+                {
+                    "type":"string",
+                    "name":"str"
+                }
+            ],
+            "returns":{
+                "type":"string"
+            }
+        },
+        "declaredFunction":{
+            "$ref":"common/function",
+            "arguments":[
+                {
+                    "type":"string",
+                    "name":"str"
+                }
+            ],
+            "returns":{
+                "type":"string"
+            }
+        }
+    }
+}

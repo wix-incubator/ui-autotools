@@ -1,0 +1,44 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$id":"ui-autotools/type-intersection/main",
+    "$ref":"common/module",
+    "definitions": {
+        "A":{
+            "type":"object",
+            "properties":{
+                "a":{
+                    "type":"string"
+                },
+                "b":{
+                    "type":"string"
+                },
+                "c":{
+                    "type":"string"
+                }
+            }
+        },
+        "RGB":{
+            "properties":{
+                "r":{
+                    "type":"string"
+                },
+                "g":{
+                    "type":"string"
+                },
+                "b":{
+                    "type":"string"
+                }
+            }
+        },
+        "Intersection":{
+            "$allOf":[
+                {
+                    "$ref":"#A"
+                },
+                {
+                    "$ref":"#RGB"
+                }
+            ]
+        }
+    }
+}

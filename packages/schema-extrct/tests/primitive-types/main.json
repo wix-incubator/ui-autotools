@@ -1,0 +1,37 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$id":"ui-autotools/primitive-types/main",
+    "$ref":"common/module",
+    "properties":{
+        "declared_string" : {
+            "type":"string"
+        },
+        "declared_number":{
+            "type":"number"
+        },
+        "declared_boolean":{
+            "type":"boolean"
+        },
+        "declared_null":{
+            "$ref":"common/null"
+        },
+        "declared_any":{
+        }, 
+        "infered_string" : {
+            "type":"string",
+            "default":""
+        },
+        "infered_number":{
+            "type":"number",
+            "default":0            
+        },
+        "infered_boolean":{
+            "type":"boolean",
+            "default":false            
+        },
+        "infered_null":{
+            "$ref":"common/null",
+            "default":null
+        }
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$id":"ui-autotools/module/named-export",
+    "$ref":"common/module",
+    "properties": {
+        "a":{
+            "type":"string"
+        },
+        "c":{
+            "type":"number"
+        },
+        "default":{
+            "type":"number",
+            "name":"d"  
+        }
+    }
+}

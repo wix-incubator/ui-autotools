@@ -1,0 +1,50 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$id":"ui-autotools/union-types/main",
+    "$ref":"common/module",
+    "properties": {
+        "declared_union":{
+            "$oneOf":[
+                {
+                    "type":"string"
+                },
+                {
+                    "type":"number"
+                }
+            ]
+        },
+        "infered_union":{
+            "$oneOf":[
+                {
+                    "type":"string",
+                    "default":"gaga"
+                },
+                {
+                    "type":"number",
+                    "default":5
+                }
+            ]
+        },
+        "specific_union":{
+            "$oneOf":[
+                {
+                    "type":"string",
+                    "enum":["hello","goodbye"]
+                },
+                {
+                    "type":"number"
+                }
+            ]
+        },
+        "type_union":{
+            "$oneOf":[
+                {
+                    "$ref":"ui-autotools/test-assets#AType"
+                },
+                {
+                    "type":"number"
+                }
+            ]
+        }
+    }
+}

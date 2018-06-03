@@ -1,0 +1,1 @@
+type PrivateType = string;

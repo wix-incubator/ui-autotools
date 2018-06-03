@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$id":"ui-autotools/interface-declarations/main",
+    "$ref":"common/module",
+    "definitions":{
+        "MyInterface" : {
+            "type":"object",
+            "properties": {
+                "title":{
+                    "type":"string"
+                }
+            }
+        }
+    },
+    "properties": {
+        "param":{
+            "$ref":"#MyInterface"
+        }
+    }
+}

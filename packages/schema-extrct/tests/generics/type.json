@@ -1,0 +1,23 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$id":"ui-autotools/generic/interface",
+    "$ref":"common/module",
+    "definitions":{
+        "MyType" : {
+            "type":"object",
+            "generics":[
+                {
+                    "name":"T"
+                }
+            ]
+        }
+    },
+    "properties": {
+        "param":{
+            "$ref":"#MyType",
+            "genericsParams":[{
+                "type":"string"
+            }]
+        }
+    }
+}

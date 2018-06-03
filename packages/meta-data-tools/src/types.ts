@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 export interface MetaDataToolsStructure {
-  metaData: Map<typeof React.Component | React.StatelessComponent<any>, MetaDataStructure>;
+  metadata: Map<typeof React.Component | React.StatelessComponent<any>, MetaDataStructure>;
   describe: (comp: typeof React.Component | React.StatelessComponent<any>) => MetaDataStructure;
   clean: () => void;
 }

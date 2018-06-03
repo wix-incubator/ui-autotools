@@ -10,17 +10,18 @@ export class MetaData implements MetaDataStructure {
 }
 
 const MetaDataTools: MetaDataToolsStructure = {
-  metaData: new Map(),
+  metadata: new Map(),
   describe (comp) {
-    if (!this.metaData.has(comp)) {
-      this.metaData.set(comp, new MetaData());
+    if (!this.metadata.has(comp)) {
+      this.metadata.set(comp, new MetaData());
     }
 
-    return this.metaData.get(comp)!;
+    return this.metadata.get(comp)!;
   },
   clean () {
-    this.metaData.clear();
+    this.metadata.clear();
   }
 };
 
+Object.freeze(MetaDataTools);
 export default MetaDataTools;

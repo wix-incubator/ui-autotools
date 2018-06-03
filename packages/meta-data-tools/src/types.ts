@@ -1,12 +1,12 @@
 import * as React from 'react';
 
 export interface MetaDataToolsDefinition {
-  metaData: Map<typeof React.Component | React.StatelessComponent<any>, MetaDataDefinition>;
-  describe: (comp: typeof React.Component | React.StatelessComponent<any>) => MetaDataDefinition;
+  metaData: Map<typeof React.Component | React.StatelessComponent<any>, MetaDataStructure>;
+  describe: (comp: typeof React.Component | React.StatelessComponent<any>) => MetaDataStructure;
   clean: () => void;
 }
 
-export interface MetaDataDefinition {
+export interface MetaDataStructure {
   simulations: [Simulation];
   addSim: (sim: Simulation) => void;
 }

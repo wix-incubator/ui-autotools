@@ -1,7 +1,7 @@
 /* tslint:disable:no-invalid-this */
-import {MetaDataToolsDefinition, MetaDataDefinition, Simulation} from './types';
+import {MetaDataToolsDefinition, MetaDataStructure, Simulation} from './types';
 
-export class MetaData implements MetaDataDefinition {
+export class MetaData implements MetaDataStructure {
   simulations: [Simulation] = [{}]; // Initialize with "empty" simulation
 
   addSim (sim: Simulation) {

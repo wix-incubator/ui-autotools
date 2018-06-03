@@ -23,11 +23,9 @@ describe('MetaData Tools', () => {
 
   it('returns an already existing metadata', () => {
     const myCompMetaData = MetadataTools.describe(TestComp);
-    myCompMetaData.addSim(testSim);
-    expect(myCompMetaData.simulations[1]).to.equal(testSim);
-
     const mySecondCompMetaData = MetadataTools.describe(TestComp);
-    expect(mySecondCompMetaData.simulations[1]).to.equal(testSim);
+    
+    expect(mySecondCompMetaData).to.equal(myCompMetaData);
   });
 
   describe('The Describe method', () => {
@@ -50,4 +48,12 @@ describe('MetaData Tools', () => {
       expect(myCompMetaData.simulations[1]).to.equal(testSim);
     });
   });
+
+  // describe('The clean method', () => {
+  //   it('removes any existing metadata', () => {
+  //     const myCompMetaData = MetadataTools.describe(TestComp);
+  //     myCompMetaData.addSim(testSim);
+  //     expect(myCompMetaData.simulations[1]).to.equal(testSim);
+  //   });
+  // });
 });

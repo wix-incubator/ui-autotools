@@ -24,7 +24,7 @@ describe('MetaData Tools', () => {
   it('returns an already existing metadata', () => {
     const myCompMetaData = MetadataTools.describe(TestComp);
     const mySecondCompMetaData = MetadataTools.describe(TestComp);
-    
+
     expect(mySecondCompMetaData).to.equal(myCompMetaData);
   });
 
@@ -49,11 +49,13 @@ describe('MetaData Tools', () => {
     });
   });
 
-  // describe('The clean method', () => {
-  //   it('removes any existing metadata', () => {
-  //     const myCompMetaData = MetadataTools.describe(TestComp);
-  //     myCompMetaData.addSim(testSim);
-  //     expect(myCompMetaData.simulations[1]).to.equal(testSim);
-  //   });
-  // });
+  describe('The clean method', () => {
+    it('removes any existing metadata', () => {
+      const myCompMetaData = MetadataTools.describe(TestComp);
+      MetadataTools.clean();
+      const mySecondCompMetaData = MetadataTools.describe(TestComp);
+
+      expect(mySecondCompMetaData).to.not.equal(myCompMetaData);
+    });
+  });
 });

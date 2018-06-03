@@ -26,7 +26,7 @@
   "dependencies": {
     "auto-ssr": "*",
     "commander": "^2.15.1",
-    "meta-data-tools": "*"
+    "metadata-tools": "*"
   },
   "devDependencies": {
     "@types/glob": "^5.0.35",

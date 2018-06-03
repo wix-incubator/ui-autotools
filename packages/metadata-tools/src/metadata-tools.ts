@@ -1,7 +1,7 @@
 /* tslint:disable:no-invalid-this */
-import {MetaDataToolsStructure, MetaDataStructure, Simulation} from './types';
+import {MetadataToolsStructure, MetadataStructure, Simulation} from './types';
 
-export class MetaData implements MetaDataStructure {
+export class Metadata implements MetadataStructure {
   simulations: [Simulation] = [{}]; // Initialize with "empty" simulation
 
   addSim (sim: Simulation) {
@@ -9,11 +9,11 @@ export class MetaData implements MetaDataStructure {
   }
 }
 
-const MetaDataTools: MetaDataToolsStructure = {
+const MetadataTools: MetadataToolsStructure = {
   metadata: new Map(),
   describe (comp) {
     if (!this.metadata.has(comp)) {
-      this.metadata.set(comp, new MetaData());
+      this.metadata.set(comp, new Metadata());
     }
 
     return this.metadata.get(comp)!;
@@ -23,5 +23,5 @@ const MetaDataTools: MetaDataToolsStructure = {
   }
 };
 
-Object.freeze(MetaDataTools);
-export default MetaDataTools;
+Object.freeze(MetadataTools);
+export default MetadataTools;

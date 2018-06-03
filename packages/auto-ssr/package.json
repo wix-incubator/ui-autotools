@@ -25,7 +25,7 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "meta-data-tools": "*"
+    "metadata-tools": "*"
   },
   "devDependencies": {
     "@types/react": "^16.3.14",

@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import {renderToString} from 'react-dom/server';
-import MetaDataTools from 'meta-data-tools';
+import MetaDataTools from 'metadata-tools';
 import {expect} from 'chai';
 
 export const autoSSR = (): void => {

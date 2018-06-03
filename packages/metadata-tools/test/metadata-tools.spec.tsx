@@ -1,5 +1,5 @@
 import * as React from 'react';
-import MetaDataTools, {MetaData} from '../src/meta-data-tools';
+import MetadataTools, {Metadata} from '../src/metadata-tools';
 import {expect} from 'chai';
 
 interface TestProps {
@@ -18,26 +18,26 @@ const testSim: {props: TestProps} = {
 
 describe('MetaData Tools', () => {
   beforeEach(() => {
-    MetaDataTools.clean();
+    MetadataTools.clean();
   });
 
   it('returns an already existing metadata', () => {
-    const myCompMetaData = MetaDataTools.describe(TestComp);
+    const myCompMetaData = MetadataTools.describe(TestComp);
     myCompMetaData.addSim(testSim);
     expect(myCompMetaData.simulations[1]).to.equal(testSim);
 
-    const mySecondCompMetaData = MetaDataTools.describe(TestComp);
+    const mySecondCompMetaData = MetadataTools.describe(TestComp);
     expect(mySecondCompMetaData.simulations[1]).to.equal(testSim);
   });
 
   describe('The Describe method', () => {
     it('adds a new component\'s metadata to the registry, and returns its meta data', () => {
-      const myCompMetaData = MetaDataTools.describe(TestComp);
-      expect(myCompMetaData).to.be.an.instanceof(MetaData);
+      const myCompMetaData = MetadataTools.describe(TestComp);
+      expect(myCompMetaData).to.be.an.instanceof(Metadata);
     });
 
     it('returns metadata with an empty simulation by default', () => {
-      const myCompMetaData = MetaDataTools.describe(TestComp);
+      const myCompMetaData = MetadataTools.describe(TestComp);
       expect(typeof myCompMetaData.simulations[0]).to.equal('object');
       expect(myCompMetaData.simulations[0]).to.be.empty;
     });
@@ -45,7 +45,7 @@ describe('MetaData Tools', () => {
 
   describe('The addSim method', () => {
     it('adds a new simulation to the component metadata', () => {
-      const myCompMetaData = MetaDataTools.describe(TestComp);
+      const myCompMetaData = MetadataTools.describe(TestComp);
       myCompMetaData.addSim(testSim);
       expect(myCompMetaData.simulations[1]).to.equal(testSim);
     });

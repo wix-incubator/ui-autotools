@@ -15,7 +15,7 @@ export const autoSSR = (): void => {
             expect(() => document).to.throw();
         });
  
-        MetaDataTools.metaData.forEach((_value: any, Key) => {
+        MetaDataTools.metadata.forEach((_value: any, Key) => {
             it(`should render ${Key.name} to string without throwing`, () => {
                 expect(() => renderToString(<Key />), 'RenderToString threw an error').not.to.throw();
             });

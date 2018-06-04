@@ -15,13 +15,13 @@ export const autoSSR = (): void => {
             expect(() => document).to.throw();
         });
  
-        Registry.metadata.forEach((_value, Key) => {
+        Registry.metadata.forEach((metadata, Key) => {
             describe(Key.name, () => {
                 it(`should render ${Key.name} to string without throwing`, () => {
                     expect(() => renderToString(<Key />), 'RenderToString threw an error').not.to.throw();
                 });
     
-                _value.simulations.forEach(((simulation) => {
+                metadata.simulations.forEach(((simulation) => {
                     it(`should render ${Key.name} to string with props ${JSON.stringify(simulation)} without throwing`, () => {
                         expect(() => renderToString(<Key {...simulation} />), 'RenderToString threw an error').not.to.throw();
                     });

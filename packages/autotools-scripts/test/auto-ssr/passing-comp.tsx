@@ -1,7 +1,11 @@
 import * as React from 'react';
 
-const TestComp: React.SFC = () => {
-  return <h1>Hey person</h1>;
+export interface Props {
+  text?: string;
+}
+
+const TestComp: React.SFC<Props> = (props: Props) => {
+  return <h1>Hey {props.text} person</h1>;
 };
 
 export {TestComp};

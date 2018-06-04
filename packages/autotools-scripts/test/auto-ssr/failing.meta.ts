@@ -1,4 +1,4 @@
 import {FailingTestComp} from './failing-comp';
-import MetaDataTools from 'meta-data-tools';
+import Registry from 'metadata-tools';
 
-MetaDataTools.describe(FailingTestComp);
+Registry.describe(FailingTestComp);

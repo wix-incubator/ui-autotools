@@ -1,4 +1,6 @@
 import {TestComp} from './passing-comp';
-import MetaDataTools from 'meta-data-tools';
+import Registry from 'metadata-tools';
 
-MetaDataTools.describe(TestComp);
+const myMetadata = Registry.describe(TestComp);
+
+myMetadata.addSim({text: 'cool'});

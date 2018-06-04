@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import {renderToString} from 'react-dom/server';
-import MetaDataTools from 'metadata-tools';
+import Registry from 'metadata-tools';
 import {expect} from 'chai';
 
 export const autoSSR = (): void => {
@@ -15,9 +15,17 @@ export const autoSSR = (): void => {
             expect(() => document).to.throw();
         });
  
-        MetaDataTools.metadata.forEach((_value: any, Key) => {
-            it(`should render ${Key.name} to string without throwing`, () => {
-                expect(() => renderToString(<Key />), 'RenderToString threw an error').not.to.throw();
+        Registry.metadata.forEach((_value, Key) => {
+            describe(Key.name, () => {
+                it(`should render ${Key.name} to string without throwing`, () => {
+                    expect(() => renderToString(<Key />), 'RenderToString threw an error').not.to.throw();
+                });
+    
+                _value.simulations.forEach(((simulation) => {
+                    it(`should render ${Key.name} to string with props ${JSON.stringify(simulation)} without throwing`, () => {
+                        expect(() => renderToString(<Key {...simulation} />), 'RenderToString threw an error').not.to.throw();
+                    });
+                }));
             });
         });
     });

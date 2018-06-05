@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$id":"ui-autotools/tests/fixtures/primitive-types/specific-primitives",
+    "$ref":"common/module",
+    "properties":{
+        "specificString" : {
+            "type":"string",
+            "enum": [
+                "A"
+            ]
+        },
+        "specificNumber":{
+            "type":"number",
+            "enum":[
+                5
+            ]
+        }
+    }
+}

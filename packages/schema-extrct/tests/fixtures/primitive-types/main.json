@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-06/schema#",
-    "$id":"ui-autotools/primitive-types/main",
+    "$id":"ui-autotools/tests/fixtures/primitive-types/main",
     "$ref":"common/module",
     "properties":{
         "declared_string" : {
@@ -18,20 +18,13 @@
         "declared_any":{
         }, 
         "infered_string" : {
-            "type":"string",
-            "default":""
+            "type":"string"
         },
         "infered_number":{
-            "type":"number",
-            "default":0            
+            "type":"number"
         },
         "infered_boolean":{
-            "type":"boolean",
-            "default":false            
-        },
-        "infered_null":{
-            "$ref":"common/null",
-            "default":null
+            "type":"boolean"        
         }
     }
 }

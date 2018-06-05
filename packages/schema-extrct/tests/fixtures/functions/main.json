@@ -27,5 +27,28 @@
                 "type":"string"
             }
         }
-    }
+        },
+        "inferedDeconstruct":{
+            "$ref":"common/function",
+            "arguments":[
+                {
+                    "type":"object",
+                    "properties":{
+                        "x":{
+                            "type":"number",
+                            "default":1
+                        },
+                        "y":{
+                            "type":"string",
+                            "default":"text"
+                        }
+
+                    }
+                }
+            ],
+            "returns":{
+                "type":"string"
+            }
+        }
+    
 }

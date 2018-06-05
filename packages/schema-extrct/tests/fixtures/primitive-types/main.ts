@@ -6,5 +6,4 @@ export let declared_any: any;
 export let infered_string = "";
 export let infered_number = 0;
 export let infered_boolean = false;
-export let infered_null = null;
 

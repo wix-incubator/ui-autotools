@@ -3,5 +3,5 @@ let b:string;
 let c:number;
 export {c};
 
-let d:number
+let d:number = 5;
 export default d; 

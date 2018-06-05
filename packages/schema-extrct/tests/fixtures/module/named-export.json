@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-06/schema#",
-    "$id":"ui-autotools/module/named-export",
+    "$id":"ui-autotools/tests/fixtures/module/named-export",
     "$ref":"common/module",
     "properties": {
         "a":{
@@ -11,7 +11,7 @@
         },
         "default":{
             "type":"number",
-            "name":"d"  
+            "name":"d"
         }
     }
 }

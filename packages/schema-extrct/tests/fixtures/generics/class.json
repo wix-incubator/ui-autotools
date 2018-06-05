@@ -13,7 +13,7 @@
             "constructor":{
                 "arguments":[
                     {
-                        "$ref":"!T",
+                        "$ref":"T",
                         "name":"id"
                     }
                 ]
@@ -24,21 +24,21 @@
                     {
                         "type":"string"
                     },{
-                        "$ref":"!T"
+                        "$ref":"T"
                     }
                 ]
             },
             "properties": {
                 "id":{
-                    "$ref":"!T"
+                    "$ref":"T"
                 },
                 "a":{
-                    "$ref":"!T"
+                    "$ref":"T"
                 },
                 "setTitle":{
                     "$ref":"common/function",
                     "arguments":[
-                        {"$ref":"!T","name":"newtitle"}
+                        {"$ref":"T","name":"newtitle"}
                     ],
                     "returns":{
                         "$ref":"common/undefined"

@@ -7,17 +7,22 @@
             "type":"object",
             "generics":[
                 {
-                    "name":"T"
+                    "name":"T",
+                    "type": "number",
+                    "default":5
                 }
-            ]
+            ],
+            "properties": {
+                "amount":{
+                    "$ref":"T"
+                }
+            }
         }
     },
     "properties": {
         "param":{
             "$ref":"#MyInterface",
-            "genericsParams":[{
-                "type":"string"
-            }]
+            "genericsParams":[7]
         }
     }
 }

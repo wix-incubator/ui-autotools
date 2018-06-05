@@ -3,7 +3,7 @@ import { AClass} from '../test-assets'
 export class MyClass extends AClass{
     static a:string;
     private static b:string;
-    a:number;
+    a:number = 0;
     constructor(public id:string){
         super();
     }

@@ -47,4 +47,4 @@ export let gen:AGenericClass</*@minLength 1*/string,number>
 /********
  * @title generics definition
  * ********/
-export type Gen</*@title generic param title*/T> = AGenericClass<string,T>
+export type GenDef</*@title generic param title*/T> = AGenericClass<string,T>

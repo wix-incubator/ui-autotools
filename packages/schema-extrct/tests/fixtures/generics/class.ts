@@ -1,7 +1,7 @@
 import { AGenericClass} from '../test-assets'
 
 export class MyClass<T> extends AGenericClass<string,T>{
-    a:T;
+    a:T = {} as any;
     constructor(public id:T){
         super();
     }

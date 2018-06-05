@@ -13,15 +13,15 @@
             "arguments":[
                 {
                     "name":"t",
-                    "$ref":"!T"
+                    "$ref":"T"
                 },
                 {
                     "name":"q",
-                    "$ref":"!Q"
+                    "$ref":"Q"
                 }
             ],
             "returns":{
-                "$ref":"!T"
+                "$ref":"T"
             }
         }
     }

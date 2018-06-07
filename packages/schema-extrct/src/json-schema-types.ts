@@ -7,7 +7,7 @@ export const NullSchemaId = "common/null";
 
 export type ObjectFields = {
     additionalProperties?:Schema
-    properties:{[name:string]:Schema}
+    properties?:{[name:string]:Schema}
 }  
 
 
@@ -34,6 +34,15 @@ export type FieldsForType = {
     array:ArrayFields
     object:ObjectFields
 }
+
+export type TypeMap = {
+    string:string;
+    number:number;
+    boolean:boolean
+    array:Array<any>
+    object:{}
+}
+
 export type PrimitiveTypes = 'string' | 'number' | 'boolean';
 
 export type SchemaTypes = keyof FieldsForType;
@@ -44,6 +53,7 @@ export type SchemaBase<T extends  SchemaTypes = SchemaTypes> = {
     description?:string;
     type?:T | T[];
     $ref?:string
+    default?:TypeMap[T]
 }
 
 export type Schema<T extends  SchemaTypes = SchemaTypes> = SchemaBase & FieldsForType[T];

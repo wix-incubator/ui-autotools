@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Registry, {Metadata} from '../src/registry';
+import Registry, {ComponentMetadata} from '../src/registry';
 import {expect} from 'chai';
 
 interface TestProps {
@@ -11,7 +11,9 @@ const TestComp: React.SFC<TestProps> = (props: TestProps) => {
 };
 
 const testSim = {
+  props: {
     text: 'person'
+  }
 };
 
 describe('Registry', () => {
@@ -29,13 +31,7 @@ describe('Registry', () => {
   describe('The Describe method', () => {
     it('adds a new component\'s metadata to the registry, and returns its meta data', () => {
       const myCompMetaData = Registry.describe(TestComp);
-      expect(myCompMetaData).to.be.an.instanceof(Metadata);
-    });
-
-    it('returns metadata with an empty simulation by default', () => {
-      const myCompMetaData = Registry.describe(TestComp);
-      expect(typeof myCompMetaData.simulations[0]).to.equal('object');
-      expect(myCompMetaData.simulations[0]).to.be.empty;
+      expect(myCompMetaData).to.be.an.instanceof(ComponentMetadata);
     });
   });
 
@@ -43,7 +39,7 @@ describe('Registry', () => {
     it('adds a new simulation to the component metadata', () => {
       const myCompMetaData = Registry.describe(TestComp);
       myCompMetaData.addSim(testSim);
-      expect(myCompMetaData.simulations[1]).to.equal(testSim);
+      expect(myCompMetaData.simulations[0]).to.equal(testSim);
     });
   });
 

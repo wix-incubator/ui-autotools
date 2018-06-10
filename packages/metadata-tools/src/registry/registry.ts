@@ -1,20 +1,20 @@
 /* tslint:disable:no-invalid-this */
-import {IMetadataTools, IMetadata} from './types';
+import {IRegistry, IComponentMetadata, Simulation} from './types';
 import {ComponentType} from 'react';
 
-export class Metadata<Props> implements IMetadata<Props> {
-  simulations: Props[] = []; // Initialize with "empty" simulation
+export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
+  simulations: Simulation<Props>[] = []; // Initialize with "empty" simulation
 
-  addSim (sim: Props) {
+  addSim (sim: Simulation<Props>) {
     this.simulations.push(sim);
   }
 }
 
-const Registry: IMetadataTools = {
+const Registry: IRegistry = {
   metadata: new Map(),
-  describe <Props>(comp: ComponentType<Props>): Metadata<Props> {
+  describe <Props>(comp: ComponentType<Props>): ComponentMetadata<Props> {
     if (!this.metadata.has(comp)) {
-      this.metadata.set(comp, new Metadata<Props>());
+      this.metadata.set(comp, new ComponentMetadata<Props>());
     }
 
     return this.metadata.get(comp)!;

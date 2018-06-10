@@ -1,12 +1,16 @@
 import { ComponentType } from 'react';
 
-export interface IMetadataTools {
-  metadata: Map<ComponentType<any>, IMetadata<any>>;
-  describe:<Props> (comp: ComponentType<Props>) => IMetadata<Props>;
+export interface IRegistry {
+  metadata: Map<ComponentType<any>, IComponentMetadata<any>>;
+  describe:<Props> (comp: ComponentType<Props>) => IComponentMetadata<Props>;
   clean: () => void;
 }
 
-export interface IMetadata<Props> {
-  simulations: Props[];
-  addSim: (sim: Props) => void;
+export interface IComponentMetadata<Props> {
+  simulations: Simulation<Props>[];
+  addSim: (sim: Simulation<Props>) => void;
+}
+
+export interface Simulation<Props> {
+  props: Props;
 }

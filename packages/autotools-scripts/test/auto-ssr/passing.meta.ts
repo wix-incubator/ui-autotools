@@ -3,4 +3,4 @@ import Registry from 'metadata-tools';
 
 const myMetadata = Registry.describe(TestComp);
 
-myMetadata.addSim({text: 'cool'});
+myMetadata.addSim({props: {text: 'cool'}});

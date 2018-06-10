@@ -1,16 +1,42 @@
-import * as React from 'react';
+import { ComponentType } from 'react';
 
-export interface MetaDataToolsDefinition {
-  metaData: Map<typeof React.Component | React.StatelessComponent<any>, MetaDataDefinition>;
-  describe: (comp: typeof React.Component | React.StatelessComponent<any>) => MetaDataDefinition;
+export interface IRegistry {
+  metadata: IMetadata;
+  describeComponent:<Props> (comp: ComponentType<Props>) => IComponentMetadata<Props>;
+  describeAsset: (asset: Style | Icon) => Style | Icon;
   clean: () => void;
 }
 
-export interface MetaDataDefinition {
-  simulations: [Simulation];
-  addSim: (sim: Simulation) => void;
+export interface IComponentMetadata<Props> {
+  simulations: Simulation<Props>[];
+  styles: Style[];
+  addSim: (sim: Simulation<Props>) => void;
+  
+  addStyle: (style: Style) => void;
 }
 
-export interface Simulation {
-  props?: Object;
+export interface IMetadata {
+  components: Map<ComponentType<any>, IComponentMetadata<any>>;
+  assets: IAssets;
+}
+
+export interface IAssets {
+  styles: Style[];
+  icons: Icon[];
+}
+
+export interface Style {
+  path: string;
+  name: string;
+  exports: any;
+}
+
+export interface Icon {
+  path: string;
+  name: string;
+  exports: any;
+}
+
+export interface Simulation<Props> {
+  props: Props;
 }

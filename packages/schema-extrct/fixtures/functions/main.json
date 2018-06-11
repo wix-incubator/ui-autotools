@@ -1,0 +1,54 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$id":"ui-autotools/functions/main",
+    "$ref":"common/module",
+    "properties": {
+        "inferedFunction":{
+            "$ref":"common/function",
+            "arguments":[
+                {
+                    "type":"string",
+                    "name":"str"
+                }
+            ],
+            "returns":{
+                "type":"string"
+            }
+        },
+        "declaredFunction":{
+            "$ref":"common/function",
+            "arguments":[
+                {
+                    "type":"string",
+                    "name":"str"
+                }
+            ],
+            "returns":{
+                "type":"string"
+            }
+        }
+        },
+        "inferedDeconstruct":{
+            "$ref":"common/function",
+            "arguments":[
+                {
+                    "type":"object",
+                    "properties":{
+                        "x":{
+                            "type":"number",
+                            "default":1
+                        },
+                        "y":{
+                            "type":"string",
+                            "default":"text"
+                        }
+
+                    }
+                }
+            ],
+            "returns":{
+                "type":"string"
+            }
+        }
+    
+}

@@ -71,7 +71,7 @@ describe('schema-extrct - functions',()=>{
         expect(res).to.eql(expected);
     })
     
-    xit('should support functions with parameter deconstruct', async ()=>{
+    it('should support functions with parameter deconstruct', async ()=>{
         const moduleId = '/ui-autotools/functions';
         const res = transformTest(`
         
@@ -90,15 +90,14 @@ describe('schema-extrct - functions',()=>{
                     "$ref":"common/function",
                     "arguments":[
                         {
+                            "name":"{x=1, y=\"text\"}",
                             "type":"object",
                             "properties":{
                                 "x":{
-                                    "type":"number",
-                                    "default":1
+                                    "type":"number"
                                 },
                                 "y":{
-                                    "type":"string",
-                                    "default":"text"
+                                    "type":"string"
                                 }
         
                             }

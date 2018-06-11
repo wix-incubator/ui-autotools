@@ -79,7 +79,7 @@ const assignmentDescriber:TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWit
         return describeIdentifier(expression, checker, env)
     }else {
         const t = checker.getTypeAtLocation(expression);
-        return serializeType(t,checker);
+        return serializeType(t, decl,checker);
     }
  
     //return resolveNode(decl.expression, checker, env);
@@ -90,12 +90,11 @@ const assignmentDescriber:TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWit
 
 
 const decribeVariableDeclaration:TsNodeDescriber<ts.VariableDeclaration | ts.PropertySignature | ts.ParameterDeclaration> = (decl, checker, env) =>{
-    const typedDecl = decl as ts.VariableDeclaration;
-    console.log(typedDecl);
-    if(typedDecl.type){
-        return describeTypeNode(typedDecl.type!, checker, env);
+    console.log(decl);
+    if(decl.type){
+        return describeTypeNode(decl.type!, checker, env);
     }
-    return serializeType(checker.getTypeAtLocation(typedDecl), checker);
+    return serializeType(checker.getTypeAtLocation(decl), decl, checker);
 }
 
 const describeTypeNode:TsNodeDescriber<ts.TypeNode> = (decl, checker, env) =>{
@@ -114,7 +113,7 @@ const describeTypeNode:TsNodeDescriber<ts.TypeNode> = (decl, checker, env) =>{
     }
    
     const t = checker.getTypeAtLocation(decl);
-    return serializeType(t, checker);
+    return serializeType(t, decl, checker);
 }
 
 
@@ -141,7 +140,7 @@ const describeInterface:TsNodeDescriber<ts.InterfaceDeclaration> = (decl, checke
 }
 
 const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction | ts.FunctionTypeNode> = (decl, checker, env) =>{
-    const returns = decl.type ? describeTypeNode(decl.type, checker, env) : serializeType(checker.getTypeAtLocation(decl), checker).returns!
+    const returns = decl.type ? describeTypeNode(decl.type, checker, env) : serializeType(checker.getTypeAtLocation(decl),decl , checker).returns!
     const res:FunctionSchema = {
         $ref:FunctionSchemaId,
         arguments : decl.parameters.map(p=>{
@@ -300,7 +299,7 @@ function isUnionType(t:ts.Type):t is ts.UnionType{
 
 
 const supportedPrimitives = ['string','number','boolean']
-function serializeType(t:ts.Type,checker:ts.TypeChecker):Schema<any>{
+function serializeType(t:ts.Type, rootNode:ts.Node,checker:ts.TypeChecker):Schema<any>{
     const typeString = checker.typeToString(t);
     if(supportedPrimitives.includes(typeString)){
         return {
@@ -310,7 +309,7 @@ function serializeType(t:ts.Type,checker:ts.TypeChecker):Schema<any>{
 
     if(isUnionType(t)){
         return {
-            $oneOf:t.types.map((tt)=>serializeType(tt, checker))
+            $oneOf:t.types.map((tt)=>serializeType(tt, rootNode, checker))
         }
         
     }
@@ -351,10 +350,10 @@ function serializeType(t:ts.Type,checker:ts.TypeChecker):Schema<any>{
         const signature = signatures[0];
         const res:FunctionSchema = {
             $ref:FunctionSchemaId,
-            returns:serializeType(signature.getReturnType(), checker),
+            returns:serializeType(signature.getReturnType(), rootNode, checker),
             arguments:signature.getParameters().map(p=>{
-                const t = checker.getTypeOfSymbolAtLocation(p,getNode(p));
-                return serializeType(t, checker)
+                const t = checker.getTypeOfSymbolAtLocation(p,rootNode);
+                return serializeType(t, rootNode, checker)
             })
         }
         return res;
@@ -364,7 +363,6 @@ function serializeType(t:ts.Type,checker:ts.TypeChecker):Schema<any>{
 
     const properties = checker.getPropertiesOfType(t);
 
-
     const res:Schema<'object'> = {
         type:'object'
     }
@@ -372,14 +370,14 @@ function serializeType(t:ts.Type,checker:ts.TypeChecker):Schema<any>{
     if(properties.length){
         res.properties = {};
         properties.forEach(prop=>{
-            const fieldType = checker.getTypeOfSymbolAtLocation(prop,prop.declarations![0]);        
-            res.properties![prop.getName()] = serializeType(fieldType,checker);
+            const fieldType = checker.getTypeOfSymbolAtLocation(prop, rootNode);
+            res.properties![prop.getName()] = serializeType(fieldType, rootNode,checker);
         })
     }
 
     const indexType = checker.getIndexTypeOfType(t,ts.IndexKind.String);
     if(indexType){
-        res.additionalProperties = serializeType(indexType, checker)
+        res.additionalProperties = serializeType(indexType, rootNode, checker)
     }
     
     return res;

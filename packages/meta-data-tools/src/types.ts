@@ -28,13 +28,13 @@ export interface IAssets {
 export interface Style {
   path: string;
   name: string;
-  exports: any;
+  exports: string[];
 }
 
 export interface Icon {
   path: string;
   name: string;
-  exports: any;
+  exports: string[];
 }
 
 export interface Simulation<Props> {

@@ -61,6 +61,7 @@ describe('schema-extrct - module',()=>{
         import { AType } from './test-assets';
         export let a:AType;
         let b:AType;
+        export {b};
         export default b`, moduleId);
 
         const expected:ModuleSchema<'object'> = {
@@ -69,6 +70,9 @@ describe('schema-extrct - module',()=>{
             "$ref":"common/module",
             "properties": {
                 "a":{
+                    "$ref":"/ui-autotools/test-assets#AType"
+                },
+                "b":{
                     "$ref":"/ui-autotools/test-assets#AType"
                 },
                 "default":{

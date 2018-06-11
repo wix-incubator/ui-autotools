@@ -1,4 +1,5 @@
 export const ModuleSchemaId = "common/module";
+export const FunctionSchemaId = "common/function";
 export const UndefinedSchemaId = "common/UndefinedSchemaId";
 export const NullSchemaId = "common/null";
 
@@ -53,6 +54,9 @@ export type SchemaBase<T extends  SchemaTypes = SchemaTypes> = {
     description?:string;
     type?:T | T[];
     $ref?:string
+    $oneOf?:Schema[];
+    enum?:any[],
+    $allOf?:Schema[];
     default?:TypeMap[T]
 }
 
@@ -63,4 +67,14 @@ export type ModuleSchema<T extends  SchemaTypes = SchemaTypes> = Schema<T> & {
     "$id":string,
     "$ref":typeof ModuleSchemaId,
     "definitions"?:{[name:string]:Schema}
+}
+
+export type FunctionSchema = Schema & {
+    $ref:typeof FunctionSchemaId;
+    arguments:Schema[],
+    returns:Schema
+}
+
+export function isSchemaOfType<T extends SchemaTypes>(t:T, s:Object): s is Schema<T>{
+    return (s as any).type === t;
 }

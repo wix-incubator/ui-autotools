@@ -6,12 +6,14 @@ import {transformTest} from '../test-kit/run-transform'
 
 describe('schema-extrct - objects',()=>{
     it('should objects with properties', async ()=>{
-        const moduleId = 'export-types';
+        const moduleId = '/ui-autotools/export-types';
         const res = transformTest(`
+        import { AType } from './test-assets';
+        
         export let declared_object:{};
 
         export let declared_object_with_prop:{
-            props:string
+            prop:string
         };
         
         export let infered_object = {};
@@ -19,6 +21,10 @@ describe('schema-extrct - objects',()=>{
         export let infered_object_with_prop = {
             prop:""
         };
+
+        export let declared_with_import:{
+            imported:AType
+        } 
         `, moduleId);
 
         const expected:ModuleSchema<'object'> = {
@@ -32,7 +38,7 @@ describe('schema-extrct - objects',()=>{
                 "declared_object_with_prop":{
                     "type":"object",
                     "properties":{
-                        "props":{
+                        "prop":{
                             "type":"string"
                         }   
                     }
@@ -46,6 +52,65 @@ describe('schema-extrct - objects',()=>{
                         "prop":{
                             "type":"string"
                         }   
+                    }
+                },
+                "declared_with_import":{
+                    "type":"object",
+                    "properties":{
+                        "imported":{
+                            "$ref":"/ui-autotools/test-assets#AType"
+                        }   
+                    }
+                }
+            }
+        }
+        expect(res).to.eql(expected);
+    });
+    it('should objects with index signature', async ()=>{
+        const moduleId = '/ui-autotools/index-signatures';
+        const res = transformTest(`
+        import { AType } from './test-assets';
+        
+        export let declared_object_with_index:{[key:string]:string};
+
+
+        export let declared_object_with_index_and_prop:{
+            [key:string]:string,
+            cnst:string
+        };
+        
+
+        export let declared_object_with_imported_index:{
+            [key:string]:AType
+        };
+        `, moduleId);
+
+        const expected:ModuleSchema<'object'> = {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "$id":moduleId,
+            "$ref":"common/module",
+            "properties":{
+                "declared_object_with_index":{
+                    "type":"object",
+                    "additionalProperties": {
+                        "type":"string"
+                    }
+                },
+                "declared_object_with_index_and_prop":{
+                    "type":"object",
+                    "properties": {
+                        "cnst":{
+                            "type":"string"
+                        }
+                    },
+                    "additionalProperties": {
+                        "type":"string"
+                    }
+                },
+                "declared_object_with_imported_index":{
+                    "type":"object",
+                    "additionalProperties": {
+                        "$ref":"/ui-autotools/test-assets#AType"
                     }
                 }
             }

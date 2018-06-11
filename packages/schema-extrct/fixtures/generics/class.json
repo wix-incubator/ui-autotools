@@ -19,7 +19,7 @@
                 ]
             },
             "extends":{
-                "$ref":"ui-autotools/test-assets",
+                "$ref":"ui-autotools/test-assets#AClass",
                 "genericsParams":[
                     {
                         "type":"string"

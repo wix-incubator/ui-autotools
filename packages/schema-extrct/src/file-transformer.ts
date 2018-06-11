@@ -141,7 +141,7 @@ const describeInterface:TsNodeDescriber<ts.InterfaceDeclaration> = (decl, checke
 }
 
 const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction | ts.FunctionTypeNode> = (decl, checker, env) =>{
-    const returns = decl.type ? describeTypeNode(decl.type, checker, env) : serializeType(checker.getTypeAtLocation(decl), checker)
+    const returns = decl.type ? describeTypeNode(decl.type, checker, env) : serializeType(checker.getTypeAtLocation(decl), checker).returns!
     const res:FunctionSchema = {
         $ref:FunctionSchemaId,
         arguments : decl.parameters.map(p=>{
@@ -343,6 +343,21 @@ function serializeType(t:ts.Type,checker:ts.TypeChecker):Schema<any>{
             type:'number',
             enum:[parseFloat(typeString)]
         }
+    }
+
+    // currently we support only one call signature
+    const signatures = t.getCallSignatures();
+    if(signatures.length){
+        const signature = signatures[0];
+        const res:FunctionSchema = {
+            $ref:FunctionSchemaId,
+            returns:serializeType(signature.getReturnType(), checker),
+            arguments:signature.getParameters().map(p=>{
+                const t = checker.getTypeOfSymbolAtLocation(p,getNode(p));
+                return serializeType(t, checker)
+            })
+        }
+        return res;
     }
 
     

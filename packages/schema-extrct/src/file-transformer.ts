@@ -1,7 +1,10 @@
 import * as ts from 'typescript';
 import {ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchema, ClassConstructorSchemaId, ClassConstructorPairSchema, ClassSchemaId} from './json-schema-types';
+import * as types from './json-schema-types';
 import * as path from 'path';
 
+
+console.log(types);
 const posix:typeof path.posix = path.posix ? path.posix : path;
 
 export type Env = {
@@ -52,19 +55,11 @@ export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, mod
     return res;
 }
 
-export type TsSymbolDescriber<S extends Schema> = {
-    predicate:(symb:ts.Symbol, decl:ts.Node, checker:ts.TypeChecker )=>boolean;
-    describe:(symb:ts.Symbol, decl:ts.Node, checker:ts.TypeChecker, env:Env)=>S;
-    name:string;
-}
 
 export type TsNodeDescriber<N extends ts.Node, S extends Schema = Schema> = (n:N, checker:ts.TypeChecker, env:Env, symb?:ts.Symbol)=>S
 
 
 function getNode(symb:ts.Symbol):ts.Node{
-    if(!symb.valueDeclaration && symb.declarations!.length!==1){
-        throw('unknown declarations')
-    }
     return symb.valueDeclaration || symb.declarations![0]!
 }
 
@@ -254,7 +249,7 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
 const describeTypeReference:TsNodeDescriber<ts.TypeReferenceNode> = (decl, checker, env) =>{
     const typeName = decl.typeName;
     if(ts.isQualifiedName(typeName)){
-       debugger;
+       return describeQualifiedName(typeName, checker, env);
     }
     else{
         const res = describeIdentifier(typeName, checker, env);
@@ -266,10 +261,23 @@ const describeTypeReference:TsNodeDescriber<ts.TypeReferenceNode> = (decl, check
         }
         return res;
     }
-    debugger;
-    return {};
-    
 }
+
+const describeQualifiedName:TsNodeDescriber<ts.QualifiedName> = (decl, checker, env) =>{
+    if(ts.isIdentifier(decl.left)){
+        const identifierRef = describeIdentifier(decl.left, checker, env);
+        const innerRef = decl.right.getText();
+        return {
+            $ref:identifierRef.$ref!.includes('#') ? 
+                    identifierRef.$ref + '.' + innerRef :
+                    identifierRef.$ref + '#' + innerRef
+        };
+    }else{
+        debugger
+    }
+    return {};
+}
+
 
 const describeIdentifier:TsNodeDescriber<ts.Identifier> = (decl, checker, env) =>{
     if(decl.getText()==='Array'){
@@ -397,6 +405,18 @@ function isUnionType(t:ts.Type):t is ts.UnionType{
 
 const supportedPrimitives = ['string','number','boolean']
 function serializeType(t:ts.Type, rootNode:ts.Node,checker:ts.TypeChecker):Schema<any>{
+    if(t.aliasSymbol){
+        return {
+            $ref:'#'+t.aliasSymbol.name
+        }
+    }else if(t.symbol){
+        const node = getNode(t.symbol);
+        if(ts.isClassDeclaration(node) || ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node)){
+            return {
+                $ref:'#'+t.symbol.name
+            }
+        }
+    }
     const typeString = checker.typeToString(t);
     if(supportedPrimitives.includes(typeString)){
         return {

@@ -25,8 +25,8 @@ export function transformTest(source:string, moduleId:string):ModuleSchema<any>{
             "test-assets.ts":fixture
         }
     })
-    const prg = ts.createProgram([testedFile],{},createHost(memFs));
+    const prg = ts.createProgram([testedFile,'/src/test-assets.ts'],{},createHost(memFs));
     const chckr = prg.getTypeChecker();
-
+    console.log(prg.getSourceFile('/src/test-assets.ts')!.getText())
     return transform(chckr,prg.getSourceFile(testedFile)!, moduleId);
 }

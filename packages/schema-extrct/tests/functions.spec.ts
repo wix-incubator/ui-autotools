@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import { ModuleSchema } from '../src/json-schema-types';
+import { ModuleSchema, UndefinedSchemaId, FunctionSchemaId, ModuleSchemaId } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform'
 
 
@@ -112,7 +112,105 @@ describe('schema-extrct - functions',()=>{
         }
         expect(res).to.eql(expected);
     })
+    it('should support functions with rest params', async ()=>{
+        const moduleId = '/ui-autotools/functions';
+        const res = transformTest(`
+        export const functionWithRestParams:(str:string, ...rest:number[])=>string = (str:string)=>{
+            return str+'a'
+        };
+
+        `, moduleId);
+
+        const expected:ModuleSchema<'object'> = {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "$id":moduleId,
+            "$ref":"common/module",
+            "properties": {
+                "functionWithRestParams":{
+                    "$ref":"common/function",
+                    "arguments":[
+                        {
+                            "type":"string",
+                            "name":"str"
+                        }
+                    ],
+                    "restArgument":{
+                        "name":"rest",
+                        "type":"array",
+                        "items":{
+                            type:'number'
+                        }
+                    },
+                    "returns":{
+                        "type":"string"
+                    }
+                }
+            }
+        }
+        expect(res).to.eql(expected);
+    })
     
-        
+
+    it('should support infered void functions', async ()=>{
+        const moduleId = '/ui-autotools/functions';
+        const res = transformTest(`
+        export function voidFunc(str:string){
+            console.log(str);
+        };
+
+        `, moduleId);
+
+        const expected:ModuleSchema<'object'> = {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "$id":moduleId,
+            "$ref":ModuleSchemaId,
+            "properties": {
+                "voidFunc":{
+                    "$ref":FunctionSchemaId,
+                    "arguments":[
+                        {
+                            "type":"string",
+                            "name":"str"
+                        }
+                    ],
+                    "returns":{
+                        $ref:UndefinedSchemaId
+                    }
+                }
+            }
+        }
+        expect(res).to.eql(expected);
+    })
+      
+    it('should support declared void functions', async ()=>{
+        const moduleId = '/ui-autotools/functions';
+        const res = transformTest(`
+        export function voidFunc(str:string):void{
+            console.log(str);
+        };
+
+        `, moduleId);
+
+        const expected:ModuleSchema<'object'> = {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "$id":moduleId,
+            "$ref":ModuleSchemaId,
+            "properties": {
+                "voidFunc":{
+                    "$ref":FunctionSchemaId,
+                    "arguments":[
+                        {
+                            "type":"string",
+                            "name":"str"
+                        }
+                    ],
+                    "returns":{
+                        $ref:UndefinedSchemaId
+                    }
+                }
+            }
+        }
+        expect(res).to.eql(expected);
+    })
 })
 

@@ -162,27 +162,22 @@ const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction
     decl.parameters.forEach(p=>{
         const res = describeVariableDeclaration(p, checker, env);
         res.name = p.name.getText();
+        const tags = ts.getJSDocParameterTags(p);
+        const tag = (tags && tags.length) ? (tags.map(t => t.comment)).join("") : '';
+        if (tag) {
+            res.description = tag;
+        }
         if(p.dotDotDotToken){
             restSchema = res as Schema<'array'>;
         }else{
             funcArguments.push(res);
         }
-    })
+    })    
     const res:FunctionSchema = {
         $ref:FunctionSchemaId,
-        arguments : decl.parameters.map(p=>{
-            const res = describeVariableDeclaration(p, checker, env);
-            const tags = ts.getJSDocParameterTags(p);
-            const tag = (tags && tags.length) ? (tags.map(t => t.comment)).join("") : '';
-            res.name = p.name.getText();
-            if (tag) {
-                res.description = tag;
-            }
-            return res;
-        }),
+        arguments : funcArguments,
         returns:returns
     }
-
     const comments = checker.getSignatureFromDeclaration(decl)!.getDocumentationComment(checker);
     const comment = comments.length ? (comments.map(comment => comment.kind === "lineBreak" ? comment.text : comment.text.trim().replace(/\r\n/g, "\n")).join("")) : '';
     if (comment) {
@@ -233,6 +228,9 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
             }
         }
     });
+
+    const comments = checker.getSymbolAtLocation(decl.name!)!.getDocumentationComment(checker);
+    const comment = comments.length ? (comments.map(comment => comment.kind === "lineBreak" ? comment.text : comment.text.trim().replace(/\r\n/g, "\n")).join("")) : '';
     
     const classDef:ClassSchema = {
         $ref:ClassSchemaId,
@@ -240,6 +238,9 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
             $ref:"#typeof "+className
         },
         properties
+    }
+    if (comment) {
+        classDef.description = comment;
     }
 
     const classConstructorDef:ClassConstructorSchema = {
@@ -249,6 +250,9 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
         },
         properties:staticProperties,
         arguments: constructorSign ? constructorSign.arguments : []
+    }
+    if(constructorSign && constructorSign.description){
+        classConstructorDef.description = constructorSign.description;
     }
     if(constructorSign && constructorSign.restArgument){
         classConstructorDef.restArgument = constructorSign.restArgument;

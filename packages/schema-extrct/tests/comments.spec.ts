@@ -1,9 +1,9 @@
 import {expect} from 'chai';
-import { ModuleSchema } from '../src/json-schema-types';
+import { ModuleSchema, ClassConstructorSchemaId, ClassSchemaId } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform'
 
 describe('schema-extrct - comments', () => {
-    it('should support comments before functions', async ()=>{
+    xit('should support comments before functions', async ()=>{
         const moduleId = '/ui-autotools/comments';
         const res = transformTest(`
         /**
@@ -41,15 +41,20 @@ describe('schema-extrct - comments', () => {
         expect(res).to.eql(expected);
     });
 
-    xit('should support comments', async ()=>{
+    it('should support comments in classes', async ()=>{
         const moduleId = '/ui-autotools/comments';
         const res = transformTest(`
-        /********
-         * @minimum 1
-         * @maximum 100
-         * @stepValue 1
-         * ********/
-        export let num:number;
+        /**
+         * Documentation for C
+         */
+            export class C {
+            /**
+             * constructor documentation
+             * @param a my parameter documentation
+             * @param b another parameter documentation
+             */
+            constructor(a: string, b: C) { }
+        }
 
         `, moduleId);
 
@@ -57,16 +62,43 @@ describe('schema-extrct - comments', () => {
             "$schema": "http://json-schema.org/draft-06/schema#",
             "$id":"/ui-autotools/comments",
             "$ref":"common/module",
+            "definitions":{
+                "typeof C" : {
+                    "$ref":ClassConstructorSchemaId,
+                    "description":"constructor documentation",
+                    "arguments":[
+                        {
+                            "type":"string",
+                            "name":"a",
+                            "description": "my parameter documentation"
+                        },
+                        {
+                            "$ref":"#C",
+                            "name":"b",
+                            "description":"another parameter documentation"
+                        }
+                    ],
+                    "returns":{
+                        $ref:"#C"
+                    },
+                    "properties":{}
+                },
+                "C" : {
+                    "$ref":ClassSchemaId,
+                    "description":"Documentation for C",
+                    "constructor":{
+                        "$ref":'#typeof C'
+                    },
+                    "properties": {}
+                }
+            },
             "properties": {
-                "num":{
-                    "type":"number",
-                    "minimum":1,
-                    "maximum":100,
-                    "stepValue":1
+                "C":{
+                    "$ref":"#typeof C"
                 }
             }
         }
-        
+        debugger;
         expect(res).to.eql(expected);
     })
 })

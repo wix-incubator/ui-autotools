@@ -63,7 +63,7 @@ describe('schema-extrct - module',()=>{
         export let a:AClass;
         let b:AClass;
         export {b};
-        export let c = AClass
+        export let c = AClass;
         export default b`, moduleId);
 
         const expected:ModuleSchema<'object'> = {
@@ -79,6 +79,39 @@ describe('schema-extrct - module',()=>{
                 },
                 "c":{
                     "$ref":"/ui-autotools/test-assets#typeof AClass"
+                },
+                "default":{
+                    "$ref":"/ui-autotools/test-assets#AClass"
+                }
+            }
+        };
+
+        expect(res).to.eql(expected);
+    });
+
+    it('should support * as imports', async ()=>{
+        const moduleId = '/ui-autotools/imports';
+        const res = transformTest(`
+        import * as stuff  from './test-assets';
+
+        export let a:stuff.AClass;
+        let b:stuff.AClass;
+        export {b};
+        export default b
+        
+        
+        `, moduleId);
+
+        const expected:ModuleSchema<'object'> = {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "$id":moduleId,
+            "$ref":"common/module",
+            "properties": {
+                "a":{
+                    "$ref":"/ui-autotools/test-assets#AClass"
+                },
+                "b":{
+                    "$ref":"/ui-autotools/test-assets#AClass"
                 },
                 "default":{
                     "$ref":"/ui-autotools/test-assets#AClass"

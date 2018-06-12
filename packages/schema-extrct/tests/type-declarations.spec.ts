@@ -66,5 +66,37 @@ describe('schema-extrct - type declarations',()=>{
         }
         expect(res).to.eql(expected);
     });
+
+    it('should support recursive types', async ()=>{
+        const moduleId = '/ui-autotools/type-recurse';
+        const res = transformTest(`
+        export type recurse = {
+            prop:recurse;
+        };
+        export let param:recurse;
+        `, moduleId);
+
+        const expected:ModuleSchema<'object'> = {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "$id":moduleId,
+            "$ref":"common/module",
+            "definitions":{
+                "recurse" : {
+                    "type":"object",
+                    "properties" : {
+                        "prop":{
+                            "$ref":"#recurse"
+                        }
+                    }
+                }
+            },
+            "properties": {
+                "param":{
+                    "$ref":"#recurse"
+                }
+            }
+        }
+        expect(res).to.eql(expected);
+    });
 })
 

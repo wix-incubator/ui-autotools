@@ -55,6 +55,55 @@ describe('schema-extrct - interfaces',()=>{
         }
         expect(res).to.eql(expected);
     });
-   
+    it('should support recursive interfaces', async ()=>{
+        const moduleId = '/ui-autotools/arrays';
+        const res = transformTest(`
+        import { AType } from './test-assets';
+        
+        export interface MyInterface{
+            a:MyInterface2;
+        };
+
+        export interface MyInterface2{
+            b:MyInterface;
+        };
+        export let param:MyInterface = {} as any;
+        export let param2:MyInterface2 = {} as any;
+       
+        `, moduleId);
+
+        const expected:ModuleSchema<'object'> = {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "$id":moduleId,
+            "$ref":"common/module",
+            "definitions":{
+                "MyInterface" : {
+                    "type":"object",
+                    "properties": {
+                        "a":{
+                            "$ref":"#MyInterface2"
+                        }
+                    }
+                },
+                "MyInterface2" : {
+                    "type":"object",
+                    "properties": {
+                        "b":{
+                            "$ref":"#MyInterface"
+                        }
+                    }
+                }
+            },
+            "properties": {
+                "param":{
+                    "$ref":"#MyInterface"
+                },
+                "param2":{
+                    "$ref":"#MyInterface2"
+                }
+            }
+        }
+        expect(res).to.eql(expected);
+    });
 })
 

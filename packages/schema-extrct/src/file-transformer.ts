@@ -21,11 +21,13 @@ export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, mod
         'properties':{}
     };
     ts.isAccessor;
+    (window as any).ts = ts;
+    (window as any).sourceFile = sourceFile;
 
     exports.forEach((exportObj) => {
         const node = getNode(exportObj);
         if( ts.isVariableDeclaration(node)){
-            res.properties![exportObj.getName()] = decribeVariableDeclaration(node, checker, env, exportObj)
+            res.properties![exportObj.getName()] = describeVariableDeclaration(node, checker, env, exportObj)
         }else if(ts.isExportSpecifier(node)){
             res.properties![exportObj.getName()] = exportSpecifierDescriber(node, checker, env, exportObj)
         }else if(ts.isExportAssignment(node)){
@@ -63,7 +65,7 @@ const exportSpecifierDescriber:TsNodeDescriber<ts.ExportSpecifier> = (decl, chec
     const aliasedSymb = checker.getAliasedSymbol(symb!);
     const aliasedNode = getNode(aliasedSymb);
     if(ts.isVariableDeclaration(aliasedNode)){
-        return decribeVariableDeclaration(aliasedNode, checker, env, aliasedSymb)
+        return describeVariableDeclaration(aliasedNode, checker, env, aliasedSymb)
     }
     else{
         debugger;
@@ -89,7 +91,7 @@ const assignmentDescriber:TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWit
 
 
 
-const decribeVariableDeclaration:TsNodeDescriber<ts.VariableDeclaration | ts.PropertySignature | ts.ParameterDeclaration> = (decl, checker, env) =>{
+const describeVariableDeclaration:TsNodeDescriber<ts.VariableDeclaration | ts.PropertySignature | ts.ParameterDeclaration> = (decl, checker, env) =>{
     console.log(decl);
     if(decl.type){
         return describeTypeNode(decl.type!, checker, env);
@@ -144,13 +146,23 @@ const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction
     const res:FunctionSchema = {
         $ref:FunctionSchemaId,
         arguments : decl.parameters.map(p=>{
-            const res = decribeVariableDeclaration(p, checker, env);
+            const res = describeVariableDeclaration(p, checker, env);
+            const tags = ts.getJSDocParameterTags(p);
+            const tag = (tags && tags.length) ? (tags.map(t => t.comment)).join("") : '';
             res.name = p.name.getText();
+            if (tag) {
+                res.description = tag;
+            }
             return res;
         }),
         returns:returns
     }
-   
+
+    const comments = checker.getSignatureFromDeclaration(decl)!.getDocumentationComment(checker);
+    const comment = comments.length ? (comments.map(comment => comment.kind === "lineBreak" ? comment.text : comment.text.trim().replace(/\r\n/g, "\n")).join("")) : '';
+    if (comment) {
+        res.description = comment;
+    }
     return res;
 }
 
@@ -185,7 +197,7 @@ const describeIdentifier:TsNodeDescriber<ts.Identifier> = (decl, checker, env) =
     let importPath:string | undefined = undefined;
     let importInternal:string | undefined = undefined;
     if(ts.isVariableDeclaration(referencedSymbDecl)){
-        return decribeVariableDeclaration(referencedSymbDecl, checker, env)
+        return describeVariableDeclaration(referencedSymbDecl, checker, env)
     }else if(ts.isNamespaceImport(referencedSymbDecl)){
         const target = referencedSymbDecl.parent!.parent!.moduleSpecifier.getText().slice(1,-1);
         importPath = target;
@@ -220,7 +232,7 @@ const describeTypeLiteral:TsNodeDescriber<ts.TypeLiteralNode | ts.InterfaceDecla
     decl.members.forEach(member=>{
         if(ts.isPropertySignature(member)){
             res.properties = res.properties || {};
-            res.properties[member.name.getText()] = decribeVariableDeclaration(member,checker,env)
+            res.properties[member.name.getText()] = describeVariableDeclaration(member,checker,env)
         }else if(ts.isIndexSignatureDeclaration(member)){
             res.additionalProperties = describeTypeNode(member.type!, checker, env)
         }

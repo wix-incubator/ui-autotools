@@ -13,8 +13,7 @@ describe('schema-extrct - interfaces',()=>{
         export interface MyInterface{
             title:string;
         };
-        export let param:MyInterface;
-        
+        export let param:MyInterface = {} as any;
         export interface Extendz extends MyInterface {
             desc: string;
         }

@@ -3,35 +3,24 @@ import { ComponentType } from 'react';
 export interface IRegistry {
   metadata: IMetadata;
   describeComponent:<Props> (comp: ComponentType<Props>) => IComponentMetadata<Props>;
-  describeAsset: (asset: Style | Icon) => Style | Icon;
+  describeAsset: (asset: any) => IAssetMetadata;
   clean: () => void;
 }
 
 export interface IComponentMetadata<Props> {
   simulations: Simulation<Props>[];
-  styles: Style[];
+  styles: Map<any, IAssetMetadata>;
   addSim: (sim: Simulation<Props>) => void;
   
-  addStyle: (style: Style) => void;
+  addStyle: (style: any) => void;
 }
 
 export interface IMetadata {
   components: Map<ComponentType<any>, IComponentMetadata<any>>;
-  assets: IAssets;
+  assets: Map<any, IAssetMetadata>;
 }
 
-export interface IAssets {
-  styles: Style[];
-  icons: Icon[];
-}
-
-export interface Style {
-  path: string;
-  name: string;
-  exports: string[];
-}
-
-export interface Icon {
+export interface IAssetMetadata {
   path: string;
   name: string;
   exports: string[];

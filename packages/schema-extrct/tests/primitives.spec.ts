@@ -13,8 +13,10 @@ describe('schema-extrct - primitives',()=>{
         export let declared_boolean: boolean;
         export let declared_null: null;
         export let declared_any: any;
+        export let declared_undefined: undefined;
         export let infered_string = "";
         export let infered_number = 0;
+        export let infered_boolean = false;
         export let infered_boolean = false;
         
         `, moduleId);
@@ -38,6 +40,9 @@ describe('schema-extrct - primitives',()=>{
                 },
                 "declared_any":{
                 }, 
+                "declared_undefined":{
+                    "$ref":"common/undefined"
+                },
                 "infered_string" : {
                     "type":"string"
                 },
@@ -47,6 +52,7 @@ describe('schema-extrct - primitives',()=>{
                 "infered_boolean":{
                     "type":"boolean"        
                 }
+                
             }
         }
         expect(res).to.eql(expected);

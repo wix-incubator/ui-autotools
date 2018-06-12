@@ -1,6 +1,8 @@
 export const ModuleSchemaId = "common/module";
 export const FunctionSchemaId = "common/function";
-export const UndefinedSchemaId = "common/UndefinedSchemaId";
+export const ClassSchemaId = "common/class";
+export const ClassConstructorSchemaId = "common/class_constructor";
+export const UndefinedSchemaId = "common/undefined";
 export const NullSchemaId = "common/null";
 
 
@@ -72,8 +74,33 @@ export type ModuleSchema<T extends  SchemaTypes = SchemaTypes> = Schema<T> & {
 export type FunctionSchema = Schema & {
     $ref:typeof FunctionSchemaId;
     arguments:Schema[],
+    restArgument?:Schema<'array'>,
     returns:Schema
 }
+
+export type ClassConstructorSchema = Schema & {
+    $ref:typeof ClassConstructorSchemaId;
+    arguments:Schema[];
+    restArgument?:Schema<'array'>;
+    returns:Schema;
+    properties:{[name:string]:Schema};
+    extends?:Schema
+}
+
+export type ClassSchema = Schema & {
+    $ref:typeof ClassSchemaId;
+    constructor:Schema;
+    extends?:Schema;
+    implements?:Schema[];
+    properties:{[name:string]:Schema};    
+}
+
+
+export type ClassConstructorPairSchema = Schema & {
+    class_def:ClassSchema;
+    constructor_def:ClassConstructorSchema;
+}
+
 
 export function isSchemaOfType<T extends SchemaTypes>(t:T, s:Object): s is Schema<T>{
     return (s as any).type === t;

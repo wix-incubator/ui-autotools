@@ -3,7 +3,7 @@ import { ModuleSchema } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform'
 
 describe('schema-extrct - comments', () => {
-    it('should support comments', async ()=>{
+    it('should support comments before functions', async ()=>{
         const moduleId = '/ui-autotools/comments';
         const res = transformTest(`
         /**
@@ -34,6 +34,35 @@ describe('schema-extrct - comments', () => {
                     "returns":{
                         "type":"string"
                     }
+                }
+            }
+        }
+        
+        expect(res).to.eql(expected);
+    });
+
+    xit('should support comments', async ()=>{
+        const moduleId = '/ui-autotools/comments';
+        const res = transformTest(`
+        /********
+         * @minimum 1
+         * @maximum 100
+         * @stepValue 1
+         * ********/
+        export let num:number;
+
+        `, moduleId);
+
+        const expected:ModuleSchema<'object'> = {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "$id":"/ui-autotools/comments",
+            "$ref":"common/module",
+            "properties": {
+                "num":{
+                    "type":"number",
+                    "minimum":1,
+                    "maximum":100,
+                    "stepValue":1
                 }
             }
         }

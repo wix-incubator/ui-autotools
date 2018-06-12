@@ -58,10 +58,12 @@ describe('schema-extrct - module',()=>{
     it('should support imports', async ()=>{
         const moduleId = '/ui-autotools/imports';
         const res = transformTest(`
-        import { AType } from './test-assets';
-        export let a:AType;
-        let b:AType;
+        import { AClass } from './test-assets';
+
+        export let a:AClass;
+        let b:AClass;
         export {b};
+        export let c = AClass
         export default b`, moduleId);
 
         const expected:ModuleSchema<'object'> = {
@@ -70,13 +72,16 @@ describe('schema-extrct - module',()=>{
             "$ref":"common/module",
             "properties": {
                 "a":{
-                    "$ref":"/ui-autotools/test-assets#AType"
+                    "$ref":"/ui-autotools/test-assets#AClass"
                 },
                 "b":{
-                    "$ref":"/ui-autotools/test-assets#AType"
+                    "$ref":"/ui-autotools/test-assets#AClass"
+                },
+                "c":{
+                    "$ref":"/ui-autotools/test-assets#typeof AClass"
                 },
                 "default":{
-                    "$ref":"/ui-autotools/test-assets#AType"
+                    "$ref":"/ui-autotools/test-assets#AClass"
                 }
             }
         };

@@ -151,7 +151,6 @@ const describeInterface:TsNodeDescriber<ts.InterfaceDeclaration> = (decl, checke
 }
 
 const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction | ts.FunctionTypeNode | ts.ConstructorDeclaration | ts.MethodDeclaration, FunctionSchema> = (decl, checker, env) =>{
-    debugger;
     const returns = getReturnSchema(decl, checker, env);
     const funcArguments:Schema[] = [];
     let restSchema:Schema<'array'> | undefined;

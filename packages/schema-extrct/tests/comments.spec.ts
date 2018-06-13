@@ -3,12 +3,13 @@ import { ModuleSchema, ClassConstructorSchemaId, ClassSchemaId } from '../src/js
 import {transformTest} from '../test-kit/run-transform'
 
 describe('schema-extrct - comments', () => {
-    xit('should support comments before functions', async ()=>{
+    it('should support comments before functions', async ()=>{
         const moduleId = '/ui-autotools/comments';
         const res = transformTest(`
         /**
          * function documentation
          * @param a my parameter documentation
+         * @returns {string} return documentation
          */
         export function c(a: string) {
             return '' + a;
@@ -32,6 +33,7 @@ describe('schema-extrct - comments', () => {
                         }
                     ],
                     "returns":{
+                        "description":"return documentation",
                         "type":"string"
                     }
                 }

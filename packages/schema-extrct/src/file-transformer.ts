@@ -156,7 +156,8 @@ const describeInterface:TsNodeDescriber<ts.InterfaceDeclaration> = (decl, checke
 }
 
 const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction | ts.FunctionTypeNode | ts.ConstructorDeclaration | ts.MethodDeclaration, FunctionSchema> = (decl, checker, env) =>{
-    const returns = decl.type ? describeTypeNode(decl.type, checker, env) : serializeType(checker.getTypeAtLocation(decl),decl , checker).returns!
+    debugger;
+    const returns = getReturnSchema(decl, checker, env);
     const funcArguments:Schema[] = [];
     let restSchema:Schema<'array'> | undefined;
     decl.parameters.forEach(p=>{
@@ -172,7 +173,8 @@ const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction
         }else{
             funcArguments.push(res);
         }
-    })    
+    })   
+
     const res:FunctionSchema = {
         $ref:FunctionSchemaId,
         arguments : funcArguments,
@@ -187,6 +189,15 @@ const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction
         res.restArgument = restSchema;
     }
     return res;
+}
+
+const getReturnSchema:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction | ts.FunctionTypeNode | ts.ConstructorDeclaration | ts.MethodDeclaration, FunctionSchema> = (decl, checker, env) => {
+    const returnSchema = decl.type ? describeTypeNode(decl.type, checker, env) : serializeType(checker.getTypeAtLocation(decl),decl , checker).returns!
+    const returnTag = ts.getJSDocReturnTag(decl);
+    if (returnTag && returnTag.comment) {
+        returnSchema.description = returnTag.comment
+    }
+    return returnSchema
 }
 
 const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSchema> = (decl, checker, env) =>{

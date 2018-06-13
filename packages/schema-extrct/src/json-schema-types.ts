@@ -75,6 +75,7 @@ export type FunctionSchema = Schema & {
     $ref:typeof FunctionSchemaId;
     arguments:Schema[],
     restArgument?:Schema<'array'>,
+    generics?:any,
     returns:Schema
 }
 

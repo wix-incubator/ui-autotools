@@ -24,6 +24,8 @@ export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, mod
         'properties':{}
     };
     ts.isAccessor;
+    (window as any).ts = ts;
+    (window as any).sourceFile = sourceFile;
 
     exports.forEach((exportObj) => {
         const node = getNode(exportObj);
@@ -167,6 +169,10 @@ const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction
     }
     if(restSchema){
         res.restArgument = restSchema;
+    }
+    if (decl.type && decl.type.kind === ts.SyntaxKind.TypeReference && decl.typeParameters) {
+        const generics = decl.typeParameters.map(t => { return {name: t.name.getText()}});
+        res.generics = generics;
     }
     return res;
 }

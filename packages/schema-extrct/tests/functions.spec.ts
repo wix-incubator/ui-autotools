@@ -212,5 +212,43 @@ describe('schema-extrct - functions',()=>{
         }
         expect(res).to.eql(expected);
     })
+
+
+    xit('should support infered function return type (non primitive)', async ()=>{
+        const moduleId = '/ui-autotools/infered_functions';
+        const res = transformTest(`
+        import {AType} from './test-assets
+        export function inferedFunction(str:string){
+            const res:A = {
+                prop:'gaga'
+            }
+            return res;
+        };
+
+        `, moduleId);
+
+        const expected:ModuleSchema<'object'> = {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "$id":moduleId,
+            "$ref":"common/module",
+            "properties": {
+               
+                "inferedFunction":{
+                    "$ref":"common/function",
+                    "arguments":[
+                        {
+                            "type":"string",
+                            "name":"str"
+                        }
+                    ],
+                    "returns":{
+                        "$ref":"/ui-autotools/test-assets#AType"
+                    }
+                }
+            }
+            
+        }
+        expect(res).to.eql(expected);
+    })
 })
 

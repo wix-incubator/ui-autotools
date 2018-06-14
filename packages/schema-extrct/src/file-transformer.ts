@@ -279,7 +279,6 @@ const describeTypeReference:TsNodeDescriber<ts.TypeReferenceNode> = (decl, check
        return describeQualifiedName(typeName, checker, env);
     }
     else{
-        debugger;
         const res = describeIdentifier(typeName, checker, env);
         const typeArgs = decl.typeArguments;
         if(typeArgs){

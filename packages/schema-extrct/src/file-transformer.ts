@@ -111,7 +111,7 @@ const describeTypeNode:TsNodeDescriber<ts.TypeNode> = (decl, checker, env) =>{
     if(ts.isTypeReferenceNode(decl)){
         return describeTypeReference(decl, checker, env)
     }else if(ts.isTypeLiteralNode(decl)){
-        return describeTypeLiteral(decl, checker, env)
+        return describeTypeLiteral(decl, checker, env)   
     }else if(ts.isArrayTypeNode(decl)){
         return describeArrayType(decl, checker, env)
     }else if(ts.isUnionTypeNode(decl)){
@@ -130,8 +130,7 @@ const describeTypeNode:TsNodeDescriber<ts.TypeNode> = (decl, checker, env) =>{
 const describeTypeAlias:TsNodeDescriber<ts.TypeAliasDeclaration> = (decl, checker, env) =>{
     const res =  describeTypeNode(decl.type,checker,env);
     if (decl.typeParameters) {
-        const generics = decl.typeParameters.map(t => { return {name: t.name.getText()}});
-        res.generics = generics;
+        res.genericParams = decl.typeParameters.map(t => { return {name: t.name.getText()}});
     }
     return res;
 }
@@ -151,6 +150,23 @@ const describeInterface:TsNodeDescriber<ts.InterfaceDeclaration> = (decl, checke
         res.$allOf!.push(localRes);
         return res;
     }
+    // if (decl.typeParameters) {
+        // const generics = decl.typeParameters.map(t => { 
+            // let res:Schema = {};
+            // return {name: t.name.getText(),
+            //         type: checker.typeToString(checker.getTypeAtLocation(t.constraint!), t)
+            // }
+            
+            // if (t.default) {
+            //     if (ts.isLiteralTypeNode(t)) {
+            //         res.default = ts.isNumericLiteral(t.literal) ? parseFloat(t.literal.getText()) : t.literal.getText();
+            //     } else {
+            //         res.default = '';
+            //     }
+            // }
+    // });
+        // localRes.generics = generics;
+    // }
     return localRes;
 }
 
@@ -175,10 +191,10 @@ const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction
     if(restSchema){
         res.restArgument = restSchema;
     }
-    if (decl.type && decl.type.kind === ts.SyntaxKind.TypeReference && decl.typeParameters) {
-        const generics = decl.typeParameters.map(t => { return {name: t.name.getText()}});
-        res.generics = generics;
-    }
+    // if (decl.type && decl.type.kind === ts.SyntaxKind.TypeReference && decl.typeParameters) {
+    //     const generics = decl.typeParameters.map(t => { return {name: t.name.getText()}});
+    //     res.generics = generics;
+    // }
     return res;
 }
 
@@ -263,6 +279,7 @@ const describeTypeReference:TsNodeDescriber<ts.TypeReferenceNode> = (decl, check
        return describeQualifiedName(typeName, checker, env);
     }
     else{
+        debugger;
         const res = describeIdentifier(typeName, checker, env);
         const typeArgs = decl.typeArguments;
         if(typeArgs){
@@ -270,8 +287,13 @@ const describeTypeReference:TsNodeDescriber<ts.TypeReferenceNode> = (decl, check
                 res.items = describeTypeNode(typeArgs[0], checker, env)
             } else {
                 //I am not sure what other cases we have except generics 
-                //but I feel like we need to make sure it is a generic declaration somehow
-                res.genericsParams = typeArgs.map(t => describeTypeNode(t, checker, env));
+                //but we need to make sure it is a generic declaration somehow
+                res.genericArguments = typeArgs.map(t => {
+                    if (ts.isLiteralTypeNode(t)) {
+                        return ts.isNumericLiteral(t.literal) ? Number(t.literal.getText()) : t.literal.getText();
+                    }
+                    return describeTypeNode(t, checker, env)
+                });
             }
         }
         return res;

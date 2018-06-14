@@ -26,7 +26,7 @@ describe('schema-extrct - generic types',()=>{
                     }],
                     "properties": {
                         "something":{
-                            "$ref":"#MyType!T"
+                            "$ref":"#T"
                         } 
                     }
                 }
@@ -40,6 +40,7 @@ describe('schema-extrct - generic types',()=>{
                 }
             }
         }
+        debugger;
         expect(res).to.eql(expected);
     });
 

@@ -10,7 +10,7 @@ mocha.addFile(pathToTest + '/ssr-test.js');
 // Invoking this method runs our ssr-test in the mocha environment
 const autoSSRTest = () => {
   // Run the ssr-test file
-  mocha.run(function(failures: any) {
+  mocha.run(function(failures: number) {
     process.exitCode = failures ? -1 : 0;
   })
 }

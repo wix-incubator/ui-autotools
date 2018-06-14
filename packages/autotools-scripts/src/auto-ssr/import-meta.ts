@@ -1,5 +1,5 @@
 import {NodeTypeScriptService} from 'node-typescript-support'
-import {sync} from 'glob';
+import * as glob from 'glob';
  
 const nodeTsService = new NodeTypeScriptService(/* options */)
 nodeTsService.installSourceMapSupport() // optional installation of source-map-support
@@ -14,10 +14,9 @@ const importMeta = (filePattern: string) => {
   };
   const defaultPattern = './**/*.meta.ts[x?]';
 
-  const files = sync(filePattern || defaultPattern, options);
+  const files = glob.sync(filePattern || defaultPattern, options);
 
   files.map((file: string) => {
-    console.log('Running', file);
     require(file);
   })
 }

@@ -59,6 +59,8 @@ export type SchemaBase<T extends  SchemaTypes = SchemaTypes> = {
     $oneOf?:Schema[];
     enum?:any[],
     $allOf?:Schema[];
+    generics?:any;
+    genericsParams?:any;
     default?:TypeMap[T]
 }
 
@@ -75,7 +77,6 @@ export type FunctionSchema = Schema & {
     $ref:typeof FunctionSchemaId;
     arguments:Schema[],
     restArgument?:Schema<'array'>,
-    generics?:any,
     returns:Schema
 }
 

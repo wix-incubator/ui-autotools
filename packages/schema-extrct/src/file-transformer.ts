@@ -37,7 +37,7 @@ export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, mod
             res.properties![exportObj.getName()] = assignmentDescriber(node, checker, env, exportObj)
         }else if(ts.isTypeAliasDeclaration(node)){
             res.definitions = res.definitions || {};
-            res.definitions![exportObj.getName()] = describeTypeAlias(node, checker, env)
+            res.definitions![exportObj.getName()] = describeTypeAlias(node, checker, env);
         }else if(ts.isInterfaceDeclaration(node)){
             res.definitions = res.definitions || {};
             res.definitions![exportObj.getName()] = describeInterface(node, checker, env)
@@ -128,7 +128,12 @@ const describeTypeNode:TsNodeDescriber<ts.TypeNode> = (decl, checker, env) =>{
 
 
 const describeTypeAlias:TsNodeDescriber<ts.TypeAliasDeclaration> = (decl, checker, env) =>{
-    return describeTypeNode(decl.type,checker,env);
+    const res =  describeTypeNode(decl.type,checker,env);
+    if (decl.typeParameters) {
+        const generics = decl.typeParameters.map(t => { return {name: t.name.getText()}});
+        res.generics = generics;
+    }
+    return res;
 }
 
 const describeInterface:TsNodeDescriber<ts.InterfaceDeclaration> = (decl, checker, env) =>{
@@ -262,7 +267,11 @@ const describeTypeReference:TsNodeDescriber<ts.TypeReferenceNode> = (decl, check
         const typeArgs = decl.typeArguments;
         if(typeArgs){
             if(isSchemaOfType('array',res)){
-                res.items = describeTypeNode(decl.typeArguments![0], checker, env)
+                res.items = describeTypeNode(typeArgs[0], checker, env)
+            } else {
+                //I am not sure what other cases we have except generics 
+                //but I feel like we need to make sure it is a generic declaration somehow
+                res.genericsParams = typeArgs.map(t => describeTypeNode(t, checker, env));
             }
         }
         return res;

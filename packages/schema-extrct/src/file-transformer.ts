@@ -8,13 +8,15 @@ console.log(types);
 const posix:typeof path.posix = path.posix ? path.posix : path;
 
 export type Env = {
-    moduleId:string
+    modulePath:string;
+    projectPath:string;
 } 
 
-export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, moduleId:string){
+export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, moduleId:string, projectPath:string){
     const moduleSymbol = (sourceFile as any).symbol;
     const env:Env =  {
-        moduleId
+        modulePath:moduleId,
+        projectPath
     };
     const exports = checker.getExportsOfModule(moduleSymbol);
     const res: ModuleSchema = {
@@ -83,7 +85,7 @@ const assignmentDescriber:TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWit
         return describeIdentifier(expression, checker, env)
     }else {
         const t = checker.getTypeAtLocation(expression);
-        return serializeType(t, decl,checker);
+        return serializeType(t, decl,checker, env);
     }
  
     //return resolveNode(decl.expression, checker, env);
@@ -116,7 +118,7 @@ const decribeVariableDeclaration:TsNodeDescriber<ts.VariableDeclaration | ts.Pro
             };
         }
     } 
-    return serializeType(checker.getTypeAtLocation(decl), decl, checker);
+    return serializeType(checker.getTypeAtLocation(decl), decl, checker, env);
 }
 
 const describeTypeNode:TsNodeDescriber<ts.TypeNode> = (decl, checker, env) =>{
@@ -135,7 +137,7 @@ const describeTypeNode:TsNodeDescriber<ts.TypeNode> = (decl, checker, env) =>{
     }
    
     const t = checker.getTypeAtLocation(decl);
-    return serializeType(t, decl, checker);
+    return serializeType(t, decl, checker, env);
 }
 
 
@@ -162,7 +164,7 @@ const describeInterface:TsNodeDescriber<ts.InterfaceDeclaration> = (decl, checke
 }
 
 const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction | ts.FunctionTypeNode | ts.ConstructorDeclaration | ts.MethodDeclaration, FunctionSchema> = (decl, checker, env) =>{
-    const returns = decl.type ? describeTypeNode(decl.type, checker, env) : serializeType(checker.getTypeAtLocation(decl),decl , checker).returns!
+    const returns = decl.type ? describeTypeNode(decl.type, checker, env) : serializeType(checker.getTypeAtLocation(decl),decl , checker, env).returns!
     const funcArguments:Schema[] = [];
     let restSchema:Schema<'array'> | undefined;
     decl.parameters.forEach(p=>{
@@ -322,7 +324,7 @@ const describeIdentifier:TsNodeDescriber<ts.Identifier> = (decl, checker, env) =
 
     if(importPath){
         if(importPath.startsWith('.') || importPath.startsWith('/')){
-            const currentDir = posix.dirname(env.moduleId);
+            const currentDir = posix.dirname(env.modulePath);
             const resolvedPath = posix.join(currentDir ,importPath);
         
             return {
@@ -422,17 +424,31 @@ function isUnionType(t:ts.Type):t is ts.UnionType{
     return !!(t as any).types
 }
 
-
+function removeExtension(pathName:string):string{
+    return pathName.slice(0, posix.extname(pathName).length*-1)
+}
 
 const supportedPrimitives = ['string','number','boolean']
-function serializeType(t:ts.Type, rootNode:ts.Node,checker:ts.TypeChecker):Schema<any>{
+function serializeType(t:ts.Type, rootNode:ts.Node,checker:ts.TypeChecker, env:Env):Schema<any>{
     if(t.aliasSymbol){
         return {
             $ref:'#'+t.aliasSymbol.name
         }
     }else if(t.symbol){
         const node = getNode(t.symbol);
+   
         if(ts.isClassDeclaration(node) || ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node)){
+
+            const fileName = node.getSourceFile().fileName;
+            const currentFileName = rootNode.getSourceFile().fileName;
+            if(fileName!=currentFileName){
+                const fileNameNoExt = removeExtension(fileName);
+                const pathInProj = fileNameNoExt.slice(env.projectPath.length);
+                return {
+                    $ref:pathInProj+'#'+t.symbol.name 
+                }
+            }
+
             return {
                 $ref:'#'+t.symbol.name
             }
@@ -447,7 +463,7 @@ function serializeType(t:ts.Type, rootNode:ts.Node,checker:ts.TypeChecker):Schem
 
     if(isUnionType(t)){
         return {
-            $oneOf:t.types.map((tt)=>serializeType(tt, rootNode, checker))
+            $oneOf:t.types.map((tt)=>serializeType(tt, rootNode, checker, env))
         }
         
     }
@@ -488,10 +504,10 @@ function serializeType(t:ts.Type, rootNode:ts.Node,checker:ts.TypeChecker):Schem
         const signature = signatures[0];
         const res:FunctionSchema = {
             $ref:FunctionSchemaId,
-            returns:serializeType(signature.getReturnType(), rootNode, checker),
+            returns:serializeType(signature.getReturnType(), rootNode, checker, env),
             arguments:signature.getParameters().map(p=>{
                 const t = checker.getTypeOfSymbolAtLocation(p,rootNode);
-                return serializeType(t, rootNode, checker)
+                return serializeType(t, rootNode, checker, env)
             })
         }
         return res;
@@ -509,13 +525,13 @@ function serializeType(t:ts.Type, rootNode:ts.Node,checker:ts.TypeChecker):Schem
         res.properties = {};
         properties.forEach(prop=>{
             const fieldType = checker.getTypeOfSymbolAtLocation(prop, rootNode);
-            res.properties![prop.getName()] = serializeType(fieldType, rootNode,checker);
+            res.properties![prop.getName()] = serializeType(fieldType, rootNode,checker, env);
         })
     }
 
     const indexType = checker.getIndexTypeOfType(t,ts.IndexKind.String);
     if(indexType){
-        res.additionalProperties = serializeType(indexType, rootNode, checker)
+        res.additionalProperties = serializeType(indexType, rootNode, checker, env)
     }
     
     return res;

@@ -6,7 +6,7 @@ import {transformTest} from '../test-kit/run-transform'
 
 describe('schema-extrct - union',()=>{
     it('should support union types', async ()=>{
-        const moduleId = '/ui-autotools/unions';
+        const moduleId = 'unions';
         const res = transformTest(`
         import {AType} from './test-assets'
 
@@ -28,7 +28,7 @@ describe('schema-extrct - union',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "definitions": {
                 "Specific_union":{
@@ -70,7 +70,7 @@ describe('schema-extrct - union',()=>{
                 "type_union":{
                     "$oneOf":[
                         {
-                            "$ref":"/ui-autotools/test-assets#AType"
+                            "$ref":"/src/test-assets#AType"
                         },
                         {
                             "type":"number"

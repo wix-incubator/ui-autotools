@@ -6,7 +6,7 @@ import {transformTest} from '../test-kit/run-transform'
 
 describe('schema-extrct - functions',()=>{
     it('should support infered function return values', async ()=>{
-        const moduleId = '/ui-autotools/infered_functions';
+        const moduleId = 'infered_functions';
         const res = transformTest(`
         export function inferedFunction(str:string){
             return str+'a'
@@ -16,7 +16,7 @@ describe('schema-extrct - functions',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "properties": {
                 "inferedFunction":{
@@ -37,7 +37,7 @@ describe('schema-extrct - functions',()=>{
         expect(res).to.eql(expected);
     })
     it('should support declared functions return values', async ()=>{
-        const moduleId = '/ui-autotools/functions';
+        const moduleId = 'functions';
         const res = transformTest(`
       
         export const declaredFunction:(str:string)=>string = (str:string)=>{
@@ -49,7 +49,7 @@ describe('schema-extrct - functions',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "properties": {
                 
@@ -72,7 +72,7 @@ describe('schema-extrct - functions',()=>{
     })
     
     it('should support functions with parameter deconstruct', async ()=>{
-        const moduleId = '/ui-autotools/functions';
+        const moduleId = 'functions';
         const res = transformTest(`
         
         export function inferedDeconstruct ({x=1, y="text"}) { return x + y; };
@@ -82,7 +82,7 @@ describe('schema-extrct - functions',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "properties": {
                 
@@ -113,7 +113,7 @@ describe('schema-extrct - functions',()=>{
         expect(res).to.eql(expected);
     })
     it('should support functions with rest params', async ()=>{
-        const moduleId = '/ui-autotools/functions';
+        const moduleId = 'functions';
         const res = transformTest(`
         export const functionWithRestParams:(str:string, ...rest:number[])=>string = (str:string)=>{
             return str+'a'
@@ -123,7 +123,7 @@ describe('schema-extrct - functions',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "properties": {
                 "functionWithRestParams":{
@@ -152,7 +152,7 @@ describe('schema-extrct - functions',()=>{
     
 
     it('should support infered void functions', async ()=>{
-        const moduleId = '/ui-autotools/functions';
+        const moduleId = 'functions';
         const res = transformTest(`
         export function voidFunc(str:string){
             console.log(str);
@@ -162,7 +162,7 @@ describe('schema-extrct - functions',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":ModuleSchemaId,
             "properties": {
                 "voidFunc":{
@@ -183,7 +183,7 @@ describe('schema-extrct - functions',()=>{
     })
       
     it('should support declared void functions', async ()=>{
-        const moduleId = '/ui-autotools/functions';
+        const moduleId = 'functions';
         const res = transformTest(`
         export function voidFunc(str:string):void{
             console.log(str);
@@ -193,7 +193,7 @@ describe('schema-extrct - functions',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":ModuleSchemaId,
             "properties": {
                 "voidFunc":{
@@ -214,12 +214,12 @@ describe('schema-extrct - functions',()=>{
     })
 
 
-    it('should support infered function return type (with import)', async ()=>{
-        const moduleId = '/ui-autotools/infered_functions';
+    it('should support infered function return type (non primitive import)', async ()=>{
+        const moduleId = 'infered_functions';
         const res = transformTest(`
-        import {AType} from './test-assets
+        import {AClass} from './test-assets
         export function inferedFunction(str:string){
-            const res:AType = 'gaga'
+            const res:AClass = 'gaga' as any;
             return res;
         };
 
@@ -227,7 +227,7 @@ describe('schema-extrct - functions',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "properties": {
                
@@ -240,8 +240,8 @@ describe('schema-extrct - functions',()=>{
                         }
                     ],
                     "returns":{
-                        "type":"string"                    }
-                }
+                        "$ref":"/src/test-assets#AClass"                    }
+                    }
             }
             
         }

@@ -6,7 +6,7 @@ import {transformTest} from '../test-kit/run-transform'
 
 describe('schema-extrct - arrays',()=>{
     it('should support types arrays', async ()=>{
-        const moduleId = '/ui-autotools/arrays';
+        const moduleId = 'arrays';
         const res = transformTest(`
         import { AType } from './test-assets';
         
@@ -17,7 +17,7 @@ describe('schema-extrct - arrays',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "properties":{
                 "declared_array" : {
@@ -29,7 +29,7 @@ describe('schema-extrct - arrays',()=>{
                 ,"import_array" : {
                     "type":"array",
                     "items": {
-                        "$ref":"/ui-autotools/test-assets#AType"
+                        "$ref":"/src/test-assets#AType"
                     }
                 }
             }

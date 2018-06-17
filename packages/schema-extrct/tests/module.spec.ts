@@ -21,7 +21,7 @@ describe('schema-extrct - module',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "properties": {
                 "a":{
@@ -47,7 +47,7 @@ describe('schema-extrct - module',()=>{
 
         const expected:ModuleSchema<'string'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "type":"string",
             "default":"b"
@@ -56,7 +56,7 @@ describe('schema-extrct - module',()=>{
     });
 
     it('should support imports', async ()=>{
-        const moduleId = '/ui-autotools/imports';
+        const moduleId = 'imports';
         const res = transformTest(`
         import { AClass } from './test-assets';
 
@@ -68,20 +68,20 @@ describe('schema-extrct - module',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "properties": {
                 "a":{
-                    "$ref":"/ui-autotools/test-assets#AClass"
+                    "$ref":"/src/test-assets#AClass"
                 },
                 "b":{
-                    "$ref":"/ui-autotools/test-assets#AClass"
+                    "$ref":"/src/test-assets#AClass"
                 },
                 "c":{
-                    "$ref":"/ui-autotools/test-assets#typeof AClass"
+                    "$ref":"/src/test-assets#typeof AClass"
                 },
                 "default":{
-                    "$ref":"/ui-autotools/test-assets#AClass"
+                    "$ref":"/src/test-assets#AClass"
                 }
             }
         };
@@ -90,7 +90,7 @@ describe('schema-extrct - module',()=>{
     });
 
     it('should support * as imports', async ()=>{
-        const moduleId = '/ui-autotools/imports';
+        const moduleId = 'imports';
         const res = transformTest(`
         import * as stuff  from './test-assets';
 
@@ -99,22 +99,48 @@ describe('schema-extrct - module',()=>{
         export {b};
         export default b
         
-        
+        export let d = stuff.AClass
         `, moduleId);
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "properties": {
                 "a":{
-                    "$ref":"/ui-autotools/test-assets#AClass"
+                    "$ref":"/src/test-assets#AClass"
                 },
                 "b":{
-                    "$ref":"/ui-autotools/test-assets#AClass"
+                    "$ref":"/src/test-assets#AClass"
+                },
+                "d":{
+                    "$ref":"/src/test-assets#typeof AClass"
                 },
                 "default":{
-                    "$ref":"/ui-autotools/test-assets#AClass"
+                    "$ref":"/src/test-assets#AClass"
+                }
+            }
+        };
+
+        expect(res).to.eql(expected);
+    });
+
+    
+    it('should support node modules import', async ()=>{
+        const moduleId = 'imports';
+        const res = transformTest(`
+        import * as stuff  from 'third-party';
+
+        export let a:stuff.AClass;
+        `, moduleId);
+
+        const expected:ModuleSchema<'object'> = {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "$id":'/src/'+moduleId,
+            "$ref":"common/module",
+            "properties": {
+                "a":{
+                    "$ref":"third-party#AClass"
                 }
             }
         };

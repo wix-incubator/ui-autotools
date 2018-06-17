@@ -6,7 +6,7 @@ import {transformTest} from '../test-kit/run-transform'
 
 describe('schema-extrct - type declarations',()=>{
     it('should support type definition', async ()=>{
-        const moduleId = '/ui-autotools/type-definition';
+        const moduleId = 'type-definition';
         const res = transformTest(`
         import { AType } from './test-assets';
      
@@ -19,7 +19,7 @@ describe('schema-extrct - type declarations',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "definitions":{
                 "MyType" : {
@@ -29,7 +29,7 @@ describe('schema-extrct - type declarations',()=>{
                             "type":"string"
                         },
                         "imported":{
-                            "$ref":"/ui-autotools/test-assets#AType"
+                            "$ref":"/src/test-assets#AType"
                         } 
                     }
                 }
@@ -43,7 +43,7 @@ describe('schema-extrct - type declarations',()=>{
         expect(res).to.eql(expected);
     });
     it('should support type alias', async ()=>{
-        const moduleId = '/ui-autotools/type-alias';
+        const moduleId = 'type-alias';
         const res = transformTest(`
         export type alias = string;
         export let param:alias;
@@ -51,7 +51,7 @@ describe('schema-extrct - type declarations',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "definitions":{
                 "alias" : {
@@ -68,7 +68,7 @@ describe('schema-extrct - type declarations',()=>{
     });
 
     it('should support recursive types', async ()=>{
-        const moduleId = '/ui-autotools/type-recurse';
+        const moduleId = 'type-recurse';
         const res = transformTest(`
         export type recurse = {
             prop:recurse;
@@ -78,7 +78,7 @@ describe('schema-extrct - type declarations',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "definitions":{
                 "recurse" : {

@@ -6,10 +6,16 @@ import {transformTest} from '../test-kit/run-transform'
 
 describe('schema-extrct - classes',()=>{
     it('should support classes', async ()=>{
-        const moduleId = '/ui-autotools/classes';
+        const moduleId = 'classes';
         const res = transformTest(`
         import { AClass} from './test-assets'
 
+        /****
+         * 
+         * @props.id the id of the component
+         * @props.id:minLength 12
+         * 
+         * **/
         export class MyClass extends AClass{
             static a:string;
             private static b:string;
@@ -27,7 +33,7 @@ describe('schema-extrct - classes',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":"/ui-autotools/classes",
+            "$id":"/src/classes",
             "$ref":ModuleSchemaId,
             "definitions":{
                 "typeof MyClass" : {
@@ -43,7 +49,7 @@ describe('schema-extrct - classes',()=>{
                         $ref:"#MyClass"
                     },
                     "extends":{
-                        "$ref":"/ui-autotools/test-assets#typeof AClass"
+                        "$ref":"/src/test-assets#typeof AClass"
                     },
                     "properties":{
                         "a":{
@@ -57,7 +63,7 @@ describe('schema-extrct - classes',()=>{
                         "$ref":'#typeof MyClass'
                     },
                     "extends":{
-                        "$ref":"/ui-autotools/test-assets#AClass"
+                        "$ref":"/src/test-assets#AClass"
                     },
                     "properties": {
                         "id":{

@@ -23,7 +23,7 @@ describe('schema-extrct - primitives',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "properties":{
                 "declared_string" : {
@@ -69,7 +69,7 @@ describe('schema-extrct - primitives',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "properties":{
                 "specificString" : {

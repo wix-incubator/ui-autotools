@@ -6,7 +6,7 @@ import {transformTest} from '../test-kit/run-transform'
 
 describe('schema-extrct - intersection',()=>{
     it('should support intersection types', async ()=>{
-        const moduleId = '/ui-autotools/intersection';
+        const moduleId = 'intersection';
         const res = transformTest(`
         export type A = {
             a:string;
@@ -24,7 +24,7 @@ describe('schema-extrct - intersection',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "definitions": {
                 "A":{

@@ -6,7 +6,7 @@ import {transformTest} from '../test-kit/run-transform'
 
 describe('schema-extrct - interfaces',()=>{
     it('should support typed interfaces', async ()=>{
-        const moduleId = '/ui-autotools/arrays';
+        const moduleId = 'arrays';
         const res = transformTest(`
         import { AType } from './test-assets';
         
@@ -21,7 +21,7 @@ describe('schema-extrct - interfaces',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "definitions":{
                 "MyInterface" : {
@@ -56,7 +56,7 @@ describe('schema-extrct - interfaces',()=>{
         expect(res).to.eql(expected);
     });
     it('should support recursive interfaces', async ()=>{
-        const moduleId = '/ui-autotools/arrays';
+        const moduleId = 'arrays';
         const res = transformTest(`
         import { AType } from './test-assets';
         
@@ -74,7 +74,7 @@ describe('schema-extrct - interfaces',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "definitions":{
                 "MyInterface" : {

@@ -24,8 +24,6 @@ export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, mod
         'properties':{}
     };
     ts.isAccessor;
-    (window as any).ts = ts;
-    (window as any).sourceFile = sourceFile;
 
     exports.forEach((exportObj) => {
         const node = getNode(exportObj);
@@ -96,7 +94,6 @@ const assignmentDescriber:TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWit
 
 
 const describeVariableDeclaration:TsNodeDescriber<ts.VariableDeclaration | ts.PropertySignature | ts.ParameterDeclaration | ts.PropertyDeclaration> = (decl, checker, env) =>{
-    console.log(decl);
     if(decl.type){
         return describeTypeNode(decl.type!, checker, env);
     }

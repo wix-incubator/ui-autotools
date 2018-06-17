@@ -130,7 +130,14 @@ const describeTypeNode:TsNodeDescriber<ts.TypeNode> = (decl, checker, env) =>{
 const describeTypeAlias:TsNodeDescriber<ts.TypeAliasDeclaration> = (decl, checker, env) =>{
     const res =  describeTypeNode(decl.type,checker,env);
     if (decl.typeParameters) {
-        res.genericParams = decl.typeParameters.map(t => { return {name: t.name.getText()}});
+        res.genericParams = decl.typeParameters.map(t => {
+            let r: Schema = {};
+            r.name = t.name.getText();
+            if (t.constraint) {
+                r.type = serializeType(checker.getTypeAtLocation(t.constraint!), t, checker).type;
+            }
+            return r
+        });
     }
     return res;
 }
@@ -150,23 +157,6 @@ const describeInterface:TsNodeDescriber<ts.InterfaceDeclaration> = (decl, checke
         res.$allOf!.push(localRes);
         return res;
     }
-    // if (decl.typeParameters) {
-        // const generics = decl.typeParameters.map(t => { 
-            // let res:Schema = {};
-            // return {name: t.name.getText(),
-            //         type: checker.typeToString(checker.getTypeAtLocation(t.constraint!), t)
-            // }
-            
-            // if (t.default) {
-            //     if (ts.isLiteralTypeNode(t)) {
-            //         res.default = ts.isNumericLiteral(t.literal) ? parseFloat(t.literal.getText()) : t.literal.getText();
-            //     } else {
-            //         res.default = '';
-            //     }
-            // }
-    // });
-        // localRes.generics = generics;
-    // }
     return localRes;
 }
 
@@ -202,10 +192,6 @@ const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction
     if(restSchema){
         res.restArgument = restSchema;
     }
-    // if (decl.type && decl.type.kind === ts.SyntaxKind.TypeReference && decl.typeParameters) {
-    //     const generics = decl.typeParameters.map(t => { return {name: t.name.getText()}});
-    //     res.generics = generics;
-    // }
     return res;
 }
 
@@ -317,9 +303,6 @@ const describeTypeReference:TsNodeDescriber<ts.TypeReferenceNode> = (decl, check
                 //I am not sure what other cases we have except generics 
                 //but we need to make sure it is a generic declaration somehow
                 res.genericArguments = typeArgs.map(t => {
-                    if (ts.isLiteralTypeNode(t)) {
-                        return ts.isNumericLiteral(t.literal) ? Number(t.literal.getText()) : t.literal.getText();
-                    }
                     return describeTypeNode(t, checker, env)
                 });
             }
@@ -367,6 +350,9 @@ const describeIdentifier:TsNodeDescriber<ts.Identifier> = (decl, checker, env) =
     }else if(ts.isImportClause(referencedSymbDecl)){
         const target = referencedSymbDecl.parent!.moduleSpecifier.getText().slice(1,-1);
         importPath = target;
+    }else if (ts.isTypeParameterDeclaration(referencedSymbDecl)) {
+        // Need to figure out the proper format!!!! This feels more lucky than anything else.
+        importInternal = '#' + ts.getNameOfDeclaration(referencedSymbDecl.parent as any)!.getText() + '!' + referencedSymb.name;
     }else{
         importInternal = '#'+referencedSymb.name
     }

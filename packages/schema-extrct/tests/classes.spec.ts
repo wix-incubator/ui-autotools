@@ -10,6 +10,12 @@ describe('schema-extrct - classes',()=>{
         const res = transformTest(`
         import { AClass} from './test-assets'
 
+        /****
+         * 
+         * @props.id the id of the component
+         * @props.id:minLength 12
+         * 
+         * **/
         export class MyClass extends AClass{
             static a:string;
             private static b:string;

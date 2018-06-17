@@ -97,11 +97,25 @@ const decribeVariableDeclaration:TsNodeDescriber<ts.VariableDeclaration | ts.Pro
     if(decl.type){
         return describeTypeNode(decl.type!, checker, env);
     }
-    if(decl.initializer && ts.isIdentifier(decl.initializer)){
-        const res =  describeIdentifier(decl.initializer, checker, env);
-        res.$ref = res.$ref!.replace('#','#typeof '); 
-        return res;
-    }
+    if(decl.initializer){
+
+        if(ts.isIdentifier(decl.initializer)){
+            const res =  describeIdentifier(decl.initializer, checker, env);
+            res.$ref = res.$ref!.replace('#','#typeof '); 
+            return res;
+        }else if(ts.isPropertyAccessExpression(decl.initializer) && ts.isIdentifier(decl.initializer.expression)){
+            const res =  describeIdentifier(decl.initializer.expression, checker, env);
+            let ref = res.$ref!;
+            if(ref.includes("#")){
+                ref = ref!.replace('#','#typeof ')+'.'+decl.initializer.name.getText(); 
+            }else{
+                ref += '#typeof '+decl.initializer.name.getText(); 
+            }
+            return {
+                $ref:ref
+            };
+        }
+    } 
     return serializeType(checker.getTypeAtLocation(decl), decl, checker);
 }
 
@@ -307,12 +321,19 @@ const describeIdentifier:TsNodeDescriber<ts.Identifier> = (decl, checker, env) =
     }
 
     if(importPath){
-        const currentDir = posix.dirname(env.moduleId);
-        const resolvedPath = posix.resolve(currentDir ,importPath);
-    
+        if(importPath.startsWith('.') || importPath.startsWith('/')){
+            const currentDir = posix.dirname(env.moduleId);
+            const resolvedPath = posix.join(currentDir ,importPath);
+        
+            return {
+                $ref:resolvedPath + importInternal
+            };
+        }
+
         return {
-            $ref:resolvedPath + importInternal
+            $ref:importPath + importInternal
         };
+        
     }
     return {
         $ref:importInternal

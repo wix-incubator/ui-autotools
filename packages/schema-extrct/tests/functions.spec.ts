@@ -214,14 +214,12 @@ describe('schema-extrct - functions',()=>{
     })
 
 
-    xit('should support infered function return type (non primitive)', async ()=>{
+    it('should support infered function return type (with import)', async ()=>{
         const moduleId = '/ui-autotools/infered_functions';
         const res = transformTest(`
         import {AType} from './test-assets
         export function inferedFunction(str:string){
-            const res:A = {
-                prop:'gaga'
-            }
+            const res:AType = 'gaga'
             return res;
         };
 
@@ -242,8 +240,7 @@ describe('schema-extrct - functions',()=>{
                         }
                     ],
                     "returns":{
-                        "$ref":"/ui-autotools/test-assets#AType"
-                    }
+                        "type":"string"                    }
                 }
             }
             

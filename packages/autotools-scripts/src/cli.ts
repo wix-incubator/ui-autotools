@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import {Command} from "commander";
 import autoSSRTest from './auto-ssr/mocha-wrapper';
-import importMeta from './auto-ssr/import-meta';
+import importMeta from './import-metadata/import-meta';
 const program = new Command();
 
 program

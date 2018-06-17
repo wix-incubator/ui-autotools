@@ -45,11 +45,12 @@ describe('Registry', () => {
 
   describe('The clean method', () => {
     it('removes any existing metadata', () => {
-      const myCompMetaData = Registry.describe(TestComp);
-      Registry.clean();
-      const mySecondCompMetaData = Registry.describe(TestComp);
+      Registry.describe(TestComp);
+      expect(Registry.metadata.size).to.equal(1);
 
-      expect(mySecondCompMetaData).to.not.equal(myCompMetaData);
+      Registry.clean();
+
+      expect(Registry.metadata.size).to.equal(0);
     });
   });
 });

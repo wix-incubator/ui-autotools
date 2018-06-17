@@ -10,7 +10,9 @@ const posix:typeof path.posix = path.posix ? path.posix : path;
 export type Env = {
     modulePath:string;
     projectPath:string;
-} 
+};
+
+
 
 export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, moduleId:string, projectPath:string){
     const moduleSymbol = (sourceFile as any).symbol;
@@ -29,19 +31,7 @@ export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, mod
 
     exports.forEach((exportObj) => {
         const node = getNode(exportObj);
-        if( ts.isVariableDeclaration(node)){
-            res.properties![exportObj.getName()] = describeVariableDeclaration(node, checker, env, exportObj)
-        }else if(ts.isExportSpecifier(node)){
-            res.properties![exportObj.getName()] = exportSpecifierDescriber(node, checker, env, exportObj)
-        }else if(ts.isExportAssignment(node)){
-            res.properties![exportObj.getName()] = assignmentDescriber(node, checker, env, exportObj)
-        }else if(ts.isTypeAliasDeclaration(node)){
-            res.definitions = res.definitions || {};
-            res.definitions![exportObj.getName()] = describeTypeAlias(node, checker, env)
-        }else if(ts.isInterfaceDeclaration(node)){
-            res.definitions = res.definitions || {};
-            res.definitions![exportObj.getName()] = describeInterface(node, checker, env)
-        }else if(ts.isFunctionDeclaration(node) || ts.isArrowFunction(node)){
+        if(ts.isFunctionDeclaration(node) || ts.isArrowFunction(node)){
             res.properties![exportObj.getName()] = describeFunction(node, checker, env, exportObj)
         }else if(ts.isClassDeclaration(node)){
             res.definitions = res.definitions || {};            
@@ -52,6 +42,42 @@ export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, mod
             res.properties![className] = {
                 $ref:'#typeof '+className
             } 
+        }else{
+            let exportSchema:Schema = {};
+            let isTypeOnly:Boolean = false;
+            if( ts.isVariableDeclaration(node)){
+                exportSchema = describeVariableDeclaration(node, checker, env, exportObj)
+            }else if(ts.isExportSpecifier(node)){
+                exportSchema = exportSpecifierDescriber(node, checker, env, exportObj)
+            }else if(ts.isExportAssignment(node)){
+                exportSchema = assignmentDescriber(node, checker, env, exportObj)
+            }else if(ts.isTypeAliasDeclaration(node)){
+                isTypeOnly = true;
+                exportSchema = describeTypeAlias(node, checker, env)
+            }else if(ts.isInterfaceDeclaration(node)){
+                isTypeOnly = true;
+                exportSchema = describeInterface(node, checker, env)
+            }
+            const documentation = exportObj.getDocumentationComment(checker);
+            if(documentation.length){
+                exportSchema.description = documentation.map(doc=>doc.text).join('\n')
+            }
+
+            const tags = exportObj.getJsDocTags();
+            if(tags.length){
+                for(let tag of tags){
+                    if(tag.text){
+                        (exportSchema as any)[tag.name] = isNaN(parseFloat(tag.text)) ? tag.text : parseFloat(tag.text);
+                    }
+                }
+            }
+
+            if(isTypeOnly){
+                res.definitions = res.definitions || {};
+                res.definitions![exportObj.getName()] = exportSchema
+            }else{
+                res.properties![exportObj.getName()] = exportSchema;
+            }
         }
     });
     return res;
@@ -96,30 +122,46 @@ const assignmentDescriber:TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWit
 
 
 const describeVariableDeclaration:TsNodeDescriber<ts.VariableDeclaration | ts.PropertySignature | ts.ParameterDeclaration | ts.PropertyDeclaration> = (decl, checker, env) =>{
+    let res:Schema | undefined = undefined;
     if(decl.type){
-        return describeTypeNode(decl.type!, checker, env);
-    }
-    if(decl.initializer){
+        res = describeTypeNode(decl.type!, checker, env);
+    }else  if(decl.initializer){
 
         if(ts.isIdentifier(decl.initializer)){
-            const res =  describeIdentifier(decl.initializer, checker, env);
+            res =  describeIdentifier(decl.initializer, checker, env);
             res.$ref = res.$ref!.replace('#','#typeof '); 
-            return res;
         }else if(ts.isPropertyAccessExpression(decl.initializer) && ts.isIdentifier(decl.initializer.expression)){
-            const res =  describeIdentifier(decl.initializer.expression, checker, env);
+            res =  describeIdentifier(decl.initializer.expression, checker, env);
             let ref = res.$ref!;
             if(ref.includes("#")){
                 ref = ref!.replace('#','#typeof ')+'.'+decl.initializer.name.getText(); 
             }else{
                 ref += '#typeof '+decl.initializer.name.getText(); 
             }
-            return {
+            res = {
                 $ref:ref
             };
         }
     } 
-    return serializeType(checker.getTypeAtLocation(decl), decl, checker, env);
+    if(!res){
+
+        res =  serializeType(checker.getTypeAtLocation(decl), decl, checker, env);
+    }
+    const jsDocs = extraCommentsHack(decl);
+    if(jsDocs){
+        if(jsDocs.comment){
+            res!.description = jsDocs.comment
+        }
+
+        if(jsDocs.tags){
+            addJsDocsTagsToSchema(jsDocs.tags as any, res!);
+        }
+
+    }
+    return res!;
 }
+
+
 
 const describeTypeNode:TsNodeDescriber<ts.TypeNode> = (decl, checker, env) =>{
     if(ts.isTypeReferenceNode(decl)){
@@ -235,6 +277,7 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
         else if(!hasModifier(member, ts.SyntaxKind.PrivateKeyword) && member.name){
             let schema:Schema = {};
             if(ts.isPropertyDeclaration(member)){
+                
                 schema = describeVariableDeclaration(member, checker, env)
             }else if(ts.isMethodDeclaration(member)){
                 schema = describeFunction(member, checker, env)
@@ -573,5 +616,16 @@ function hasModifier(node:ts.Node, modifier:number):boolean{
     }))
 }
 
+function extraCommentsHack(node:ts.Node):ts.JSDoc | undefined{
+    return (node as any).jsDoc ? (node as any).jsDoc[0] : undefined;
+}
 
-
+function addJsDocsTagsToSchema(tags:ts.JSDocTag[], schema:Schema){
+    if(tags.length){
+        for(let tag of tags){
+            if(tag.comment){
+                (schema as any)[tag.tagName.escapedText as any] = isNaN(parseFloat(tag.comment)) ? tag.comment : parseFloat(tag.comment);
+            }
+        }
+    }
+}

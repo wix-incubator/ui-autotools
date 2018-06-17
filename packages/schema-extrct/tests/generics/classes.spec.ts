@@ -5,12 +5,12 @@ import {transformTest} from '../../test-kit/run-transform'
 
 
 describe('schema-extrct - generic classes',()=>{
-    it('should support generic classes', async ()=>{
-        const moduleId = '/ui-autotools/classes';
+    xit('should support generic classes', async ()=>{
+        const moduleId = 'classes';
         const res = transformTest(`
         import { AGenericClass} from './test-assets'
 
-        export class MyClass<P, T> extends AClass<P>{
+        export class MyClass<P, T> extends AGenericClass<P>{
             a:P;
             b:T;
             constructor(x:T, y:P){
@@ -24,7 +24,7 @@ describe('schema-extrct - generic classes',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":"/ui-autotools/classes",
+            "$id":'/src/'+moduleId,
             "$ref":ModuleSchemaId,
             "definitions":{
                 "typeof MyClass" : {
@@ -52,7 +52,7 @@ describe('schema-extrct - generic classes',()=>{
                         }]
                     },
                     "extends":{
-                        "$ref":"/ui-autotools/test-assets#typeof AGenericClass",
+                        "$ref":"/src/test-assets#typeof AGenericClass",
                         "genericArguments":[{
                             "$ref":"#typeof MyClass!P"
                         }]
@@ -69,7 +69,7 @@ describe('schema-extrct - generic classes',()=>{
                         "name":"P"
                     }],
                     "extends":{
-                        "$ref":"/ui-autotools/test-assets#AClass",
+                        "$ref":"/src/test-assets#AClass",
                         "genericArguments":[{
                             "$ref":"#typeof MyClass!P"
                         }]

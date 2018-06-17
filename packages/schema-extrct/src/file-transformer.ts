@@ -177,12 +177,22 @@ const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction
         }else{
             funcArguments.push(res);
         }
-    })   
+    })
 
     const res:FunctionSchema = {
         $ref:FunctionSchemaId,
         arguments : funcArguments,
         returns:returns
+    }
+    if (decl.typeParameters) {
+        res.genericParams = decl.typeParameters.map(t => {
+            let r: Schema = {};
+            r.name = t.name.getText();
+            if (t.constraint) {
+                r.type = serializeType(checker.getTypeAtLocation(t.constraint!), t, checker).type;
+            }
+            return r
+        });
     }
     const comments = checker.getSignatureFromDeclaration(decl)!.getDocumentationComment(checker);
     const comment = comments.length ? (comments.map(comment => comment.kind === "lineBreak" ? comment.text : comment.text.trim().replace(/\r\n/g, "\n")).join("")) : '';
@@ -351,8 +361,12 @@ const describeIdentifier:TsNodeDescriber<ts.Identifier> = (decl, checker, env) =
         const target = referencedSymbDecl.parent!.moduleSpecifier.getText().slice(1,-1);
         importPath = target;
     }else if (ts.isTypeParameterDeclaration(referencedSymbDecl)) {
+        if (ts.isFunctionTypeNode(referencedSymbDecl.parent!)) {
+            importInternal = '#' + ts.getNameOfDeclaration(referencedSymbDecl.parent!.parent as any)!.getText() + '!' + referencedSymb.name;
+        } else {
         // Need to figure out the proper format!!!! This feels more lucky than anything else.
-        importInternal = '#' + ts.getNameOfDeclaration(referencedSymbDecl.parent as any)!.getText() + '!' + referencedSymb.name;
+            importInternal = '#' + ts.getNameOfDeclaration(referencedSymbDecl.parent as any)!.getText() + '!' + referencedSymb.name;
+        }
     }else{
         importInternal = '#'+referencedSymb.name
     }

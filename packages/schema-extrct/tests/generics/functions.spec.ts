@@ -9,13 +9,15 @@ describe('schema-extrct - generic functions',()=>{
     it('should support declared generic functions', async ()=>{
         const moduleId = '/ui-autotools/functions';
         const res = transformTest(`
-      
-        export const declaredFunction<T extends string>:(str:T)=>T = (str:T)=>{
+        export const declaredFunction: <T extends string>(str:T)=>T = (str)=>{
             return str
         };
-      
 
         `, moduleId);
+        // This was the old test, but this will not transpile
+        // export const declaredFunction<T extends string>:(str:T)=>T = (str:T)=>{
+        //     return str
+        // };
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
@@ -48,10 +50,12 @@ describe('schema-extrct - generic functions',()=>{
         const moduleId = '/ui-autotools/functions';
         const res = transformTest(`
         
-        export function declaredDeconstruct<T> ({x:T, y:T}):T { return x };
+        export function declaredDeconstruct<T> ({x, y}: {x:T,y:T}):T { return x };
 
 
         `, moduleId);
+        // This was the old test, but this will not transpile
+        // export function declaredDeconstruct<T> ({x:T, y:T}):T { return x };
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
@@ -66,7 +70,7 @@ describe('schema-extrct - generic functions',()=>{
                     }],
                     "arguments":[
                         {
-                            "name":"{x=1, y=\"text\"}",
+                            "name":"{x, y}",
                             "type":"object",
                             "properties":{
                                 "x":{
@@ -83,8 +87,7 @@ describe('schema-extrct - generic functions',()=>{
                         "$ref":"#declaredDeconstruct!T"
                     }
                 }
-            }
-            
+            } 
         }
         expect(res).to.eql(expected);
     })

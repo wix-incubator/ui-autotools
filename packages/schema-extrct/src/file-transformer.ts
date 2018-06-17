@@ -30,7 +30,7 @@ export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, mod
     exports.forEach((exportObj) => {
         const node = getNode(exportObj);
         if( ts.isVariableDeclaration(node)){
-            res.properties![exportObj.getName()] = decribeVariableDeclaration(node, checker, env, exportObj)
+            res.properties![exportObj.getName()] = describeVariableDeclaration(node, checker, env, exportObj)
         }else if(ts.isExportSpecifier(node)){
             res.properties![exportObj.getName()] = exportSpecifierDescriber(node, checker, env, exportObj)
         }else if(ts.isExportAssignment(node)){
@@ -69,7 +69,7 @@ const exportSpecifierDescriber:TsNodeDescriber<ts.ExportSpecifier> = (decl, chec
     const aliasedSymb = checker.getAliasedSymbol(symb!);
     const aliasedNode = getNode(aliasedSymb);
     if(ts.isVariableDeclaration(aliasedNode)){
-        return decribeVariableDeclaration(aliasedNode, checker, env, aliasedSymb)
+        return describeVariableDeclaration(aliasedNode, checker, env, aliasedSymb)
     }
     else{
         debugger;
@@ -95,7 +95,7 @@ const assignmentDescriber:TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWit
 
 
 
-const decribeVariableDeclaration:TsNodeDescriber<ts.VariableDeclaration | ts.PropertySignature | ts.ParameterDeclaration | ts.PropertyDeclaration> = (decl, checker, env) =>{
+const describeVariableDeclaration:TsNodeDescriber<ts.VariableDeclaration | ts.PropertySignature | ts.ParameterDeclaration | ts.PropertyDeclaration> = (decl, checker, env) =>{
     if(decl.type){
         return describeTypeNode(decl.type!, checker, env);
     }
@@ -171,22 +171,33 @@ const describeInterface:TsNodeDescriber<ts.InterfaceDeclaration> = (decl, checke
 }
 
 const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction | ts.FunctionTypeNode | ts.ConstructorDeclaration | ts.MethodDeclaration, FunctionSchema> = (decl, checker, env) =>{
-    const returns = decl.type ? describeTypeNode(decl.type, checker, env) : serializeType(checker.getTypeAtLocation(decl),decl , checker).returns!
+    const returns = getReturnSchema(decl, checker, env);
     const funcArguments:Schema[] = [];
     let restSchema:Schema<'array'> | undefined;
     decl.parameters.forEach(p=>{
-        const res = decribeVariableDeclaration(p, checker, env);
+        const res = describeVariableDeclaration(p, checker, env);
         res.name = p.name.getText();
+        const tags = ts.getJSDocParameterTags(p);
+        const tag = (tags && tags.length) ? (tags.map(t => t.comment)).join("") : '';
+        if (tag) {
+            res.description = tag;
+        }
         if(p.dotDotDotToken){
             restSchema = res as Schema<'array'>;
         }else{
             funcArguments.push(res);
         }
-    })
+    })   
+
     const res:FunctionSchema = {
         $ref:FunctionSchemaId,
         arguments : funcArguments,
         returns:returns
+    }
+    const comments = checker.getSignatureFromDeclaration(decl)!.getDocumentationComment(checker);
+    const comment = comments.length ? (comments.map(comment => comment.kind === "lineBreak" ? comment.text : comment.text.trim().replace(/\r\n/g, "\n")).join("")) : '';
+    if (comment) {
+        res.description = comment;
     }
     if(restSchema){
         res.restArgument = restSchema;
@@ -196,6 +207,15 @@ const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction
     //     res.generics = generics;
     // }
     return res;
+}
+
+const getReturnSchema:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction | ts.FunctionTypeNode | ts.ConstructorDeclaration | ts.MethodDeclaration, FunctionSchema> = (decl, checker, env) => {
+    const returnSchema = decl.type ? describeTypeNode(decl.type, checker, env) : serializeType(checker.getTypeAtLocation(decl),decl , checker).returns!
+    const returnTag = ts.getJSDocReturnTag(decl);
+    if (returnTag && returnTag.comment) {
+        returnSchema.description = returnTag.comment
+    }
+    return returnSchema
 }
 
 const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSchema> = (decl, checker, env) =>{
@@ -219,14 +239,14 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
             constructorSign = describeFunction(member, checker, env);
             member.parameters.forEach((p=>{
                 if(hasModifier(p, ts.SyntaxKind.PublicKeyword)){
-                    properties[p.name.getText()] = decribeVariableDeclaration(p, checker, env)
+                    properties[p.name.getText()] = describeVariableDeclaration(p, checker, env)
                 }
             }));
         }
         else if(!hasModifier(member, ts.SyntaxKind.PrivateKeyword) && member.name){
             let schema:Schema = {};
             if(ts.isPropertyDeclaration(member)){
-                schema = decribeVariableDeclaration(member, checker, env)
+                schema = describeVariableDeclaration(member, checker, env)
             }else if(ts.isMethodDeclaration(member)){
                 schema = describeFunction(member, checker, env)
             }
@@ -237,6 +257,9 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
             }
         }
     });
+
+    const comments = checker.getSymbolAtLocation(decl.name!)!.getDocumentationComment(checker);
+    const comment = comments.length ? (comments.map(comment => comment.kind === "lineBreak" ? comment.text : comment.text.trim().replace(/\r\n/g, "\n")).join("")) : '';
     
     const classDef:ClassSchema = {
         $ref:ClassSchemaId,
@@ -244,6 +267,9 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
             $ref:"#typeof "+className
         },
         properties
+    }
+    if (comment) {
+        classDef.description = comment;
     }
 
     const classConstructorDef:ClassConstructorSchema = {
@@ -253,6 +279,9 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
         },
         properties:staticProperties,
         arguments: constructorSign ? constructorSign.arguments : []
+    }
+    if(constructorSign && constructorSign.description){
+        classConstructorDef.description = constructorSign.description;
     }
     if(constructorSign && constructorSign.restArgument){
         classConstructorDef.restArgument = constructorSign.restArgument;
@@ -326,7 +355,7 @@ const describeIdentifier:TsNodeDescriber<ts.Identifier> = (decl, checker, env) =
     let importPath:string | undefined = undefined;
     let importInternal:string | undefined = undefined;
     if(ts.isVariableDeclaration(referencedSymbDecl)){
-        return decribeVariableDeclaration(referencedSymbDecl, checker, env)
+        return describeVariableDeclaration(referencedSymbDecl, checker, env)
     }else if(ts.isNamespaceImport(referencedSymbDecl)){
         const target = referencedSymbDecl.parent!.parent!.moduleSpecifier.getText().slice(1,-1);
         importPath = target;
@@ -361,7 +390,7 @@ const describeTypeLiteral:TsNodeDescriber<ts.TypeLiteralNode | ts.InterfaceDecla
     decl.members.forEach(member=>{
         if(ts.isPropertySignature(member)){
             res.properties = res.properties || {};
-            res.properties[member.name.getText()] = decribeVariableDeclaration(member,checker,env)
+            res.properties[member.name.getText()] = describeVariableDeclaration(member,checker,env)
         }else if(ts.isIndexSignatureDeclaration(member)){
             res.additionalProperties = describeTypeNode(member.type!, checker, env)
         }

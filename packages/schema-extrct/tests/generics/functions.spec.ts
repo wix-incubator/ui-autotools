@@ -122,7 +122,6 @@ describe('schema-extrct - generic functions',()=>{
                 }
             }
         }
-        debugger;
         expect(res).to.eql(expected);
     })
     

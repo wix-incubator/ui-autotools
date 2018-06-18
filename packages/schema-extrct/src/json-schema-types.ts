@@ -59,9 +59,8 @@ export type SchemaBase<T extends  SchemaTypes = SchemaTypes> = {
     $oneOf?:Schema[];
     enum?:any[],
     $allOf?:Schema[];
-    //Fix types
-    genericParams?:any;
-    genericArguments?:any;
+    genericParams?:Schema[];
+    genericArguments?:Schema[];
     default?:TypeMap[T]
 }
 

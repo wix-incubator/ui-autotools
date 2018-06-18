@@ -94,7 +94,9 @@ describe('schema-extrct - generic functions',()=>{
     it('should support generic functions with rest params', async ()=>{
         const moduleId = '/ui-autotools/functions';
         const res = transformTest(`
-        export let functionWithRestParams<T>:(str:string, ...rest:T[])=>T;
+        export let functionWithRestParams:<T>(str:T, ...rest:T[])=>T = (str)=>{
+            return str;
+        }
         `, moduleId);
 
         const expected:ModuleSchema<'object'> = {
@@ -109,7 +111,7 @@ describe('schema-extrct - generic functions',()=>{
                     }],
                     "arguments":[
                         {
-                            "type":"string",
+                            "$ref":"#functionWithRestParams!T",
                             "name":"str"
                         }
                     ],
@@ -126,6 +128,7 @@ describe('schema-extrct - generic functions',()=>{
                 }
             }
         }
+        debugger;
         expect(res).to.eql(expected);
     })
     

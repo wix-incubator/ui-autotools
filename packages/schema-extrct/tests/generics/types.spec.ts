@@ -127,22 +127,28 @@ describe('schema-extrct - generic types',()=>{
                             "$ref":FunctionSchemaId,
                             "arguments":[
                                 {
-                                    "name":"values",
-                                    "type":"array",
-                                    "items":{
-                                        "$ref":"#MyType!T"
-                                    }
-                                },{
-                                    "name":"filter",
-                                    "$ref":FunctionSchemaId,
-                                    "arguments":[
-                                        {
-                                            "name":"item",
-                                            "$ref":"#MyType!T"
+                                    "name":"arg",
+                                    "type":"object",
+                                    properties: {
+                                        "values": {
+                                            "type":"array",
+                                            "items":{
+                                                "$ref":"#MyType!T"
+                                            }
+                                        },
+                                
+                                        "filter": {
+                                            "$ref":FunctionSchemaId,
+                                            "arguments":[
+                                                {
+                                                    "name":"item",
+                                                    "$ref":"#MyType!T"
+                                                }
+                                            ],
+                                            "returns":{
+                                                "type":"boolean"
+                                            }
                                         }
-                                    ],
-                                    "returns":{
-                                        "type":"boolean"
                                     }
                                 }
                             ],
@@ -163,7 +169,8 @@ describe('schema-extrct - generic types',()=>{
                         }
                     }
                 }
-            }
+            },
+            "properties": {}
         }
         expect(res).to.eql(expected);
     });

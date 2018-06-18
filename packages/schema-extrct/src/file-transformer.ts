@@ -274,8 +274,26 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
             $ref:"#"+className
         },
         properties:staticProperties,
-        arguments: constructorSign ? constructorSign.arguments : []
+        arguments: constructorSign ? constructorSign.arguments : []//.map(m => {
+        //     if (m.$ref) {
+        //         m.$ref = m.$ref!.replace('#', '#typeof ');
+        //     }
+        //     return m;
+        // }) : []
     }
+    if (decl.typeParameters) {
+        const genericParams: Array<Schema> = [];
+        decl.typeParameters.forEach(t => {
+            let r: Schema = {};
+            r.name = t.name.getText();
+            if (t.constraint) {
+                r.type = serializeType(checker.getTypeAtLocation(t.constraint!), t, checker).type;
+            }
+            genericParams.push(r);
+        });
+        classConstructorDef.genericParams = classDef.genericParams = genericParams;
+    }
+
     if(constructorSign && constructorSign.description){
         classConstructorDef.description = constructorSign.description;
     }

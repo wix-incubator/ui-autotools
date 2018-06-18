@@ -127,22 +127,27 @@ describe('schema-extrct - generic interface',()=>{
                             "$ref":FunctionSchemaId,
                             "arguments":[
                                 {
-                                    "name":"values",
-                                    "type":"array",
-                                    "items":{
-                                        "$ref":"#MyInterface!T"
-                                    }
-                                },{
-                                    "name":"filter",
-                                    "$ref":FunctionSchemaId,
-                                    "arguments":[
-                                        {
-                                            "name":"item",
-                                            "$ref":"#MyInterface!T"
+                                    "name":"arg",
+                                    "type":"object",
+                                    "properties": {
+                                        "values": {
+                                            "type":"array",
+                                            "items":{
+                                                "$ref":"#MyInterface!T"
+                                            }
+                                        },
+                                        "filter": {
+                                            "$ref":FunctionSchemaId,
+                                            "arguments":[
+                                                {
+                                                    "name":"item",
+                                                    "$ref":"#MyInterface!T"
+                                                }
+                                            ],
+                                            "returns":{
+                                                "type":"boolean"
+                                            }
                                         }
-                                    ],
-                                    "returns":{
-                                        "type":"boolean"
                                     }
                                 }
                             ],
@@ -163,7 +168,8 @@ describe('schema-extrct - generic interface',()=>{
                         }
                     }
                 }
-            }
+            },
+            properties: {}
         }
         expect(res).to.eql(expected);
     });

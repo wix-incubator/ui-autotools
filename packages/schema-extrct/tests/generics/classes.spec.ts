@@ -10,7 +10,7 @@ describe('schema-extrct - generic classes',()=>{
         const res = transformTest(`
         import { AGenericClass} from './test-assets'
 
-        export class MyClass<P, T> extends AClass<P>{
+        export class MyClass<P, T> extends AGenericClass<P>{
             a:P;
             b:T;
             constructor(x:T, y:P){
@@ -69,7 +69,7 @@ describe('schema-extrct - generic classes',()=>{
                         "name":"P"
                     }],
                     "extends":{
-                        "$ref":"/ui-autotools/test-assets#AClass",
+                        "$ref":"/ui-autotools/test-assets#AGenericClass",
                         "genericArguments":[{
                             "$ref":"#typeof MyClass!P"
                         }]
@@ -100,6 +100,7 @@ describe('schema-extrct - generic classes',()=>{
                 }
             }
         }
+        debugger;
         expect(res).to.eql(expected);
     })
   

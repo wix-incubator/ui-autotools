@@ -24,8 +24,6 @@ export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, mod
         'properties':{}
     };
     ts.isAccessor;
-    (window as any).ts = ts;
-    (window as any).sourceFile = sourceFile;
 
     exports.forEach((exportObj) => {
         const node = getNode(exportObj);
@@ -111,7 +109,7 @@ const describeTypeNode:TsNodeDescriber<ts.TypeNode> = (decl, checker, env) =>{
     if(ts.isTypeReferenceNode(decl)){
         return describeTypeReference(decl, checker, env)
     }else if(ts.isTypeLiteralNode(decl)){
-        return describeTypeLiteral(decl, checker, env)   
+        return describeTypeLiteral(decl, checker, env)
     }else if(ts.isArrayTypeNode(decl)){
         return describeArrayType(decl, checker, env)
     }else if(ts.isUnionTypeNode(decl)){
@@ -160,10 +158,6 @@ const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction
     let restSchema:Schema<'array'> | undefined;
     decl.parameters.forEach(p=>{
         const res = describeVariableDeclaration(p, checker, env);
-        // debugger;
-        // if (ts.isConstructorDeclaration(p.parent!) && res.$ref) {
-        //     res.$ref = res.$ref!.replace('#', '#typeof ');
-        // }
         res.name = p.name.getText();
         const tags = ts.getJSDocParameterTags(p);
         const tag = (tags && tags.length) ? (tags.map(t => t.comment)).join("") : '';
@@ -371,7 +365,6 @@ const describeIdentifier:TsNodeDescriber<ts.Identifier> = (decl, checker, env) =
         if (ts.isFunctionTypeNode(referencedSymbDecl.parent!)) {
             importInternal = '#' + ts.getNameOfDeclaration(referencedSymbDecl.parent!.parent as any)!.getText() + '!' + referencedSymb.name;
         } else {
-        // Need to figure out the proper format!!!! This feels more lucky than anything else.
             importInternal = '#' + ts.getNameOfDeclaration(referencedSymbDecl.parent as any)!.getText() + '!' + referencedSymb.name;
         }
     }else{

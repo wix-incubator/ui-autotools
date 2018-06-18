@@ -129,15 +129,9 @@ const describeTypeNode:TsNodeDescriber<ts.TypeNode> = (decl, checker, env) =>{
 
 const describeTypeAlias:TsNodeDescriber<ts.TypeAliasDeclaration> = (decl, checker, env) =>{
     const res =  describeTypeNode(decl.type,checker,env);
-    if (decl.typeParameters) {
-        res.genericParams = decl.typeParameters.map(t => {
-            let r: Schema = {};
-            r.name = t.name.getText();
-            if (t.constraint) {
-                r.type = serializeType(checker.getTypeAtLocation(t.constraint!), t, checker).type;
-            }
-            return r
-        });
+    const genericParams = getGenericParams(decl, checker);
+    if (genericParams) {
+        res.genericParams = genericParams;
     }
     return res;
 }
@@ -184,15 +178,9 @@ const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction
         arguments : funcArguments,
         returns:returns
     }
-    if (decl.typeParameters) {
-        res.genericParams = decl.typeParameters.map(t => {
-            let r: Schema = {};
-            r.name = t.name.getText();
-            if (t.constraint) {
-                r.type = serializeType(checker.getTypeAtLocation(t.constraint!), t, checker).type;
-            }
-            return r
-        });
+    const genericParams = getGenericParams(decl, checker);
+    if (genericParams) {
+        res.genericParams = genericParams;
     }
     const comments = checker.getSignatureFromDeclaration(decl)!.getDocumentationComment(checker);
     const comment = comments.length ? (comments.map(comment => comment.kind === "lineBreak" ? comment.text : comment.text.trim().replace(/\r\n/g, "\n")).join("")) : '';
@@ -220,7 +208,15 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
     if(decl.heritageClauses){
         decl.heritageClauses.forEach(node=>{
             if(node.token === ts.SyntaxKind.ExtendsKeyword){
-                extendRef = assignmentDescriber(node.types[0], checker, env);
+                const types = node.types[0];
+                extendRef = assignmentDescriber(types, checker, env);
+                if (types.typeArguments) {
+                    extendRef.genericArguments = types.typeArguments.map(t => {
+                        const arg = describeTypeNode(t, checker, env);
+                        arg.$ref = arg.$ref!.replace('#', '#typeof ');
+                        return arg;
+                    });
+                }
             }
         })
     }
@@ -253,7 +249,6 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
             }
         }
     });
-
     const comments = checker.getSymbolAtLocation(decl.name!)!.getDocumentationComment(checker);
     const comment = comments.length ? (comments.map(comment => comment.kind === "lineBreak" ? comment.text : comment.text.trim().replace(/\r\n/g, "\n")).join("")) : '';
     
@@ -267,29 +262,18 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
     if (comment) {
         classDef.description = comment;
     }
-
     const classConstructorDef:ClassConstructorSchema = {
         $ref:ClassConstructorSchemaId,
         returns:{
             $ref:"#"+className
         },
         properties:staticProperties,
-        arguments: constructorSign ? constructorSign.arguments : []//.map(m => {
-        //     if (m.$ref) {
-        //         m.$ref = m.$ref!.replace('#', '#typeof ');
-        //     }
-        //     return m;
-        // }) : []
+        arguments: constructorSign ? constructorSign.arguments : []
     }
-    if (decl.typeParameters) {
-        const genericParams: Array<Schema> = [];
-        decl.typeParameters.forEach(t => {
-            let r: Schema = {};
-            r.name = t.name.getText();
-            if (t.constraint) {
-                r.type = serializeType(checker.getTypeAtLocation(t.constraint!), t, checker).type;
-            }
-            genericParams.push(r);
+    const genericParams = getGenericParams(decl, checker);
+    if (genericParams) {
+        classConstructorDef.returns.genericArguments = getGenericParams(decl, checker)!.map(p => {
+            return {$ref: `#typeof ${className}!${p.name}`}
         });
         classConstructorDef.genericParams = classDef.genericParams = genericParams;
     }
@@ -303,9 +287,12 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
     if(extendRef){
         classDef.extends = {
             $ref: extendRef.$ref
-        }
+        };
         classConstructorDef.extends = {
             $ref: extendRef.$ref!.replace('#', '#typeof ')
+        };
+        if (extendRef.genericArguments) {
+            classDef.extends.genericArguments = classConstructorDef.extends.genericArguments = extendRef.genericArguments;
         }
     }
 
@@ -328,8 +315,6 @@ const describeTypeReference:TsNodeDescriber<ts.TypeReferenceNode> = (decl, check
             if(isSchemaOfType('array',res)){
                 res.items = describeTypeNode(typeArgs[0], checker, env)
             } else {
-                //I am not sure what other cases we have except generics 
-                //but we need to make sure it is a generic declaration somehow
                 res.genericArguments = typeArgs.map(t => {
                     return describeTypeNode(t, checker, env)
                 });
@@ -582,6 +567,20 @@ function serializeType(t:ts.Type, rootNode:ts.Node,checker:ts.TypeChecker):Schem
     
     return res;
     
+}
+
+function getGenericParams(decl: ts.DeclarationWithTypeParameters, checker: ts.TypeChecker): Array<Schema> | undefined {
+    if (decl.typeParameters) {
+        return decl.typeParameters.map(t => {
+            let r: Schema = {};
+            r.name = t.name.getText();
+            if (t.constraint) {
+                r.type = serializeType(checker.getTypeAtLocation(t.constraint!), t, checker).type;
+            }
+            return r
+        });
+    }
+    return;
 }
 
 function hasModifier(node:ts.Node, modifier:number):boolean{

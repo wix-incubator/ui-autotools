@@ -30,9 +30,9 @@ describe('schema-extrct - generic classes',()=>{
                 "typeof MyClass" : {
                     "$ref":ClassConstructorSchemaId,
                     "genericParams": [{
-                        "name":"T"
-                    },{
                         "name":"P"
+                    },{
+                        "name":"T"
                     }],
                     "arguments":[
                         {
@@ -46,9 +46,9 @@ describe('schema-extrct - generic classes',()=>{
                     "returns":{
                         "$ref":"#MyClass",
                         "genericArguments":[{
-                            "$ref":"#typeof MyClass!T"
-                        },{
                             "$ref":"#typeof MyClass!P"
+                        },{
+                            "$ref":"#typeof MyClass!T"
                         }]
                     },
                     "extends":{
@@ -56,7 +56,8 @@ describe('schema-extrct - generic classes',()=>{
                         "genericArguments":[{
                             "$ref":"#typeof MyClass!P"
                         }]
-                    }
+                    },
+                    "properties": {}
                 },
                 "MyClass" : {
                     "$ref":ClassSchemaId,
@@ -64,9 +65,9 @@ describe('schema-extrct - generic classes',()=>{
                         "$ref":'#typeof MyClass'
                     },
                     "genericParams": [{
-                        "name":"T"
-                    },{
                         "name":"P"
+                    },{
+                        "name":"T"
                     }],
                     "extends":{
                         "$ref":"/ui-autotools/test-assets#AGenericClass",

@@ -36,19 +36,19 @@ describe('schema-extrct - generic classes',()=>{
                     }],
                     "arguments":[
                         {
-                            "$ref":"#typeof MyClass!T",
+                            "$ref":"#MyClass!T",
                             "name":"x"
                         },{
-                            "$ref":"#typeof MyClass!P",
+                            "$ref":"#MyClass!P",
                             "name":"y"
                         }
                     ],
                     "returns":{
                         "$ref":"#MyClass",
                         "genericArguments":[{
-                            "$ref":"#typeof MyClass!P"
+                            "$ref":"#MyClass!P"
                         },{
-                            "$ref":"#typeof MyClass!T"
+                            "$ref":"#MyClass!T"
                         }]
                     },
                     "extends":{
@@ -101,7 +101,6 @@ describe('schema-extrct - generic classes',()=>{
                 }
             }
         }
-        debugger;
         expect(res).to.eql(expected);
     })
   

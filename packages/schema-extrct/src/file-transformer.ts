@@ -160,6 +160,10 @@ const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction
     let restSchema:Schema<'array'> | undefined;
     decl.parameters.forEach(p=>{
         const res = describeVariableDeclaration(p, checker, env);
+        // debugger;
+        // if (ts.isConstructorDeclaration(p.parent!) && res.$ref) {
+        //     res.$ref = res.$ref!.replace('#', '#typeof ');
+        // }
         res.name = p.name.getText();
         const tags = ts.getJSDocParameterTags(p);
         const tag = (tags && tags.length) ? (tags.map(t => t.comment)).join("") : '';
@@ -272,8 +276,8 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
     }
     const genericParams = getGenericParams(decl, checker);
     if (genericParams) {
-        classConstructorDef.returns.genericArguments = getGenericParams(decl, checker)!.map(p => {
-            return {$ref: `#typeof ${className}!${p.name}`}
+        classConstructorDef.returns.genericArguments = genericParams!.map(p => {
+            return {$ref: `#${className}!${p.name}`}
         });
         classConstructorDef.genericParams = classDef.genericParams = genericParams;
     }

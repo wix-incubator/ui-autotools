@@ -100,7 +100,6 @@ describe('schema-extrct - comments', () => {
                 }
             }
         }
-        debugger;
         expect(res).to.eql(expected);
     })
 })

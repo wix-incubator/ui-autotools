@@ -6,7 +6,7 @@ import {transformTest} from '../test-kit/run-transform'
 
 describe('schema-extrct - objects',()=>{
     it('should objects with properties', async ()=>{
-        const moduleId = '/ui-autotools/export-types';
+        const moduleId = 'export-types';
         const res = transformTest(`
         import { AType } from './test-assets';
         
@@ -29,7 +29,7 @@ describe('schema-extrct - objects',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "properties":{
                 "declared_object" : {
@@ -58,7 +58,7 @@ describe('schema-extrct - objects',()=>{
                     "type":"object",
                     "properties":{
                         "imported":{
-                            "$ref":"/ui-autotools/test-assets#AType"
+                            "$ref":"/src/test-assets#AType"
                         }   
                     }
                 }
@@ -67,7 +67,7 @@ describe('schema-extrct - objects',()=>{
         expect(res).to.eql(expected);
     });
     it('should objects with index signature', async ()=>{
-        const moduleId = '/ui-autotools/index-signatures';
+        const moduleId = 'index-signatures';
         const res = transformTest(`
         import { AType } from './test-assets';
         
@@ -87,7 +87,7 @@ describe('schema-extrct - objects',()=>{
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":moduleId,
+            "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "properties":{
                 "declared_object_with_index":{
@@ -110,7 +110,7 @@ describe('schema-extrct - objects',()=>{
                 "declared_object_with_imported_index":{
                     "type":"object",
                     "additionalProperties": {
-                        "$ref":"/ui-autotools/test-assets#AType"
+                        "$ref":"/src/test-assets#AType"
                     }
                 }
             }

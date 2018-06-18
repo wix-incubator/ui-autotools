@@ -8,13 +8,17 @@ console.log(types);
 const posix:typeof path.posix = path.posix ? path.posix : path;
 
 export type Env = {
-    moduleId:string
-} 
+    modulePath:string;
+    projectPath:string;
+};
 
-export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, moduleId:string){
+
+
+export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, moduleId:string, projectPath:string){
     const moduleSymbol = (sourceFile as any).symbol;
     const env:Env =  {
-        moduleId
+        modulePath:moduleId,
+        projectPath
     };
     const exports = checker.getExportsOfModule(moduleSymbol);
     const res: ModuleSchema = {
@@ -27,19 +31,7 @@ export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, mod
 
     exports.forEach((exportObj) => {
         const node = getNode(exportObj);
-        if( ts.isVariableDeclaration(node)){
-            res.properties![exportObj.getName()] = describeVariableDeclaration(node, checker, env, exportObj)
-        }else if(ts.isExportSpecifier(node)){
-            res.properties![exportObj.getName()] = exportSpecifierDescriber(node, checker, env, exportObj)
-        }else if(ts.isExportAssignment(node)){
-            res.properties![exportObj.getName()] = assignmentDescriber(node, checker, env, exportObj)
-        }else if(ts.isTypeAliasDeclaration(node)){
-            res.definitions = res.definitions || {};
-            res.definitions![exportObj.getName()] = describeTypeAlias(node, checker, env);
-        }else if(ts.isInterfaceDeclaration(node)){
-            res.definitions = res.definitions || {};
-            res.definitions![exportObj.getName()] = describeInterface(node, checker, env)
-        }else if(ts.isFunctionDeclaration(node) || ts.isArrowFunction(node)){
+        if(ts.isFunctionDeclaration(node) || ts.isArrowFunction(node)){
             res.properties![exportObj.getName()] = describeFunction(node, checker, env, exportObj)
         }else if(ts.isClassDeclaration(node)){
             res.definitions = res.definitions || {};            
@@ -50,6 +42,42 @@ export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, mod
             res.properties![className] = {
                 $ref:'#typeof '+className
             } 
+        }else{
+            let exportSchema:Schema = {};
+            let isTypeOnly:Boolean = false;
+            if( ts.isVariableDeclaration(node)){
+                exportSchema = describeVariableDeclaration(node, checker, env, exportObj)
+            }else if(ts.isExportSpecifier(node)){
+                exportSchema = exportSpecifierDescriber(node, checker, env, exportObj)
+            }else if(ts.isExportAssignment(node)){
+                exportSchema = assignmentDescriber(node, checker, env, exportObj)
+            }else if(ts.isTypeAliasDeclaration(node)){
+                isTypeOnly = true;
+                exportSchema = describeTypeAlias(node, checker, env)
+            }else if(ts.isInterfaceDeclaration(node)){
+                isTypeOnly = true;
+                exportSchema = describeInterface(node, checker, env)
+            }
+            const documentation = exportObj.getDocumentationComment(checker);
+            if(documentation.length){
+                exportSchema.description = documentation.map(doc=>doc.text).join('\n')
+            }
+
+            const tags = exportObj.getJsDocTags();
+            if(tags.length){
+                for(let tag of tags){
+                    if(tag.text){
+                        (exportSchema as any)[tag.name] = isNaN(parseFloat(tag.text)) ? tag.text : parseFloat(tag.text);
+                    }
+                }
+            }
+
+            if(isTypeOnly){
+                res.definitions = res.definitions || {};
+                res.definitions![exportObj.getName()] = exportSchema
+            }else{
+                res.properties![exportObj.getName()] = exportSchema;
+            }
         }
     });
     return res;
@@ -83,7 +111,7 @@ const assignmentDescriber:TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWit
         return describeIdentifier(expression, checker, env)
     }else {
         const t = checker.getTypeAtLocation(expression);
-        return serializeType(t, decl,checker);
+        return serializeType(t, decl,checker, env);
     }
  
     //return resolveNode(decl.expression, checker, env);
@@ -94,16 +122,46 @@ const assignmentDescriber:TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWit
 
 
 const describeVariableDeclaration:TsNodeDescriber<ts.VariableDeclaration | ts.PropertySignature | ts.ParameterDeclaration | ts.PropertyDeclaration> = (decl, checker, env) =>{
+    let res:Schema | undefined = undefined;
     if(decl.type){
-        return describeTypeNode(decl.type!, checker, env);
+        res = describeTypeNode(decl.type!, checker, env);
+    }else  if(decl.initializer){
+
+        if(ts.isIdentifier(decl.initializer)){
+            res =  describeIdentifier(decl.initializer, checker, env);
+            res.$ref = res.$ref!.replace('#','#typeof '); 
+        }else if(ts.isPropertyAccessExpression(decl.initializer) && ts.isIdentifier(decl.initializer.expression)){
+            res =  describeIdentifier(decl.initializer.expression, checker, env);
+            let ref = res.$ref!;
+            if(ref.includes("#")){
+                ref = ref!.replace('#','#typeof ')+'.'+decl.initializer.name.getText(); 
+            }else{
+                ref += '#typeof '+decl.initializer.name.getText(); 
+            }
+            res = {
+                $ref:ref
+            };
+        }
+    } 
+    if(!res){
+
+        res =  serializeType(checker.getTypeAtLocation(decl), decl, checker, env);
     }
-    if(decl.initializer && ts.isIdentifier(decl.initializer)){
-        const res =  describeIdentifier(decl.initializer, checker, env);
-        res.$ref = res.$ref!.replace('#','#typeof '); 
-        return res;
+    const jsDocs = extraCommentsHack(decl);
+    if(jsDocs){
+        if(jsDocs.comment){
+            res!.description = jsDocs.comment
+        }
+
+        if(jsDocs.tags){
+            addJsDocsTagsToSchema(jsDocs.tags as any, res!);
+        }
+
     }
-    return serializeType(checker.getTypeAtLocation(decl), decl, checker);
+    return res!;
 }
+
+
 
 const describeTypeNode:TsNodeDescriber<ts.TypeNode> = (decl, checker, env) =>{
     if(ts.isTypeReferenceNode(decl)){
@@ -121,13 +179,13 @@ const describeTypeNode:TsNodeDescriber<ts.TypeNode> = (decl, checker, env) =>{
     }
    
     const t = checker.getTypeAtLocation(decl);
-    return serializeType(t, decl, checker);
+    return serializeType(t, decl, checker, env);
 }
 
 
 const describeTypeAlias:TsNodeDescriber<ts.TypeAliasDeclaration> = (decl, checker, env) =>{
     const res =  describeTypeNode(decl.type,checker,env);
-    const genericParams = getGenericParams(decl, checker);
+    const genericParams = getGenericParams(decl, checker, env);
     if (genericParams) {
         res.genericParams = genericParams;
     }
@@ -176,7 +234,7 @@ const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction
         arguments : funcArguments,
         returns:returns
     }
-    const genericParams = getGenericParams(decl, checker);
+    const genericParams = getGenericParams(decl, checker, env);
     if (genericParams) {
         res.genericParams = genericParams;
     }
@@ -192,7 +250,7 @@ const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction
 }
 
 const getReturnSchema:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction | ts.FunctionTypeNode | ts.ConstructorDeclaration | ts.MethodDeclaration, FunctionSchema> = (decl, checker, env) => {
-    const returnSchema = decl.type ? describeTypeNode(decl.type, checker, env) : serializeType(checker.getTypeAtLocation(decl),decl , checker).returns!
+    const returnSchema = decl.type ? describeTypeNode(decl.type, checker, env) : serializeType(checker.getTypeAtLocation(decl),decl , checker, env).returns!
     const returnTag = ts.getJSDocReturnTag(decl);
     if (returnTag && returnTag.comment) {
         returnSchema.description = returnTag.comment
@@ -236,6 +294,7 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
         else if(!hasModifier(member, ts.SyntaxKind.PrivateKeyword) && member.name){
             let schema:Schema = {};
             if(ts.isPropertyDeclaration(member)){
+                
                 schema = describeVariableDeclaration(member, checker, env)
             }else if(ts.isMethodDeclaration(member)){
                 schema = describeFunction(member, checker, env)
@@ -268,7 +327,7 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
         properties:staticProperties,
         arguments: constructorSign ? constructorSign.arguments : []
     }
-    const genericParams = getGenericParams(decl, checker);
+    const genericParams = getGenericParams(decl, checker, env);
     if (genericParams) {
         classConstructorDef.returns.genericArguments = genericParams!.map(p => {
             return {$ref: `#${className}!${p.name}`}
@@ -372,12 +431,19 @@ const describeIdentifier:TsNodeDescriber<ts.Identifier> = (decl, checker, env) =
     }
 
     if(importPath){
-        const currentDir = posix.dirname(env.moduleId);
-        const resolvedPath = posix.resolve(currentDir ,importPath);
-    
+        if(importPath.startsWith('.') || importPath.startsWith('/')){
+            const currentDir = posix.dirname(env.modulePath);
+            const resolvedPath = posix.join(currentDir ,importPath);
+        
+            return {
+                $ref:resolvedPath + importInternal
+            };
+        }
+
         return {
-            $ref:resolvedPath + importInternal
+            $ref:importPath + importInternal
         };
+        
     }
     return {
         $ref:importInternal
@@ -466,17 +532,31 @@ function isUnionType(t:ts.Type):t is ts.UnionType{
     return !!(t as any).types
 }
 
-
+function removeExtension(pathName:string):string{
+    return pathName.slice(0, posix.extname(pathName).length*-1)
+}
 
 const supportedPrimitives = ['string','number','boolean']
-function serializeType(t:ts.Type, rootNode:ts.Node,checker:ts.TypeChecker):Schema<any>{
+function serializeType(t:ts.Type, rootNode:ts.Node,checker:ts.TypeChecker, env:Env):Schema<any>{
     if(t.aliasSymbol){
         return {
             $ref:'#'+t.aliasSymbol.name
         }
     }else if(t.symbol){
         const node = getNode(t.symbol);
+   
         if(ts.isClassDeclaration(node) || ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node)){
+
+            const fileName = node.getSourceFile().fileName;
+            const currentFileName = rootNode.getSourceFile().fileName;
+            if(fileName!=currentFileName){
+                const fileNameNoExt = removeExtension(fileName);
+                const pathInProj = fileNameNoExt.slice(env.projectPath.length);
+                return {
+                    $ref:pathInProj+'#'+t.symbol.name 
+                }
+            }
+
             return {
                 $ref:'#'+t.symbol.name
             }
@@ -491,7 +571,7 @@ function serializeType(t:ts.Type, rootNode:ts.Node,checker:ts.TypeChecker):Schem
 
     if(isUnionType(t)){
         return {
-            $oneOf:t.types.map((tt)=>serializeType(tt, rootNode, checker))
+            $oneOf:t.types.map((tt)=>serializeType(tt, rootNode, checker, env))
         }
         
     }
@@ -532,10 +612,10 @@ function serializeType(t:ts.Type, rootNode:ts.Node,checker:ts.TypeChecker):Schem
         const signature = signatures[0];
         const res:FunctionSchema = {
             $ref:FunctionSchemaId,
-            returns:serializeType(signature.getReturnType(), rootNode, checker),
+            returns:serializeType(signature.getReturnType(), rootNode, checker, env),
             arguments:signature.getParameters().map(p=>{
                 const t = checker.getTypeOfSymbolAtLocation(p,rootNode);
-                return serializeType(t, rootNode, checker)
+                return serializeType(t, rootNode, checker, env)
             })
         }
         return res;
@@ -553,26 +633,26 @@ function serializeType(t:ts.Type, rootNode:ts.Node,checker:ts.TypeChecker):Schem
         res.properties = {};
         properties.forEach(prop=>{
             const fieldType = checker.getTypeOfSymbolAtLocation(prop, rootNode);
-            res.properties![prop.getName()] = serializeType(fieldType, rootNode,checker);
+            res.properties![prop.getName()] = serializeType(fieldType, rootNode,checker, env);
         })
     }
 
     const indexType = checker.getIndexTypeOfType(t,ts.IndexKind.String);
     if(indexType){
-        res.additionalProperties = serializeType(indexType, rootNode, checker)
+        res.additionalProperties = serializeType(indexType, rootNode, checker, env)
     }
     
     return res;
     
 }
 
-function getGenericParams(decl: ts.DeclarationWithTypeParameters, checker: ts.TypeChecker): Array<Schema> | undefined {
+function getGenericParams(decl: ts.DeclarationWithTypeParameters, checker: ts.TypeChecker, env: Env): Array<Schema> | undefined {
     if (decl.typeParameters) {
         return decl.typeParameters.map(t => {
             let r: Schema = {};
             r.name = t.name.getText();
             if (t.constraint) {
-                r.type = serializeType(checker.getTypeAtLocation(t.constraint!), t, checker).type;
+                r.type = serializeType(checker.getTypeAtLocation(t.constraint!), t, checker, env).type;
             }
             return r
         });
@@ -586,5 +666,16 @@ function hasModifier(node:ts.Node, modifier:number):boolean{
     }))
 }
 
+function extraCommentsHack(node:ts.Node):ts.JSDoc | undefined{
+    return (node as any).jsDoc ? (node as any).jsDoc[0] : undefined;
+}
 
-
+function addJsDocsTagsToSchema(tags:ts.JSDocTag[], schema:Schema){
+    if(tags.length){
+        for(let tag of tags){
+            if(tag.comment){
+                (schema as any)[tag.tagName.escapedText as any] = isNaN(parseFloat(tag.comment)) ? tag.comment : parseFloat(tag.comment);
+            }
+        }
+    }
+}

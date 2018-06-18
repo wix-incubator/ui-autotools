@@ -1,6 +1,9 @@
 
 import * as ts from 'typescript';
 import {FileSystemReadSync} from 'kissfs';
+import * as path from 'path';
+
+const posix:typeof path.posix = path.posix ? path.posix : path;
 
 export function createHost(fs:FileSystemReadSync):ts.CompilerHost{
 
@@ -30,6 +33,14 @@ export function createHost(fs:FileSystemReadSync):ts.CompilerHost{
                 onError && onError(err.message)
                 return undefined
             }
+        },
+        resolveModuleNames(moduleNames: string[], containingFile: string, reusedNames?: string[]){
+            const dir = posix.dirname(containingFile);
+            return moduleNames.map(fileName=>{
+                return {
+                    resolvedFileName:posix.join(dir,fileName)+'.ts'
+                }
+            })
         },
         getDefaultLibFileName(/*options: ts.CompilerOptions*/){
             return ''

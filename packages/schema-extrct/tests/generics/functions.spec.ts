@@ -14,10 +14,6 @@ describe('schema-extrct - generic functions',()=>{
         };
 
         `, moduleId);
-        // This was the old test, but this will not transpile
-        // export const declaredFunction<T extends string>:(str:T)=>T = (str:T)=>{
-        //     return str
-        // };
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",
@@ -54,8 +50,6 @@ describe('schema-extrct - generic functions',()=>{
 
 
         `, moduleId);
-        // This was the old test, but this will not transpile
-        // export function declaredDeconstruct<T> ({x:T, y:T}):T { return x };
 
         const expected:ModuleSchema<'object'> = {
             "$schema": "http://json-schema.org/draft-06/schema#",

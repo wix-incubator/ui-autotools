@@ -41,6 +41,7 @@
     "tslint": "^5.10.0",
     "typescript": "~2.8.3",
     "typescript-support": "^0.4.1",
+    "node-typescript-support": "^0.3.0",
     "url-loader": "^1.0.1",
     "webpack": "^4.8.3",
     "webpack-cli": "^2.1.3",

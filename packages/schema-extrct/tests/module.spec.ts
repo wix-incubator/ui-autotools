@@ -147,5 +147,25 @@ describe('schema-extrct - module',()=>{
 
         expect(res).to.eql(expected);
     });
+
+    it('should support import export', async ()=>{
+        const moduleId = 'imports';
+        const res = transformTest(`
+        export {AType} from './test-assets';
+        `, moduleId);
+
+        const expected:ModuleSchema<'object'> = {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "$id":'/src/'+moduleId,
+            "$ref":"common/module",
+            "properties": {
+                "AType":{
+                    "$ref":"/src/test-assets#typeof AType"
+                }
+            }
+        };
+
+        expect(res).to.eql(expected);
+    });
 })
 

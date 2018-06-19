@@ -5,6 +5,26 @@ import {transformTest} from '../test-kit/run-transform'
 
 
 describe('schema-extrct - objects',()=>{
+    it('should support "any" object', async ()=>{
+        const moduleId = 'export-types';
+        const res = transformTest(`
+        import { AType } from './test-assets';
+        
+        export let declared_object:Object;
+        `, moduleId);
+
+        const expected:ModuleSchema<'object'> = {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "$id":'/src/'+moduleId,
+            "$ref":"common/module",
+            "properties":{
+                "declared_object" : {
+                    "type":"object"
+                }
+            }
+        }
+        expect(res).to.eql(expected);
+    });
     it('should objects with properties', async ()=>{
         const moduleId = 'export-types';
         const res = transformTest(`

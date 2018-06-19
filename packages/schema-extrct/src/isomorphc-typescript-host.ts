@@ -6,11 +6,6 @@ import * as path from 'path';
 const posix:typeof path.posix = path.posix ? path.posix : path;
 
 export function createHost(fs:FileSystemReadSync):ts.CompilerHost{
-
-    // getSourceFile(fileName: string, languageVersion: ScriptTarget, onError?: (message: string) => void, shouldCreateNewSourceFile?: boolean): SourceFile | undefined;
-    // getDefaultLibFileName(options: CompilerOptions): string;
-    // const writeFile: ts.WriteFileCallback;
-    
     return {
         readFile:(fileName: string)=>fs.loadTextFileSync(fileName),
         fileExists:(fileName: string)=>{

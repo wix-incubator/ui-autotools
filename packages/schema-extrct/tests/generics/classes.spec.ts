@@ -1,11 +1,11 @@
 import {expect} from 'chai';
-import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId } from '../../src/json-schema-types';
+import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId, ClassConstructorSchemaId } from '../../src/json-schema-types';
 import {transformTest} from '../../test-kit/run-transform'
 
 
 
 describe('schema-extrct - generic classes',()=>{
-    xit('should support generic classes', async ()=>{
+    it('should support generic classes', async ()=>{
         const moduleId = 'classes';
         const res = transformTest(`
         import { AGenericClass} from './test-assets'
@@ -29,15 +29,18 @@ describe('schema-extrct - generic classes',()=>{
             "definitions":{
                 "MyClass" : {
                     "$ref":ClassSchemaId,
-                    "constructorArguments":[
-                        {
-                            "$ref":"#MyClass!T",
-                            "name":"x"
-                        },{
-                            "$ref":"#MyClass!P",
-                            "name":"y"
-                        }
-                    ],
+                    "constructor":{
+                        "$ref":ClassConstructorSchemaId,
+                        "arguments":[
+                            {
+                                "$ref":"#MyClass!T",
+                                "name":"x"
+                            },{
+                                "$ref":"#MyClass!P",
+                                "name":"y"
+                            }
+                        ],
+                    },
                     "genericParams": [{
                         "name":"P"
                     },{
@@ -66,7 +69,8 @@ describe('schema-extrct - generic classes',()=>{
                                 "$ref":UndefinedSchemaId
                             }
                         }
-                    }
+                    },
+                    "staticProperties": {}
                 }
             },
             "properties": {

@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId } from '../src/json-schema-types';
+import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId, ClassConstructorSchemaId } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform'
 
 
@@ -38,12 +38,15 @@ describe('schema-extrct - classes',()=>{
             "definitions":{
                 "MyClass" : {
                     "$ref":ClassSchemaId,
-                    "constructorArguments":[
-                        {
-                            "type":"string",
-                            "name":"id"
-                        }
-                    ],
+                    "constructor": {
+                        "$ref":ClassConstructorSchemaId,
+                        "arguments":[
+                            {
+                                "type":"string",
+                                "name":"id"
+                            }
+                        ]
+                    },
                     "staticProperties":{
                         "a":{
                             "type":"string"
@@ -84,7 +87,6 @@ describe('schema-extrct - classes',()=>{
                 }
             }
         }
-        debugger;
         expect(res).to.eql(expected);
     })
   

@@ -1,5 +1,5 @@
 import * as ts from 'typescript';
-import {ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchema, ClassConstructorSchemaId, ClassSchemaId} from './json-schema-types';
+import {ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchemaId, ClassSchemaId} from './json-schema-types';
 import * as types from './json-schema-types';
 import * as path from 'path';
 
@@ -247,11 +247,12 @@ const describeFunction:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction
             funcArguments.push(res);
         }
     })
-
     const res:FunctionSchema = {
-        $ref:FunctionSchemaId,
+        $ref: ts.isConstructorDeclaration(decl) ? ClassConstructorSchemaId : FunctionSchemaId,
         arguments : funcArguments,
-        returns:returns
+    }
+    if (returns) {
+        res.returns = returns;
     }
     const genericParams = getGenericParams(decl, checker, env);
     if (genericParams) {
@@ -278,7 +279,6 @@ const getReturnSchema:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction 
 }
 
 const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassSchema> = (decl, checker, env) =>{
-    const className = decl.name!.getText();
     let extendRef:Schema | undefined;
     if(decl.heritageClauses){
         decl.heritageClauses.forEach(node=>{
@@ -286,16 +286,11 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassSchema> = (decl, c
                 const types = node.types[0];
                 extendRef = assignmentDescriber(types, checker, env);
                 if (types.typeArguments) {
-                    extendRef.genericArguments = types.typeArguments.map(t => {
-                        const arg = describeTypeNode(t, checker, env);
-                        arg.$ref = arg.$ref!.replace('#', '#typeof ');
-                        return arg;
-                    });
+                    extendRef.genericArguments = types.typeArguments.map(t => describeTypeNode(t, checker, env));
                 }
             }
         })
     }
-
 
 
     let constructorSign:FunctionSchema | undefined;
@@ -313,7 +308,6 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassSchema> = (decl, c
         else if(!hasModifier(member, ts.SyntaxKind.PrivateKeyword) && member.name){
             let schema:Schema = {};
             if(ts.isPropertyDeclaration(member)){
-                
                 schema = describeVariableDeclaration(member, checker, env)
             }else if(ts.isMethodDeclaration(member)){
                 schema = describeFunction(member, checker, env)
@@ -325,55 +319,37 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassSchema> = (decl, c
             }
         }
     });
+    if (!constructorSign) {
+        constructorSign = {
+            $ref: ClassConstructorSchemaId,
+            arguments:[]
+        };
+    }
     const comments = checker.getSymbolAtLocation(decl.name!)!.getDocumentationComment(checker);
     const comment = comments.length ? (comments.map(comment => comment.kind === "lineBreak" ? comment.text : comment.text.trim().replace(/\r\n/g, "\n")).join("")) : '';
-    
     const classDef:ClassSchema = {
         $ref:ClassSchemaId,
         properties,
         staticProperties,
-        constructorArguments: constructorSign ? constructorSign.arguments : []
+        constructor:constructorSign
     }
     if (comment) {
         classDef.description = comment;
     }
-    const classConstructorDef:ClassConstructorSchema = {
-        $ref:ClassConstructorSchemaId,
-        returns:{
-            $ref:"#"+className
-        },
-        properties:staticProperties,
-        arguments: constructorSign ? constructorSign.arguments : []
-    }
     const genericParams = getGenericParams(decl, checker, env);
     if (genericParams) {
-        classConstructorDef.returns.genericArguments = genericParams!.map(p => {
-            return {$ref: `#${className}!${p.name}`}
-        });
-        classConstructorDef.genericParams = classDef.genericParams = genericParams;
+        classDef.genericParams = genericParams;
     }
-
-    if(constructorSign && constructorSign.description){
-        classConstructorDef.description = constructorSign.description;
-    }
-    if(constructorSign && constructorSign.restArgument){
-        classConstructorDef.restArgument = constructorSign.restArgument;
-    };
     if(extendRef && extendRef.$ref){
         classDef.extends = {
             $ref: extendRef.$ref
         };
-        classConstructorDef.extends = {
-            $ref: extendRef.$ref!.replace('#', '#typeof ')
-        };
         if (extendRef.genericArguments) {
-            classDef.extends.genericArguments = classConstructorDef.extends.genericArguments = extendRef.genericArguments;
+            classDef.extends.genericArguments = extendRef.genericArguments;
         }
     }
 
     return classDef;
-        // constructor_def:classConstructorDef
-
   }
 
 const describeTypeReference:TsNodeDescriber<ts.TypeReferenceNode> = (decl, checker, env) =>{

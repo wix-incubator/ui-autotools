@@ -131,33 +131,27 @@ describe('schema-extrct - comments', () => {
             "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "definitions":{
-                "typeof C" : {
-                    "$ref":ClassConstructorSchemaId,
-                    "description":"constructor documentation",
-                    "arguments":[
-                        {
-                            "type":"string",
-                            "name":"a",
-                            "description": "my parameter documentation"
-                        },
-                        {
-                            "$ref":"#C",
-                            "name":"b",
-                            "description":"another parameter documentation"
-                        }
-                    ],
-                    "returns":{
-                        $ref:"#C"
-                    },
-                    "properties":{}
-                },
                 "C" : {
                     "$ref":ClassSchemaId,
                     "description":"Documentation for C",
-                    "constructor":{
-                        "$ref":'#typeof C'
+                    "constructor": {
+                        "$ref":ClassConstructorSchemaId,
+                        "description":"constructor documentation",
+                        "arguments":[
+                            {
+                                "type":"string",
+                                "name":"a",
+                                "description": "my parameter documentation"
+                            },
+                            {
+                                "$ref":"#C",
+                                "name":"b",
+                                "description":"another parameter documentation"
+                            }
+                        ],
                     },
-                    "properties": {}
+                    "properties": {},
+                    "staticProperties": {}
                 }
             },
             "properties": {
@@ -187,25 +181,19 @@ describe('schema-extrct - comments', () => {
             "$id":'/src/'+moduleId,
             "$ref":"common/module",
             "definitions":{
-                "typeof C" : {
-                    "$ref":ClassConstructorSchemaId,
-                    "arguments":[],
-                    "returns":{
-                        $ref:"#C"
-                    },
-                    "properties":{}
-                },
                 "C" : {
                     "$ref":ClassSchemaId,
-                    "constructor":{
-                        "$ref":'#typeof C'
+                    "constructor": {
+                        "$ref":ClassConstructorSchemaId,
+                        "arguments":[]
                     },
                     "properties": {
                         a:{
                             description:'member documentation',
                             type:'string'
                         }
-                    }
+                    },
+                    "staticProperties": {}
                 }
             },
             "properties": {

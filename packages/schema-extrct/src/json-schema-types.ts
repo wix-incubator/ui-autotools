@@ -74,24 +74,15 @@ export type ModuleSchema<T extends  SchemaTypes = SchemaTypes> = Schema<T> & {
 }
 
 export type FunctionSchema = Schema & {
-    $ref:typeof FunctionSchemaId;
+    $ref:typeof FunctionSchemaId | typeof ClassConstructorSchemaId;
     arguments:Schema[],
     restArgument?:Schema<'array'>,
-    returns:Schema
-}
-
-export type ClassConstructorSchema = Schema & {
-    $ref:typeof ClassConstructorSchemaId;
-    arguments:Schema[];
-    restArgument?:Schema<'array'>;
-    returns:Schema;
-    properties:{[name:string]:Schema};
-    extends?:Schema
+    returns?:Schema
 }
 
 export type ClassSchema = Schema & {
     $ref:typeof ClassSchemaId;
-    constructorArguments:Schema[];
+    constructor?:FunctionSchema;
     extends?:Schema;
     implements?:Schema[];
     properties:{[name:string]:Schema};

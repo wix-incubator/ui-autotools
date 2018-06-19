@@ -36,31 +36,18 @@ describe('schema-extrct - classes',()=>{
             "$id":"/src/classes",
             "$ref":ModuleSchemaId,
             "definitions":{
-                "typeof MyClass" : {
-                    "$ref":ClassConstructorSchemaId,
-                    
-                    "arguments":[
+                "MyClass" : {
+                    "$ref":ClassSchemaId,
+                    "constructorArguments":[
                         {
                             "type":"string",
                             "name":"id"
                         }
                     ],
-                    "returns":{
-                        $ref:"#MyClass"
-                    },
-                    "extends":{
-                        "$ref":"/src/test-assets#typeof AClass"
-                    },
-                    "properties":{
+                    "staticProperties":{
                         "a":{
                             "type":"string"
                         }
-                    }
-                },
-                "MyClass" : {
-                    "$ref":ClassSchemaId,
-                    "constructor":{
-                        "$ref":'#typeof MyClass'
                     },
                     "extends":{
                         "$ref":"/src/test-assets#AClass"

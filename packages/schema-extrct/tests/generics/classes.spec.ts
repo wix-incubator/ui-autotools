@@ -27,42 +27,17 @@ describe('schema-extrct - generic classes',()=>{
             "$id":'/src/'+moduleId,
             "$ref":ModuleSchemaId,
             "definitions":{
-                "typeof MyClass" : {
-                    "$ref":ClassConstructorSchemaId,
-                    "genericParams": [{
-                        "name":"T"
-                    },{
-                        "name":"P"
-                    }],
-                    "arguments":[
+                "MyClass" : {
+                    "$ref":ClassSchemaId,
+                    "constructorArguments":[
                         {
-                            "$ref":"#typeof MyClass!T",
+                            "$ref":"#MyClass!T",
                             "name":"x"
                         },{
-                            "$ref":"#typeof MyClass!P",
+                            "$ref":"#MyClass!P",
                             "name":"y"
                         }
                     ],
-                    "returns":{
-                        "$ref":"#MyClass",
-                        "genericArguments":[{
-                            "$ref":"#typeof MyClass!T"
-                        },{
-                            "$ref":"#typeof MyClass!P"
-                        }]
-                    },
-                    "extends":{
-                        "$ref":"/src/test-assets#typeof AGenericClass",
-                        "genericArguments":[{
-                            "$ref":"#typeof MyClass!P"
-                        }]
-                    }
-                },
-                "MyClass" : {
-                    "$ref":ClassSchemaId,
-                    "constructor":{
-                        "$ref":'#typeof MyClass'
-                    },
                     "genericParams": [{
                         "name":"T"
                     },{
@@ -71,7 +46,7 @@ describe('schema-extrct - generic classes',()=>{
                     "extends":{
                         "$ref":"/src/test-assets#AClass",
                         "genericArguments":[{
-                            "$ref":"#typeof MyClass!P"
+                            "$ref":"#MyClass!P"
                         }]
                     },
                     "properties": {

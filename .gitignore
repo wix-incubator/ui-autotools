@@ -70,3 +70,7 @@ typings/
 
 # next.js build output
 .next
+
+# version locks
+package-lock.json
+yarn.lock

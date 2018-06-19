@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import { ModuleSchema, ModuleSchemaId, ClassConstructorSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId } from '../src/json-schema-types';
+import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform'
 
 

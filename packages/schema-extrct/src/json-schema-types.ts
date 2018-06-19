@@ -89,13 +89,6 @@ export type ClassSchema = Schema & {
     staticProperties:{[name:string]:Schema};
 }
 
-
-// export type ClassConstructorPairSchema = Schema & {
-//     class_def:ClassSchema;
-//     constructor_def:ClassConstructorSchema;
-// }
-
-
 export function isSchemaOfType<T extends SchemaTypes>(t:T, s:Object): s is Schema<T>{
     return (s as any).type === t;
 }

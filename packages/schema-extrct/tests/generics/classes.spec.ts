@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import { ModuleSchema, ModuleSchemaId, ClassConstructorSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId } from '../../src/json-schema-types';
+import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId } from '../../src/json-schema-types';
 import {transformTest} from '../../test-kit/run-transform'
 
 
@@ -27,14 +27,9 @@ describe('schema-extrct - generic classes',()=>{
             "$id":'/src/'+moduleId,
             "$ref":ModuleSchemaId,
             "definitions":{
-                "typeof MyClass" : {
-                    "$ref":ClassConstructorSchemaId,
-                    "genericParams": [{
-                        "name":"P"
-                    },{
-                        "name":"T"
-                    }],
-                    "arguments":[
+                "MyClass" : {
+                    "$ref":ClassSchemaId,
+                    "constructorArguments":[
                         {
                             "$ref":"#MyClass!T",
                             "name":"x"
@@ -43,27 +38,6 @@ describe('schema-extrct - generic classes',()=>{
                             "name":"y"
                         }
                     ],
-                    "returns":{
-                        "$ref":"#MyClass",
-                        "genericArguments":[{
-                            "$ref":"#MyClass!P"
-                        },{
-                            "$ref":"#MyClass!T"
-                        }]
-                    },
-                    "extends":{
-                        "$ref":"/src/test-assets#typeof AGenericClass",
-                        "genericArguments":[{
-                            "$ref":"#typeof MyClass!P"
-                        }]
-                    },
-                    "properties": {}
-                },
-                "MyClass" : {
-                    "$ref":ClassSchemaId,
-                    "constructor":{
-                        "$ref":'#typeof MyClass'
-                    },
                     "genericParams": [{
                         "name":"P"
                     },{
@@ -72,7 +46,7 @@ describe('schema-extrct - generic classes',()=>{
                     "extends":{
                         "$ref":"/src/test-assets#AGenericClass",
                         "genericArguments":[{
-                            "$ref":"#typeof MyClass!P"
+                            "$ref":"#MyClass!P"
                         }]
                     },
                     "properties": {

@@ -5,7 +5,7 @@ import {transformTest} from '../../test-kit/run-transform'
 
 
 describe('schema-extrct - generic interface',()=>{
-    xit('should support genric interface definition', async ()=>{
+    it('should support genric interface definition', async ()=>{
         const moduleId = 'interface-definition';
         const res = transformTest(`
         export type MyInterface<T>{
@@ -43,7 +43,7 @@ describe('schema-extrct - generic interface',()=>{
         expect(res).to.eql(expected);
     });
 
-    xit('should support generic arguments schema', async ()=>{
+    it('should support generic arguments schema', async ()=>{
         const moduleId = 'interface-definition';
         const res = transformTest(`
         export type MyInterface<T extends string>{
@@ -86,7 +86,7 @@ describe('schema-extrct - generic interface',()=>{
     });
 
 
-    xit('generic arguments should be passed deeply', async ()=>{
+    it('generic arguments should be passed deeply', async ()=>{
         const moduleId = 'interface-definition';
         const res = transformTest(`
         export type MyInterface<T extends string>{

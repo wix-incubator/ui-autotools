@@ -5,7 +5,7 @@ import {transformTest} from '../../test-kit/run-transform'
 
 
 describe('schema-extrct - generic types',()=>{
-    xit('should support genric type definition', async ()=>{
+    it('should support genric type definition', async ()=>{
         const moduleId = 'type-definition';
         const res = transformTest(`
         export type MyType<T> = {
@@ -43,7 +43,7 @@ describe('schema-extrct - generic types',()=>{
         expect(res).to.eql(expected);
     });
 
-    xit('should support generic arguments schema', async ()=>{
+    it('should support generic arguments schema', async ()=>{
         const moduleId = 'type-definition';
         const res = transformTest(`
         export type MyType<T extends string> = {
@@ -86,7 +86,7 @@ describe('schema-extrct - generic types',()=>{
     });
 
 
-    xit('generic arguments should be passed deeply', async ()=>{
+    it('generic arguments should be passed deeply', async ()=>{
         const moduleId = 'type-definition';
         const res = transformTest(`
         export type MyType<T extends string> = {

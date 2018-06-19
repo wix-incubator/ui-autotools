@@ -91,17 +91,18 @@ export type ClassConstructorSchema = Schema & {
 
 export type ClassSchema = Schema & {
     $ref:typeof ClassSchemaId;
-    constructor:Schema;
+    constructorArguments:Schema[];
     extends?:Schema;
     implements?:Schema[];
-    properties:{[name:string]:Schema};    
+    properties:{[name:string]:Schema};
+    staticProperties:{[name:string]:Schema};
 }
 
 
-export type ClassConstructorPairSchema = Schema & {
-    class_def:ClassSchema;
-    constructor_def:ClassConstructorSchema;
-}
+// export type ClassConstructorPairSchema = Schema & {
+//     class_def:ClassSchema;
+//     constructor_def:ClassConstructorSchema;
+// }
 
 
 export function isSchemaOfType<T extends SchemaTypes>(t:T, s:Object): s is Schema<T>{

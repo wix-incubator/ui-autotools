@@ -1,7 +1,7 @@
 import * as ts from 'typescript';
 import { transform } from '../src/file-transformer';
 import { MemoryFileSystem } from 'kissfs';
-import { createHost } from '../test-kit/isomorphc-typescript-host';
+import { createHost } from '../src/isomorphc-typescript-host';
 import { ModuleSchema } from '../src/json-schema-types';
 
 

@@ -1,5 +1,5 @@
 import * as ts from 'typescript';
-import {ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchema, ClassConstructorSchemaId, ClassConstructorPairSchema, ClassSchemaId} from './json-schema-types';
+import {ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchema, ClassConstructorSchemaId, ClassSchemaId} from './json-schema-types';
 import * as types from './json-schema-types';
 import * as path from 'path';
 
@@ -16,29 +16,32 @@ export type Env = {
 
 export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, moduleId:string, projectPath:string){
     const moduleSymbol = (sourceFile as any).symbol;
-    const env:Env =  {
-        modulePath:moduleId,
-        projectPath
-    };
-    const exports = checker.getExportsOfModule(moduleSymbol);
     const res: ModuleSchema = {
         '$schema':'http://json-schema.org/draft-06/schema#',
         '$id':moduleId,
         '$ref':'common/module',
         'properties':{}
     };
+    if(!moduleSymbol){
+        return res
+    }
+    const env:Env =  {
+        modulePath:moduleId,
+        projectPath
+    };
+    const exports = checker.getExportsOfModule(moduleSymbol);
+    
     ts.isAccessor;
 
     exports.forEach((exportObj) => {
-        const node = getNode(exportObj);
+        const node = getNode(exportObj)!;
         if(ts.isFunctionDeclaration(node) || ts.isArrowFunction(node)){
             res.properties![exportObj.getName()] = describeFunction(node, checker, env, exportObj)
         }else if(ts.isClassDeclaration(node)){
             res.definitions = res.definitions || {};            
             const classDefInitions = describeClass(node, checker, env);
             const className = exportObj.getName()
-            res.definitions[className] = classDefInitions.class_def;
-            res.definitions['typeof '+className] = classDefInitions.constructor_def;
+            res.definitions[className] = classDefInitions
             res.properties![className] = {
                 $ref:'#typeof '+className
             } 
@@ -87,20 +90,36 @@ export function transform(checker: ts.TypeChecker, sourceFile:ts.SourceFile, mod
 export type TsNodeDescriber<N extends ts.Node, S extends Schema = Schema> = (n:N, checker:ts.TypeChecker, env:Env, symb?:ts.Symbol)=>S
 
 
-function getNode(symb:ts.Symbol):ts.Node{
-    return symb.valueDeclaration || symb.declarations![0]!
+function getNode(symb:ts.Symbol):ts.Node | undefined {
+    if(!symb){
+        return undefined;
+    }
+    if(symb.valueDeclaration)
+    {
+        return symb.valueDeclaration
+    }
+    if(symb.declarations){
+        return symb.declarations[0];
+    }
+    return undefined;
 }
 
 const exportSpecifierDescriber:TsNodeDescriber<ts.ExportSpecifier> = (decl, checker, env, symb) =>{
     const aliasedSymb = checker.getAliasedSymbol(symb!);
-    const aliasedNode = getNode(aliasedSymb);
-    if(ts.isVariableDeclaration(aliasedNode)){
-        return describeVariableDeclaration(aliasedNode, checker, env, aliasedSymb)
+    if(aliasedSymb){
+        const aliasedNode = getNode(aliasedSymb);
+        if(aliasedNode && ts.isVariableDeclaration(aliasedNode)){
+            return describeVariableDeclaration(aliasedNode, checker, env, aliasedSymb)
+        }
     }
-    else{
-        debugger;
-        return {}
+    
+    const exportClause = decl.parent!.parent!;
+    if(ts.isExportDeclaration(exportClause) && exportClause.moduleSpecifier){
+        return {
+            $ref:resolveImportPath(exportClause.moduleSpecifier!.getText().slice(1,-1),"#typeof "+ symb!.name, env)
+        };
     }
+    return {};
 }
 
 
@@ -258,7 +277,7 @@ const getReturnSchema:TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction 
     return returnSchema
 }
 
-const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSchema> = (decl, checker, env) =>{
+const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassSchema> = (decl, checker, env) =>{
     const className = decl.name!.getText();
     let extendRef:Schema | undefined;
     if(decl.heritageClauses){
@@ -311,10 +330,9 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
     
     const classDef:ClassSchema = {
         $ref:ClassSchemaId,
-        constructor:{
-            $ref:"#typeof "+className
-        },
-        properties
+        properties,
+        staticProperties,
+        constructorArguments: constructorSign ? constructorSign.arguments : []
     }
     if (comment) {
         classDef.description = comment;
@@ -341,7 +359,7 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
     if(constructorSign && constructorSign.restArgument){
         classConstructorDef.restArgument = constructorSign.restArgument;
     };
-    if(extendRef){
+    if(extendRef && extendRef.$ref){
         classDef.extends = {
             $ref: extendRef.$ref
         };
@@ -353,10 +371,8 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSch
         }
     }
 
-    return {
-        class_def:classDef,
-        constructor_def:classConstructorDef
-    }
+    return classDef;
+        // constructor_def:classConstructorDef
 
   }
 
@@ -383,12 +399,12 @@ const describeTypeReference:TsNodeDescriber<ts.TypeReferenceNode> = (decl, check
 
 const describeQualifiedName:TsNodeDescriber<ts.QualifiedName> = (decl, checker, env) =>{
     if(ts.isIdentifier(decl.left)){
-        const identifierRef = describeIdentifier(decl.left, checker, env);
+        const identifierRef = describeIdentifier(decl.left, checker, env).$ref || '';
         const innerRef = decl.right.getText();
         return {
-            $ref:identifierRef.$ref!.includes('#') ? 
-                    identifierRef.$ref + '.' + innerRef :
-                    identifierRef.$ref + '#' + innerRef
+            $ref:identifierRef.includes('#') ? 
+                    identifierRef + '.' + innerRef :
+                    identifierRef + '#' + innerRef
         };
     }else{
         debugger
@@ -403,52 +419,68 @@ const describeIdentifier:TsNodeDescriber<ts.Identifier> = (decl, checker, env) =
             type:'array'
         }
     }
-    const referencedSymb = checker.getSymbolAtLocation(decl)!;
-    const referencedSymbDecl = referencedSymb!.declarations![0];
-    let importPath:string | undefined = undefined;
-    let importInternal:string | undefined = undefined;
-    if(ts.isVariableDeclaration(referencedSymbDecl)){
-        return describeVariableDeclaration(referencedSymbDecl, checker, env)
-    }else if(ts.isNamespaceImport(referencedSymbDecl)){
-        const target = referencedSymbDecl.parent!.parent!.moduleSpecifier.getText().slice(1,-1);
-        importPath = target;
-        importInternal = '';
-    }else if(ts.isImportSpecifier(referencedSymbDecl)){
-        const target = referencedSymbDecl.parent!.parent!.parent!.moduleSpecifier.getText().slice(1,-1);
-        importPath = target;
-        importInternal = '#'+referencedSymbDecl.getText();
-    }else if(ts.isImportClause(referencedSymbDecl)){
-        const target = referencedSymbDecl.parent!.moduleSpecifier.getText().slice(1,-1);
-        importPath = target;
-    }else if (ts.isTypeParameterDeclaration(referencedSymbDecl)) {
-        if (ts.isFunctionTypeNode(referencedSymbDecl.parent!)) {
-            importInternal = '#' + ts.getNameOfDeclaration(referencedSymbDecl.parent!.parent as any)!.getText() + '!' + referencedSymb.name;
-        } else {
-            importInternal = '#' + ts.getNameOfDeclaration(referencedSymbDecl.parent as any)!.getText() + '!' + referencedSymb.name;
-        }
-    }else{
-        importInternal = '#'+referencedSymb.name
-    }
-
-    if(importPath){
-        if(importPath.startsWith('.') || importPath.startsWith('/')){
-            const currentDir = posix.dirname(env.modulePath);
-            const resolvedPath = posix.join(currentDir ,importPath);
-        
-            return {
-                $ref:resolvedPath + importInternal
-            };
-        }
-
+    if(decl.getText()==='Object'){
         return {
-            $ref:importPath + importInternal
-        };
-        
+            type:'object'
+        }
     }
-    return {
-        $ref:importInternal
-    };
+    const referencedSymb = checker.getSymbolAtLocation(decl)!;
+    const referencedSymbDecl = getNode(referencedSymb);
+    let importPath:string  = '';
+    let importInternal:string = '';
+    if(referencedSymbDecl){
+        if(ts.isVariableDeclaration(referencedSymbDecl)){
+            return describeVariableDeclaration(referencedSymbDecl, checker, env)
+        }else if(ts.isNamespaceImport(referencedSymbDecl)){
+            const target = referencedSymbDecl.parent!.parent!.moduleSpecifier.getText().slice(1,-1);
+            importPath = target;
+            importInternal = '';
+        }else if(ts.isImportSpecifier(referencedSymbDecl)){
+            const target = referencedSymbDecl.parent!.parent!.parent!.moduleSpecifier.getText().slice(1,-1);
+            importPath = target;
+            importInternal = '#'+referencedSymbDecl.getText();
+        }else if(ts.isImportClause(referencedSymbDecl)){
+            const target = referencedSymbDecl.parent!.moduleSpecifier.getText().slice(1,-1);
+            importPath = target;
+        }else if (ts.isTypeParameterDeclaration(referencedSymbDecl)) {
+            if (ts.isFunctionTypeNode(referencedSymbDecl.parent!)) {
+                importInternal = '#' + ts.getNameOfDeclaration(referencedSymbDecl.parent!.parent as any)!.getText() + '!' + referencedSymb.name;
+            } else {
+                importInternal = '#' + ts.getNameOfDeclaration(referencedSymbDecl.parent as any)!.getText() + '!' + referencedSymb.name;
+            }
+        }else{
+            importInternal = '#'+referencedSymb.name
+        }
+    
+        if(importPath){
+            return {
+                $ref:resolveImportPath(importPath, importInternal, env)
+            };
+            
+        }
+        return {
+            $ref:importInternal
+        };
+    }else{
+        // debugger;
+        return {
+
+        }
+    }
+    
 }
+
+function resolveImportPath(relativeUrl:string, importInternal:string, env:Env){
+    if(relativeUrl.startsWith('.') || relativeUrl.startsWith('/')){
+        const currentDir = posix.dirname(env.modulePath);
+        const resolvedPath = posix.join(currentDir ,relativeUrl);
+    
+        return resolvedPath + importInternal
+    }
+
+    return relativeUrl + importInternal
+}
+
 const describeTypeLiteral:TsNodeDescriber<ts.TypeLiteralNode | ts.InterfaceDeclaration> = (decl, checker, env) =>{
     const res:Schema<'object'>  = {
         type:'object'
@@ -545,7 +577,7 @@ function serializeType(t:ts.Type, rootNode:ts.Node,checker:ts.TypeChecker, env:E
     }else if(t.symbol){
         const node = getNode(t.symbol);
    
-        if(ts.isClassDeclaration(node) || ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node)){
+        if(node && (ts.isClassDeclaration(node) || ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node))){
 
             const fileName = node.getSourceFile().fileName;
             const currentFileName = rootNode.getSourceFile().fileName;

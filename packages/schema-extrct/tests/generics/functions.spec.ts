@@ -6,7 +6,7 @@ import {transformTest} from '../../test-kit/run-transform'
 
 describe('schema-extrct - generic functions',()=>{
    
-    xit('should support declared generic functions', async ()=>{
+    it('should support declared generic functions', async ()=>{
         const moduleId = 'functions';
         const res = transformTest(`
         export const declaredFunction: <T extends string>(str:T)=>T = (str)=>{
@@ -42,7 +42,7 @@ describe('schema-extrct - generic functions',()=>{
         expect(res).to.eql(expected);
     })
     
-    xit('should support generic functions with parameter deconstruct', async ()=>{
+    it('should support generic functions with parameter deconstruct', async ()=>{
         const moduleId = 'functions';
         const res = transformTest(`
         
@@ -85,7 +85,7 @@ describe('schema-extrct - generic functions',()=>{
         }
         expect(res).to.eql(expected);
     })
-    xit('should support generic functions with rest params', async ()=>{
+    it('should support generic functions with rest params', async ()=>{
         const moduleId = 'functions';
         const res = transformTest(`
         export let functionWithRestParams:<T>(str:T, ...rest:T[])=>T = (str)=>{

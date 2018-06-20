@@ -88,9 +88,6 @@ describe('schema-extrct - classes',()=>{
             }
         }
         expect(res).to.eql(expected);
-    })
-  
-    
-        
+    });
 })
 

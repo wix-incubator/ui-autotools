@@ -128,10 +128,21 @@ const assignmentDescriber:TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWit
     if(ts.isIdentifier(expression)){
         
         return describeIdentifier(expression, checker, env)
-    }else {
-        const t = checker.getTypeAtLocation(expression);
-        return serializeType(t, decl,checker, env);
+    }else if(ts.isPropertyAccessExpression(expression)) {
+        if(ts.isIdentifier(expression.expression)) {
+            const identifier = describeIdentifier(expression.expression, checker, env);
+            const identifierRef = identifier.$ref;
+            const innerRef = expression.name.getText();
+            if (identifierRef) {
+                identifier.$ref = identifierRef.includes('#') ? 
+                    identifierRef + '.' + innerRef :
+                    identifierRef + '#' + innerRef
+            }
+            return identifier;
+        }
     }
+    const t = checker.getTypeAtLocation(expression);
+    return serializeType(t, decl,checker, env);
  
     //return resolveNode(decl.expression, checker, env);
 }
@@ -354,23 +365,23 @@ const describeClass:TsNodeDescriber<ts.ClassDeclaration, ClassSchema> = (decl, c
 
 const describeTypeReference:TsNodeDescriber<ts.TypeReferenceNode> = (decl, checker, env) =>{
     const typeName = decl.typeName;
+    let res;
     if(ts.isQualifiedName(typeName)){
-       return describeQualifiedName(typeName, checker, env);
+        res = describeQualifiedName(typeName, checker, env);
+    } else {
+        res = describeIdentifier(typeName, checker, env);
     }
-    else{
-        const res = describeIdentifier(typeName, checker, env);
-        const typeArgs = decl.typeArguments;
-        if(typeArgs){
-            if(isSchemaOfType('array',res)){
-                res.items = describeTypeNode(typeArgs[0], checker, env)
-            } else {
-                res.genericArguments = typeArgs.map(t => {
-                    return describeTypeNode(t, checker, env)
-                });
-            }
+    const typeArgs = decl.typeArguments;
+    if(typeArgs){
+        if(isSchemaOfType('array',res)){
+            res.items = describeTypeNode(typeArgs[0], checker, env)
+        } else {
+            res.genericArguments = typeArgs.map(t => {
+                return describeTypeNode(t, checker, env)
+            });
         }
-        return res;
     }
+    return res;
 }
 
 const describeQualifiedName:TsNodeDescriber<ts.QualifiedName> = (decl, checker, env) =>{

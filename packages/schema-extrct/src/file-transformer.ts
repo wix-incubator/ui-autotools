@@ -451,7 +451,7 @@ const describeIdentifier:TsNodeDescriber<ts.Identifier> = (decl, checker, env) =
     }else{
         // debugger;
         return {
-
+            $ref: '#' + decl.getText()
         }
     }
     

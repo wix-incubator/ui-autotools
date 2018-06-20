@@ -173,5 +173,49 @@ describe('schema-extrct - generic interface',()=>{
         }
         expect(res).to.eql(expected);
     });
+
+    it('should support generic imports', async ()=>{
+        const moduleId = 'interface-definition';
+        const res = transformTest(`
+        import * as Event from 'event';
+
+        export type MyInterface{
+            func: (event: Event<A>) => void;
+        };
+        `, moduleId);
+
+        const expected:ModuleSchema<'object'> = {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "$id":'/src/'+moduleId,
+            "$ref":"common/module",
+            "definitions":{
+                "MyInterface" : {
+                    "type":"object",
+                    "properties": {
+                        "func":{
+                            "$ref": "common/function",
+                            "arguments": [
+                                {
+                                    "$ref": "event",
+                                    "genericArguments": [
+                                        {
+                                            "$ref": "#A"
+                                        }
+                                    ],
+                                    "name": "event"
+                                }
+                            ],
+                            "returns": {
+                                "$ref": "common/undefined"
+                            },
+                        } 
+                    }
+                }
+            },
+            "properties": {}
+        }
+        debugger;
+        expect(res).to.eql(expected);
+    });
 })
 

@@ -83,7 +83,7 @@ describe('schema-extrct - generic classes',()=>{
     });
 
     //Need a better description
-    it('should support classes with generic handlers', async ()=>{
+    xit('should support classes with generic handlers', async ()=>{
         const moduleId = 'classes';
         const res = transformTest(`
         import { Event} from './test-assets'

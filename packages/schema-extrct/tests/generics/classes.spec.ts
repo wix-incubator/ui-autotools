@@ -80,9 +80,56 @@ describe('schema-extrct - generic classes',()=>{
             }
         }
         expect(res).to.eql(expected);
+    });
+
+    //Need a better description
+    it('should support classes with generic handlers', async ()=>{
+        const moduleId = 'classes';
+        const res = transformTest(`
+        import { Event} from './test-assets'
+
+        export class MyClass{
+            constructor(){
+                super();
+            }
+            handleEvent = (e: Event<HTMLElement) => {
+
+            }
+        };
+        `, moduleId);
+
+        const expected:ModuleSchema<'object'> = {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "$id":'/src/'+moduleId,
+            "$ref":ModuleSchemaId,
+            "definitions":{
+                "MyClass" : {
+                    "$ref":ClassSchemaId,
+                    "constructor":{
+                        "$ref":ClassConstructorSchemaId,
+                        "arguments":[]
+                    },
+                    "properties": {
+                        "handleEvent":{
+                            "$ref":FunctionSchemaId,
+                            "arguments":[
+                                {"$ref":"Event#HTMLElement","name":"event"},
+                            ],
+                            "returns":{
+                                "$ref":UndefinedSchemaId
+                            }
+                        }
+                    },
+                    "staticProperties": {}
+                }
+            },
+            "properties": {
+                "MyClass":{
+                    "$ref":"#typeof MyClass"
+                }
+            }
+        }
+        expect(res).to.eql(expected);
     })
-  
-    
-        
 })
 

@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import { ModuleSchema } from '../../src/json-schema-types';
+import { ModuleSchema, PromiseId, UndefinedSchemaId } from '../../src/json-schema-types';
 import {transformTest} from '../../test-kit/run-transform'
 
 
@@ -125,6 +125,41 @@ describe('schema-extrct - generic functions',()=>{
         expect(res).to.eql(expected);
     })
     
+    xit('should handle functions that return a promise', async ()=>{
+        const moduleId = 'infered_functions';
+        const res = transformTest(`
+        
+        export async function asyncFunction(str:string){
+            
+        };
 
+        `, moduleId);
+
+        const expected:ModuleSchema<'object'> = {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "$id":'/src/'+moduleId,
+            "$ref":"common/module",
+            "properties": {
+               
+                "asyncFunction":{
+                    "$ref":"common/function",
+                    "arguments":[
+                        {
+                            "type":"string",
+                            "name":"str"
+                        }
+                    ],
+                    "returns":{
+                        "$ref":PromiseId,
+                        "genericArguments": [
+                            {"type":UndefinedSchemaId}
+                        ]
+                    }
+                }
+            }
+            
+        }
+        expect(res).to.eql(expected);
+    })
 })
 

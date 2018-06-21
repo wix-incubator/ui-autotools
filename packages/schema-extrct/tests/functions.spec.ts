@@ -246,6 +246,36 @@ describe('schema-extrct - functions',()=>{
             
         }
         expect(res).to.eql(expected);
+    });
+
+    xit('should support functions that return JSX element', async ()=>{
+        const moduleId = 'jsx_functions';
+        const res = transformTest(`
+        import * as React from 'react';
+
+        export function jsxFunction(){
+            return <p>Hello!</p>;
+        };
+
+        `, moduleId);
+
+        const expected:ModuleSchema<'object'> = {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "$id":'/src/'+moduleId,
+            "$ref":"common/module",
+            "properties": {
+               
+                "jsxFunction":{
+                    "$ref":"common/function",
+                    "arguments":[],
+                    "returns":{
+                        "$ref":"JSX#Element"
+                    }
+                }
+            }
+            
+        }
+        expect(res).to.eql(expected);
     })
 })
 

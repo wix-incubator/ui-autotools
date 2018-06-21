@@ -5,6 +5,7 @@ export const ClassConstructorSchemaId = "common/class_constructor";
 export const UndefinedSchemaId = "common/undefined";
 export const NullSchemaId = "common/null";
 export const PromiseId = "common/promise";
+export const JSXElement = "common/JSX";
 
 
 

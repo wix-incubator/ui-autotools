@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import { ModuleSchema, UndefinedSchemaId, FunctionSchemaId, ModuleSchemaId } from '../src/json-schema-types';
+import { ModuleSchema, UndefinedSchemaId, FunctionSchemaId, ModuleSchemaId, JSXElement } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform'
 
 
@@ -269,7 +269,7 @@ describe('schema-extrct - functions',()=>{
                     "$ref":"common/function",
                     "arguments":[],
                     "returns":{
-                        "$ref":"JSX#Element"
+                        "$ref":JSXElement
                     }
                 }
             }

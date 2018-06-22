@@ -28,6 +28,6 @@
     "metadata-tools": "*",
     "commander": "^2.15.1",
     "@types/glob": "^5.0.35",
-    "glob": "^7.1.2",
+    "glob": "^7.1.2"
   }
 }

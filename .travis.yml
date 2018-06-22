@@ -1,4 +1,13 @@
 language: node_js
+sudo: required # needed for headless chrome's sandbox
+    
+node_js:
+  - 10 # current
+  - 8  # lts
+
+cache:
+  yarn: true
+
 # Travis has built-in yarn 1.3.2 atm.
 # We install 1.6.0 to be able to run bins from root node_modules
 # in child projects (without having to specify them as dev deps in each project)

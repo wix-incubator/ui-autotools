@@ -3,5 +3,7 @@ language: node_js
 node_js:
   - 10 # current
 
+warnings_are_errors: false # get around deprecated Buffer warnings in node
+
 cache:
   yarn: true

@@ -5,7 +5,7 @@ import {transformTest} from '../test-kit/run-transform'
 
 
 describe('schema-extrct - classes',()=>{
-    it('should support classes', async ()=>{
+    xit('should support classes', async ()=>{
         const moduleId = 'classes';
         const res = transformTest(`
         import { AClass} from './test-assets'

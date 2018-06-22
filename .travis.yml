@@ -1,5 +1,4 @@
 language: node_js
-
 # Travis has built-in yarn 1.3.2 atm.
 # We install 1.6.0 to be able to run bins from root node_modules
 # in child projects (without having to specify them as dev deps in each project)

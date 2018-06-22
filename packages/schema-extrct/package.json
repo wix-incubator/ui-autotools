@@ -30,12 +30,10 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "commander": "^2.15.1",
-    "glob": "^7.1.2",
     "typescript": "~2.8.3"
   },
   "devDependencies": {
     "@types/autobahn": "^0.9.39",
-    "@types/glob": "^5.0.35",
     "html-webpack-externals-plugin": "^3.8.0",
     "kissfs": "^0.6.3",
     "mocha": "^5.2.0",

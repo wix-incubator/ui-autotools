@@ -1,11 +1,9 @@
 import {expect} from 'chai';
 import { ModuleSchema } from '../src/json-schema-types';
-import {transformTest} from '../test-kit/run-transform'
+import {transformTest} from '../test-kit/run-transform';
 
-
-
-describe('schema-extrct - primitives',()=>{
-    it('should support primitives', async ()=>{
+describe('schema-extrct - primitives', () => {
+    it('should support primitives', async () => {
         const moduleId = 'primitives';
         const res = transformTest(`
         export let declared_string: string;
@@ -18,75 +16,73 @@ describe('schema-extrct - primitives',()=>{
         export let infered_number = 0;
         export let infered_boolean = false;
         export let infered_boolean = false;
-        
+
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "properties":{
-                "declared_string" : {
-                    "type":"string"
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+                declared_string : {
+                    type: 'string'
                 },
-                "declared_number":{
-                    "type":"number"
+                declared_number: {
+                    type: 'number'
                 },
-                "declared_boolean":{
-                    "type":"boolean"
+                declared_boolean: {
+                    type: 'boolean'
                 },
-                "declared_null":{
-                    "$ref":"common/null"
+                declared_null: {
+                    $ref: 'common/null'
                 },
-                "declared_any":{
-                }, 
-                "declared_undefined":{
-                    "$ref":"common/undefined"
+                declared_any: {
                 },
-                "infered_string" : {
-                    "type":"string"
+                declared_undefined: {
+                    $ref: 'common/undefined'
                 },
-                "infered_number":{
-                    "type":"number"
+                infered_string : {
+                    type: 'string'
                 },
-                "infered_boolean":{
-                    "type":"boolean"        
+                infered_number: {
+                    type: 'number'
+                },
+                infered_boolean: {
+                    type: 'boolean'
                 }
-                
+
             }
-        }
+        };
         expect(res).to.eql(expected);
     });
 
-  
-    it('should support exact primitives', async ()=>{
+    it('should support exact primitives', async () => {
         const moduleId = 'primitives';
         const res = transformTest(`
         export let specificString: "A";
         export let specificNumber: 5;
-        
+
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "properties":{
-                "specificString" : {
-                    "type":"string",
-                    "enum": [
-                        "A"
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+                specificString : {
+                    type: 'string',
+                    enum: [
+                        'A'
                     ]
                 },
-                "specificNumber":{
-                    "type":"number",
-                    "enum":[
+                specificNumber: {
+                    type: 'number',
+                    enum: [
                         5
                     ]
                 }
             }
-        }
+        };
         expect(res).to.eql(expected);
     });
-})
-
+});

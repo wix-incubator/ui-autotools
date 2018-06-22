@@ -1,61 +1,59 @@
 import {expect} from 'chai';
 import { ModuleSchema } from '../src/json-schema-types';
-import {transformTest} from '../test-kit/run-transform'
+import {transformTest} from '../test-kit/run-transform';
 
-
-
-describe('schema-extrct - module',()=>{
-    it('should support different export types', async ()=>{
+describe('schema-extrct - module', () => {
+    it('should support different export types', async () => {
         const moduleId = 'export-types';
         const res = transformTest(`
                 export let a:string;
                 let b:string;
                 let c:number;
                 export {c};
-                
+
                 let z:number;
-                
+
                 let d:number = 5;
-                export default (d); 
+                export default (d);
                 `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "properties": {
-                "a":{
-                    "type":"string"
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+                a: {
+                    type: 'string'
                 },
-                "c":{
-                    "type":"number"
+                c: {
+                    type: 'number'
                 },
-                "default":{
-                    "type":"number",
+                default: {
+                    type: 'number'
                 }
             }
-        }
+        };
         expect(res).to.eql(expected);
     });
 
-    xit('should support one export mode', async ()=>{
+    xit('should support one export mode', async () => {
         const moduleId = 'export-one';
         const res = transformTest(`
         let a:string = 'b';
-        exports = a; 
+        exports = a;
         `, moduleId);
 
-        const expected:ModuleSchema<'string'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "type":"string",
-            "default":"b"
-        }
+        const expected: ModuleSchema<'string'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            type: 'string',
+            default: 'b'
+        };
         expect(res).to.eql(expected);
     });
 
-    it('should support imports', async ()=>{
+    it('should support imports', async () => {
         const moduleId = 'imports';
         const res = transformTest(`
         import { AClass } from './test-assets';
@@ -66,22 +64,22 @@ describe('schema-extrct - module',()=>{
         export let c = AClass;
         export default b`, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "properties": {
-                "a":{
-                    "$ref":"/src/test-assets#AClass"
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+                a: {
+                    $ref: '/src/test-assets#AClass'
                 },
-                "b":{
-                    "$ref":"/src/test-assets#AClass"
+                b: {
+                    $ref: '/src/test-assets#AClass'
                 },
-                "c":{
-                    "$ref":"/src/test-assets#typeof AClass"
+                c: {
+                    $ref: '/src/test-assets#typeof AClass'
                 },
-                "default":{
-                    "$ref":"/src/test-assets#AClass"
+                default: {
+                    $ref: '/src/test-assets#AClass'
                 }
             }
         };
@@ -89,7 +87,7 @@ describe('schema-extrct - module',()=>{
         expect(res).to.eql(expected);
     });
 
-    it('should support * as imports', async ()=>{
+    it('should support * as imports', async () => {
         const moduleId = 'imports';
         const res = transformTest(`
         import * as stuff  from './test-assets';
@@ -98,26 +96,26 @@ describe('schema-extrct - module',()=>{
         let b:stuff.AClass;
         export {b};
         export default b
-        
+
         export let d = stuff.AClass
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "properties": {
-                "a":{
-                    "$ref":"/src/test-assets#AClass"
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+                a: {
+                    $ref: '/src/test-assets#AClass'
                 },
-                "b":{
-                    "$ref":"/src/test-assets#AClass"
+                b: {
+                    $ref: '/src/test-assets#AClass'
                 },
-                "d":{
-                    "$ref":"/src/test-assets#typeof AClass"
+                d: {
+                    $ref: '/src/test-assets#typeof AClass'
                 },
-                "default":{
-                    "$ref":"/src/test-assets#AClass"
+                default: {
+                    $ref: '/src/test-assets#AClass'
                 }
             }
         };
@@ -125,8 +123,7 @@ describe('schema-extrct - module',()=>{
         expect(res).to.eql(expected);
     });
 
-    
-    it('should support node modules import', async ()=>{
+    it('should support node modules import', async () => {
         const moduleId = 'imports';
         const res = transformTest(`
         import * as stuff  from 'third-party';
@@ -134,13 +131,13 @@ describe('schema-extrct - module',()=>{
         export let a:stuff.AClass;
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "properties": {
-                "a":{
-                    "$ref":"third-party#AClass"
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+                a: {
+                    $ref: 'third-party#AClass'
                 }
             }
         };
@@ -148,24 +145,23 @@ describe('schema-extrct - module',()=>{
         expect(res).to.eql(expected);
     });
 
-    it('should support import export', async ()=>{
+    it('should support import export', async () => {
         const moduleId = 'imports';
         const res = transformTest(`
         export {AType} from './test-assets';
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "properties": {
-                "AType":{
-                    "$ref":"/src/test-assets#typeof AType"
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+                AType: {
+                    $ref: '/src/test-assets#typeof AType'
                 }
             }
         };
 
         expect(res).to.eql(expected);
     });
-})
-
+});

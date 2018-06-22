@@ -1,9 +1,9 @@
 import {expect} from 'chai';
-import { ModuleSchema, ClassConstructorSchemaId, ClassSchemaId } from '../src/json-schema-types';
-import {transformTest} from '../test-kit/run-transform'
+import { ClassConstructorSchemaId, ClassSchemaId, ModuleSchema } from '../src/json-schema-types';
+import {transformTest} from '../test-kit/run-transform';
 
 describe('schema-extrct - comments', () => {
-    it('should support comments before vars', async ()=>{
+    it('should support comments before vars', async () => {
         const moduleId = 'comments';
         const res = transformTest(`
         /**
@@ -14,22 +14,22 @@ describe('schema-extrct - comments', () => {
 
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "properties": {
-                "a":{
-                    "type":'string',
-                    "description":"param documentation",
-                    "minLength":5
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+                a: {
+                    type: 'string',
+                    description: 'param documentation',
+                    minLength: 5
                 }
             }
-        }
-        
+        };
+
         expect(res).to.eql(expected);
     });
-    it('should support comments before types and type members', async ()=>{
+    it('should support comments before types and type members', async () => {
         const moduleId = 'comments';
         const res = transformTest(`
         /**
@@ -46,30 +46,30 @@ describe('schema-extrct - comments', () => {
 
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "definitions": {
-                "a":{
-                    "type":'object',
-                    "description":"type documentation",
-                    "zagzag":5,
-                    "properties":{
-                        "prop":{
-                            "type":'string',
-                            "description":"type member documentation",
-                            "minLength":5
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            definitions: {
+                a: {
+                    type: 'object',
+                    description: 'type documentation',
+                    zagzag: 5,
+                    properties: {
+                        prop: {
+                            type: 'string',
+                            description: 'type member documentation',
+                            minLength: 5
                         }
                     }
                 }
             },
-            "properties":{}
-        }
-        
+            properties: {}
+        };
+
         expect(res).to.eql(expected);
     });
-    it('should support comments before functions', async ()=>{
+    it('should support comments before functions', async () => {
         const moduleId = 'comments';
         const res = transformTest(`
         /**
@@ -83,33 +83,33 @@ describe('schema-extrct - comments', () => {
 
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "properties": {
-                "c":{
-                    "$ref":"common/function",
-                    "description":"function documentation",
-                    "arguments":[
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+                c: {
+                    $ref: 'common/function',
+                    description: 'function documentation',
+                    arguments: [
                         {
-                            "type":"string",
-                            "description": "my parameter documentation",
-                            "name":"a"
+                            type: 'string',
+                            description: 'my parameter documentation',
+                            name: 'a'
                         }
                     ],
-                    "returns":{
-                        "description":"return documentation",
-                        "type":"string"
+                    returns: {
+                        description: 'return documentation',
+                        type: 'string'
                     }
                 }
             }
-        }
-        
+        };
+
         expect(res).to.eql(expected);
     });
 
-    it('should support comments in classes', async ()=>{
+    it('should support comments in classes', async () => {
         const moduleId = 'comments';
         const res = transformTest(`
         /**
@@ -126,51 +126,50 @@ describe('schema-extrct - comments', () => {
 
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "definitions":{
-                "typeof C" : {
-                    "$ref":ClassConstructorSchemaId,
-                    "description":"constructor documentation",
-                    "arguments":[
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            definitions: {
+                'typeof C' : {
+                    $ref: ClassConstructorSchemaId,
+                    description: 'constructor documentation',
+                    arguments: [
                         {
-                            "type":"string",
-                            "name":"a",
-                            "description": "my parameter documentation"
+                            type: 'string',
+                            name: 'a',
+                            description: 'my parameter documentation'
                         },
                         {
-                            "$ref":"#C",
-                            "name":"b",
-                            "description":"another parameter documentation"
+                            $ref: '#C',
+                            name: 'b',
+                            description: 'another parameter documentation'
                         }
                     ],
-                    "returns":{
-                        $ref:"#C"
+                    returns: {
+                        $ref: '#C'
                     },
-                    "properties":{}
+                    properties: {}
                 },
-                "C" : {
-                    "$ref":ClassSchemaId,
-                    "description":"Documentation for C",
-                    "constructor":{
-                        "$ref":'#typeof C'
+                'C' : {
+                    $ref: ClassSchemaId,
+                    description: 'Documentation for C',
+                    constructor: {
+                        $ref: '#typeof C'
                     },
-                    "properties": {}
+                    properties: {}
                 }
             },
-            "properties": {
-                "C":{
-                    "$ref":"#typeof C"
+            properties: {
+                C: {
+                    $ref: '#typeof C'
                 }
             }
-        }
+        };
         expect(res).to.eql(expected);
     });
 
-
-    it('should support comments on class members', async ()=>{
+    it('should support comments on class members', async () => {
         const moduleId = 'comments';
         const res = transformTest(`
             export class C {
@@ -182,38 +181,38 @@ describe('schema-extrct - comments', () => {
 
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "definitions":{
-                "typeof C" : {
-                    "$ref":ClassConstructorSchemaId,
-                    "arguments":[],
-                    "returns":{
-                        $ref:"#C"
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            definitions: {
+                'typeof C' : {
+                    $ref: ClassConstructorSchemaId,
+                    arguments: [],
+                    returns: {
+                        $ref: '#C'
                     },
-                    "properties":{}
+                    properties: {}
                 },
-                "C" : {
-                    "$ref":ClassSchemaId,
-                    "constructor":{
-                        "$ref":'#typeof C'
+                'C' : {
+                    $ref: ClassSchemaId,
+                    constructor: {
+                        $ref: '#typeof C'
                     },
-                    "properties": {
-                        a:{
-                            description:'member documentation',
-                            type:'string'
+                    properties: {
+                        a: {
+                            description: 'member documentation',
+                            type: 'string'
                         }
                     }
                 }
             },
-            "properties": {
-                "C":{
-                    "$ref":"#typeof C"
+            properties: {
+                C: {
+                    $ref: '#typeof C'
                 }
             }
-        }
+        };
         expect(res).to.eql(expected);
-    })
-})
+    });
+});

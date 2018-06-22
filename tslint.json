@@ -1,0 +1,36 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "interface-name": false,
+        "trailing-comma": {
+            "options": {
+                "multiline": "never",
+                "singleline": "never"
+            }
+        },
+        "arrow-parens": {
+            "options": [
+                "ban-single-arg-parens"
+            ]
+        },
+        "variable-name": false,
+        "forin": false,
+        "quotemark": {
+            "options": [
+                "single",
+                "avoid-escape"
+            ]
+        },
+        "max-line-length": [true, 420], // TODO: change this to something reasonable
+        "no-var-requires": false,
+        "no-console": false,
+        "no-bitwise": false,
+        "object-literal-sort-keys": false,
+        "no-shadowed-variable": false
+    },
+    "rulesDirectory": []
+}

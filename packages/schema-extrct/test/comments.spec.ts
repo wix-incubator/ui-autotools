@@ -22,9 +22,9 @@ describe('schema-extrct - comments', () => {
                 a: {
                     type: 'string',
                     description: 'param documentation',
-                    minLength: 5
-                }
-            }
+                    minLength: 5,
+                },
+            },
         }
 
         expect(res).to.eql(expected)
@@ -59,12 +59,12 @@ describe('schema-extrct - comments', () => {
                         prop: {
                             type: 'string',
                             description: 'type member documentation',
-                            minLength: 5
-                        }
-                    }
-                }
+                            minLength: 5,
+                        },
+                    },
+                },
             },
-            properties: {}
+            properties: {},
         }
 
         expect(res).to.eql(expected)
@@ -95,15 +95,15 @@ describe('schema-extrct - comments', () => {
                         {
                             type: 'string',
                             description: 'my parameter documentation',
-                            name: 'a'
-                        }
+                            name: 'a',
+                        },
                     ],
                     returns: {
                         description: 'return documentation',
-                        type: 'string'
-                    }
-                }
-            }
+                        type: 'string',
+                    },
+                },
+            },
         }
 
         expect(res).to.eql(expected)
@@ -138,33 +138,33 @@ describe('schema-extrct - comments', () => {
                         {
                             type: 'string',
                             name: 'a',
-                            description: 'my parameter documentation'
+                            description: 'my parameter documentation',
                         },
                         {
                             $ref: '#C',
                             name: 'b',
-                            description: 'another parameter documentation'
-                        }
+                            description: 'another parameter documentation',
+                        },
                     ],
                     returns: {
-                        $ref: '#C'
+                        $ref: '#C',
                     },
-                    properties: {}
+                    properties: {},
                 },
                 'C' : {
                     $ref: ClassSchemaId,
                     description: 'Documentation for C',
                     constructor: {
-                        $ref: '#typeof C'
+                        $ref: '#typeof C',
                     },
-                    properties: {}
-                }
+                    properties: {},
+                },
             },
             properties: {
                 C: {
-                    $ref: '#typeof C'
-                }
-            }
+                    $ref: '#typeof C',
+                },
+            },
         }
         expect(res).to.eql(expected)
     })
@@ -190,28 +190,28 @@ describe('schema-extrct - comments', () => {
                     $ref: ClassConstructorSchemaId,
                     arguments: [],
                     returns: {
-                        $ref: '#C'
+                        $ref: '#C',
                     },
-                    properties: {}
+                    properties: {},
                 },
                 'C' : {
                     $ref: ClassSchemaId,
                     constructor: {
-                        $ref: '#typeof C'
+                        $ref: '#typeof C',
                     },
                     properties: {
                         a: {
                             description: 'member documentation',
-                            type: 'string'
-                        }
-                    }
-                }
+                            type: 'string',
+                        },
+                    },
+                },
             },
             properties: {
                 C: {
-                    $ref: '#typeof C'
-                }
-            }
+                    $ref: '#typeof C',
+                },
+            },
         }
         expect(res).to.eql(expected)
     })

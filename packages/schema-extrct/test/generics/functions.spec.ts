@@ -24,19 +24,19 @@ describe('schema-extrct - generic functions', () => {
                     $ref: 'common/function',
                     genericParams: [{
                         name: 'T',
-                        type: 'string'
+                        type: 'string',
                     }],
                     arguments: [
                         {
                             name: 'str',
-                            $ref: '#declaredFunction!T'
-                        }
+                            $ref: '#declaredFunction!T',
+                        },
                     ],
                     returns: {
-                        $ref: '#declaredFunction!T'
-                    }
-                }
-            }
+                        $ref: '#declaredFunction!T',
+                    },
+                },
+            },
 
         }
         expect(res).to.eql(expected)
@@ -60,7 +60,7 @@ describe('schema-extrct - generic functions', () => {
                 declaredDeconstruct: {
                     $ref: 'common/function',
                     genericParams: [{
-                        name: 'T'
+                        name: 'T',
                     }],
                     arguments: [
                         {
@@ -68,20 +68,20 @@ describe('schema-extrct - generic functions', () => {
                             type: 'object',
                             properties: {
                                 x: {
-                                    $ref: '#declaredDeconstruct!T'
+                                    $ref: '#declaredDeconstruct!T',
                                 },
                                 y: {
-                                    $ref: '#declaredDeconstruct!T'
-                                }
+                                    $ref: '#declaredDeconstruct!T',
+                                },
 
-                            }
-                        }
+                            },
+                        },
                     ],
                     returns: {
-                        $ref: '#declaredDeconstruct!T'
-                    }
-                }
-            }
+                        $ref: '#declaredDeconstruct!T',
+                    },
+                },
+            },
 
         }
         expect(res).to.eql(expected)
@@ -100,26 +100,26 @@ describe('schema-extrct - generic functions', () => {
                 functionWithRestParams: {
                     $ref: 'common/function',
                     genericParams: [{
-                        name: 'T'
+                        name: 'T',
                     }],
                     arguments: [
                         {
                             type: 'string',
-                            name: 'str'
-                        }
+                            name: 'str',
+                        },
                     ],
                     restArgument: {
                         name: 'rest',
                         type: 'array',
                         items: {
-                            $ref: '#functionWithRestParams!T'
-                        }
+                            $ref: '#functionWithRestParams!T',
+                        },
                     },
                     returns: {
-                        $ref: '#functionWithRestParams!T'
-                    }
-                }
-            }
+                        $ref: '#functionWithRestParams!T',
+                    },
+                },
+            },
         }
         expect(res).to.eql(expected)
     })

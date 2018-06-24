@@ -20,23 +20,23 @@ describe('schema-extrct - generic types', () => {
                 MyType : {
                     type: 'object',
                     genericParams: [{
-                        name: 'T'
+                        name: 'T',
                     }],
                     properties: {
                         something: {
-                            $ref: '#MyType!T'
-                        }
-                    }
-                }
+                            $ref: '#MyType!T',
+                        },
+                    },
+                },
             },
             properties: {
                 param: {
                     $ref: '#MyType',
                     genericArguments: [{
-                        type: 'string'
-                    }]
-                }
-            }
+                        type: 'string',
+                    }],
+                },
+            },
         }
         expect(res).to.eql(expected)
     })
@@ -59,14 +59,14 @@ describe('schema-extrct - generic types', () => {
                     type: 'object',
                     genericParams: [{
                         name: 'T',
-                        type: 'string'
+                        type: 'string',
                     }],
                     properties: {
                         something: {
-                            $ref: '#MyType!T'
-                        }
-                    }
-                }
+                            $ref: '#MyType!T',
+                        },
+                    },
+                },
             },
             properties: {
                 param: {
@@ -74,11 +74,11 @@ describe('schema-extrct - generic types', () => {
                     genericArguments: [{
                         type: 'string',
                         enum: [
-                            'gaga'
-                        ]
-                    }]
-                }
-            }
+                            'gaga',
+                        ],
+                    }],
+                },
+            },
         }
         expect(res).to.eql(expected)
     })
@@ -109,16 +109,16 @@ describe('schema-extrct - generic types', () => {
                     type: 'object',
                     genericParams: [{
                         name: 'T',
-                        type: 'string'
+                        type: 'string',
                     }],
                     properties: {
                         something: {
                             type: 'object',
                             properties: {
                                 deepKey: {
-                                    $ref: '#MyType!T'
-                                }
-                            }
+                                    $ref: '#MyType!T',
+                                },
+                            },
                         },
                         method: {
                             $ref: FunctionSchemaId,
@@ -127,40 +127,40 @@ describe('schema-extrct - generic types', () => {
                                     name: 'values',
                                     type: 'array',
                                     items: {
-                                        $ref: '#MyType!T'
-                                    }
+                                        $ref: '#MyType!T',
+                                    },
                                 }, {
                                     name: 'filter',
                                     $ref: FunctionSchemaId,
                                     arguments: [
                                         {
                                             name: 'item',
-                                            $ref: '#MyType!T'
-                                        }
+                                            $ref: '#MyType!T',
+                                        },
                                     ],
                                     returns: {
-                                        type: 'boolean'
-                                    }
-                                }
+                                        type: 'boolean',
+                                    },
+                                },
                             ],
                             returns: {
                                 type: 'object',
                                 properties: {
                                     status: {
-                                        type: 'string'
+                                        type: 'string',
                                     },
                                     results: {
                                         type: 'array',
                                         items: {
-                                            $ref: '#MyType!T'
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+                                            $ref: '#MyType!T',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         }
         expect(res).to.eql(expected)
     })

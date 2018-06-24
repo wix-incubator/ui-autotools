@@ -21,16 +21,16 @@ describe('schema-extrct - arrays', () => {
                 declared_array : {
                     type: 'array',
                     items: {
-                        type: 'string'
-                    }
+                        type: 'string',
+                    },
                 }
                 , import_array : {
                     type: 'array',
                     items: {
-                        $ref: '/src/test-assets#AType'
-                    }
-                }
-            }
+                        $ref: '/src/test-assets#AType',
+                    },
+                },
+            },
         }
         expect(res).to.eql(expected)
     })

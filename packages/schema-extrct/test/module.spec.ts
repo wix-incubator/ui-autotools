@@ -23,15 +23,15 @@ describe('schema-extrct - module', () => {
             $ref: 'common/module',
             properties: {
                 a: {
-                    type: 'string'
+                    type: 'string',
                 },
                 c: {
-                    type: 'number'
+                    type: 'number',
                 },
                 default: {
                     type: 'number',
-                }
-            }
+                },
+            },
         }
         expect(res).to.eql(expected)
     })
@@ -48,7 +48,7 @@ describe('schema-extrct - module', () => {
             $id: '/src/' + moduleId,
             $ref: 'common/module',
             type: 'string',
-            default: 'b'
+            default: 'b',
         }
         expect(res).to.eql(expected)
     })
@@ -70,18 +70,18 @@ describe('schema-extrct - module', () => {
             $ref: 'common/module',
             properties: {
                 a: {
-                    $ref: '/src/test-assets#AClass'
+                    $ref: '/src/test-assets#AClass',
                 },
                 b: {
-                    $ref: '/src/test-assets#AClass'
+                    $ref: '/src/test-assets#AClass',
                 },
                 c: {
-                    $ref: '/src/test-assets#typeof AClass'
+                    $ref: '/src/test-assets#typeof AClass',
                 },
                 default: {
-                    $ref: '/src/test-assets#AClass'
-                }
-            }
+                    $ref: '/src/test-assets#AClass',
+                },
+            },
         }
 
         expect(res).to.eql(expected)
@@ -106,18 +106,18 @@ describe('schema-extrct - module', () => {
             $ref: 'common/module',
             properties: {
                 a: {
-                    $ref: '/src/test-assets#AClass'
+                    $ref: '/src/test-assets#AClass',
                 },
                 b: {
-                    $ref: '/src/test-assets#AClass'
+                    $ref: '/src/test-assets#AClass',
                 },
                 d: {
-                    $ref: '/src/test-assets#typeof AClass'
+                    $ref: '/src/test-assets#typeof AClass',
                 },
                 default: {
-                    $ref: '/src/test-assets#AClass'
-                }
-            }
+                    $ref: '/src/test-assets#AClass',
+                },
+            },
         }
 
         expect(res).to.eql(expected)
@@ -137,9 +137,9 @@ describe('schema-extrct - module', () => {
             $ref: 'common/module',
             properties: {
                 a: {
-                    $ref: 'third-party#AClass'
-                }
-            }
+                    $ref: 'third-party#AClass',
+                },
+            },
         }
 
         expect(res).to.eql(expected)
@@ -157,9 +157,9 @@ describe('schema-extrct - module', () => {
             $ref: 'common/module',
             properties: {
                 AType: {
-                    $ref: '/src/test-assets#typeof AType'
-                }
-            }
+                    $ref: '/src/test-assets#typeof AType',
+                },
+            },
         }
 
         expect(res).to.eql(expected)

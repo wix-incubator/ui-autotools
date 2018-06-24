@@ -39,48 +39,48 @@ describe('schema-extrct - classes', () => {
                     constructorArguments: [
                         {
                             type: 'string',
-                            name: 'id'
-                        }
+                            name: 'id',
+                        },
                     ],
                     staticProperties: {
                         a: {
-                            type: 'string'
-                        }
+                            type: 'string',
+                        },
                     },
                     extends: {
-                        $ref: '/src/test-assets#AClass'
+                        $ref: '/src/test-assets#AClass',
                     },
                     properties: {
                         id: {
-                            type: 'string'
+                            type: 'string',
                         },
                         a: {
-                            type: 'number'
+                            type: 'number',
                         },
                         setTitle: {
                             $ref: FunctionSchemaId,
                             arguments: [
                                 {type: 'string', name: 'newtitle'},
-                                {type: 'string', name: 'prefix'}
+                                {type: 'string', name: 'prefix'},
                             ],
                             returns: {
-                                $ref: UndefinedSchemaId
-                            }
-                        }
-                    }
-                }
+                                $ref: UndefinedSchemaId,
+                            },
+                        },
+                    },
+                },
             },
             properties: {
                 MyClass: {
-                    $ref: '#typeof MyClass'
+                    $ref: '#typeof MyClass',
                 },
                 param: {
-                    $ref: '#MyClass'
+                    $ref: '#MyClass',
                 },
                 alias: {
-                    $ref: '#typeof MyClass'
-                }
-            }
+                    $ref: '#typeof MyClass',
+                },
+            },
         }
         expect(res).to.eql(expected)
     })

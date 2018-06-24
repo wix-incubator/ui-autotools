@@ -21,9 +21,9 @@ export function transformTest(source: string, moduleId: string): ModuleSchema<an
         [projectName]: {
             src: {
                 'tested-module.ts': source,
-                'test-assets.ts': fixture
-            }
-        }
+                'test-assets.ts': fixture,
+            },
+        },
 
     })
     const prg = ts.createProgram([testedFile, projectName + '/src/test-assets.ts'], {}, createHost(memFs))

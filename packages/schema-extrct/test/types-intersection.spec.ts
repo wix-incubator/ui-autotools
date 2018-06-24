@@ -29,44 +29,44 @@ describe('schema-extrct - intersection', () => {
                     type: 'object',
                     properties: {
                         a: {
-                            type: 'string'
+                            type: 'string',
                         },
                         b: {
-                            type: 'string'
+                            type: 'string',
                         },
                         c: {
-                            type: 'string'
-                        }
-                    }
+                            type: 'string',
+                        },
+                    },
                 },
                 RGB: {
                     type: 'object',
                     properties: {
                         r: {
-                            type: 'string'
+                            type: 'string',
                         },
                         g: {
-                            type: 'string'
+                            type: 'string',
                         },
                         b: {
-                            type: 'string'
-                        }
-                    }
+                            type: 'string',
+                        },
+                    },
                 },
                 Intersection: {
                     $allOf: [
                         {
-                            $ref: '#A'
+                            $ref: '#A',
                         },
                         {
-                            $ref: '#RGB'
-                        }
-                    ]
-                }
+                            $ref: '#RGB',
+                        },
+                    ],
+                },
             },
             properties: {
 
-            }
+            },
         }
         expect(res).to.eql(expected)
     })

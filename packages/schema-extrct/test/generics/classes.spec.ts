@@ -30,48 +30,48 @@ describe('schema-extrct - generic classes', () => {
                     constructorArguments: [
                         {
                             $ref: '#MyClass!T',
-                            name: 'x'
+                            name: 'x',
                         }, {
                             $ref: '#MyClass!P',
-                            name: 'y'
-                        }
+                            name: 'y',
+                        },
                     ],
                     genericParams: [{
-                        name: 'T'
+                        name: 'T',
                     }, {
-                        name: 'P'
+                        name: 'P',
                     }],
                     extends: {
                         $ref: '/src/test-assets#AClass',
                         genericArguments: [{
-                            $ref: '#MyClass!P'
-                        }]
+                            $ref: '#MyClass!P',
+                        }],
                     },
                     properties: {
                         a: {
-                            $ref: '#MyClass!P'
+                            $ref: '#MyClass!P',
                         },
                         b: {
-                            $ref: '#MyClass!T'
+                            $ref: '#MyClass!T',
                         },
                         setA: {
                             $ref: FunctionSchemaId,
                             arguments: [
                                 {$ref: '#MyClass!T', name: 'newA'},
-                                {$ref: '#MyClass!P', name: 'prefix'}
+                                {$ref: '#MyClass!P', name: 'prefix'},
                             ],
                             returns: {
-                                $ref: UndefinedSchemaId
-                            }
-                        }
-                    }
-                }
+                                $ref: UndefinedSchemaId,
+                            },
+                        },
+                    },
+                },
             },
             properties: {
                 MyClass: {
-                    $ref: '#typeof MyClass'
-                }
-            }
+                    $ref: '#typeof MyClass',
+                },
+            },
         }
         expect(res).to.eql(expected)
     })

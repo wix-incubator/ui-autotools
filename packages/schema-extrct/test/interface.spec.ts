@@ -26,30 +26,30 @@ describe('schema-extrct - interfaces', () => {
                     type: 'object',
                     properties: {
                         title: {
-                            type: 'string'
-                        }
-                    }
+                            type: 'string',
+                        },
+                    },
                 },
                 Extendz : {
                     $allOf: [
                         {
-                            $ref: '#MyInterface'
+                            $ref: '#MyInterface',
                         }, {
                             type: 'object',
                             properties: {
                                 desc: {
-                                    type: 'string'
-                                }
-                            }
-                        }
-                    ]
-                }
+                                    type: 'string',
+                                },
+                            },
+                        },
+                    ],
+                },
             },
             properties: {
                 param: {
-                    $ref: '#MyInterface'
-                }
-            }
+                    $ref: '#MyInterface',
+                },
+            },
         }
         expect(res).to.eql(expected)
     })
@@ -79,27 +79,27 @@ describe('schema-extrct - interfaces', () => {
                     type: 'object',
                     properties: {
                         a: {
-                            $ref: '#MyInterface2'
-                        }
-                    }
+                            $ref: '#MyInterface2',
+                        },
+                    },
                 },
                 MyInterface2 : {
                     type: 'object',
                     properties: {
                         b: {
-                            $ref: '#MyInterface'
-                        }
-                    }
-                }
+                            $ref: '#MyInterface',
+                        },
+                    },
+                },
             },
             properties: {
                 param: {
-                    $ref: '#MyInterface'
+                    $ref: '#MyInterface',
                 },
                 param2: {
-                    $ref: '#MyInterface2'
-                }
-            }
+                    $ref: '#MyInterface2',
+                },
+            },
         }
         expect(res).to.eql(expected)
     })

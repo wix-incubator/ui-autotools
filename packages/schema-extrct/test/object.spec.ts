@@ -17,9 +17,9 @@ describe('schema-extrct - objects', () => {
             $ref: 'common/module',
             properties: {
                 declared_object : {
-                    type: 'object'
-                }
-            }
+                    type: 'object',
+                },
+            },
         }
         expect(res).to.eql(expected)
     })
@@ -51,36 +51,36 @@ describe('schema-extrct - objects', () => {
             $ref: 'common/module',
             properties: {
                 declared_object : {
-                    type: 'object'
+                    type: 'object',
                 },
                 declared_object_with_prop: {
                     type: 'object',
                     properties: {
                         prop: {
-                            type: 'string'
-                        }
-                    }
+                            type: 'string',
+                        },
+                    },
                 },
                 infered_object: {
-                    type: 'object'
+                    type: 'object',
                 },
                 infered_object_with_prop: {
                     type: 'object',
                     properties: {
                         prop: {
-                            type: 'string'
-                        }
-                    }
+                            type: 'string',
+                        },
+                    },
                 },
                 declared_with_import: {
                     type: 'object',
                     properties: {
                         imported: {
-                            $ref: '/src/test-assets#AType'
-                        }
-                    }
-                }
-            }
+                            $ref: '/src/test-assets#AType',
+                        },
+                    },
+                },
+            },
         }
         expect(res).to.eql(expected)
     })
@@ -111,27 +111,27 @@ describe('schema-extrct - objects', () => {
                 declared_object_with_index: {
                     type: 'object',
                     additionalProperties: {
-                        type: 'string'
-                    }
+                        type: 'string',
+                    },
                 },
                 declared_object_with_index_and_prop: {
                     type: 'object',
                     properties: {
                         cnst: {
-                            type: 'string'
-                        }
+                            type: 'string',
+                        },
                     },
                     additionalProperties: {
-                        type: 'string'
-                    }
+                        type: 'string',
+                    },
                 },
                 declared_object_with_imported_index: {
                     type: 'object',
                     additionalProperties: {
-                        $ref: '/src/test-assets#AType'
-                    }
-                }
-            }
+                        $ref: '/src/test-assets#AType',
+                    },
+                },
+            },
         }
         expect(res).to.eql(expected)
     })

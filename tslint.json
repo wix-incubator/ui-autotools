@@ -17,7 +17,6 @@
             "never"
         ],
         "max-line-length": [true, 420], // TODO: change this to something reasonable
-        "trailing-comma": false,
         "variable-name": [
             true,
             "allow-leading-underscore",

@@ -32,77 +32,77 @@ describe('schema-extrct - union', () => {
                 Specific_union: {
                     $oneOf: [
                         {
-                            type: 'number'
+                            type: 'number',
                         },
                         {
                             type: 'string',
-                            enum: ['hello', 'goodbye']
-                        }
-                    ]
-                }
+                            enum: ['hello', 'goodbye'],
+                        },
+                    ],
+                },
             },
             properties: {
                 declared_union: {
                     $oneOf: [
                         {
-                            type: 'string'
+                            type: 'string',
                         },
                         {
-                            type: 'number'
-                        }
-                    ]
+                            type: 'number',
+                        },
+                    ],
                 },
                 infered_union: {
                     $oneOf: [
                         {
-                            type: 'string'
+                            type: 'string',
                         },
                         {
-                            type: 'number'
-                        }
-                    ]
+                            type: 'number',
+                        },
+                    ],
                 },
                 specific_union: {
-                    $ref: '#Specific_union'
+                    $ref: '#Specific_union',
                 },
                 type_union: {
                     $oneOf: [
                         {
-                            $ref: '/src/test-assets#AType'
+                            $ref: '/src/test-assets#AType',
                         },
                         {
-                            type: 'number'
-                        }
-                    ]
+                            type: 'number',
+                        },
+                    ],
 
                 },
                 union_union: {
                     $oneOf: [
                         {
-                            $ref: '#Specific_union'
+                            $ref: '#Specific_union',
                         },
                         {
                             type: 'string',
-                            enum: ['goodday']
-                        }
-                    ]
+                            enum: ['goodday'],
+                        },
+                    ],
                 },
                 inline_union: {
                     $oneOf: [
                         {
-                            type: 'number'
+                            type: 'number',
                         },
                         {
                             type: 'object',
                             properties: {
                                 value: {
-                                    type: 'number'
-                                }
-                            }
-                        }
-                    ]
-                }
-            }
+                                    type: 'number',
+                                },
+                            },
+                        },
+                    ],
+                },
+            },
         }
         expect(res).to.eql(expected)
     })

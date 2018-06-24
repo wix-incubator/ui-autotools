@@ -12,8 +12,8 @@ const TestComp: React.SFC<ITestProps> = (props: ITestProps) => {
 
 const testSim = {
   props: {
-    text: 'person'
-  }
+    text: 'person',
+  },
 }
 
 describe('Registry', () => {

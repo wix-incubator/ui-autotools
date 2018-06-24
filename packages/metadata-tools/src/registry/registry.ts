@@ -21,7 +21,7 @@ const Registry: IRegistry = {
   },
   clean() {
     this.metadata.clear()
-  }
+  },
 }
 
 Object.freeze(Registry)

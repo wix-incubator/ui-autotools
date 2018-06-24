@@ -20,23 +20,23 @@ describe('schema-extrct - generic interface', () => {
                 MyInterface : {
                     type: 'object',
                     genericParams: [{
-                        name: 'T'
+                        name: 'T',
                     }],
                     properties: {
                         something: {
-                            $ref: '#MyInterface!T'
-                        }
-                    }
-                }
+                            $ref: '#MyInterface!T',
+                        },
+                    },
+                },
             },
             properties: {
                 param: {
                     $ref: '#MyInterface',
                     genericArguments: [{
-                        type: 'string'
-                    }]
-                }
-            }
+                        type: 'string',
+                    }],
+                },
+            },
         }
         expect(res).to.eql(expected)
     })
@@ -59,14 +59,14 @@ describe('schema-extrct - generic interface', () => {
                     type: 'object',
                     genericParams: [{
                         name: 'T',
-                        type: 'string'
+                        type: 'string',
                     }],
                     properties: {
                         something: {
-                            $ref: '#MyInterface!T'
-                        }
-                    }
-                }
+                            $ref: '#MyInterface!T',
+                        },
+                    },
+                },
             },
             properties: {
                 param: {
@@ -74,11 +74,11 @@ describe('schema-extrct - generic interface', () => {
                     genericArguments: [{
                         type: 'string',
                         enum: [
-                            'gaga'
-                        ]
-                    }]
-                }
-            }
+                            'gaga',
+                        ],
+                    }],
+                },
+            },
         }
         expect(res).to.eql(expected)
     })
@@ -109,16 +109,16 @@ describe('schema-extrct - generic interface', () => {
                     type: 'object',
                     genericParams: [{
                         name: 'T',
-                        type: 'string'
+                        type: 'string',
                     }],
                     properties: {
                         something: {
                             type: 'object',
                             properties: {
                                 deepKey: {
-                                    $ref: '#MyInterface!T'
-                                }
-                            }
+                                    $ref: '#MyInterface!T',
+                                },
+                            },
                         },
                         method: {
                             $ref: FunctionSchemaId,
@@ -127,40 +127,40 @@ describe('schema-extrct - generic interface', () => {
                                     name: 'values',
                                     type: 'array',
                                     items: {
-                                        $ref: '#MyInterface!T'
-                                    }
+                                        $ref: '#MyInterface!T',
+                                    },
                                 }, {
                                     name: 'filter',
                                     $ref: FunctionSchemaId,
                                     arguments: [
                                         {
                                             name: 'item',
-                                            $ref: '#MyInterface!T'
-                                        }
+                                            $ref: '#MyInterface!T',
+                                        },
                                     ],
                                     returns: {
-                                        type: 'boolean'
-                                    }
-                                }
+                                        type: 'boolean',
+                                    },
+                                },
                             ],
                             returns: {
                                 type: 'object',
                                 properties: {
                                     status: {
-                                        type: 'string'
+                                        type: 'string',
                                     },
                                     results: {
                                         type: 'array',
                                         items: {
-                                            $ref: '#MyInterface!T'
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+                                            $ref: '#MyInterface!T',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         }
         expect(res).to.eql(expected)
     })

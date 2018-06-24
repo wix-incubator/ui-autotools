@@ -24,19 +24,19 @@ describe('schema-extrct - type declarations', () => {
                     type: 'object',
                     properties: {
                         title: {
-                            type: 'string'
+                            type: 'string',
                         },
                         imported: {
-                            $ref: '/src/test-assets#AType'
-                        }
-                    }
-                }
+                            $ref: '/src/test-assets#AType',
+                        },
+                    },
+                },
             },
             properties: {
                 param: {
-                    $ref: '#MyType'
-                }
-            }
+                    $ref: '#MyType',
+                },
+            },
         }
         expect(res).to.eql(expected)
     })
@@ -53,14 +53,14 @@ describe('schema-extrct - type declarations', () => {
             $ref: 'common/module',
             definitions: {
                 alias : {
-                    type: 'string'
-                }
+                    type: 'string',
+                },
             },
             properties: {
                 param: {
-                    $ref: '#alias'
-                }
-            }
+                    $ref: '#alias',
+                },
+            },
         }
         expect(res).to.eql(expected)
     })
@@ -83,16 +83,16 @@ describe('schema-extrct - type declarations', () => {
                     type: 'object',
                     properties : {
                         prop: {
-                            $ref: '#recurse'
-                        }
-                    }
-                }
+                            $ref: '#recurse',
+                        },
+                    },
+                },
             },
             properties: {
                 param: {
-                    $ref: '#recurse'
-                }
-            }
+                    $ref: '#recurse',
+                },
+            },
         }
         expect(res).to.eql(expected)
     })

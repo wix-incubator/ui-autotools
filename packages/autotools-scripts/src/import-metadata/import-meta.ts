@@ -5,7 +5,7 @@ const importMeta = (filePattern: string) => {
   const options = {
     nosort: true,
     matchBase: true,
-    absolute: true
+    absolute: true,
   }
   const defaultPattern = './**/*.meta.ts[x?]'
 

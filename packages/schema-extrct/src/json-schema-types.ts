@@ -64,7 +64,7 @@ export type ModuleSchema<T extends  SchemaTypes = SchemaTypes> = Schema<T> & {
     '$schema': 'http://json-schema.org/draft-06/schema#',
     '$id': string,
     '$ref': typeof ModuleSchemaId,
-    'definitions'?: {[name: string]: Schema}
+    'definitions'?: {[name: string]: Schema},
 }
 
 export type FunctionSchema = Schema & {

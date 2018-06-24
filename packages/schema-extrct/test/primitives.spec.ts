@@ -25,33 +25,33 @@ describe('schema-extrct - primitives', () => {
             $ref: 'common/module',
             properties: {
                 declared_string : {
-                    type: 'string'
+                    type: 'string',
                 },
                 declared_number: {
-                    type: 'number'
+                    type: 'number',
                 },
                 declared_boolean: {
-                    type: 'boolean'
+                    type: 'boolean',
                 },
                 declared_null: {
-                    $ref: 'common/null'
+                    $ref: 'common/null',
                 },
                 declared_any: {
                 },
                 declared_undefined: {
-                    $ref: 'common/undefined'
+                    $ref: 'common/undefined',
                 },
                 infered_string : {
-                    type: 'string'
+                    type: 'string',
                 },
                 infered_number: {
-                    type: 'number'
+                    type: 'number',
                 },
                 infered_boolean: {
-                    type: 'boolean'
-                }
+                    type: 'boolean',
+                },
 
-            }
+            },
         }
         expect(res).to.eql(expected)
     })
@@ -72,16 +72,16 @@ describe('schema-extrct - primitives', () => {
                 specificString : {
                     type: 'string',
                     enum: [
-                        'A'
-                    ]
+                        'A',
+                    ],
                 },
                 specificNumber: {
                     type: 'number',
                     enum: [
-                        5
-                    ]
-                }
-            }
+                        5,
+                    ],
+                },
+            },
         }
         expect(res).to.eql(expected)
     })

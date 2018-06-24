@@ -22,14 +22,14 @@ describe('schema-extrct - functions', () => {
                     arguments: [
                         {
                             type: 'string',
-                            name: 'str'
-                        }
+                            name: 'str',
+                        },
                     ],
                     returns: {
-                        type: 'string'
-                    }
-                }
-            }
+                        type: 'string',
+                    },
+                },
+            },
 
         }
         expect(res).to.eql(expected)
@@ -56,14 +56,14 @@ describe('schema-extrct - functions', () => {
                     arguments: [
                         {
                             type: 'string',
-                            name: 'str'
-                        }
+                            name: 'str',
+                        },
                     ],
                     returns: {
-                        type: 'string'
-                    }
-                }
-            }
+                        type: 'string',
+                    },
+                },
+            },
 
         }
         expect(res).to.eql(expected)
@@ -92,20 +92,20 @@ describe('schema-extrct - functions', () => {
                             type: 'object',
                             properties: {
                                 x: {
-                                    type: 'number'
+                                    type: 'number',
                                 },
                                 y: {
-                                    type: 'string'
-                                }
+                                    type: 'string',
+                                },
 
-                            }
-                        }
+                            },
+                        },
                     ],
                     returns: {
-                        type: 'string'
-                    }
-                }
-            }
+                        type: 'string',
+                    },
+                },
+            },
 
         }
         expect(res).to.eql(expected)
@@ -129,21 +129,21 @@ describe('schema-extrct - functions', () => {
                     arguments: [
                         {
                             type: 'string',
-                            name: 'str'
-                        }
+                            name: 'str',
+                        },
                     ],
                     restArgument: {
                         name: 'rest',
                         type: 'array',
                         items: {
-                            type: 'number'
-                        }
+                            type: 'number',
+                        },
                     },
                     returns: {
-                        type: 'string'
-                    }
-                }
-            }
+                        type: 'string',
+                    },
+                },
+            },
         }
         expect(res).to.eql(expected)
     })
@@ -167,14 +167,14 @@ describe('schema-extrct - functions', () => {
                     arguments: [
                         {
                             type: 'string',
-                            name: 'str'
-                        }
+                            name: 'str',
+                        },
                     ],
                     returns: {
-                        $ref: UndefinedSchemaId
-                    }
-                }
-            }
+                        $ref: UndefinedSchemaId,
+                    },
+                },
+            },
         }
         expect(res).to.eql(expected)
     })
@@ -198,14 +198,14 @@ describe('schema-extrct - functions', () => {
                     arguments: [
                         {
                             type: 'string',
-                            name: 'str'
-                        }
+                            name: 'str',
+                        },
                     ],
                     returns: {
-                        $ref: UndefinedSchemaId
-                    }
-                }
-            }
+                        $ref: UndefinedSchemaId,
+                    },
+                },
+            },
         }
         expect(res).to.eql(expected)
     })
@@ -232,13 +232,13 @@ describe('schema-extrct - functions', () => {
                     arguments: [
                         {
                             type: 'string',
-                            name: 'str'
-                        }
+                            name: 'str',
+                        },
                     ],
                     returns: {
-                        $ref: '/src/test-assets#AClass'                    }
-                    }
-            }
+                        $ref: '/src/test-assets#AClass'                    },
+                    },
+            },
 
         }
         expect(res).to.eql(expected)

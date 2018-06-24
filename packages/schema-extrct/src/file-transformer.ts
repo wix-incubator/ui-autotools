@@ -17,14 +17,14 @@ export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, mo
         $schema: 'http://json-schema.org/draft-06/schema#',
         $id: moduleId,
         $ref: 'common/module',
-        properties: {}
+        properties: {},
     }
     if (!moduleSymbol) {
         return res
     }
     const env: IEnv =  {
         modulePath: moduleId,
-        projectPath
+        projectPath,
     }
     const exports = checker.getExportsOfModule(moduleSymbol)
 
@@ -42,7 +42,7 @@ export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, mo
             res.definitions[className] = classDefInitions.class_def
             res.definitions['typeof ' + className] = classDefInitions.constructor_def
             res.properties![className] = {
-                $ref: '#typeof ' + className
+                $ref: '#typeof ' + className,
             }
         } else {
             let exportSchema: Schema = {}
@@ -112,7 +112,7 @@ const exportSpecifierDescriber: TsNodeDescriber<ts.ExportSpecifier> = (decl, che
     const exportClause = decl.parent!.parent!
     if (ts.isExportDeclaration(exportClause) && exportClause.moduleSpecifier) {
         return {
-            $ref: resolveImportPath(exportClause.moduleSpecifier!.getText().slice(1, -1), '#typeof ' + symb!.name, env)
+            $ref: resolveImportPath(exportClause.moduleSpecifier!.getText().slice(1, -1), '#typeof ' + symb!.name, env),
         }
     }
     return {}
@@ -149,7 +149,7 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
                 ref += '#typeof ' + decl.initializer.name.getText()
             }
             res = {
-                $ref: ref
+                $ref: ref,
             }
         }
     }
@@ -198,7 +198,7 @@ const describeInterface: TsNodeDescriber<ts.InterfaceDeclaration> = (decl, check
     const localRes = describeTypeLiteral(decl, checker, env)
     if (decl.heritageClauses) {
         const res: Schema = {
-            $allOf: []
+            $allOf: [],
         }
         decl.heritageClauses.forEach((clauese) => {
             clauese.types.forEach((t) => {
@@ -235,7 +235,7 @@ const describeFunction: TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunctio
     const res: FunctionSchema = {
         $ref: FunctionSchemaId,
         arguments : funcArguments,
-        returns
+        returns,
     }
     const comments = checker.getSignatureFromDeclaration(decl)!.getDocumentationComment(checker)
     // tslint:disable-next-line:no-shadowed-variable
@@ -303,9 +303,9 @@ const describeClass: TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSc
     const classDef: ClassSchema = {
         $ref: ClassSchemaId,
         constructor: {
-            $ref: '#typeof ' + className
+            $ref: '#typeof ' + className,
         },
-        properties
+        properties,
     }
     if (comment) {
         classDef.description = comment
@@ -314,10 +314,10 @@ const describeClass: TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSc
     const classConstructorDef: ClassConstructorSchema = {
         $ref: ClassConstructorSchemaId,
         returns: {
-            $ref: '#' + className
+            $ref: '#' + className,
         },
         properties: staticProperties,
-        arguments: constructorSign ? constructorSign.arguments : []
+        arguments: constructorSign ? constructorSign.arguments : [],
     }
     if (constructorSign && constructorSign.description) {
         classConstructorDef.description = constructorSign.description
@@ -327,16 +327,16 @@ const describeClass: TsNodeDescriber<ts.ClassDeclaration, ClassConstructorPairSc
     }
     if (extendRef && extendRef.$ref) {
         classDef.extends = {
-            $ref: extendRef.$ref
+            $ref: extendRef.$ref,
         }
         classConstructorDef.extends = {
-            $ref: extendRef.$ref!.replace('#', '#typeof ')
+            $ref: extendRef.$ref!.replace('#', '#typeof '),
         }
     }
 
     return {
         class_def: classDef,
-        constructor_def: classConstructorDef
+        constructor_def: classConstructorDef,
     }
 
   }
@@ -364,7 +364,7 @@ const describeQualifiedName: TsNodeDescriber<ts.QualifiedName> = (decl, checker,
         return {
             $ref: identifierRef.includes('#') ?
                     identifierRef + '.' + innerRef :
-                    identifierRef + '#' + innerRef
+                    identifierRef + '#' + innerRef,
         }
     } else {
         // tslint:disable-next-line:no-debugger
@@ -376,12 +376,12 @@ const describeQualifiedName: TsNodeDescriber<ts.QualifiedName> = (decl, checker,
 const describeIdentifier: TsNodeDescriber<ts.Identifier> = (decl, checker, env) => {
     if (decl.getText() === 'Array') {
         return {
-            type: 'array'
+            type: 'array',
         }
     }
     if (decl.getText() === 'Object') {
         return {
-            type: 'object'
+            type: 'object',
         }
     }
     const referencedSymb = checker.getSymbolAtLocation(decl)!
@@ -408,12 +408,12 @@ const describeIdentifier: TsNodeDescriber<ts.Identifier> = (decl, checker, env) 
 
         if (importPath) {
             return {
-                $ref: resolveImportPath(importPath, importInternal, env)
+                $ref: resolveImportPath(importPath, importInternal, env),
             }
 
         }
         return {
-            $ref: importInternal
+            $ref: importInternal,
         }
     } else {
         // debugger;
@@ -437,7 +437,7 @@ function resolveImportPath(relativeUrl: string, importInternal: string, env: IEn
 
 const describeTypeLiteral: TsNodeDescriber<ts.TypeLiteralNode | ts.InterfaceDeclaration> = (decl, checker, env) => {
     const res: Schema<'object'>  = {
-        type: 'object'
+        type: 'object',
     }
     decl.members.forEach((member) => {
         if (ts.isPropertySignature(member)) {
@@ -454,7 +454,7 @@ const describeTypeLiteral: TsNodeDescriber<ts.TypeLiteralNode | ts.InterfaceDecl
 const describeArrayType: TsNodeDescriber<ts.ArrayTypeNode> = (decl, checker, env) => {
     const res: Schema<'array'>  = {
         type: 'array',
-        items: describeTypeNode(decl.elementType, checker, env)
+        items: describeTypeNode(decl.elementType, checker, env),
     }
 
     return res
@@ -466,7 +466,7 @@ const describeIntersectionType: TsNodeDescriber<ts.IntersectionTypeNode> = (decl
     })
 
     const res: Schema = {
-        $allOf: schemas
+        $allOf: schemas,
     }
 
     return res
@@ -483,13 +483,13 @@ const describeUnionType: TsNodeDescriber<ts.UnionTypeNode> = (decl, checker, env
         if (s.type === 'string' && s.enum) {
             specificString = specificString || {
                 type: 'string',
-                enum: []
+                enum: [],
             }
             specificString.enum = specificString.enum!.concat(s.enum)
         } else if (s.type === 'number' && s.enum) {
             specificNumber = specificNumber || {
                 type: 'number',
-                enum: []
+                enum: [],
             }
             specificNumber.enum = specificNumber.enum!.concat(s.enum)
         } else {
@@ -505,7 +505,7 @@ const describeUnionType: TsNodeDescriber<ts.UnionTypeNode> = (decl, checker, env
     }
 
     const res: Schema = {
-        $oneOf: groupedSchemas
+        $oneOf: groupedSchemas,
     }
 
     return res
@@ -523,7 +523,7 @@ const supportedPrimitives = ['string', 'number', 'boolean']
 function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, env: IEnv): Schema<any> {
     if (t.aliasSymbol) {
         return {
-            $ref: '#' + t.aliasSymbol.name
+            $ref: '#' + t.aliasSymbol.name,
         }
     } else if (t.symbol) {
         const node = getNode(t.symbol)
@@ -536,36 +536,36 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
                 const fileNameNoExt = removeExtension(fileName)
                 const pathInProj = fileNameNoExt.slice(env.projectPath.length)
                 return {
-                    $ref: pathInProj + '#' + t.symbol.name
+                    $ref: pathInProj + '#' + t.symbol.name,
                 }
             }
 
             return {
-                $ref: '#' + t.symbol.name
+                $ref: '#' + t.symbol.name,
             }
         }
     }
     const typeString = checker.typeToString(t)
     if (supportedPrimitives.includes(typeString)) {
         return {
-            type: checker.typeToString(t) as any
+            type: checker.typeToString(t) as any,
         }
     }
 
     if (isUnionType(t)) {
         return {
-            $oneOf: t.types.map((tt) => serializeType(tt, rootNode, checker, env))
+            $oneOf: t.types.map((tt) => serializeType(tt, rootNode, checker, env)),
         }
 
     }
     if (typeString === 'null') {
         return {
-            $ref: NullSchemaId
+            $ref: NullSchemaId,
         }
     }
     if (typeString === 'undefined' || typeString === 'void') {
         return {
-            $ref: UndefinedSchemaId
+            $ref: UndefinedSchemaId,
         }
     }
     if (typeString === 'any') {
@@ -577,14 +577,14 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
     if (typeString.startsWith('"')) {
         return {
             type: 'string',
-            enum: [typeString.slice(1, -1)]
+            enum: [typeString.slice(1, -1)],
         }
     }
 
     if (!isNaN(parseFloat(typeString))) {
         return {
             type: 'number',
-            enum: [parseFloat(typeString)]
+            enum: [parseFloat(typeString)],
         }
     }
 
@@ -600,7 +600,7 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
                 // tslint:disable-next-line:no-shadowed-variable
                 const t = checker.getTypeOfSymbolAtLocation(p, rootNode)
                 return serializeType(t, rootNode, checker, env)
-            })
+            }),
         }
         return res
     }
@@ -608,7 +608,7 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
     const properties = checker.getPropertiesOfType(t)
 
     const res: Schema<'object'> = {
-        type: 'object'
+        type: 'object',
     }
 
     if (properties.length) {

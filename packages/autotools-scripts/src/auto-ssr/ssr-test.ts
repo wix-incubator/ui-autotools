@@ -1,3 +1,3 @@
-import {autoSSR} from 'auto-ssr';
+import {autoSSR} from 'auto-ssr'
 
-autoSSR();
+autoSSR()

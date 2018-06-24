@@ -1,12 +1,12 @@
-import * as React from 'react';
+import * as React from 'react'
 
 const FailingTestComp: React.SFC = () => {
   const accessDocument = () => {
-    document.createElement('div');
-  };
+    document.createElement('div')
+  }
 
-  accessDocument();
-  return null;
-};
+  accessDocument()
+  return null
+}
 
-export {FailingTestComp};
+export {FailingTestComp}

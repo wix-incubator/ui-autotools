@@ -1,1 +1,1 @@
-export * from "./auto-ssr.spec";
+export * from './auto-ssr.spec'

@@ -1,11 +1,11 @@
-import * as React from 'react';
+import * as React from 'react'
 
-export interface Props {
-  text?: string;
+export interface IProps {
+  text?: string
 }
 
-const TestComp: React.SFC<Props> = (props: Props) => {
-  return <h1>Hey {props.text} person</h1>;
-};
+const TestComp: React.SFC<IProps> = (props: IProps) => {
+  return <h1>Hey {props.text} person</h1>
+}
 
-export {TestComp};
+export {TestComp}

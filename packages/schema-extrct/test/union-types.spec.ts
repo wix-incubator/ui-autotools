@@ -1,12 +1,10 @@
-import {expect} from 'chai';
-import { ModuleSchema } from '../src/json-schema-types';
+import {expect} from 'chai'
+import { ModuleSchema } from '../src/json-schema-types'
 import {transformTest} from '../test-kit/run-transform'
 
-
-
-describe('schema-extrct - union',()=>{
-    it('should support union types', async ()=>{
-        const moduleId = 'unions';
+describe('schema-extrct - union', () => {
+    it('should support union types', async () => {
+        const moduleId = 'unions'
         const res = transformTest(`
         import {AType} from './test-assets'
 
@@ -24,81 +22,81 @@ describe('schema-extrct - union',()=>{
         export let inline_union: number | {
             value:number
         }
-        `, moduleId);
+        `, moduleId)
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "definitions": {
-                "Specific_union":{
-                    "$oneOf":[
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            definitions: {
+                Specific_union: {
+                    $oneOf: [
                         {
-                            "type":"number"
+                            type: 'number'
                         },
                         {
-                            "type":"string",
-                            "enum":["hello","goodbye"]
+                            type: 'string',
+                            enum: ['hello', 'goodbye']
                         }
                     ]
                 }
             },
-            "properties": {
-                "declared_union":{
-                    "$oneOf":[
+            properties: {
+                declared_union: {
+                    $oneOf: [
                         {
-                            "type":"string"
+                            type: 'string'
                         },
                         {
-                            "type":"number"
+                            type: 'number'
                         }
                     ]
                 },
-                "infered_union":{
-                    "$oneOf":[
+                infered_union: {
+                    $oneOf: [
                         {
-                            "type":"string"
+                            type: 'string'
                         },
                         {
-                            "type":"number"
+                            type: 'number'
                         }
                     ]
                 },
-                "specific_union":{
-                    "$ref":'#Specific_union'
+                specific_union: {
+                    $ref: '#Specific_union'
                 },
-                "type_union":{
-                    "$oneOf":[
+                type_union: {
+                    $oneOf: [
                         {
-                            "$ref":"/src/test-assets#AType"
+                            $ref: '/src/test-assets#AType'
                         },
                         {
-                            "type":"number"
+                            type: 'number'
                         }
                     ]
-                
+
                 },
-                "union_union":{
-                    "$oneOf":[
+                union_union: {
+                    $oneOf: [
                         {
-                            "$ref":'#Specific_union'
+                            $ref: '#Specific_union'
                         },
                         {
-                            "type":"string",
-                            "enum":["goodday"]
+                            type: 'string',
+                            enum: ['goodday']
                         }
                     ]
                 },
-                "inline_union":{
-                    "$oneOf":[
+                inline_union: {
+                    $oneOf: [
                         {
-                            type:'number'
+                            type: 'number'
                         },
                         {
-                            "type":"object",
-                            "properties":{
-                                value:{
-                                    type:'number'
+                            type: 'object',
+                            properties: {
+                                value: {
+                                    type: 'number'
                                 }
                             }
                         }
@@ -106,8 +104,7 @@ describe('schema-extrct - union',()=>{
                 }
             }
         }
-        expect(res).to.eql(expected);
-    });
-   
-})
+        expect(res).to.eql(expected)
+    })
 
+})

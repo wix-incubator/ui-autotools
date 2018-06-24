@@ -1,0 +1,22 @@
+{
+  "name": "ui-autotools-mock-repo",
+  "version": "1.0.0",
+  "private": true,
+  "author": "Wix.com",
+  "license": "BSD-3-Clause",
+  "scripts": {
+    "start": "webpack-dev-server --progress",
+    "clean": "rimraf ./cjs ./esm",
+    "build": "run-p build:cjs build:esm",
+    "build:cjs": "tsc --project src --outDir cjs --module commonjs",
+    "build:esm": "tsc --project src --outDir esm --module esnext",
+    "lint": "run-p lint:src lint:test",
+    "lint:src": "tslint --project src",
+    "lint:test": "tslint --project test",
+    "test": "mocha -r typescript-support \"./test/node/**/*.node-spec.ts?(x)\" --watch-extensions ts,tsx"
+  },
+  "dependencies": {
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
+  }
+}

@@ -6,6 +6,8 @@ cjs
 .idea
 .history
 .DS_Store
+package-lock.json
+
 
 # https://github.com/github/gitignore/blob/master/Node.gitignore
 
@@ -70,7 +72,3 @@ typings/
 
 # next.js build output
 .next
-
-# version locks
-package-lock.json
-yarn.lock

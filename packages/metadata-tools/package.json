@@ -12,7 +12,7 @@
     "lint": "run-p lint:src lint:test",
     "lint:src": "tslint --project src",
     "lint:test": "tslint --project test",
-    "test": "mocha -r node-typescript-support/register \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
+    "test": "mocha -r typescript-support \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
   },
   "files": [
     "cjs",
@@ -23,11 +23,5 @@
   },
   "repository": "git@github.com:wix-incubator/ui-autotools.git",
   "author": "Wix.com",
-  "license": "BSD-3-Clause",
-  "devDependencies": {
-    "@types/react": "^16.3.14",
-    "@types/react-dom": "^16.0.5",
-    "react": "^16.4.0",
-    "react-dom": "^16.4.0"
-  }
+  "license": "BSD-3-Clause"
 }

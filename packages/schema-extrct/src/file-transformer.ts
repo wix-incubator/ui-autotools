@@ -665,7 +665,7 @@ function serializeType(t:ts.Type, rootNode:ts.Node,checker:ts.TypeChecker, env:E
     
 }
 
-function getGenericParams(decl: ts.DeclarationWithTypeParameters, checker: ts.TypeChecker, env: Env): Array<Schema> | undefined {
+function getGenericParams(decl: ts.SignatureDeclaration | ts.ClassLikeDeclaration | ts.InterfaceDeclaration | ts.TypeAliasDeclaration, checker: ts.TypeChecker, env: Env): Array<Schema> | undefined {
     if (decl.typeParameters) {
         return decl.typeParameters.map(t => {
             let r: Schema = {};

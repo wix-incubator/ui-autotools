@@ -73,4 +73,3 @@ typings/
 
 # version locks
 package-lock.json
-yarn.lock

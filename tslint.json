@@ -14,10 +14,10 @@
         ],
         "semicolon": [
             true,
-            "never"
+            "always"
         ],
-        "max-line-length": [true, 420], // TODO: change this to something reasonable
-        "semicolon": [true, "always"],
+        "max-line-length": [true, 420],
+        "trailing-comma": false,
         "variable-name": [
             true,
             "allow-leading-underscore",

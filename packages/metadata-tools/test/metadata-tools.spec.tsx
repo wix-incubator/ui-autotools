@@ -1,6 +1,6 @@
+import {expect} from 'chai';
 import * as React from 'react';
 import Registry, {ComponentMetadata} from '../src/registry';
-import {expect} from 'chai';
 
 interface TestProps {
   text: string;

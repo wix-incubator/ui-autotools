@@ -1,10 +1,10 @@
-import {NodeTypeScriptService} from 'node-typescript-support'
 import * as glob from 'glob';
- 
-const nodeTsService = new NodeTypeScriptService(/* options */)
-nodeTsService.installSourceMapSupport() // optional installation of source-map-support
+import {NodeTypeScriptService} from 'node-typescript-support';
+
+const nodeTsService = new NodeTypeScriptService(/* options */);
+nodeTsService.installSourceMapSupport(); // optional installation of source-map-support
 // register our handler for the two default supported extensions
-require.extensions['.ts'] = require.extensions['.tsx'] = nodeTsService.requireExtension
+require.extensions['.ts'] = require.extensions['.tsx'] = nodeTsService.requireExtension;
 
 const importMeta = (filePattern: string) => {
   const options = {
@@ -18,7 +18,7 @@ const importMeta = (filePattern: string) => {
 
   files.map((file: string) => {
     require(file);
-  })
-}
+  });
+};
 
 export default importMeta;

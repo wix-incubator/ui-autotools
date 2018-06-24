@@ -1,6 +1,0 @@
-{
-    "extends": ["tslint-wix-react"],
-    "rules": {
-      "no-submodule-imports" : [true, "react-dom"]
-    }
-}

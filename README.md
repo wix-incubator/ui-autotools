@@ -1,4 +1,6 @@
 # ui-autotools
+[![Build Status](https://travis-ci.org/wix-incubator/ui-autotools.svg?branch=master)](https://travis-ci.org/wix-incubator/ui-autotools)
+
 A set of tools designed to automate and improve the process of developing components.
 
 These tools rely on `*.meta.tsx` files in the project. 

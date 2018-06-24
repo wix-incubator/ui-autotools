@@ -1,10 +1,10 @@
-import {expect} from 'chai'
-import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId } from '../src/json-schema-types'
-import {transformTest} from '../test-kit/run-transform'
+import {expect} from 'chai';
+import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId } from '../src/json-schema-types';
+import {transformTest} from '../test-kit/run-transform';
 
 describe('schema-extrct - classes', () => {
     xit('should support classes', async () => {
-        const moduleId = 'classes'
+        const moduleId = 'classes';
         const res = transformTest(`
         import { AClass} from './test-assets'
 
@@ -27,7 +27,7 @@ describe('schema-extrct - classes', () => {
         };
         export let param:MyClass;
         export let alias = MyClass;
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -81,8 +81,8 @@ describe('schema-extrct - classes', () => {
                     $ref: '#typeof MyClass',
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
 
-})
+});

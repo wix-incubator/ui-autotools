@@ -1,10 +1,10 @@
-import {expect} from 'chai'
-import { ModuleSchema, ClassConstructorSchemaId, ClassSchemaId } from '../src/json-schema-types'
-import {transformTest} from '../test-kit/run-transform'
+import {expect} from 'chai';
+import { ModuleSchema, ClassConstructorSchemaId, ClassSchemaId } from '../src/json-schema-types';
+import {transformTest} from '../test-kit/run-transform';
 
 describe('schema-extrct - comments', () => {
     it('should support comments before vars', async () => {
-        const moduleId = 'comments'
+        const moduleId = 'comments';
         const res = transformTest(`
         /**
          * param documentation
@@ -12,7 +12,7 @@ describe('schema-extrct - comments', () => {
          */
         export let a:string;
 
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -25,12 +25,12 @@ describe('schema-extrct - comments', () => {
                     minLength: 5,
                 },
             },
-        }
+        };
 
-        expect(res).to.eql(expected)
-    })
+        expect(res).to.eql(expected);
+    });
     it('should support comments before types and type members', async () => {
-        const moduleId = 'comments'
+        const moduleId = 'comments';
         const res = transformTest(`
         /**
          * type documentation
@@ -44,7 +44,7 @@ describe('schema-extrct - comments', () => {
             prop:string;
         };
 
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -65,12 +65,12 @@ describe('schema-extrct - comments', () => {
                 },
             },
             properties: {},
-        }
+        };
 
-        expect(res).to.eql(expected)
-    })
+        expect(res).to.eql(expected);
+    });
     it('should support comments before functions', async () => {
-        const moduleId = 'comments'
+        const moduleId = 'comments';
         const res = transformTest(`
         /**
          * function documentation
@@ -81,7 +81,7 @@ describe('schema-extrct - comments', () => {
             return '' + a;
         }
 
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -104,13 +104,13 @@ describe('schema-extrct - comments', () => {
                     },
                 },
             },
-        }
+        };
 
-        expect(res).to.eql(expected)
-    })
+        expect(res).to.eql(expected);
+    });
 
     it('should support comments in classes', async () => {
-        const moduleId = 'comments'
+        const moduleId = 'comments';
         const res = transformTest(`
         /**
          * Documentation for C
@@ -124,7 +124,7 @@ describe('schema-extrct - comments', () => {
             constructor(a: string, b: C) { }
         }
 
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -165,12 +165,12 @@ describe('schema-extrct - comments', () => {
                     $ref: '#typeof C',
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
 
     it('should support comments on class members', async () => {
-        const moduleId = 'comments'
+        const moduleId = 'comments';
         const res = transformTest(`
             export class C {
                 /**
@@ -179,7 +179,7 @@ describe('schema-extrct - comments', () => {
                 a:string;
             }
 
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -212,7 +212,7 @@ describe('schema-extrct - comments', () => {
                     $ref: '#typeof C',
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
-})
+        };
+        expect(res).to.eql(expected);
+    });
+});

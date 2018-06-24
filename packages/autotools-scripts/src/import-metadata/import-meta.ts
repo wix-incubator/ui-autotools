@@ -1,19 +1,19 @@
-import 'typescript-support'
-import * as glob from 'glob'
+import 'typescript-support';
+import * as glob from 'glob';
 
 const importMeta = (filePattern: string) => {
   const options = {
     nosort: true,
     matchBase: true,
     absolute: true,
-  }
-  const defaultPattern = './**/*.meta.ts[x?]'
+  };
+  const defaultPattern = './**/*.meta.ts[x?]';
 
-  const files = glob.sync(filePattern || defaultPattern, options)
+  const files = glob.sync(filePattern || defaultPattern, options);
 
   files.map((file: string) => {
-    require(file)
-  })
-}
+    require(file);
+  });
+};
 
-export default importMeta
+export default importMeta;

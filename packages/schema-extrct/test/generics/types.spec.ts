@@ -1,16 +1,16 @@
-import {expect} from 'chai'
-import { ModuleSchema, FunctionSchemaId } from '../../src/json-schema-types'
-import {transformTest} from '../../test-kit/run-transform'
+import {expect} from 'chai';
+import { ModuleSchema, FunctionSchemaId } from '../../src/json-schema-types';
+import {transformTest} from '../../test-kit/run-transform';
 
 describe('schema-extrct - generic types', () => {
     xit('should support genric type definition', async () => {
-        const moduleId = 'type-definition'
+        const moduleId = 'type-definition';
         const res = transformTest(`
         export type MyType<T> = {
             something:T;
         };
         export let param:MyType<string>;
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -37,18 +37,18 @@ describe('schema-extrct - generic types', () => {
                     }],
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
 
     xit('should support generic arguments schema', async () => {
-        const moduleId = 'type-definition'
+        const moduleId = 'type-definition';
         const res = transformTest(`
         export type MyType<T extends string> = {
             something:T;
         };
         export let param:MyType<'gaga'>;
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -79,12 +79,12 @@ describe('schema-extrct - generic types', () => {
                     }],
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
 
     xit('generic arguments should be passed deeply', async () => {
-        const moduleId = 'type-definition'
+        const moduleId = 'type-definition';
         const res = transformTest(`
         export type MyType<T extends string> = {
             something:{
@@ -98,7 +98,7 @@ describe('schema-extrct - generic types', () => {
                 results:T[]
             }
         };
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -161,7 +161,7 @@ describe('schema-extrct - generic types', () => {
                     },
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
-})
+        };
+        expect(res).to.eql(expected);
+    });
+});

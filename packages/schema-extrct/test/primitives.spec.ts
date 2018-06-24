@@ -1,10 +1,10 @@
-import {expect} from 'chai'
-import { ModuleSchema } from '../src/json-schema-types'
-import {transformTest} from '../test-kit/run-transform'
+import {expect} from 'chai';
+import { ModuleSchema } from '../src/json-schema-types';
+import {transformTest} from '../test-kit/run-transform';
 
 describe('schema-extrct - primitives', () => {
     it('should support primitives', async () => {
-        const moduleId = 'primitives'
+        const moduleId = 'primitives';
         const res = transformTest(`
         export let declared_string: string;
         export let declared_number: number;
@@ -17,7 +17,7 @@ describe('schema-extrct - primitives', () => {
         export let infered_boolean = false;
         export let infered_boolean = false;
 
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -52,17 +52,17 @@ describe('schema-extrct - primitives', () => {
                 },
 
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
 
     it('should support exact primitives', async () => {
-        const moduleId = 'primitives'
+        const moduleId = 'primitives';
         const res = transformTest(`
         export let specificString: "A";
         export let specificNumber: 5;
 
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -82,7 +82,7 @@ describe('schema-extrct - primitives', () => {
                     ],
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
-})
+        };
+        expect(res).to.eql(expected);
+    });
+});

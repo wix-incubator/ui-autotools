@@ -1,10 +1,10 @@
-import {expect} from 'chai'
-import { ModuleSchema } from '../src/json-schema-types'
-import {transformTest} from '../test-kit/run-transform'
+import {expect} from 'chai';
+import { ModuleSchema } from '../src/json-schema-types';
+import {transformTest} from '../test-kit/run-transform';
 
 describe('schema-extrct - interfaces', () => {
     it('should support typed interfaces', async () => {
-        const moduleId = 'arrays'
+        const moduleId = 'arrays';
         const res = transformTest(`
         import { AType } from './test-assets';
 
@@ -15,7 +15,7 @@ describe('schema-extrct - interfaces', () => {
         export interface Extendz extends MyInterface {
             desc: string;
         }
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -50,11 +50,11 @@ describe('schema-extrct - interfaces', () => {
                     $ref: '#MyInterface',
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
     it('should support recursive interfaces', async () => {
-        const moduleId = 'arrays'
+        const moduleId = 'arrays';
         const res = transformTest(`
         import { AType } from './test-assets';
 
@@ -68,7 +68,7 @@ describe('schema-extrct - interfaces', () => {
         export let param:MyInterface = {} as any;
         export let param2:MyInterface2 = {} as any;
 
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -100,7 +100,7 @@ describe('schema-extrct - interfaces', () => {
                     $ref: '#MyInterface2',
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
-})
+        };
+        expect(res).to.eql(expected);
+    });
+});

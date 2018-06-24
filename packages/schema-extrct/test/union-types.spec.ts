@@ -1,10 +1,10 @@
-import {expect} from 'chai'
-import { ModuleSchema } from '../src/json-schema-types'
-import {transformTest} from '../test-kit/run-transform'
+import {expect} from 'chai';
+import { ModuleSchema } from '../src/json-schema-types';
+import {transformTest} from '../test-kit/run-transform';
 
 describe('schema-extrct - union', () => {
     it('should support union types', async () => {
-        const moduleId = 'unions'
+        const moduleId = 'unions';
         const res = transformTest(`
         import {AType} from './test-assets'
 
@@ -22,7 +22,7 @@ describe('schema-extrct - union', () => {
         export let inline_union: number | {
             value:number
         }
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -103,8 +103,8 @@ describe('schema-extrct - union', () => {
                     ],
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
 
-})
+});

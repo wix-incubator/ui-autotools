@@ -1,15 +1,15 @@
-import {expect} from 'chai'
-import { ModuleSchema } from '../src/json-schema-types'
-import {transformTest} from '../test-kit/run-transform'
+import {expect} from 'chai';
+import { ModuleSchema } from '../src/json-schema-types';
+import {transformTest} from '../test-kit/run-transform';
 
 describe('schema-extrct - objects', () => {
     it('should support "any" object', async () => {
-        const moduleId = 'export-types'
+        const moduleId = 'export-types';
         const res = transformTest(`
         import { AType } from './test-assets';
 
         export let declared_object:Object;
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -20,11 +20,11 @@ describe('schema-extrct - objects', () => {
                     type: 'object',
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
     it('should objects with properties', async () => {
-        const moduleId = 'export-types'
+        const moduleId = 'export-types';
         const res = transformTest(`
         import { AType } from './test-assets';
 
@@ -43,7 +43,7 @@ describe('schema-extrct - objects', () => {
         export let declared_with_import:{
             imported:AType
         }
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -81,11 +81,11 @@ describe('schema-extrct - objects', () => {
                     },
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
     it('should objects with index signature', async () => {
-        const moduleId = 'index-signatures'
+        const moduleId = 'index-signatures';
         const res = transformTest(`
         import { AType } from './test-assets';
 
@@ -101,7 +101,7 @@ describe('schema-extrct - objects', () => {
         export let declared_object_with_imported_index:{
             [key:string]:AType
         };
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -132,8 +132,8 @@ describe('schema-extrct - objects', () => {
                     },
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
 
-})
+});

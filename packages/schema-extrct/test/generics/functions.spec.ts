@@ -1,11 +1,11 @@
-import {expect} from 'chai'
-import { ModuleSchema } from '../../src/json-schema-types'
-import {transformTest} from '../../test-kit/run-transform'
+import {expect} from 'chai';
+import { ModuleSchema } from '../../src/json-schema-types';
+import {transformTest} from '../../test-kit/run-transform';
 
 describe('schema-extrct - generic functions', () => {
 
     xit('should support declared generic functions', async () => {
-        const moduleId = 'functions'
+        const moduleId = 'functions';
         const res = transformTest(`
 
         export const declaredFunction<T extends string>:(str:T)=>T = (str:T)=>{
@@ -13,7 +13,7 @@ describe('schema-extrct - generic functions', () => {
         };
 
 
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -38,18 +38,18 @@ describe('schema-extrct - generic functions', () => {
                 },
             },
 
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
 
     xit('should support generic functions with parameter deconstruct', async () => {
-        const moduleId = 'functions'
+        const moduleId = 'functions';
         const res = transformTest(`
 
         export function declaredDeconstruct<T> ({x:T, y:T}):T { return x };
 
 
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -83,14 +83,14 @@ describe('schema-extrct - generic functions', () => {
                 },
             },
 
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
     xit('should support generic functions with rest params', async () => {
-        const moduleId = 'functions'
+        const moduleId = 'functions';
         const res = transformTest(`
         export let functionWithRestParams<T>:(str:string, ...rest:T[])=>T;
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -120,8 +120,8 @@ describe('schema-extrct - generic functions', () => {
                     },
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
 
-})
+});

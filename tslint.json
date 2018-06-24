@@ -17,6 +17,7 @@
             "never"
         ],
         "max-line-length": [true, 420], // TODO: change this to something reasonable
+        "semicolon": [true, "always"],
         "variable-name": [
             true,
             "allow-leading-underscore",

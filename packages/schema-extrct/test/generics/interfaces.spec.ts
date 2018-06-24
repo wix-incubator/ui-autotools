@@ -1,16 +1,16 @@
-import {expect} from 'chai'
-import { ModuleSchema, FunctionSchemaId } from '../../src/json-schema-types'
-import {transformTest} from '../../test-kit/run-transform'
+import {expect} from 'chai';
+import { ModuleSchema, FunctionSchemaId } from '../../src/json-schema-types';
+import {transformTest} from '../../test-kit/run-transform';
 
 describe('schema-extrct - generic interface', () => {
     xit('should support genric interface definition', async () => {
-        const moduleId = 'interface-definition'
+        const moduleId = 'interface-definition';
         const res = transformTest(`
         export type MyInterface<T>{
             something:T;
         };
         export let param:MyInterface<string>;
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -37,18 +37,18 @@ describe('schema-extrct - generic interface', () => {
                     }],
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
 
     xit('should support generic arguments schema', async () => {
-        const moduleId = 'interface-definition'
+        const moduleId = 'interface-definition';
         const res = transformTest(`
         export type MyInterface<T extends string>{
             something:T;
         };
         export let param:MyInterface<'gaga'>;
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -79,12 +79,12 @@ describe('schema-extrct - generic interface', () => {
                     }],
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
 
     xit('generic arguments should be passed deeply', async () => {
-        const moduleId = 'interface-definition'
+        const moduleId = 'interface-definition';
         const res = transformTest(`
         export type MyInterface<T extends string>{
             something:{
@@ -98,7 +98,7 @@ describe('schema-extrct - generic interface', () => {
                 results:T[]
             }
         };
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -161,7 +161,7 @@ describe('schema-extrct - generic interface', () => {
                     },
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
-})
+        };
+        expect(res).to.eql(expected);
+    });
+});

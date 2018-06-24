@@ -1,16 +1,16 @@
-import {expect} from 'chai'
-import { ModuleSchema, UndefinedSchemaId, FunctionSchemaId, ModuleSchemaId } from '../src/json-schema-types'
-import {transformTest} from '../test-kit/run-transform'
+import {expect} from 'chai';
+import { ModuleSchema, UndefinedSchemaId, FunctionSchemaId, ModuleSchemaId } from '../src/json-schema-types';
+import {transformTest} from '../test-kit/run-transform';
 
 describe('schema-extrct - functions', () => {
     it('should support infered function return values', async () => {
-        const moduleId = 'infered_functions'
+        const moduleId = 'infered_functions';
         const res = transformTest(`
         export function inferedFunction(str:string){
             return str+'a'
         };
 
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -31,11 +31,11 @@ describe('schema-extrct - functions', () => {
                 },
             },
 
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
     it('should support declared functions return values', async () => {
-        const moduleId = 'functions'
+        const moduleId = 'functions';
         const res = transformTest(`
 
         export const declaredFunction:(str:string)=>string = (str:string)=>{
@@ -43,7 +43,7 @@ describe('schema-extrct - functions', () => {
         };
 
 
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -65,18 +65,18 @@ describe('schema-extrct - functions', () => {
                 },
             },
 
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
 
     it('should support functions with parameter deconstruct', async () => {
-        const moduleId = 'functions'
+        const moduleId = 'functions';
         const res = transformTest(`
 
         export function inferedDeconstruct ({x=1, y="text"}) { return x + y; };
 
 
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -107,17 +107,17 @@ describe('schema-extrct - functions', () => {
                 },
             },
 
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
     it('should support functions with rest params', async () => {
-        const moduleId = 'functions'
+        const moduleId = 'functions';
         const res = transformTest(`
         export const functionWithRestParams:(str:string, ...rest:number[])=>string = (str:string)=>{
             return str+'a'
         };
 
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -144,18 +144,18 @@ describe('schema-extrct - functions', () => {
                     },
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
 
     it('should support infered void functions', async () => {
-        const moduleId = 'functions'
+        const moduleId = 'functions';
         const res = transformTest(`
         export function voidFunc(str:string){
             console.log(str);
         };
 
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -175,18 +175,18 @@ describe('schema-extrct - functions', () => {
                     },
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
 
     it('should support declared void functions', async () => {
-        const moduleId = 'functions'
+        const moduleId = 'functions';
         const res = transformTest(`
         export function voidFunc(str:string):void{
             console.log(str);
         };
 
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -206,12 +206,12 @@ describe('schema-extrct - functions', () => {
                     },
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
 
     it('should support infered function return type (non primitive import)', async () => {
-        const moduleId = 'infered_functions'
+        const moduleId = 'infered_functions';
         const res = transformTest(`
         import {AClass} from './test-assets
         export function inferedFunction(str:string){
@@ -219,7 +219,7 @@ describe('schema-extrct - functions', () => {
             return res;
         };
 
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -240,7 +240,7 @@ describe('schema-extrct - functions', () => {
                     },
             },
 
-        }
-        expect(res).to.eql(expected)
-    })
-})
+        };
+        expect(res).to.eql(expected);
+    });
+});

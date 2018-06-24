@@ -1,10 +1,10 @@
-import {expect} from 'chai'
-import { ModuleSchema } from '../src/json-schema-types'
-import {transformTest} from '../test-kit/run-transform'
+import {expect} from 'chai';
+import { ModuleSchema } from '../src/json-schema-types';
+import {transformTest} from '../test-kit/run-transform';
 
 describe('schema-extrct - intersection', () => {
     it('should support intersection types', async () => {
-        const moduleId = 'intersection'
+        const moduleId = 'intersection';
         const res = transformTest(`
         export type A = {
             a:string;
@@ -18,7 +18,7 @@ describe('schema-extrct - intersection', () => {
         }
 
         export type Intersection = A & RGB;
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -67,8 +67,8 @@ describe('schema-extrct - intersection', () => {
             properties: {
 
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
 
-})
+});

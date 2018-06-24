@@ -1,10 +1,10 @@
-import {expect} from 'chai'
-import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId } from '../../src/json-schema-types'
-import {transformTest} from '../../test-kit/run-transform'
+import {expect} from 'chai';
+import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId } from '../../src/json-schema-types';
+import {transformTest} from '../../test-kit/run-transform';
 
 describe('schema-extrct - generic classes', () => {
     xit('should support generic classes', async () => {
-        const moduleId = 'classes'
+        const moduleId = 'classes';
         const res = transformTest(`
         import { AGenericClass} from './test-assets'
 
@@ -18,7 +18,7 @@ describe('schema-extrct - generic classes', () => {
 
             }
         };
-        `, moduleId)
+        `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
             $schema: 'http://json-schema.org/draft-06/schema#',
@@ -72,8 +72,8 @@ describe('schema-extrct - generic classes', () => {
                     $ref: '#typeof MyClass',
                 },
             },
-        }
-        expect(res).to.eql(expected)
-    })
+        };
+        expect(res).to.eql(expected);
+    });
 
-})
+});

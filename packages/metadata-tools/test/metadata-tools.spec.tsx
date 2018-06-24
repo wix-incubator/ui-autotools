@@ -1,56 +1,56 @@
-import * as React from 'react'
-import Registry, {ComponentMetadata} from '../src/registry'
-import {expect} from 'chai'
+import * as React from 'react';
+import Registry, {ComponentMetadata} from '../src/registry';
+import {expect} from 'chai';
 
 interface ITestProps {
-  text: string
+  text: string;
 }
 
 const TestComp: React.SFC<ITestProps> = (props: ITestProps) => {
-  return <h1>Hey {props.text} person</h1>
-}
+  return <h1>Hey {props.text} person</h1>;
+};
 
 const testSim = {
   props: {
     text: 'person',
   },
-}
+};
 
 describe('Registry', () => {
   beforeEach(() => {
-    Registry.clean()
-  })
+    Registry.clean();
+  });
 
   it('returns an already existing metadata', () => {
-    const myCompMetaData = Registry.describe(TestComp)
-    const mySecondCompMetaData = Registry.describe(TestComp)
+    const myCompMetaData = Registry.describe(TestComp);
+    const mySecondCompMetaData = Registry.describe(TestComp);
 
-    expect(mySecondCompMetaData).to.equal(myCompMetaData)
-  })
+    expect(mySecondCompMetaData).to.equal(myCompMetaData);
+  });
 
   describe('The Describe method', () => {
     it('adds a new component\'s metadata to the registry, and returns its meta data', () => {
-      const myCompMetaData = Registry.describe(TestComp)
-      expect(myCompMetaData).to.be.an.instanceof(ComponentMetadata)
-    })
-  })
+      const myCompMetaData = Registry.describe(TestComp);
+      expect(myCompMetaData).to.be.an.instanceof(ComponentMetadata);
+    });
+  });
 
   describe('The addSim method', () => {
     it('adds a new simulation to the component metadata', () => {
-      const myCompMetaData = Registry.describe(TestComp)
-      myCompMetaData.addSim(testSim)
-      expect(myCompMetaData.simulations[0]).to.equal(testSim)
-    })
-  })
+      const myCompMetaData = Registry.describe(TestComp);
+      myCompMetaData.addSim(testSim);
+      expect(myCompMetaData.simulations[0]).to.equal(testSim);
+    });
+  });
 
   describe('The clean method', () => {
     it('removes any existing metadata', () => {
-      Registry.describe(TestComp)
-      expect(Registry.metadata.size).to.equal(1)
+      Registry.describe(TestComp);
+      expect(Registry.metadata.size).to.equal(1);
 
-      Registry.clean()
+      Registry.clean();
 
-      expect(Registry.metadata.size).to.equal(0)
-    })
-  })
-})
+      expect(Registry.metadata.size).to.equal(0);
+    });
+  });
+});

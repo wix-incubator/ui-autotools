@@ -1,15 +1,13 @@
 import {expect} from 'chai';
 import { ModuleSchema } from '../src/json-schema-types';
-import {transformTest} from '../test-kit/run-transform'
+import {transformTest} from '../test-kit/run-transform';
 
-
-
-describe('schema-extrct - interfaces',()=>{
-    it('should support typed interfaces', async ()=>{
+describe('schema-extrct - interfaces', () => {
+    it('should support typed interfaces', async () => {
         const moduleId = 'arrays';
         const res = transformTest(`
         import { AType } from './test-assets';
-        
+
         export interface MyInterface{
             title:string;
         };
@@ -19,47 +17,47 @@ describe('schema-extrct - interfaces',()=>{
         }
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "definitions":{
-                "MyInterface" : {
-                    "type":"object",
-                    "properties": {
-                        "title":{
-                            "type":"string"
-                        }
-                    }
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            definitions: {
+                MyInterface : {
+                    type: 'object',
+                    properties: {
+                        title: {
+                            type: 'string',
+                        },
+                    },
                 },
-                "Extendz" : {
-                    "$allOf": [
+                Extendz : {
+                    $allOf: [
                         {
-                            $ref:"#MyInterface"
-                        },{
-                            type:'object',
-                            "properties": {
-                                "desc":{
-                                    "type":"string"
-                                }
-                            }
-                        }
-                    ]
-                }
+                            $ref: '#MyInterface',
+                        }, {
+                            type: 'object',
+                            properties: {
+                                desc: {
+                                    type: 'string',
+                                },
+                            },
+                        },
+                    ],
+                },
             },
-            "properties": {
-                "param":{
-                    "$ref":"#MyInterface"
-                }
-            }
-        }
+            properties: {
+                param: {
+                    $ref: '#MyInterface',
+                },
+            },
+        };
         expect(res).to.eql(expected);
     });
-    it('should support recursive interfaces', async ()=>{
+    it('should support recursive interfaces', async () => {
         const moduleId = 'arrays';
         const res = transformTest(`
         import { AType } from './test-assets';
-        
+
         export interface MyInterface{
             a:MyInterface2;
         };
@@ -69,41 +67,40 @@ describe('schema-extrct - interfaces',()=>{
         };
         export let param:MyInterface = {} as any;
         export let param2:MyInterface2 = {} as any;
-       
+
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "definitions":{
-                "MyInterface" : {
-                    "type":"object",
-                    "properties": {
-                        "a":{
-                            "$ref":"#MyInterface2"
-                        }
-                    }
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            definitions: {
+                MyInterface : {
+                    type: 'object',
+                    properties: {
+                        a: {
+                            $ref: '#MyInterface2',
+                        },
+                    },
                 },
-                "MyInterface2" : {
-                    "type":"object",
-                    "properties": {
-                        "b":{
-                            "$ref":"#MyInterface"
-                        }
-                    }
-                }
+                MyInterface2 : {
+                    type: 'object',
+                    properties: {
+                        b: {
+                            $ref: '#MyInterface',
+                        },
+                    },
+                },
             },
-            "properties": {
-                "param":{
-                    "$ref":"#MyInterface"
+            properties: {
+                param: {
+                    $ref: '#MyInterface',
                 },
-                "param2":{
-                    "$ref":"#MyInterface2"
-                }
-            }
-        }
+                param2: {
+                    $ref: '#MyInterface2',
+                },
+            },
+        };
         expect(res).to.eql(expected);
     });
-})
-
+});

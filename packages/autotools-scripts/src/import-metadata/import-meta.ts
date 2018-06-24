@@ -1,11 +1,11 @@
-import 'typescript-support'
-import * as glob from 'glob'
- 
+import 'typescript-support';
+import * as glob from 'glob';
+
 const importMeta = (filePattern: string) => {
   const options = {
     nosort: true,
     matchBase: true,
-    absolute: true
+    absolute: true,
   };
   const defaultPattern = './**/*.meta.ts[x?]';
 
@@ -13,7 +13,7 @@ const importMeta = (filePattern: string) => {
 
   files.map((file: string) => {
     require(file);
-  })
-}
+  });
+};
 
 export default importMeta;

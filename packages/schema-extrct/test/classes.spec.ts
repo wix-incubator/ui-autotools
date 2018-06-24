@@ -1,20 +1,18 @@
 import {expect} from 'chai';
 import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId } from '../src/json-schema-types';
-import {transformTest} from '../test-kit/run-transform'
+import {transformTest} from '../test-kit/run-transform';
 
-
-
-describe('schema-extrct - classes',()=>{
-    xit('should support classes', async ()=>{
+describe('schema-extrct - classes', () => {
+    xit('should support classes', async () => {
         const moduleId = 'classes';
         const res = transformTest(`
         import { AClass} from './test-assets'
 
         /****
-         * 
+         *
          * @props.id the id of the component
          * @props.id:minLength 12
-         * 
+         *
          * **/
         export class MyClass extends AClass{
             static a:string;
@@ -31,63 +29,60 @@ describe('schema-extrct - classes',()=>{
         export let alias = MyClass;
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":"/src/classes",
-            "$ref":ModuleSchemaId,
-            "definitions":{
-                "MyClass" : {
-                    "$ref":ClassSchemaId,
-                    "constructorArguments":[
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/classes',
+            $ref: ModuleSchemaId,
+            definitions: {
+                MyClass : {
+                    $ref: ClassSchemaId,
+                    constructorArguments: [
                         {
-                            "type":"string",
-                            "name":"id"
-                        }
+                            type: 'string',
+                            name: 'id',
+                        },
                     ],
-                    "staticProperties":{
-                        "a":{
-                            "type":"string"
-                        }
-                    },
-                    "extends":{
-                        "$ref":"/src/test-assets#AClass"
-                    },
-                    "properties": {
-                        "id":{
-                            "type":"string"
+                    staticProperties: {
+                        a: {
+                            type: 'string',
                         },
-                        "a":{
-                            "type":"number"
+                    },
+                    extends: {
+                        $ref: '/src/test-assets#AClass',
+                    },
+                    properties: {
+                        id: {
+                            type: 'string',
                         },
-                        "setTitle":{
-                            "$ref":FunctionSchemaId,
-                            "arguments":[
-                                {"type":"string","name":"newtitle"},
-                                {"type":"string","name":"prefix"}
+                        a: {
+                            type: 'number',
+                        },
+                        setTitle: {
+                            $ref: FunctionSchemaId,
+                            arguments: [
+                                {type: 'string', name: 'newtitle'},
+                                {type: 'string', name: 'prefix'},
                             ],
-                            "returns":{
-                                "$ref":UndefinedSchemaId
-                            }
-                        }
-                    }
-                }
+                            returns: {
+                                $ref: UndefinedSchemaId,
+                            },
+                        },
+                    },
+                },
             },
-            "properties": {
-                "MyClass":{
-                    "$ref":"#typeof MyClass"
+            properties: {
+                MyClass: {
+                    $ref: '#typeof MyClass',
                 },
-                "param":{
-                    "$ref":"#MyClass"
+                param: {
+                    $ref: '#MyClass',
                 },
-                "alias":{
-                    "$ref":"#typeof MyClass"
-                }
-            }
-        }
+                alias: {
+                    $ref: '#typeof MyClass',
+                },
+            },
+        };
         expect(res).to.eql(expected);
-    })
-  
-    
-        
-})
+    });
 
+});

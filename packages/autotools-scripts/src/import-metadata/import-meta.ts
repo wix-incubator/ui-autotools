@@ -1,11 +1,6 @@
-import {NodeTypeScriptService} from 'node-typescript-support'
-import * as glob from 'glob';
+import 'typescript-support'
+import * as glob from 'glob'
  
-const nodeTsService = new NodeTypeScriptService(/* options */)
-nodeTsService.installSourceMapSupport() // optional installation of source-map-support
-// register our handler for the two default supported extensions
-require.extensions['.ts'] = require.extensions['.tsx'] = nodeTsService.requireExtension
-
 const importMeta = (filePattern: string) => {
   const options = {
     nosort: true,

@@ -1,4 +1,3 @@
-
 import * as ts from 'typescript';
 import {FileSystemReadSync} from 'kissfs';
 import * as path from 'path';

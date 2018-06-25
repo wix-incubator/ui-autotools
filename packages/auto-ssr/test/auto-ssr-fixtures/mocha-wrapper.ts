@@ -6,13 +6,19 @@ const mocha = new Mocha();
 // Grab the ssr-test.js file
 const pathToTest = path.dirname(require.resolve('./ssr-test.ts'));
 mocha.addFile(pathToTest + '/ssr-test.ts');
+mocha.reporter('min');
 
 // Invoking this method runs our ssr-test in the mocha environment
-const autoSSRTest = () => {
+const autoSSRTest = (getPassFlag: (flag: number) => void) => {
   // Run the ssr-test file
-  mocha.run((failures: number) => {
-    process.exitCode = failures ? -1 : 0;
-  });
+  let passFlag = 1;
+  mocha.run()
+    .on('fail', () => {
+        passFlag = -1;
+    })
+    .on('end', () => {
+        getPassFlag(passFlag);
+    });
 };
 
 export default autoSSRTest;

@@ -5,10 +5,14 @@
       "es2017",
       "dom"
     ],  
+    "noImplicitThis": false,
     "types": [
+      "node",
       "mocha",
       "chai",
       "node"
-    ]
+    ],
+    "jsx": "react",
+    "module": "commonjs"
   }
 }

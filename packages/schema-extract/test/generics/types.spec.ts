@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import { ModuleSchema, FunctionSchemaId } from '../../src/json-schema-types';
 import {transformTest} from '../../test-kit/run-transform';
 
-describe('schema-extrct - generic types', () => {
+describe('schema-extract - generic types', () => {
     xit('should support genric type definition', async () => {
         const moduleId = 'type-definition';
         const res = transformTest(`

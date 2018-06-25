@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import { ModuleSchema } from '../../src/json-schema-types';
 import {transformTest} from '../../test-kit/run-transform';
 
-describe('schema-extrct - generic functions', () => {
+describe('schema-extract - generic functions', () => {
 
     xit('should support declared generic functions', async () => {
         const moduleId = 'functions';

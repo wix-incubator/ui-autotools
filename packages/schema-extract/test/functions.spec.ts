@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import { ModuleSchema, UndefinedSchemaId, FunctionSchemaId, ModuleSchemaId } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform';
 
-describe('schema-extrct - functions', () => {
+describe('schema-extract - functions', () => {
     it('should support infered function return values', async () => {
         const moduleId = 'infered_functions';
         const res = transformTest(`

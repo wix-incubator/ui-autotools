@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import { ModuleSchema } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform';
 
-describe('schema-extrct - union', () => {
+describe('schema-extract - union', () => {
     it('should support union types', async () => {
         const moduleId = 'unions';
         const res = transformTest(`

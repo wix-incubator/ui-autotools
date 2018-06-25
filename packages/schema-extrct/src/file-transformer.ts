@@ -1,6 +1,5 @@
 import * as ts from 'typescript';
 import {ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchemaId, ClassSchemaId} from './json-schema-types';
-import * as types from './json-schema-types';
 import * as path from 'path';
 
 // console.log(types)

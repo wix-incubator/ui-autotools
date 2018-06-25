@@ -15,7 +15,7 @@ export const autoSSR = (): void => {
             expect(() => document).to.throw();
         });
 
-        Registry.metadata.forEach((metadata, Comp) => {
+        Registry.metadata.components.forEach((metadata, Comp) => {
             describe(Comp.name, () => {
                 it(`should render ${Comp.name} to string without throwing`, () => {
                     expect(() => renderToString(<Comp />), 'RenderToString threw an error').not.to.throw();

@@ -1,26 +1,33 @@
-/* tslint:disable:no-invalid-this */
-import {IRegistry, IComponentMetadata, ISimulation} from './types';
+import {IRegistry, IAssetMetadata, IThemeMetadata} from './types';
 import {ComponentType} from 'react';
+import ComponentMetadata from './component-metadata';
+import Metadata from './metadata';
 
-export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
-  public simulations: Array<ISimulation<Props>> = []; // Initialize with "empty" simulation
-
-  public addSim(sim: ISimulation<Props>) {
-    this.simulations.push(sim);
-  }
+interface IAssetMap {
+  svg: ComponentType;
 }
 
-const Registry: IRegistry = {
-  metadata: new Map(),
-  describe <Props>(comp: ComponentType<Props>): ComponentMetadata<Props> {
-    if (!this.metadata.has(comp)) {
-      this.metadata.set(comp, new ComponentMetadata<Props>());
+const Registry: IRegistry<IAssetMap> = {
+  metadata: new Metadata(),
+  describeComponent <Props>(comp: ComponentType<Props>): ComponentMetadata<Props> {
+    if (!this.metadata.components.has(comp)) {
+      this.metadata.components.set(comp, new ComponentMetadata<Props>());
     }
 
-    return this.metadata.get(comp)!;
+    return this.metadata.components.get(comp)!;
+  },
+  describeAsset <AssetType extends keyof IAssetMap, Asset extends IAssetMap[AssetType]>(asset: Asset, type: AssetType, name: string, description?: string): IAssetMetadata {
+    // TODO: actually implement
+    return this.metadata.assets.get(asset)!;
+  },
+  describeTheme(theme: any): IThemeMetadata {
+    // TODO: actually implement
+    return this.metadata.themes.get(theme)!;
   },
   clean() {
-    this.metadata.clear();
+    this.metadata.components.clear();
+    this.metadata.assets.clear();
+    this.metadata.themes.clear();
   },
 };
 

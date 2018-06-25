@@ -1,11 +1,11 @@
 /* tslint:disable:no-invalid-this */
-import {IRegistry, IComponentMetadata, Simulation} from './types';
+import {IRegistry, IComponentMetadata, ISimulation} from './types';
 import {ComponentType} from 'react';
 
 export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
-  simulations: Simulation<Props>[] = []; // Initialize with "empty" simulation
+  public simulations: Array<ISimulation<Props>> = []; // Initialize with "empty" simulation
 
-  addSim (sim: Simulation<Props>) {
+  public addSim(sim: ISimulation<Props>) {
     this.simulations.push(sim);
   }
 }
@@ -19,9 +19,9 @@ const Registry: IRegistry = {
 
     return this.metadata.get(comp)!;
   },
-  clean () {
+  clean() {
     this.metadata.clear();
-  }
+  },
 };
 
 Object.freeze(Registry);

@@ -1,11 +1,9 @@
 import {expect} from 'chai';
 import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId, ClassConstructorSchemaId } from '../../src/json-schema-types';
-import {transformTest} from '../../test-kit/run-transform'
+import {transformTest} from '../../test-kit/run-transform';
 
-
-
-describe('schema-extrct - generic classes',()=>{
-    it('should support generic classes', async ()=>{
+describe('schema-extrct - generic classes', () => {
+    it('should support generic classes', async () => {
         const moduleId = 'classes';
         const res = transformTest(`
         import { AGenericClass} from './test-assets'
@@ -22,68 +20,68 @@ describe('schema-extrct - generic classes',()=>{
         };
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":ModuleSchemaId,
-            "definitions":{
-                "MyClass" : {
-                    "$ref":ClassSchemaId,
-                    "constructor":{
-                        "$ref":ClassConstructorSchemaId,
-                        "arguments":[
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: ModuleSchemaId,
+            definitions: {
+                MyClass : {
+                    $ref: ClassSchemaId,
+                    constructor: {
+                        $ref: ClassConstructorSchemaId,
+                        arguments: [
                             {
-                                "$ref":"#MyClass!T",
-                                "name":"x"
-                            },{
-                                "$ref":"#MyClass!P",
-                                "name":"y"
+                                $ref: '#MyClass!T',
+                                name: 'x'
+                            }, {
+                                $ref: '#MyClass!P',
+                                name: 'y'
                             }
                         ],
                     },
-                    "genericParams": [{
-                        "name":"P"
-                    },{
-                        "name":"T"
+                    genericParams: [{
+                        name: 'P'
+                    }, {
+                        name: 'T'
                     }],
-                    "extends":{
-                        "$ref":"/src/test-assets#AGenericClass",
-                        "genericArguments":[{
-                            "$ref":"#MyClass!P"
+                    extends: {
+                        $ref: '/src/test-assets#AGenericClass',
+                        genericArguments: [{
+                            $ref: '#MyClass!P'
                         }]
                     },
-                    "properties": {
-                        "a":{
-                            "$ref":"#MyClass!P"
+                    properties: {
+                        a: {
+                            $ref: '#MyClass!P',
                         },
-                        "b":{
-                            "$ref":"#MyClass!T"
+                        b: {
+                            $ref: '#MyClass!T',
                         },
-                        "setA":{
-                            "$ref":FunctionSchemaId,
-                            "arguments":[
-                                {"$ref":"#MyClass!T","name":"newA"},
-                                {"$ref":"#MyClass!P","name":"prefix"}
+                        setA: {
+                            $ref: FunctionSchemaId,
+                            arguments: [
+                                {$ref: '#MyClass!T', name: 'newA'},
+                                {$ref: '#MyClass!P', name: 'prefix'},
                             ],
-                            "returns":{
-                                "$ref":UndefinedSchemaId
+                            returns: {
+                                $ref: UndefinedSchemaId
                             }
                         }
                     },
-                    "staticProperties": {}
+                    staticProperties: {}
                 }
             },
-            "properties": {
-                "MyClass":{
-                    "$ref":"#typeof MyClass"
+            properties: {
+                MyClass: {
+                    $ref: '#typeof MyClass'
                 }
             }
-        }
+        };
         expect(res).to.eql(expected);
     });
 
-    //Need a better description
-    xit('should support classes with generic handlers', async ()=>{
+    // Need a better description
+    xit('should support classes with generic handlers', async () => {
         const moduleId = 'classes';
         const res = transformTest(`
         import { Event} from './test-assets'
@@ -98,38 +96,37 @@ describe('schema-extrct - generic classes',()=>{
         };
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":ModuleSchemaId,
-            "definitions":{
-                "MyClass" : {
-                    "$ref":ClassSchemaId,
-                    "constructor":{
-                        "$ref":ClassConstructorSchemaId,
-                        "arguments":[]
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: ModuleSchemaId,
+            definitions: {
+                MyClass : {
+                    $ref: ClassSchemaId,
+                    constructor: {
+                        $ref: ClassConstructorSchemaId,
+                        arguments: []
                     },
-                    "properties": {
-                        "handleEvent":{
-                            "$ref":FunctionSchemaId,
-                            "arguments":[
-                                {"$ref":"Event#HTMLElement","name":"event"},
+                    properties: {
+                        handleEvent: {
+                            $ref: FunctionSchemaId,
+                            arguments: [
+                                {$ref: 'Event#HTMLElement', name: 'event'},
                             ],
-                            "returns":{
-                                "$ref":UndefinedSchemaId
+                            returns: {
+                                $ref: UndefinedSchemaId
                             }
                         }
                     },
-                    "staticProperties": {}
+                    staticProperties: {}
                 }
             },
-            "properties": {
-                "MyClass":{
-                    "$ref":"#typeof MyClass"
-                }
-            }
-        }
+            properties: {
+                MyClass: {
+                    $ref: '#typeof MyClass',
+                },
+            },
+        };
         expect(res).to.eql(expected);
-    })
-})
-
+    });
+});

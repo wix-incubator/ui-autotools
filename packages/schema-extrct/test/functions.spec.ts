@@ -1,11 +1,9 @@
 import {expect} from 'chai';
 import { ModuleSchema, UndefinedSchemaId, FunctionSchemaId, ModuleSchemaId, JSXElement } from '../src/json-schema-types';
-import {transformTest} from '../test-kit/run-transform'
+import {transformTest} from '../test-kit/run-transform';
 
-
-
-describe('schema-extrct - functions',()=>{
-    it('should support infered function return values', async ()=>{
+describe('schema-extrct - functions', () => {
+    it('should support infered function return values', async () => {
         const moduleId = 'infered_functions';
         const res = transformTest(`
         export function inferedFunction(str:string){
@@ -14,105 +12,105 @@ describe('schema-extrct - functions',()=>{
 
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "properties": {
-                "inferedFunction":{
-                    "$ref":"common/function",
-                    "arguments":[
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+                inferedFunction: {
+                    $ref: 'common/function',
+                    arguments: [
                         {
-                            "type":"string",
-                            "name":"str"
-                        }
+                            type: 'string',
+                            name: 'str',
+                        },
                     ],
-                    "returns":{
-                        "type":"string"
-                    }
-                }
-            }
-            
-        }
+                    returns: {
+                        type: 'string',
+                    },
+                },
+            },
+
+        };
         expect(res).to.eql(expected);
-    })
-    it('should support declared functions return values', async ()=>{
+    });
+    it('should support declared functions return values', async () => {
         const moduleId = 'functions';
         const res = transformTest(`
-      
+
         export const declaredFunction:(str:string)=>string = (str:string)=>{
             return str+'a'
         };
-      
+
 
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "properties": {
-                
-                "declaredFunction":{
-                    "$ref":"common/function",
-                    "arguments":[
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+
+                declaredFunction: {
+                    $ref: 'common/function',
+                    arguments: [
                         {
-                            "type":"string",
-                            "name":"str"
-                        }
+                            type: 'string',
+                            name: 'str',
+                        },
                     ],
-                    "returns":{
-                        "type":"string"
-                    }
-                }
-            }
-            
-        }
+                    returns: {
+                        type: 'string',
+                    },
+                },
+            },
+
+        };
         expect(res).to.eql(expected);
-    })
-    
-    it('should support functions with parameter deconstruct', async ()=>{
+    });
+
+    it('should support functions with parameter deconstruct', async () => {
         const moduleId = 'functions';
         const res = transformTest(`
-        
+
         export function inferedDeconstruct ({x=1, y="text"}) { return x + y; };
 
 
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "properties": {
-                
-                "inferedDeconstruct":{
-                    "$ref":"common/function",
-                    "arguments":[
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+
+                inferedDeconstruct: {
+                    $ref: 'common/function',
+                    arguments: [
                         {
-                            "name":"{x=1, y=\"text\"}",
-                            "type":"object",
-                            "properties":{
-                                "x":{
-                                    "type":"number"
+                            name: '{x=1, y="text"}',
+                            type: 'object',
+                            properties: {
+                                x: {
+                                    type: 'number',
                                 },
-                                "y":{
-                                    "type":"string"
-                                }
-        
-                            }
-                        }
+                                y: {
+                                    type: 'string',
+                                },
+
+                            },
+                        },
                     ],
-                    "returns":{
-                        "type":"string"
-                    }
-                }
-            }
-            
-        }
+                    returns: {
+                        type: 'string',
+                    },
+                },
+            },
+
+        };
         expect(res).to.eql(expected);
-    })
-    it('should support functions with rest params', async ()=>{
+    });
+    it('should support functions with rest params', async () => {
         const moduleId = 'functions';
         const res = transformTest(`
         export const functionWithRestParams:(str:string, ...rest:number[])=>string = (str:string)=>{
@@ -121,37 +119,36 @@ describe('schema-extrct - functions',()=>{
 
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "properties": {
-                "functionWithRestParams":{
-                    "$ref":"common/function",
-                    "arguments":[
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+                functionWithRestParams: {
+                    $ref: 'common/function',
+                    arguments: [
                         {
-                            "type":"string",
-                            "name":"str"
-                        }
+                            type: 'string',
+                            name: 'str',
+                        },
                     ],
-                    "restArgument":{
-                        "name":"rest",
-                        "type":"array",
-                        "items":{
-                            type:'number'
-                        }
+                    restArgument: {
+                        name: 'rest',
+                        type: 'array',
+                        items: {
+                            type: 'number',
+                        },
                     },
-                    "returns":{
-                        "type":"string"
-                    }
-                }
-            }
-        }
+                    returns: {
+                        type: 'string',
+                    },
+                },
+            },
+        };
         expect(res).to.eql(expected);
-    })
-    
+    });
 
-    it('should support infered void functions', async ()=>{
+    it('should support infered void functions', async () => {
         const moduleId = 'functions';
         const res = transformTest(`
         export function voidFunc(str:string){
@@ -160,29 +157,29 @@ describe('schema-extrct - functions',()=>{
 
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":ModuleSchemaId,
-            "properties": {
-                "voidFunc":{
-                    "$ref":FunctionSchemaId,
-                    "arguments":[
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: ModuleSchemaId,
+            properties: {
+                voidFunc: {
+                    $ref: FunctionSchemaId,
+                    arguments: [
                         {
-                            "type":"string",
-                            "name":"str"
-                        }
+                            type: 'string',
+                            name: 'str',
+                        },
                     ],
-                    "returns":{
-                        $ref:UndefinedSchemaId
-                    }
-                }
-            }
-        }
+                    returns: {
+                        $ref: UndefinedSchemaId,
+                    },
+                },
+            },
+        };
         expect(res).to.eql(expected);
-    })
-      
-    it('should support declared void functions', async ()=>{
+    });
+
+    it('should support declared void functions', async () => {
         const moduleId = 'functions';
         const res = transformTest(`
         export function voidFunc(str:string):void{
@@ -191,30 +188,29 @@ describe('schema-extrct - functions',()=>{
 
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":ModuleSchemaId,
-            "properties": {
-                "voidFunc":{
-                    "$ref":FunctionSchemaId,
-                    "arguments":[
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: ModuleSchemaId,
+            properties: {
+                voidFunc: {
+                    $ref: FunctionSchemaId,
+                    arguments: [
                         {
-                            "type":"string",
-                            "name":"str"
-                        }
+                            type: 'string',
+                            name: 'str',
+                        },
                     ],
-                    "returns":{
-                        $ref:UndefinedSchemaId
-                    }
-                }
-            }
-        }
+                    returns: {
+                        $ref: UndefinedSchemaId,
+                    },
+                },
+            },
+        };
         expect(res).to.eql(expected);
-    })
+    });
 
-
-    it('should support infered function return type (non primitive import)', async ()=>{
+    it('should support infered function return type (non primitive import)', async () => {
         const moduleId = 'infered_functions';
         const res = transformTest(`
         import {AClass} from './test-assets
@@ -225,30 +221,30 @@ describe('schema-extrct - functions',()=>{
 
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "properties": {
-               
-                "inferedFunction":{
-                    "$ref":"common/function",
-                    "arguments":[
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+
+                inferedFunction: {
+                    $ref: 'common/function',
+                    arguments: [
                         {
-                            "type":"string",
-                            "name":"str"
-                        }
+                            type: 'string',
+                            name: 'str',
+                        },
                     ],
-                    "returns":{
-                        "$ref":"/src/test-assets#AClass"                    }
+                    returns: {
+                        $ref: '/src/test-assets#AClass'                    }
                     }
             }
-            
-        }
+
+        };
         expect(res).to.eql(expected);
     });
 
-    xit('should support functions that return JSX element', async ()=>{
+    xit('should support functions that return JSX element', async () => {
         const moduleId = 'jsx_functions';
         const res = transformTest(`
         import * as React from 'react';
@@ -259,23 +255,22 @@ describe('schema-extrct - functions',()=>{
 
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "properties": {
-               
-                "jsxFunction":{
-                    "$ref":"common/function",
-                    "arguments":[],
-                    "returns":{
-                        "$ref":JSXElement
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+
+                jsxFunction: {
+                    $ref: 'common/function',
+                    arguments: [],
+                    returns: {
+                        $ref: JSXElement
                     }
                 }
             }
-            
-        }
-        expect(res).to.eql(expected);
-    })
-})
 
+        };
+        expect(res).to.eql(expected);
+    });
+});

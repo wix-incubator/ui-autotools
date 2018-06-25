@@ -2,18 +2,18 @@ import * as React from 'react';
 import Registry, {ComponentMetadata} from '../src/registry';
 import {expect} from 'chai';
 
-interface TestProps {
+interface ITestProps {
   text: string;
 }
 
-const TestComp: React.SFC<TestProps> = (props: TestProps) => {
+const TestComp: React.SFC<ITestProps> = (props: ITestProps) => {
   return <h1>Hey {props.text} person</h1>;
 };
 
 const testSim = {
   props: {
-    text: 'person'
-  }
+    text: 'person',
+  },
 };
 
 describe('Registry', () => {

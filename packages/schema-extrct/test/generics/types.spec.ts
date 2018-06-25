@@ -1,11 +1,9 @@
 import {expect} from 'chai';
 import { ModuleSchema, FunctionSchemaId } from '../../src/json-schema-types';
-import {transformTest} from '../../test-kit/run-transform'
+import {transformTest} from '../../test-kit/run-transform';
 
-
-
-describe('schema-extrct - generic types',()=>{
-    it('should support genric type definition', async ()=>{
+describe('schema-extrct - generic types', () => {
+    it('should support genric type definition', async () => {
         const moduleId = 'type-definition';
         const res = transformTest(`
         export type MyType<T> = {
@@ -14,36 +12,36 @@ describe('schema-extrct - generic types',()=>{
         export let param:MyType<string>;
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "definitions":{
-                "MyType" : {
-                    "type":"object",
-                    "genericParams": [{
-                        name:"T"
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            definitions: {
+                MyType : {
+                    type: 'object',
+                    genericParams: [{
+                        name: 'T',
                     }],
-                    "properties": {
-                        "something":{
-                            "$ref":"#MyType!T"
-                        } 
-                    }
-                }
+                    properties: {
+                        something: {
+                            $ref: '#MyType!T',
+                        },
+                    },
+                },
             },
-            "properties": {
-                "param":{
-                    "$ref":"#MyType",
-                    "genericArguments":[{
-                        "type":"string"
-                    }]
-                }
-            }
-        }
+            properties: {
+                param: {
+                    $ref: '#MyType',
+                    genericArguments: [{
+                        type: 'string',
+                    }],
+                },
+            },
+        };
         expect(res).to.eql(expected);
     });
 
-    it('should support generic arguments schema', async ()=>{
+    it('should support generic arguments schema', async () => {
         const moduleId = 'type-definition';
         const res = transformTest(`
         export type MyType<T extends string> = {
@@ -52,41 +50,40 @@ describe('schema-extrct - generic types',()=>{
         export let param:MyType<'gaga'>;
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "definitions":{
-                "MyType" : {
-                    "type":"object",
-                    "genericParams": [{
-                        name:"T",
-                        "type":"string"
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            definitions: {
+                MyType : {
+                    type: 'object',
+                    genericParams: [{
+                        name: 'T',
+                        type: 'string',
                     }],
-                    "properties": {
-                        "something":{
-                            "$ref":"#MyType!T"
-                        } 
-                    }
-                }
+                    properties: {
+                        something: {
+                            $ref: '#MyType!T',
+                        },
+                    },
+                },
             },
-            "properties": {
-                "param":{
-                    "$ref":"#MyType",
-                    "genericArguments":[{
-                        "type":"string",
-                        "enum":[
-                            "gaga"
-                        ]
-                    }]
-                }
-            }
-        }
+            properties: {
+                param: {
+                    $ref: '#MyType',
+                    genericArguments: [{
+                        type: 'string',
+                        enum: [
+                            'gaga',
+                        ],
+                    }],
+                },
+            },
+        };
         expect(res).to.eql(expected);
     });
 
-
-    it('generic arguments should be passed deeply', async ()=>{
+    it('generic arguments should be passed deeply', async () => {
         const moduleId = 'type-definition';
         const res = transformTest(`
         export type MyType<T extends string> = {
@@ -103,65 +100,65 @@ describe('schema-extrct - generic types',()=>{
         };
         `, moduleId);
 
-        const expected:ModuleSchema<'object'> = {
-            "$schema": "http://json-schema.org/draft-06/schema#",
-            "$id":'/src/'+moduleId,
-            "$ref":"common/module",
-            "definitions":{
-                "MyType" : {
-                    "type":"object",
-                    "genericParams": [{
-                        name:"T",
-                        "type":"string"
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            definitions: {
+                MyType : {
+                    type: 'object',
+                    genericParams: [{
+                        name: 'T',
+                        type: 'string',
                     }],
-                    "properties": {
-                        "something":{
-                            "type":"object",
-                            "properties":{
-                                "deepKey":{
-                                    "$ref":"#MyType!T"
-                                }
-                            }
+                    properties: {
+                        something: {
+                            type: 'object',
+                            properties: {
+                                deepKey: {
+                                    $ref: '#MyType!T',
+                                },
+                            },
                         },
-                        "method":{
-                            "$ref":FunctionSchemaId,
-                            "arguments":[
+                        method: {
+                            $ref: FunctionSchemaId,
+                            arguments: [
                                 {
-                                    "name":"arg",
-                                    "type":"object",
+                                    name: 'arg',
+                                    type: 'object',
                                     properties: {
-                                        "values": {
-                                            "type":"array",
-                                            "items":{
-                                                "$ref":"#MyType!T"
+                                        values: {
+                                            type: 'array',
+                                            items: {
+                                                $ref: '#MyType!T'
                                             }
                                         },
-                                
-                                        "filter": {
-                                            "$ref":FunctionSchemaId,
-                                            "arguments":[
+
+                                        filter: {
+                                            $ref: FunctionSchemaId,
+                                            arguments: [
                                                 {
-                                                    "name":"item",
-                                                    "$ref":"#MyType!T"
+                                                    name: 'item',
+                                                    $ref: '#MyType!T'
                                                 }
                                             ],
-                                            "returns":{
-                                                "type":"boolean"
+                                            returns: {
+                                                type: 'boolean'
                                             }
                                         }
                                     }
                                 }
                             ],
-                            "returns":{
-                                "type":"object",
-                                "properties":{
-                                    "status":{
-                                        "type":"string"
+                            returns: {
+                                type: 'object',
+                                properties: {
+                                    status: {
+                                        type: 'string',
                                     },
-                                    "results":{  
-                                        "type":"array",
-                                        "items":{
-                                            "$ref":"#MyType!T"
+                                    results: {
+                                        type: 'array',
+                                        items: {
+                                            $ref: '#MyType!T'
                                         }
                                     }
                                 }
@@ -170,9 +167,8 @@ describe('schema-extrct - generic types',()=>{
                     }
                 }
             },
-            "properties": {}
-        }
+            properties: {}
+        };
         expect(res).to.eql(expected);
     });
-})
-
+});

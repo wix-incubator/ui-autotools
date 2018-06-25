@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import { ModuleSchema } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform';
 
-describe('schema-extrct - interfaces', () => {
+describe('schema-extract - interfaces', () => {
     it('should support typed interfaces', async () => {
         const moduleId = 'arrays';
         const res = transformTest(`

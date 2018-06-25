@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import { ModuleSchema } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform';
 
-describe('schema-extrct - module', () => {
+describe('schema-extract - module', () => {
     it('should support different export types', async () => {
         const moduleId = 'export-types';
         const res = transformTest(`

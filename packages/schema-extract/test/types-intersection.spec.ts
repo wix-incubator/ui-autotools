@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import { ModuleSchema } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform';
 
-describe('schema-extrct - intersection', () => {
+describe('schema-extract - intersection', () => {
     it('should support intersection types', async () => {
         const moduleId = 'intersection';
         const res = transformTest(`

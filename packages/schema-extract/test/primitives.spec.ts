@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import { ModuleSchema } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform';
 
-describe('schema-extrct - primitives', () => {
+describe('schema-extract - primitives', () => {
     it('should support primitives', async () => {
         const moduleId = 'primitives';
         const res = transformTest(`

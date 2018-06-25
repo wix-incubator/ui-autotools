@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId, ClassConstructorSchemaId } from '../../src/json-schema-types';
 import {transformTest} from '../../test-kit/run-transform';
 
-describe('schema-extrct - generic classes', () => {
+describe('schema-extract - generic classes', () => {
     it('should support generic classes', async () => {
         const moduleId = 'classes';
         const res = transformTest(`

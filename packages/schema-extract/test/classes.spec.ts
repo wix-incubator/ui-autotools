@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId, ClassConstructorSchemaId } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform';
 
-describe('schema-extrct - classes', () => {
+describe('schema-extract - classes', () => {
     xit('should support classes', async () => {
         const moduleId = 'classes';
         const res = transformTest(`

@@ -63,9 +63,9 @@ desc.addDocumentation('Usage',mdFile);
 (missing context)
 many of the fields can be auto added using tools in this repo:
 
-- **AssetsExtrct** - scans global assets provided by library according to configuration
-- **DocsExtrct** - adds documentation extracted from code to the registry
-- **SchemaExtrct** - adds JSON schema extracted from code to the registry
+- **AssetsExtract** - scans global assets provided by library according to configuration
+- **DocsExtract** - adds documentation extracted from code to the registry
+- **SchemaExtract** - adds JSON schema extracted from code to the registry
 
 ### Sanity tester
 

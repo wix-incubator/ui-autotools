@@ -2,14 +2,14 @@ import {expect} from 'chai';
 import { ModuleSchema, FunctionSchemaId } from '../../src/json-schema-types';
 import {transformTest} from '../../test-kit/run-transform';
 
-describe('schema-extrct - generic types', () => {
-    it('should support genric type definition', async () => {
-        const moduleId = 'type-definition';
+describe('schema-extract - generic interface', () => {
+    it('should support genric interface definition', async () => {
+        const moduleId = 'interface-definition';
         const res = transformTest(`
-        export type MyType<T> = {
+        export type MyInterface<T>{
             something:T;
         };
-        export let param:MyType<string>;
+        export let param:MyInterface<string>;
         `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
@@ -17,21 +17,21 @@ describe('schema-extrct - generic types', () => {
             $id: '/src/' + moduleId,
             $ref: 'common/module',
             definitions: {
-                MyType : {
+                MyInterface : {
                     type: 'object',
                     genericParams: [{
                         name: 'T',
                     }],
                     properties: {
                         something: {
-                            $ref: '#MyType!T',
+                            $ref: '#MyInterface!T',
                         },
                     },
                 },
             },
             properties: {
                 param: {
-                    $ref: '#MyType',
+                    $ref: '#MyInterface',
                     genericArguments: [{
                         type: 'string',
                     }],
@@ -42,12 +42,12 @@ describe('schema-extrct - generic types', () => {
     });
 
     it('should support generic arguments schema', async () => {
-        const moduleId = 'type-definition';
+        const moduleId = 'interface-definition';
         const res = transformTest(`
-        export type MyType<T extends string> = {
+        export type MyInterface<T extends string>{
             something:T;
         };
-        export let param:MyType<'gaga'>;
+        export let param:MyInterface<'gaga'>;
         `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
@@ -55,7 +55,7 @@ describe('schema-extrct - generic types', () => {
             $id: '/src/' + moduleId,
             $ref: 'common/module',
             definitions: {
-                MyType : {
+                MyInterface : {
                     type: 'object',
                     genericParams: [{
                         name: 'T',
@@ -63,14 +63,14 @@ describe('schema-extrct - generic types', () => {
                     }],
                     properties: {
                         something: {
-                            $ref: '#MyType!T',
+                            $ref: '#MyInterface!T',
                         },
                     },
                 },
             },
             properties: {
                 param: {
-                    $ref: '#MyType',
+                    $ref: '#MyInterface',
                     genericArguments: [{
                         type: 'string',
                         enum: [
@@ -84,9 +84,9 @@ describe('schema-extrct - generic types', () => {
     });
 
     it('generic arguments should be passed deeply', async () => {
-        const moduleId = 'type-definition';
+        const moduleId = 'interface-definition';
         const res = transformTest(`
-        export type MyType<T extends string> = {
+        export type MyInterface<T extends string>{
             something:{
                 deepKey:T
             };
@@ -105,7 +105,7 @@ describe('schema-extrct - generic types', () => {
             $id: '/src/' + moduleId,
             $ref: 'common/module',
             definitions: {
-                MyType : {
+                MyInterface : {
                     type: 'object',
                     genericParams: [{
                         name: 'T',
@@ -116,7 +116,7 @@ describe('schema-extrct - generic types', () => {
                             type: 'object',
                             properties: {
                                 deepKey: {
-                                    $ref: '#MyType!T',
+                                    $ref: '#MyInterface!T',
                                 },
                             },
                         },
@@ -130,16 +130,15 @@ describe('schema-extrct - generic types', () => {
                                         values: {
                                             type: 'array',
                                             items: {
-                                                $ref: '#MyType!T'
+                                                $ref: '#MyInterface!T'
                                             }
                                         },
-
                                         filter: {
                                             $ref: FunctionSchemaId,
                                             arguments: [
                                                 {
                                                     name: 'item',
-                                                    $ref: '#MyType!T'
+                                                    $ref: '#MyInterface!T'
                                                 }
                                             ],
                                             returns: {
@@ -158,11 +157,54 @@ describe('schema-extrct - generic types', () => {
                                     results: {
                                         type: 'array',
                                         items: {
-                                            $ref: '#MyType!T'
+                                            $ref: '#MyInterface!T'
                                         }
                                     }
                                 }
                             }
+                        }
+                    }
+                }
+            },
+            properties: {}
+        };
+        expect(res).to.eql(expected);
+    });
+
+    it('should support generic imports', async () => {
+        const moduleId = 'interface-definition';
+        const res = transformTest(`
+        import * as Event from 'event';
+
+        export type MyInterface{
+            func: (event: Event<A>) => void;
+        };
+        `, moduleId);
+
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            definitions: {
+                MyInterface : {
+                    type: 'object',
+                    properties: {
+                        func: {
+                            $ref: 'common/function',
+                            arguments: [
+                                {
+                                    $ref: 'event',
+                                    genericArguments: [
+                                        {
+                                            $ref: '#A'
+                                        }
+                                    ],
+                                    name: 'event'
+                                }
+                            ],
+                            returns: {
+                                $ref: 'common/undefined'
+                            },
                         }
                     }
                 }

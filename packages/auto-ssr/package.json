@@ -12,10 +12,7 @@
     "lint": "run-p lint:src lint:test",
     "lint:src": "tslint --project src",
     "lint:test": "tslint --project test",
-    "test": "mocha -r node-typescript-support/register \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
-  },
-  "bin": {
-    "auto-ssr": "bin/runner.js"
+    "test": "mocha -r typescript-support \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
   },
   "files": [
     "cjs",
@@ -24,17 +21,15 @@
   "engines": {
     "node": ">=8"
   },
-  "repository": "git@github.com:wix/ui-autotools.git",
+  "repository": "git@github.com:wix-incubator/ui-autotools.git",
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "meta-data-tools": "*"
+    "metadata-tools": "*"
   },
-  "devDependencies": {
-    "@types/react": "^16.3.14",
-    "@types/react-dom": "^16.0.5",
-    "commander": "^2.15.1",
-    "react": "^16.4.0",
-    "react-dom": "^16.4.0"
+  "peerDependencies": {
+    "chai": ">=4",
+    "react": ">=16",
+    "react-dom": ">=16"
   }
 }

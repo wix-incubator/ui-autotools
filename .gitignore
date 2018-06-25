@@ -6,6 +6,8 @@ cjs
 .idea
 .history
 .DS_Store
+package-lock.json
+
 
 # https://github.com/github/gitignore/blob/master/Node.gitignore
 

@@ -1,0 +1,39 @@
+{
+  "name": "schema-extrct",
+  "version": "1.0.0",
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "types": "esm/index.d.ts",
+  "scripts": {
+    "clean": "rimraf ./cjs ./esm",
+    "build": "run-p build:cjs build:esm",
+    "build:cjs": "tsc --project src --outDir cjs --module commonjs",
+    "build:esm": "tsc --project src --outDir esm --module esnext",
+    "lint": "run-p lint:src lint:test",
+    "lint:src": "tslint --project src",
+    "lint:test": "tslint --project test",
+    "test": "mocha -r typescript-support \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx",
+    "run-browser": "webpack-dev-server --progress"
+  },
+  "bin": {
+    "schema-extrct": "cjs/cli.js"
+  },
+  "peerDependencies": {
+    "typescript": ">=2.8.0"
+  },
+  "dependencies": {
+    "commander": "^2.15.1",
+    "glob": "^7.1.2",
+    "kissfs": "^0.6.3"
+  },
+  "files": [
+    "cjs",
+    "esm"
+  ],
+  "engines": {
+    "node": ">=8"
+  },
+  "repository": "git@github.com:wix/ui-autotools.git",
+  "author": "Wix.com",
+  "license": "BSD-3-Clause"
+}

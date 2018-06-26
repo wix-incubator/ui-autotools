@@ -1,5 +1,5 @@
 import Registry from './registry';
-import ComponentMetadata from './component-metadata';
-import AssetMetadata from './asset-metadata';
-export {ComponentMetadata, AssetMetadata};
+export {ComponentMetadata} from './component-metadata';
+export {AssetMetadata} from './asset-metadata';
+export {ThemeMetadata} from './theme-metadata';
 export default Registry;

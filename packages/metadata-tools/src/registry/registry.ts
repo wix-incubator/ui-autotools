@@ -1,8 +1,8 @@
 import {IRegistry, IAssetMetadata, IThemeMetadata} from './types';
 import {ComponentType} from 'react';
-import AssetMetadata from './asset-metadata';
-import ComponentMetadata from './component-metadata';
-import ThemeMetadata from './theme-metadata';
+import {AssetMetadata} from './asset-metadata';
+import {ComponentMetadata} from './component-metadata';
+import {ThemeMetadata} from './theme-metadata';
 import Metadata from './metadata';
 
 interface IAssetMap {

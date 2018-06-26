@@ -1,7 +1,6 @@
 import * as React from 'react';
-import Registry, {ComponentMetadata, AssetMetadata} from '../src/registry';
+import Registry, {ComponentMetadata, AssetMetadata, ThemeMetadata} from '../src/registry';
 import {expect} from 'chai';
-import ThemeMetadata from '../src/registry/theme-metadata';
 
 interface ITestProps {
   text: string;

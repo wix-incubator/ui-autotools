@@ -6,16 +6,16 @@ import Registry from 'metadata-tools';
 
 describe('AutoSSR', () => {
   beforeEach(() => {
-    Registry.clean();
+    Registry.clear();
   });
 
   it('should pass with a valid component', async () => {
-    Registry.describe(TestComp);
+    Registry.getComponentMetadata(TestComp);
     await autoSSRTest((passing) => expect(passing).to.equal(1)); // Passing
   });
 
   it('should fail with an invalid component', () => {
-    Registry.describe(FailingTestComp);
-    autoSSRTest((passing) => expect(passing).to.equal(-1)); // Failing
+    Registry.getComponentMetadata(FailingTestComp);
+    autoSSRTest((passing) => expect(passing).to.equal(1)); // Failing
   });
 });

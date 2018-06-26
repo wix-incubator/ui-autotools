@@ -2,9 +2,9 @@ import { ComponentType } from 'react';
 
 export interface IRegistry<AssetMap = any> {
   metadata: IMetadata;
-  describeComponent: <Props> (comp: ComponentType<Props>) => IComponentMetadata<Props>;
-  describeAsset: <AssetType extends keyof AssetMap, Asset extends AssetMap[AssetType]> (asset: Asset, type: AssetType, name: string, description?: string) => IAssetMetadata;
-  describeTheme: (theme: any, name: string) => IThemeMetadata;
+  getComponentMetadata: <Props> (comp: ComponentType<Props>) => IComponentMetadata<Props>;
+  getAssetMetadata: <AssetType extends keyof AssetMap, Asset extends AssetMap[AssetType]> (asset: Asset, type: AssetType, name: string, description?: string) => IAssetMetadata;
+  getThemeMetadata: (theme: any, name: string) => IThemeMetadata;
   clean: () => void;
 }
 

@@ -31,7 +31,7 @@ describe('Component Metadata', () => {
 
   describe('The addSim method', () => {
     it('adds a new simulation to the component metadata', () => {
-      const myCompMetadata = Registry.describeComponent(TestComp);
+      const myCompMetadata = Registry.getComponentMetadata(TestComp);
       myCompMetadata.addSim(testSim);
       expect(myCompMetadata.simulations[0]).to.equal(testSim);
     });
@@ -39,7 +39,7 @@ describe('Component Metadata', () => {
 
   describe('The addStyle method', () => {
     it('adds a new style to the component metadata', () => {
-      const myCompMetadata = Registry.describeComponent(TestComp);
+      const myCompMetadata = Registry.getComponentMetadata(TestComp);
       myCompMetadata.addStyle(testStyle, testStyleMetadata);
       expect(myCompMetadata.styles.get(testStyle)).to.equal(testStyleMetadata);
     });

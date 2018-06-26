@@ -8,8 +8,7 @@
     "types": [
       "node",
       "mocha",
-      "chai",
-      "node"
+      "chai"
     ],
     "jsx": "react",
     "module": "commonjs"

@@ -7,8 +7,8 @@ import {renderToString} from 'react-dom/server';
 import Registry from 'metadata-tools';
 import {expect} from 'chai';
 
-export const autoSSR = (): void => {
-    describe('AutoSSR tests', () => {
+export const ssrTest = (): void => {
+    describe('SSR tests', () => {
         it('should be run in an environment without document and window', () => {
             // TODO: check node context
             expect(() => window).to.throw();

@@ -24,7 +24,7 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "auto-ssr": "*",
+    "sanity": "*",
     "metadata-tools": "*",
     "commander": "^2.15.1",
     "glob": "^7.1.2",

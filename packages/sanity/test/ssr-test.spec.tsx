@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import autoSSRTest from './auto-ssr-fixtures/mocha-wrapper';
+import ssrTest from './auto-ssr-fixtures/mocha-wrapper';
 import Registry from 'metadata-tools';
 
 interface IProps {
@@ -27,7 +27,7 @@ describe('AutoSSR', () => {
 
   it('should pass with a valid component', (done) => {
     Registry.getComponentMetadata(TestComp);
-    autoSSRTest((flag) => {
+    ssrTest((flag) => {
       expect(flag, 'Test did not pass with valid component').to.equal(1);
       done();
     });
@@ -35,7 +35,7 @@ describe('AutoSSR', () => {
 
   it('should fail with an invalid component', (done) => {
     Registry.getComponentMetadata(FailingTestComp);
-    autoSSRTest((flag) => {
+    ssrTest((flag) => {
       expect(flag, 'Test did not fail with invalid component').to.equal(-1);
       done();
     });

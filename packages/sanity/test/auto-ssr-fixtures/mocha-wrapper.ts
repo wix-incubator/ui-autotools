@@ -14,11 +14,11 @@ class MyReporter extends Mocha.reporters.Base {
 const mocha = new Mocha({reporter: MyReporter});
 
 // Grab the ssr-test.js file
-const pathToTest = path.dirname(require.resolve('./ssr-test.ts'));
-mocha.addFile(pathToTest + '/ssr-test.ts');
+const pathToTest = path.dirname(require.resolve('./import-test.ts'));
+mocha.addFile(pathToTest + '/import-test.ts');
 
 // Invoking this method runs our ssr-test in the mocha environment
-const autoSSRTest = (getPassFlag: (flag: number) => void) => {
+const ssrTest = (getPassFlag: (flag: number) => void) => {
   let passFlag = 1; // Default is passing
   mocha.run()
     .on('fail', () => {
@@ -29,4 +29,4 @@ const autoSSRTest = (getPassFlag: (flag: number) => void) => {
     });
 };
 
-export default autoSSRTest;
+export default ssrTest;

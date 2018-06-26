@@ -1,5 +1,5 @@
 {
-  "name": "auto-ssr",
+  "name": "sanity",
   "version": "1.0.0",
   "main": "cjs/index.js",
   "module": "esm/index.js",

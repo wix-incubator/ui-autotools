@@ -4,8 +4,8 @@ import path from 'path';
 const mocha = new Mocha();
 
 // Grab the ssr-test.js file
-const pathToTest = path.dirname(require.resolve('./ssr-test.js'));
-mocha.addFile(pathToTest + '/ssr-test.js');
+const pathToTest = path.dirname(require.resolve('./ssr-test.ts'));
+mocha.addFile(pathToTest + '/ssr-test.ts');
 
 // Invoking this method runs our ssr-test in the mocha environment
 const autoSSRTest = () => {

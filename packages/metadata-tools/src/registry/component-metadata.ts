@@ -1,6 +1,6 @@
 import {IComponentMetadata, ISimulation, IStyleMetadata} from './types';
 
-export default class ComponentMetadata<Props> implements IComponentMetadata<Props> {
+export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
   public simulations: Array<ISimulation<Props>> = []; // Initialize with "empty" simulation
   public styles: Map<any, IStyleMetadata> = new Map<any, IStyleMetadata>();
 

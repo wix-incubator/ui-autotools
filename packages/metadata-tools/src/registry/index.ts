@@ -1,3 +1,3 @@
-import Registry, {ComponentMetadata} from './registry';
-export {ComponentMetadata};
+import Registry from './registry';
+export {ComponentMetadata} from './component-metadata';
 export default Registry;

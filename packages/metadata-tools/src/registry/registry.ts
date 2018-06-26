@@ -1,27 +1,20 @@
-/* tslint:disable:no-invalid-this */
-import {IRegistry, IComponentMetadata, ISimulation} from './types';
+import {IRegistry} from './types';
 import {ComponentType} from 'react';
-
-export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
-  public simulations: Array<ISimulation<Props>> = []; // Initialize with "empty" simulation
-
-  public addSim(sim: ISimulation<Props>) {
-    this.simulations.push(sim);
-  }
-}
+import {ComponentMetadata} from './component-metadata';
+import Metadata from './metadata';
 
 const Registry: IRegistry = {
-  metadata: new Map(),
-  describe <Props>(comp: ComponentType<Props>): ComponentMetadata<Props> {
-    if (!this.metadata.has(comp)) {
-      this.metadata.set(comp, new ComponentMetadata<Props>());
+  metadata: new Metadata(),
+  getComponentMetadata <Props>(comp: ComponentType<Props>): ComponentMetadata<Props> {
+    if (!this.metadata.components.has(comp)) {
+      this.metadata.components.set(comp, new ComponentMetadata<Props>());
     }
 
-    return this.metadata.get(comp)!;
+    return this.metadata.components.get(comp)!;
   },
-  clean() {
-    this.metadata.clear();
-  },
+  clear() {
+    this.metadata.components.clear();
+  }
 };
 
 Object.freeze(Registry);

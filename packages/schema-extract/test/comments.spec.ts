@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import { ModuleSchema, ClassConstructorSchemaId, ClassSchemaId } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform';
 
-describe('schema-extrct - comments', () => {
+describe('schema-extract - comments', () => {
     it('should support comments before vars', async () => {
         const moduleId = 'comments';
         const res = transformTest(`

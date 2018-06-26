@@ -1,5 +1,5 @@
 {
-  "name": "schema-extrct",
+  "name": "schema-extract",
   "version": "1.0.0",
   "main": "cjs/index.js",
   "module": "esm/index.js",
@@ -16,7 +16,7 @@
     "run-browser": "webpack-dev-server --progress"
   },
   "bin": {
-    "schema-extrct": "cjs/cli.js"
+    "schema-extract": "cjs/cli.js"
   },
   "peerDependencies": {
     "typescript": ">=2.8.0"

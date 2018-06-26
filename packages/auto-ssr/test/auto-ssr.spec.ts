@@ -9,13 +9,19 @@ describe('AutoSSR', () => {
     Registry.clear();
   });
 
-  it('should pass with a valid component', async () => {
+  it('should pass with a valid component', (done) => {
     Registry.getComponentMetadata(TestComp);
-    await autoSSRTest((passing) => expect(passing).to.equal(1)); // Passing
+    autoSSRTest((flag) => {
+      expect(flag, 'Test did not pass with valid component').to.equal(1);
+      done();
+    });
   });
 
-  it('should fail with an invalid component', () => {
+  it('should fail with an invalid component', (done) => {
     Registry.getComponentMetadata(FailingTestComp);
-    autoSSRTest((passing) => expect(passing).to.equal(1)); // Failing
+    autoSSRTest((flag) => {
+      expect(flag, 'Test did not fail with invalid component').to.equal(-1);
+      done();
+    });
   });
 });

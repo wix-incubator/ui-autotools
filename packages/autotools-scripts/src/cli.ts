@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import {Command} from 'commander';
-import autoSSRTest from './auto-ssr/mocha-wrapper';
+import ssrTest from './ssr-test/mocha-wrapper';
 import importMeta from './import-metadata/import-meta';
 const program = new Command();
 
@@ -13,7 +13,7 @@ program
   // Load metadata for each component that should be sanity tested
   importMeta(searchString);
   // Run the sanity tests for each loaded metadata
-  autoSSRTest();
+  ssrTest();
 });
 
 program.parse(process.argv);

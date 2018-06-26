@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import ssrTest from './auto-ssr-fixtures/mocha-wrapper';
+import ssrTest from './ssr-test-fixtures/mocha-wrapper';
 import Registry from 'metadata-tools';
 
 interface IProps {
@@ -20,7 +20,7 @@ const FailingTestComp: React.SFC = () => {
   return null;
 };
 
-describe('AutoSSR', () => {
+describe('SSR Test', () => {
   beforeEach(() => {
     Registry.clear();
   });

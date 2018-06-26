@@ -5,7 +5,7 @@ export interface IRegistry<AssetMap = any> {
   getComponentMetadata: <Props> (comp: ComponentType<Props>) => IComponentMetadata<Props>;
   getAssetMetadata: <AssetType extends keyof AssetMap, Asset extends AssetMap[AssetType]> (asset: Asset, type: AssetType, name: string, description?: string) => IAssetMetadata;
   getThemeMetadata: (theme: any, name: string) => IThemeMetadata;
-  clean: () => void;
+  clear: () => void;
 }
 
 export interface IComponentMetadata<Props> {

@@ -32,7 +32,7 @@ const Registry: IRegistry<IAssetMap> = {
 
     return this.metadata.themes.get(theme)!;
   },
-  clean() {
+  clear() {
     this.metadata.components.clear();
     this.metadata.assets.clear();
     this.metadata.themes.clear();

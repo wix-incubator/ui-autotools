@@ -26,7 +26,7 @@ const testStyleMetadata = {
 
 describe('Component Metadata', () => {
   beforeEach(() => {
-    Registry.clean();
+    Registry.clear();
   });
 
   describe('The addSim method', () => {

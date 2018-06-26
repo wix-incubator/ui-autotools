@@ -20,7 +20,7 @@ const testTheme = {
 
 describe('Registry', () => {
   beforeEach(() => {
-    Registry.clean();
+    Registry.clear();
   });
 
   describe('The getComponentMetadata method', () => {
@@ -65,7 +65,7 @@ describe('Registry', () => {
     });
   });
 
-  describe('The clean method', () => {
+  describe('The clear method', () => {
     it('removes any existing metadata', () => {
       Registry.getComponentMetadata(TestComp);
       Registry.getAssetMetadata(TestAsset, 'svg', 'image');
@@ -74,7 +74,7 @@ describe('Registry', () => {
       expect(Registry.metadata.assets.size).to.equal(1);
       expect(Registry.metadata.themes.size).to.equal(1);
 
-      Registry.clean();
+      Registry.clear();
 
       expect(Registry.metadata.components.size).to.equal(0);
       expect(Registry.metadata.assets.size).to.equal(0);

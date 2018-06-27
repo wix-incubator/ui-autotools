@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {ParentComp} from './composite/composite';
-import {Portal} from './portal/portal';
+import {Modal} from './modal/modal';
 import {PostRenderHook} from './post-render-hook/post-render-hook';
 
 const App: React.SFC = () => {
@@ -9,9 +9,9 @@ const App: React.SFC = () => {
     <div>
       <div>
         Hey cool person
-        <Portal root={rootContainer}>
+        <Modal>
           <span>Hey, I'm in a portal</span>
-        </Portal>
+        </Modal>
       </div>
       <div>
         Other Div

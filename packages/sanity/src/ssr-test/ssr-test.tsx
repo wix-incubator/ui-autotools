@@ -1,14 +1,24 @@
 /**
  * @jest-environment node
  */
-
 import * as React from 'react';
 import {renderToString} from 'react-dom/server';
 import Registry from 'metadata-tools';
 import {expect} from 'chai';
+import sinon from 'sinon';
 
 export const ssrTest = (): void => {
     describe('SSR tests', () => {
+        let consoleSpy: sinon.SinonSpy;
+
+        beforeEach(() => {
+            consoleSpy = sinon.spy(console, 'log');
+        });
+
+        afterEach(() => {
+            expect(consoleSpy.notCalled).to.equal(true);
+        });
+
         it('should be run in an environment without document and window', () => {
             // TODO: check node context
             expect(() => window).to.throw();

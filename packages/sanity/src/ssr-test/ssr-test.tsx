@@ -4,8 +4,11 @@
 import * as React from 'react';
 import {renderToString} from 'react-dom/server';
 import Registry from 'metadata-tools';
-import {expect} from 'chai';
+import chai, {expect} from 'chai';
 import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
+
+chai.use(sinonChai);
 
 export const ssrTest = (): void => {
     describe('SSR tests', () => {
@@ -16,7 +19,7 @@ export const ssrTest = (): void => {
         });
 
         afterEach(() => {
-            expect(consoleSpy.notCalled).to.equal(true);
+            consoleSpy.restore();
         });
 
         it('should be run in an environment without document and window', () => {
@@ -31,9 +34,19 @@ export const ssrTest = (): void => {
                     expect(() => renderToString(<Comp />), 'RenderToString threw an error').not.to.throw();
                 });
 
+                it('should not print anything to the console', () => {
+                    renderToString(<Comp />);
+                    expect(consoleSpy.notCalled).to.equal(true);
+                });
+
                 metadata.simulations.forEach(((simulation) => {
                     it(`should render ${Comp.name} to string with props ${JSON.stringify(simulation)} without throwing`, () => {
                         expect(() => renderToString(<Comp {...simulation.props} />), 'RenderToString threw an error').not.to.throw();
+                    });
+
+                    it(`should not print anything to the console with props ${JSON.stringify(simulation)}`, () => {
+                        renderToString(<Comp {...simulation.props} />);
+                        expect(consoleSpy.notCalled).to.equal(true);
                     });
                 }));
             });

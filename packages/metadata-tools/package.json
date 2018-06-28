@@ -7,8 +7,11 @@
   "scripts": {
     "clean": "rimraf ./cjs ./esm",
     "build": "run-p build:cjs build:esm",
+    "build:watch": "run-p build:cjs-watch build:esm-watch",
     "build:cjs": "tsc --project src --outDir cjs --module commonjs",
     "build:esm": "tsc --project src --outDir esm --module esnext",
+    "build:cjs-watch": "tsc --watch --project src --outDir cjs --module commonjs",
+    "build:esm-watch": "tsc --watch --project src --outDir esm --module esnext",
     "lint": "run-p lint:src lint:test",
     "lint:src": "tslint --project src",
     "lint:test": "tslint --project test",

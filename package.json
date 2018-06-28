@@ -26,6 +26,7 @@
     "@types/webpack": "^4.4.2",
     "@types/webpack-env": "^1.13.6",
     "@types/webpack-sources": "^0.1.4",
+    "axe-core": "^3.0.3",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "chai-style": "^1.0.3",
@@ -60,7 +61,8 @@
     "url-loader": "^1.0.1",
     "webpack": "^4.12.1",
     "webpack-cli": "^3.0.8",
-    "webpack-dev-server": "^3.1.4"
+    "webpack-dev-server": "^3.1.4",
+    "webpack-serve": "^1.0.4"
   },
   "engines": {
     "node": ">=8"

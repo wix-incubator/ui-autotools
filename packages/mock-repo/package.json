@@ -21,6 +21,6 @@
   "dependencies": {
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
-    "metadata-tools": "*"
+    "metadata-tools": "^1.0.0"
   }
 }

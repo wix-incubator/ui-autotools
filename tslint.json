@@ -6,6 +6,7 @@
     ],
     "jsRules": {},
     "rules": {
+        "no-var-requires": false,
         "ordered-imports": false,
         "quotemark": [
             true,

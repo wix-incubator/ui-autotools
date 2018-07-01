@@ -1,16 +1,13 @@
 import * as React from 'react';
 
-export interface CompState {
+export interface IState {
   label: string;
 }
 
-export class PostRenderHook extends React.Component<{}, CompState> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      label: 'Label failed to change'
-    };
-  }
+export class PostRenderHook extends React.Component<{}, IState> {
+  public state: IState = {
+    label: 'Label failed to change'
+  };
 
   public componentDidMount() {
     this.setState({label: 'I mounted and changed my label'});

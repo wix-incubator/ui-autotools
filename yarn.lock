@@ -475,6 +475,22 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.0.tgz#50c1e2260ac0ed9439a181de3725a0168d59c48a"
 
+"@shellscape/koa-send@^4.1.0":
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/@shellscape/koa-send/-/koa-send-4.1.3.tgz#1a7c8df21f63487e060b7bfd8ed82e1d3c4ae0b0"
+  dependencies:
+    debug "^2.6.3"
+    http-errors "^1.6.1"
+    mz "^2.6.0"
+    resolve-path "^1.3.3"
+
+"@shellscape/koa-static@^4.0.4":
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/@shellscape/koa-static/-/koa-static-4.0.5.tgz#b329b55bfd41056a6981c584ae6bace30b5b6b3b"
+  dependencies:
+    "@shellscape/koa-send" "^4.1.0"
+    debug "^2.6.8"
+
 "@types/accepts@*":
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/@types/accepts/-/accepts-1.3.5.tgz#c34bec115cfc746e04fe5a059df4ce7e7b391575"
@@ -867,6 +883,19 @@
     "@webassemblyjs/wast-parser" "1.5.12"
     long "^3.2.0"
 
+"@webpack-contrib/config-loader@^1.1.1":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@webpack-contrib/config-loader/-/config-loader-1.1.3.tgz#6cce904cabfd880203db600207fdbf64f4744fd7"
+  dependencies:
+    "@webpack-contrib/schema-utils" "^1.0.0-beta.0"
+    chalk "^2.1.0"
+    cosmiconfig "^5.0.2"
+    loud-rejection "^1.6.0"
+    merge-options "^1.0.1"
+    minimist "^1.2.0"
+    resolve "^1.6.0"
+    webpack-log "^1.1.2"
+
 "@webpack-contrib/schema-utils@^1.0.0-beta.0":
   version "1.0.0-beta.0"
   resolved "https://registry.yarnpkg.com/@webpack-contrib/schema-utils/-/schema-utils-1.0.0-beta.0.tgz#bf9638c9464d177b48209e84209e23bee2eb4f65"
@@ -1021,7 +1050,7 @@ ansi-styles@^3.2.0, ansi-styles@^3.2.1:
   dependencies:
     color-convert "^1.9.0"
 
-any-promise@^1.1.0:
+any-promise@^1.0.0, any-promise@^1.1.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/any-promise/-/any-promise-1.3.0.tgz#abc6afeedcea52e809cdc0376aed3ce39635d17f"
 
@@ -1277,6 +1306,10 @@ aws-sign2@~0.7.0:
 aws4@^1.2.1, aws4@^1.6.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.7.0.tgz#d4d0e9b9dbfca77bf08eeb0a8a471550fe39e289"
+
+axe-core@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-3.0.3.tgz#ce016fd01476e23f4f3199d48a3f07125450b5db"
 
 axios@^0.15.3:
   version "0.15.3"
@@ -2560,7 +2593,7 @@ debug@*, debug@3.1.0, debug@^3.1.0, debug@~3.1.0:
   dependencies:
     ms "2.0.0"
 
-debug@2, debug@2.6.9, debug@^2.1.2, debug@^2.2.0, debug@^2.3.3, debug@^2.6.6, debug@^2.6.8, debug@~2.6.4, debug@~2.6.6:
+debug@2, debug@2.6.9, debug@^2.1.2, debug@^2.2.0, debug@^2.3.3, debug@^2.6.3, debug@^2.6.6, debug@^2.6.8, debug@~2.6.4, debug@~2.6.6:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
   dependencies:
@@ -4020,7 +4053,7 @@ http-errors@1.6.2:
     setprototypeof "1.0.3"
     statuses ">= 1.3.1 < 2"
 
-http-errors@1.6.3, http-errors@^1.2.8, http-errors@~1.6.1, http-errors@~1.6.2, http-errors@~1.6.3:
+http-errors@1.6.3, http-errors@^1.2.8, http-errors@^1.6.1, http-errors@~1.6.1, http-errors@~1.6.2, http-errors@~1.6.3:
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/http-errors/-/http-errors-1.6.3.tgz#8b55680bb4be283a0b5bf4ea2e38580be1d9320d"
   dependencies:
@@ -4851,6 +4884,16 @@ koa-is-json@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/koa-is-json/-/koa-is-json-1.0.0.tgz#273c07edcdcb8df6a2c1ab7d59ee76491451ec14"
 
+koa-webpack@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/koa-webpack/-/koa-webpack-4.0.0.tgz#1d9b83c109db106d8ef65db376f910a45ba964c7"
+  dependencies:
+    app-root-path "^2.0.1"
+    merge-options "^1.0.0"
+    webpack-dev-middleware "^3.0.0"
+    webpack-hot-client "^3.0.0"
+    webpack-log "^1.1.1"
+
 koa-webpack@^5.0.2:
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/koa-webpack/-/koa-webpack-5.0.2.tgz#9deebec50a1b8beffb1f5ac11fa962f4e583f71b"
@@ -4863,7 +4906,7 @@ koa-webpack@^5.0.2:
     webpack-hot-client "^4.0.1"
     webpack-log "^1.1.1"
 
-koa@^2.5.1:
+koa@^2.4.1, koa@^2.5.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/koa/-/koa-2.5.1.tgz#79f8b95f8d72d04fe9a58a8da5ebd6d341103f9c"
   dependencies:
@@ -4891,6 +4934,12 @@ koa@^2.5.1:
     statuses "^1.2.0"
     type-is "^1.5.5"
     vary "^1.0.0"
+
+latest-version@^3.0.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/latest-version/-/latest-version-3.1.0.tgz#a205383fea322b33b5ae3b18abee0dc2f356ee15"
+  dependencies:
+    package-json "^4.0.0"
 
 lazy-cache@^1.0.3:
   version "1.0.4"
@@ -8043,6 +8092,18 @@ text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
 
+thenify-all@^1.0.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/thenify-all/-/thenify-all-1.6.0.tgz#1a1918d402d8fc3f98fbf234db0bcc8cc10e9726"
+  dependencies:
+    thenify ">= 3.1.0 < 4"
+
+"thenify@>= 3.1.0 < 4":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/thenify/-/thenify-3.3.0.tgz#e69e38a1babe969b0108207978b9f62b88604839"
+  dependencies:
+    any-promise "^1.0.0"
+
 through2@^2.0.0, through2@^2.0.2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/through2/-/through2-2.0.3.tgz#0004569b37c7c74ba39c43f3ced78d1ad94140be"
@@ -8717,6 +8778,17 @@ webpack-dev-server@^3.1.4:
     webpack-dev-middleware "3.1.3"
     webpack-log "^1.1.2"
     yargs "11.0.0"
+
+webpack-hot-client@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/webpack-hot-client/-/webpack-hot-client-3.0.0.tgz#b714f257a264001275bc1491741685779cde12f2"
+  dependencies:
+    json-stringify-safe "^5.0.1"
+    loglevelnext "^1.0.2"
+    strip-ansi "^4.0.0"
+    uuid "^3.1.0"
+    webpack-log "^1.1.1"
+    ws "^4.0.0"
 
 webpack-hot-client@^4.0.1:
   version "4.0.4"

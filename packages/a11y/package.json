@@ -25,7 +25,8 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "sanity": "*",
-    "metadata-tools": "*",
+    "metadata-tools": "^1.0.0",
+    "ui-autotools-utils": "^1.0.0",
     "commander": "^2.15.1",
     "glob": "^7.1.2",
     "typescript-support": "^0.4.1"

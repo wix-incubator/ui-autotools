@@ -22,6 +22,14 @@ function createTestsFromSimulations(reactRoot: any) {
         <p>Label for this text field.</p>
         <input type="text" id="nolabelfld"/>
       </div>, container)
+  });
+  tests.push({
+    title: 'broken',
+    render: (container: any) => ReactDOM.render(
+      <div id="broken">
+        <p>Label for this text field.</p>
+        <input type="text" id="bla"/>
+      </div>, container)
   })
   return tests;
 }
@@ -45,14 +53,12 @@ async function test(rootElement: HTMLElement) {
 
 function printViolations(violations: axe.Result[], impact: axe.ImpactValue = 'minor'): string {
   let errors: string[] = [];
-  violations.forEach(((violation, index) => {
+  let index = 1;
+  violations.forEach((violation => {
     if (isImpactRelevant(violation.impact, impact)) {
-      const node = violation.nodes[0];
-      if (violation.id === 'duplicate-id') {
-        errors.push(`${index + 1}. Document: (Impact: ${violation.impact}) ${node.failureSummary}`);
-      } else {
-        errors.push(`${index + 1}. ${node.target[0].replace('#', '')}: (Impact: ${violation.impact}) ${node.failureSummary}`);
-      }
+      violation.nodes.forEach(node => {
+        errors.push(`${index++}. ${violation.id === 'duplicate-id' ? 'Document' : node.target[0].replace('#', '')}: (Impact: ${violation.impact}) ${node.failureSummary}`);
+      });
     }
   }))
   return errors.join('\n');

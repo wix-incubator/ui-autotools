@@ -31,8 +31,6 @@
     "typescript-support": "^0.4.1"
   },
   "peerDependencies": {
-    "mocha": ">=5",
-    "chai": ">=4",
     "react": ">=16",
     "react-dom": ">=16"
   }

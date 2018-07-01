@@ -5,7 +5,6 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 
 const projectPath = process.cwd();
-// const packagePath = path.resolve(__dirname, '..');
 const projectName = path.basename(projectPath);
 
 // tslint:disable-next-line
@@ -23,7 +22,7 @@ if (!webpackConfig.plugins) {
 
 webpackConfig.plugins.push(new HtmlWebpackPlugin({
   template: path.join(projectPath, 'packages/a11y/index.html'),
-  title: `Eyes - ${projectName}`
+  title: `A11y - ${projectName}`
 }));
 
 serve({

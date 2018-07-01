@@ -10,11 +10,19 @@ function createTestsFromSimulations(reactRoot: any) {
     for (const [simIndex, sim] of meta.simulations.entries()) {
       tests.push({
         title: Comp.name + ' ' + simIndex,
-        render:  (container: any) => ReactDOM.render(<div id="comp"><Comp {...sim.props} /></div>, container),
+        render:  (container: any) => ReactDOM.render(<div id={Comp.name}><Comp {...sim.props} /></div>, container),
         cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot)
       });
     }
   }
+  tests.push({
+    title: 'broken',
+    render: (container: any) => ReactDOM.render(
+      <div id="broken">
+        <p>Label for this text field.</p>
+        <input type="text" id="nolabelfld"/>
+      </div>, container)
+  })
   return tests;
 }
 
@@ -26,12 +34,33 @@ async function test(rootElement: HTMLElement) {
     rootElement.appendChild(div);
     await c.render(div);
   }
-  axe.run(rootElement, (err: any, result: any) => {
-    console.log('err', err);
+  axe.run(rootElement, (err: Error, result: axe.AxeResults) => {
+    if (err) throw err;
     console.log('result', result);
+    if (result.violations.length) {
+      console.log(printViolations(result.violations));
+    }
   });
 }
 
-if (root) {
-  test(root);
+function printViolations(violations: axe.Result[], impact: axe.ImpactValue = 'minor'): string {
+  let errors: string[] = [];
+  violations.forEach(((violation, index) => {
+    if (isImpactRelevant(violation.impact, impact)) {
+      const node = violation.nodes[0];
+      if (violation.id === 'duplicate-id') {
+        errors.push(`${index + 1}. Document: (Impact: ${violation.impact}) ${node.failureSummary}`);
+      } else {
+        errors.push(`${index + 1}. ${node.target[0].replace('#', '')}: (Impact: ${violation.impact}) ${node.failureSummary}`);
+      }
+    }
+  }))
+  return errors.join('\n');
 }
+
+function isImpactRelevant(impact: axe.ImpactValue, minImpact: axe.ImpactValue): boolean {
+  const impactArray = ['minor', 'moderate', 'serious', 'critical'];
+  return impactArray.indexOf(impact) >= impactArray.indexOf(minImpact);
+}
+
+test(root!);

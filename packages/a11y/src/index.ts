@@ -13,7 +13,7 @@ function getWebpackConfig() {
     .addEntry('meta', path.join(packagePath, 'src/browser/run'))
     .addHtml({
       template: path.join(packagePath, 'src/browser/index.html'),
-      title: 'Eyes'
+      title: 'Accessibility'
     })
     .suppressReactDevtoolsSuggestion()
     .getConfig();

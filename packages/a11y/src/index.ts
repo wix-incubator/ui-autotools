@@ -1,5 +1,4 @@
 /* tslint:disable:no-console */
-
 import path from 'path';
 import {WebpackConfigurator} from 'ui-autotools-utils';
 import {serve, IServer} from 'ui-autotools-utils';
@@ -30,10 +29,10 @@ async function main() {
     process.exitCode = 1;
     console.error(error ? error.message : '');
   } finally {
-    if (server) {
-      server.close();
-    }
-    process.exit();
+    // if (server) {
+    //   server.close();
+    // }
+    // process.exit();
   }
 }
 

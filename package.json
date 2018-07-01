@@ -7,6 +7,7 @@
   "scripts": {
     "clean": "lerna run clean --stream",
     "build": "lerna run build --stream",
+    "build:watch": "lerna run --parallel build:watch",
     "pretest": "run-p lint build",
     "lint": "lerna run lint --stream",
     "test": "lerna run test --stream --"
@@ -17,7 +18,9 @@
     "@types/chai-dom": "^0.0.6",
     "@types/chai-subset": "^1.3.1",
     "@types/glob": "^5.0.35",
+    "@types/html-webpack-plugin": "^2.30.3",
     "@types/jsdom": "^11.0.6",
+    "@types/koa-webpack": "^5.0.1",
     "@types/mocha": "^5.2.3",
     "@types/node": "8",
     "@types/react": "^16.4.1",

@@ -1,16 +1,6 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "lib": [
-      "es2017",
-      "dom"
-    ],  
-    "types": [
-      "node",
-      "mocha",
-      "chai"
-    ],
-    "jsx": "react",
     "module": "commonjs"
   }
 }

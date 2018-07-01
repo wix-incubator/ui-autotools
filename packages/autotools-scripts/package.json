@@ -9,6 +9,7 @@
   "scripts": {
     "clean": "rimraf ./cjs ./esm",
     "build": "tsc --project src --outDir cjs --module commonjs",
+    "build:watch": "tsc --watch --project src --outDir cjs --module commonjs",
     "lint": "run-p lint:src lint:test",
     "lint:src": "tslint --project src",
     "lint:test": "tslint --project test",
@@ -24,8 +25,8 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "sanity": "*",
-    "metadata-tools": "*",
+    "sanity": "^1.0.0",
+    "metadata-tools": "^1.0.0",
     "commander": "^2.15.1",
     "glob": "^7.1.2",
     "typescript-support": "^0.4.1"

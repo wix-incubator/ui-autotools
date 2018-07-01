@@ -1,5 +1,5 @@
 {
-  "name": "sanity",
+  "name": "ui-autotools-eyes",
   "version": "1.0.0",
   "main": "cjs/index.js",
   "module": "esm/index.js",
@@ -7,15 +7,15 @@
   "scripts": {
     "clean": "rimraf ./cjs ./esm",
     "build": "run-p build:cjs build:esm",
+    "build:watch": "run-p build:cjs-watch build:esm-watch",
     "build:cjs": "tsc --project src --outDir cjs --module commonjs",
     "build:esm": "tsc --project src --outDir esm --module esnext",
-    "build:watch": "run-p build:cjs-watch build:esm-watch",
     "build:cjs-watch": "tsc --watch --project src --outDir cjs --module commonjs",
     "build:esm-watch": "tsc --watch --project src --outDir esm --module esnext",
     "lint": "run-p lint:src lint:test",
     "lint:src": "tslint --project src",
-    "lint:test": "tslint --project test",
-    "test": "mocha -r typescript-support \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
+    "lint:test": "true",
+    "test": "true"
   },
   "files": [
     "cjs",
@@ -28,10 +28,11 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "metadata-tools": "^1.0.0"
+    "metadata-tools": "^1.0.0",
+    "puppeteer": "^1.5.0",
+    "ui-autotools-utils": "^1.0.0"
   },
   "peerDependencies": {
-    "chai": ">=4",
     "react": ">=16",
     "react-dom": ">=16"
   }

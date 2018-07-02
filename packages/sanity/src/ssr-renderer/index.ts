@@ -3,6 +3,7 @@
 import path from 'path';
 import {WebpackConfigurator} from 'ui-autotools-utils';
 import {serve, IServer} from 'ui-autotools-utils';
+import puppeteer from 'puppeteer';
 
 const packagePath = path.resolve(__dirname, '../..');
 const projectPath = process.cwd();
@@ -24,8 +25,19 @@ async function main() {
   let server: IServer | null = null;
   try {
     server = await serve({webpackConfig: getWebpackConfig()});
-    const numFailedTests = await runTests(server.getUrl());
-    process.exitCode = numFailedTests ? 1 : 0;
+    const browser = await puppeteer.launch({headless: false, devtools: true});
+    const page = await browser.newPage();
+    // tslint:disable-next-line:no-debugger
+    await page.evaluate(() => {debugger;});
+    // page.on('console', async (msg) => {
+    //   const args = await Promise.all(msg.args().map((a) => a.jsonValue()));
+    //   console.log(...args);
+    //   if (server) {
+    //     server.close();
+    //   }
+    //   process.exit();
+    // });
+    await page.goto(server.getUrl());
   } catch (error) {
     process.exitCode = 1;
     console.error(error ? error.message : '');
@@ -37,9 +49,9 @@ async function main() {
   }
 }
 
-async function runTests(url: string) {
-  console.log(`Serving meta bundle on ${url}`);
-  return 0;
-}
+// async function runTests(url: string) {
+//   console.log(`Serving meta bundle on ${url}`);
+//   return 0;
+// }
 
 main();

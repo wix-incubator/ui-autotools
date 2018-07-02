@@ -44,7 +44,6 @@ async function test(rootElement: HTMLElement) {
   }
   axe.run(rootElement, (err: Error, result: axe.AxeResults) => {
     if (err) throw err;
-    console.log('result', result);
     if (result.violations.length) {
       console.log(printViolations(result.violations));
     }
@@ -57,16 +56,15 @@ function printViolations(violations: axe.Result[], impact: axe.ImpactValue = 'mi
   violations.forEach((violation => {
     if (isImpactRelevant(violation.impact, impact)) {
       violation.nodes.forEach(node => {
-        errors.push(`${index++}. ${violation.id === 'duplicate-id' ? 'Document' : node.target[0].replace('#', '')}: (Impact: ${violation.impact}) ${node.failureSummary}`);
+        errors.push(`${index++}. \x1b[31m${violation.id === 'duplicate-id' ? 'Document' : node.target[0].replace('#', '')}\x1b[0m: (Impact: ${violation.impact}) ${node.failureSummary}`);
       });
     }
   }))
-  return errors.join('\n');
+  return errors.join('\n\n');
 }
 
 function isImpactRelevant(impact: axe.ImpactValue, minImpact: axe.ImpactValue): boolean {
   const impactArray = ['minor', 'moderate', 'serious', 'critical'];
   return impactArray.indexOf(impact) >= impactArray.indexOf(minImpact);
 }
-
 test(root!);

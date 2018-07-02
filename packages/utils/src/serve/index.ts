@@ -47,7 +47,7 @@ function getServerUrl(server: http.Server) {
 }
 
 function createCompiler({webpackConfig, log, watch}: ICompilerOptions) {
-  webpackConfig.bail = true;
+  webpackConfig.bail = watch;
 
   webpackConfig.plugins = webpackConfig.plugins || [];
   webpackConfig.plugins.push(
@@ -57,6 +57,15 @@ function createCompiler({webpackConfig, log, watch}: ICompilerOptions) {
   const compiler = webpack(webpackConfig);
 
   const compilerPromise = new Promise((resolve, reject) => {
+    // When an error occurs either `hooks.failed` or `hooks.done` runs depending
+    // on the bail mode and the type of the error. `hooks.failed` seems to be
+    // specific to missing entry points.
+
+    compiler.hooks.failed.tap('Serve', (error) => {
+      log.compilationError(error);
+      reject();
+    });
+
     compiler.hooks.done.tap('Serve', (stats) => {
       log.compilationFinished(stats);
       stats.hasErrors() ? reject() : resolve();

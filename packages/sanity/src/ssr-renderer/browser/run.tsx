@@ -30,10 +30,16 @@ function createTestsFromSimulations() {
 function run() {
   // Puppeteer decides which tests to run and in what order, we just provide it
   // with the list of test titles and expose hooks for render and cleanup.
-  const tests = createTestsFromSimulations();
-  (window as any).puppeteerRenderTest  = (i: number) => tests[i].render();
-  (window as any).puppeteerCleanupTest = (i: number) => tests[i].cleanup();
-  (window as any).puppeteerRunTests(tests.map(({title}) => ({title})));
+  // createTestsFromSimulations();
+  const comps = createTestsFromSimulations();
+  // tslint:disable-next-line:no-debugger
+  debugger;
+  comps.map((comp) => {
+    comp.render();
+  });
+  // (window as any).puppeteerRenderTest  = (i: number) => tests[i].render();
+  // (window as any).puppeteerCleanupTest = (i: number) => tests[i].cleanup();
+  // (window as any).puppeteerRunTests(tests.map(({title}) => ({title})));
 }
 
 run();

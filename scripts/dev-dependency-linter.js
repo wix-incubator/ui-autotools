@@ -18,23 +18,23 @@ if (rootPackageJson.workspaces) {
 }
 
 
-workspaces.forEach(workspace => {
+for (const workspace in workspaces) {
   const packages = glob.sync(workspace);
   if (!packages || packages.length === 0) {
     throw new Error('Couldn\'t find any packages in the workspace.');
   }
   const errors = [];
 
-  packages.forEach(package => {
+  for (const package in packages) {
     const packageJson = JSON.parse(fs.readFileSync(`${package}/package.json`));
     if (packageJson.devDependencies) {
       for (const devDep in packageJson.devDependencies) {
         errors.push(`\n Package "${package}" cannot have devDependency "${devDep}" in its package.json. This dev-dependency should be placed in the root package.json`);
       }
     }
-  })
+  }
 
   if (errors.length > 0) {
     throw new Error(errors.toString());
   }
-});
+};

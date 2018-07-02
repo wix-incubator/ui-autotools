@@ -4,17 +4,17 @@ import path from 'path';
 import {WebpackConfigurator} from 'ui-autotools-utils';
 import {serve, IServer} from 'ui-autotools-utils';
 
-const packagePath = path.resolve(__dirname, '..');
+const packagePath = path.resolve(__dirname, '../..');
 const projectPath = process.cwd();
 const webpackConfigPath = path.join(projectPath, 'meta.webpack.config.js');
 
 function getWebpackConfig() {
   return WebpackConfigurator
     .load(webpackConfigPath)
-    .addEntry('meta', path.join(packagePath, 'src/browser/run'))
+    .addEntry('meta', path.join(packagePath, 'src/ssr-renderer/browser/run'))
     .addHtml({
-      template: path.join(packagePath, 'src/browser/index.html'),
-      title: 'Eyes'
+      template: path.join(packagePath, 'src/ssr-renderer/browser/index.html'),
+      title: 'SSR-Hydrate'
     })
     .suppressReactDevtoolsSuggestion()
     .getConfig();
@@ -30,10 +30,10 @@ async function main() {
     process.exitCode = 1;
     console.error(error ? error.message : '');
   } finally {
-    if (server) {
-      server.close();
-    }
-    process.exit();
+    // if (server) {
+    //   server.close();
+    // }
+    // process.exit();
   }
 }
 

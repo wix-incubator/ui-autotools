@@ -28,7 +28,8 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "metadata-tools": "^1.0.0"
+    "metadata-tools": "^1.0.0",
+    "ui-autotools-utils": "^1.0.0"
   },
   "peerDependencies": {
     "chai": ">=4",

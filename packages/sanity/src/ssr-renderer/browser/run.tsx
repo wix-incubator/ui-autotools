@@ -1,6 +1,8 @@
 import Registry from 'metadata-tools';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {test} from '../test/sample.spec';
+import 'mocha';
 
 // [ISSUE] If the registry imported here and the registry imported by the
 // project sit in different node_modules we're screwed.
@@ -32,6 +34,7 @@ function run() {
   // with the list of test titles and expose hooks for render and cleanup.
   // createTestsFromSimulations();
   const comps = createTestsFromSimulations();
+  test();
   comps.map((comp) => {
     comp.render();
   });

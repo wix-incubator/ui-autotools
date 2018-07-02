@@ -32,8 +32,6 @@ function run() {
   // with the list of test titles and expose hooks for render and cleanup.
   // createTestsFromSimulations();
   const comps = createTestsFromSimulations();
-  // tslint:disable-next-line:no-debugger
-  debugger;
   comps.map((comp) => {
     comp.render();
   });

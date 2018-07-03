@@ -21,9 +21,12 @@ program
 .command('a11y')
 .description('test')
 .option('-p, --path <p>', 'project path')
+.option('-i, --impact <i>', 'Only display issues with impact level higher than <i>. Value between 1 (minor) and 4 (critical)')
 .action((options) => {
+  const impact = Number(options.impact);
+  const impactLevel = (isNaN(impact) || impact > 4 || impact < 1) ? 1 : impact;
   const path = options.path ? options.path : './';
-  a11yTest(path);
+  a11yTest(path, impactLevel);
 });
 
 program.parse(process.argv);

@@ -1,22 +1,31 @@
-/* tslint:disable */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Registry from 'metadata-tools';
 import axe from 'axe-core';
 
-(window as any).axeImpat = 'minor';
+interface ITest {
+  render: (container: HTMLElement) => void;
+  cleanup: () => void;
+}
 
 function createTestsFromSimulations(reactRoot: any) {
-  const tests = [];
+  const tests: ITest[] = [];
   for (const [Comp, meta] of Registry.metadata.components.entries()) {
-    for (const [simIndex, sim] of meta.simulations.entries()) {
+    meta.simulations.forEach((sim) => {
       tests.push({
-        title: Comp.name + ' ' + simIndex,
-        render:  (container: any) => ReactDOM.render(<div id={Comp.name}><Comp {...sim.props} /></div>, container),
+        render:  (container: HTMLElement) => ReactDOM.render(<div id={Comp.name}><Comp {...sim.props} /></div>, container),
         cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot)
       });
-    }
+    });
   }
+  tests.push({
+    render:  (container: any) => ReactDOM.render(<div id="nolabelfld"><p>Label for this text field.</p></div>, container),
+    cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot)
+  });
+  tests.push({
+    render:  (container: any) => ReactDOM.render(<div id="nolabelfld"><p>Label for this text field.</p></div>, container),
+    cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot)
+  });
   return tests;
 }
 
@@ -29,7 +38,9 @@ async function test(rootElement: HTMLElement) {
     await c.render(div);
   }
   axe.run(rootElement, (err: Error, result: axe.AxeResults) => {
-    if (err) throw err;
+    if (err) {
+      throw err;
+    }
     (window as any).runAxeTest(result);
   });
 }

@@ -15,22 +15,6 @@ function createTestsFromSimulations(reactRoot: any) {
       });
     }
   }
-  tests.push({
-    title: 'broken',
-    render: (container: any) => ReactDOM.render(
-      <div id="broken">
-        <p>Label for this text field.</p>
-        <input type="text" id="nolabelfld"/>
-      </div>, container)
-  });
-  tests.push({
-    title: 'broken',
-    render: (container: any) => ReactDOM.render(
-      <div id="broken">
-        <p>Label for this text field.</p>
-        <input type="text" id="bla"/>
-      </div>, container)
-  })
   return tests;
 }
 

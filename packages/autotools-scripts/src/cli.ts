@@ -2,6 +2,7 @@
 import {Command} from 'commander';
 import ssrTest from './ssr-test/mocha-wrapper';
 import importMeta from './import-metadata/import-meta';
+import {a11yTest} from 'a11y';
 const program = new Command();
 
 program
@@ -14,6 +15,7 @@ program
   importMeta(searchString);
   // Run the sanity tests for each loaded metadata
   ssrTest();
+  a11yTest();
 });
 
 program.parse(process.argv);

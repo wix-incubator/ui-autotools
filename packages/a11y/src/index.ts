@@ -20,7 +20,7 @@ function getWebpackConfig() {
     .getConfig();
 }
 
-async function main() {
+export async function a11yTest() {
   let server: IServer | null = null;
   try {
     server = await serve({webpackConfig: getWebpackConfig()});
@@ -35,16 +35,10 @@ async function main() {
       process.exit();
     });
     await page.goto(server.getUrl());
-    // await browser.close();
+    process.exitCode = 0;
+    // Maybe add settimeout as backup?
   } catch (error) {
     process.exitCode = 1;
     console.error(error ? error.message : '');
-  } finally {
-    // if (server) {
-    //   server.close();
-    // }
-    // process.exit();
   }
 }
-
-main();

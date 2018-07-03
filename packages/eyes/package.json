@@ -33,7 +33,7 @@
     "ui-autotools-utils": "^1.0.0"
   },
   "devDependencies": {
-    "asdfsdf": "asdfsdf"
+    "glob": "^7.1.2"
   },
   "peerDependencies": {
     "react": ">=16",

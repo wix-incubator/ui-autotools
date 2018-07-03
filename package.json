@@ -9,7 +9,7 @@
     "build": "lerna run build --stream",
     "build:watch": "lerna run --parallel build:watch",
     "pretest": "run-p lint build",
-    "lint": "lerna run lint --stream && node scripts/dev-dependency-linter",
+    "lint": "lerna run lint --stream && node -r typescript-support scripts/dev-dependency-linter",
     "test": "lerna run test --stream --"
   },
   "devDependencies": {

@@ -15,7 +15,15 @@ program
   importMeta(searchString);
   // Run the sanity tests for each loaded metadata
   ssrTest();
-  a11yTest();
+});
+
+program
+.command('a11y')
+.description('test')
+.option('-p, --path <p>', 'project path')
+.action((options) => {
+  const path = options.path ? options.path : './';
+  a11yTest(path);
 });
 
 program.parse(process.argv);

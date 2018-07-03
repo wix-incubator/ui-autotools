@@ -32,6 +32,9 @@
     "puppeteer": "^1.5.0",
     "ui-autotools-utils": "^1.0.0"
   },
+  "devDependencies": {
+    "asdfsdf": "asdfsdf"
+  },
   "peerDependencies": {
     "react": ">=16",
     "react-dom": ">=16"

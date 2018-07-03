@@ -16,8 +16,8 @@ export const devDependencyLinter = (pathToPackageJson: string): string[] => {
       const {devDependencies} = JSON.parse(fs.readFileSync(`${pkg}/package.json`));
 
       if (devDependencies) {
-        for (const devDependency of devDependencies) {
-          errors.push(`\n Package "${pkg}" cannot have devDependency "${devDependency}" in its package.json. This dev-dependency should be placed in the root package.json`);
+        for (const devDependency of Object.keys(devDependencies)) {
+          errors.push(`Package "${pkg}" cannot have devDependency "${devDependency}" in its package.json. This dev-dependency should be placed in the root package.json`);
         }
       }
     }

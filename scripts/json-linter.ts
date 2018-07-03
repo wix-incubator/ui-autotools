@@ -5,6 +5,8 @@ const pathToPackageJson = join(__dirname, '../package.json');
 
 const errors = devDependencyLinter(pathToPackageJson);
 
-if (errors) {
-  throw errors;
+for (const error of errors) {
+  // tslint:disable-next-line:no-console
+  console.error(error);
+
 }

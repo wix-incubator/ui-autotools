@@ -6,5 +6,5 @@ const pathToPackageJson = join(__dirname, '../package.json');
 const errors = devDependencyLinter(pathToPackageJson);
 
 for (const error of errors) {
-  throw error;
+  throw new Error(error);
 }

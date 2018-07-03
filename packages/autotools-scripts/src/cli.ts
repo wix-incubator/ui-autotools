@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import {Command} from 'commander';
 import ssrTest from './ssr-test/mocha-wrapper';
+import {eyesTest} from 'ui-autotools-eyes';
 import importMeta from './import-metadata/import-meta';
 const program = new Command();
 
@@ -15,5 +16,10 @@ program
   // Run the sanity tests for each loaded metadata
   ssrTest();
 });
+
+program
+.command('eyes')
+.description('compare components to the expected appearance using Eyes')
+.action(eyesTest);
 
 program.parse(process.argv);

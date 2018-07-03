@@ -19,8 +19,9 @@
     "test": "mocha -r typescript-support \"./test/node/**/*.node-spec.ts?(x)\" --watch-extensions ts,tsx"
   },
   "dependencies": {
-    "react": "^16.4.1",
+    "autotools-scripts": "^1.0.0",
+    "metadata-tools": "^1.0.0",
     "react-dom": "^16.4.1",
-    "metadata-tools": "^1.0.0"
+    "react": "^16.4.1"
   }
 }

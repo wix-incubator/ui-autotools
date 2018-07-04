@@ -23,6 +23,7 @@
     "@types/koa-webpack": "^5.0.1",
     "@types/mocha": "^5.2.3",
     "@types/node": "8",
+    "@types/puppeteer": "^1.5.0",
     "@types/react": "^16.4.1",
     "@types/react-dom": "^16.0.6",
     "@types/tapable": "^1.0.2",

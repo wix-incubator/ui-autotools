@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import {Command} from 'commander';
 import ssrTest from './ssr-test/mocha-wrapper';
+import {eyesTest} from 'ui-autotools-eyes';
 import importMeta from './import-metadata/import-meta';
 import {a11yTest} from 'a11y';
 const program = new Command();
@@ -28,5 +29,10 @@ program
   const path = options.path ? options.path : './';
   a11yTest(path, impactLevel);
 });
+
+program
+.command('eyes')
+.description('compare components to the expected appearance using Eyes')
+.action(eyesTest);
 
 program.parse(process.argv);

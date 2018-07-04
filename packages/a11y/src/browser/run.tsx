@@ -18,14 +18,6 @@ function createTestsFromSimulations(reactRoot: any) {
       });
     });
   }
-  tests.push({
-    render:  (container: any) => ReactDOM.render(<div id="nolabelfld"><p>Label for this text field.</p></div>, container),
-    cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot)
-  });
-  tests.push({
-    render:  (container: any) => ReactDOM.render(<div id="nolabelfld"><p>Label for this text field.</p></div>, container),
-    cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot)
-  });
   return tests;
 }
 

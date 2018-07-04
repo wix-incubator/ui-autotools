@@ -27,7 +27,7 @@ function printResults(results: axe.AxeResults, impact: number): string {
   results.violations.forEach((violation) => {
     if (impactArray.indexOf(violation.impact) + 1 >= impact) {
       violation.nodes.forEach((node) => {
-        msg.push(`${index++}. ${chalk.red(violation.id === 'duplicate-id' ? 'Document' : node.target[0].replace('#', ''))}: (Impact: ${violation.impact}) ${node.failureSummary}`);
+        msg.push(`${index++}. ${chalk.red(violation.id === 'duplicate-id' ? 'Document' : node.target[0])}: (Impact: ${violation.impact}) ${node.failureSummary}`);
       });
     }
   });

@@ -1,11 +1,8 @@
 {
-  "name": "a11y",
+  "name": "ui-autotools-a11y",
   "version": "1.0.0",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
-  "bin": {
-    "autotools": "bin/cli.js"
-  },
   "scripts": {
     "clean": "rimraf ./cjs ./esm",
     "build": "run-p build:cjs build:esm",
@@ -30,6 +27,7 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
+    "axe-core": "^3.0.3",
     "chalk": "^2.4.1",
     "metadata-tools": "^1.0.0",
     "puppeteer": "^1.5.0",

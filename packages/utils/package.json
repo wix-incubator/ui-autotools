@@ -32,9 +32,6 @@
     "koa-webpack": "^5.0.2",
     "koa": "^2.5.1"
   },
-  "devDependencies" : {
-    "test": "asdfsdf"
-  },
   "peerDependencies": {
     "webpack": ">=4"
   }

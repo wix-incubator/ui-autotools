@@ -1,8 +1,7 @@
 /* tslint:disable:no-console */
 import path from 'path';
 import puppeteer from 'puppeteer';
-import {WebpackConfigurator} from 'ui-autotools-utils';
-import {serve, IServer} from 'ui-autotools-utils';
+import {WebpackConfigurator, serve, IServer} from 'ui-autotools-utils';
 import axe from 'axe-core';
 import chalk from 'chalk';
 
@@ -41,10 +40,11 @@ function printResults(results: axe.AxeResults, impact: number): string {
 
 export async function a11yTest(p: string, impact: number) {
   let server: IServer | null = null;
+  let browser: puppeteer.Browser | null = null;
   console.log('Running accessibility tests...');
   try {
     server = await serve({webpackConfig: getWebpackConfig(p)});
-    const browser = await puppeteer.launch({headless: true});
+    browser = await puppeteer.launch({headless: true});
     const page = await browser.newPage();
     const getResults = new Promise<axe.AxeResults>((resolve) =>
       page.exposeFunction('runAxeTest', resolve)
@@ -52,11 +52,18 @@ export async function a11yTest(p: string, impact: number) {
     await page.goto(server.getUrl());
     const results = await getResults;
     console.log(printResults(results, impact));
-    browser.close();
+
     process.exitCode = 0;
   } catch (error) {
-    process.exitCode = 1;
-    console.error(error ? error.message : '');
+    if (browser) {
+      try {
+       browser!.close();
+      } catch (_) {
+        // Ignore the error since we're already handling an exception.
+      }
+    }
+
+    throw error;
   } finally {
     if (server) {
       server.close();

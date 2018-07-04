@@ -21,7 +21,7 @@ function createTestsFromSimulations(reactRoot: any) {
   return tests;
 }
 
-const root = document.getElementById('root');
+const root = document.getElementById('react-root');
 async function test(rootElement: HTMLElement) {
   const comps = createTestsFromSimulations(root);
   for (const c of comps) {

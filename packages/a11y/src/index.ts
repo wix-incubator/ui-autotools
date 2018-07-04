@@ -1,20 +1,20 @@
 /* tslint:disable:no-console */
 import path from 'path';
 import puppeteer from 'puppeteer';
-import {WebpackConfigurator, serve, IServer} from 'ui-autotools-utils';
+import {WebpackConfigurator, serve, IServer, waitForPageError} from 'ui-autotools-utils';
 import axe from 'axe-core';
 import chalk from 'chalk';
 
-const packagePath = path.resolve(__dirname, '..');
+const ownPath = path.resolve(__dirname, '..');
 const impactArray: axe.ImpactValue[] = ['minor', 'moderate', 'serious', 'critical'];
 
 function getWebpackConfig(p: string) {
   const webpackConfigPath = path.join(process.cwd(), p, 'meta.webpack.config.js');
   return WebpackConfigurator
     .load(webpackConfigPath)
-    .addEntry('meta', path.join(packagePath, 'src/browser/run'))
+    .addEntry('meta', path.join(ownPath, 'esm/browser/run'))
     .addHtml({
-      template: path.join(packagePath, 'src/browser/index.html'),
+      template: path.join(ownPath, 'src/browser/index.html'),
       title: 'Accessibility'
     })
     .suppressReactDevtoolsSuggestion()
@@ -49,8 +49,11 @@ export async function a11yTest(p: string, impact: number) {
     const getResults = new Promise<axe.AxeResults>((resolve) =>
       page.exposeFunction('runAxeTest', resolve)
     );
+    page.on('dialog', (dialog) => {
+      dialog.dismiss();
+    });
     await page.goto(server.getUrl());
-    const results = await getResults;
+    const results = await Promise.race([waitForPageError(page), getResults]);
     console.log(printResults(results, impact));
 
     process.exitCode = 0;
@@ -62,8 +65,7 @@ export async function a11yTest(p: string, impact: number) {
         // Ignore the error since we're already handling an exception.
       }
     }
-
-    throw error;
+    console.error(error.toString());
   } finally {
     if (server) {
       server.close();

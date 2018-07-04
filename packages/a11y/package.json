@@ -30,7 +30,7 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@types/puppeteer": "^1.5.0",
+    "chalk": "^2.4.1",
     "metadata-tools": "^1.0.0",
     "puppeteer": "^1.5.0",
     "ui-autotools-utils": "^1.0.0"

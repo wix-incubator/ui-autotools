@@ -8,7 +8,7 @@ const pathToPackageJson = join(__dirname, '../package.json');
 // tslint:disable-next-line:no-console
 console.log('Linting devDependencies.');
 devDependencyLinter(pathToPackageJson).then((errors) => {
-  if (errors) {
+  if (errors.length) {
     for (const error of errors) {
       const errorColour = error.type === 'Error' ? 'red' : 'yellow';
       // tslint:disable-next-line:no-console
@@ -16,4 +16,6 @@ devDependencyLinter(pathToPackageJson).then((errors) => {
     }
     process.exit(1);
   }
+
+  process.exit(0);
 });

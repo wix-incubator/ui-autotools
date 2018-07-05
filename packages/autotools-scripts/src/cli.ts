@@ -31,7 +31,7 @@ program
 .action((options) => {
   const entry = glob.sync(path.join(projectPath, options.files ? options.files : defaultMetaGlob));
   const impact = options.impact || 'minor';
-  if (impactLevels.indexOf(impact) < 0) {
+  if (!impactLevels.includes(impact)) {
     throw new Error(`Invalid impact level ${impact}`);
   }
   a11yTest(entry, impact);

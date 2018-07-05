@@ -3,7 +3,7 @@ import { ModuleSchema, FunctionSchemaId } from '../../src/json-schema-types';
 import {transformTest} from '../../test-kit/run-transform';
 
 describe('schema-extract - generic interface', () => {
-    xit('should support genric interface definition', async () => {
+    it('should support genric interface definition', async () => {
         const moduleId = 'interface-definition';
         const res = transformTest(`
         export type MyInterface<T>{
@@ -41,7 +41,7 @@ describe('schema-extract - generic interface', () => {
         expect(res).to.eql(expected);
     });
 
-    xit('should support generic arguments schema', async () => {
+    it('should support generic arguments schema', async () => {
         const moduleId = 'interface-definition';
         const res = transformTest(`
         export type MyInterface<T extends string>{
@@ -83,7 +83,7 @@ describe('schema-extract - generic interface', () => {
         expect(res).to.eql(expected);
     });
 
-    xit('generic arguments should be passed deeply', async () => {
+    it('generic arguments should be passed deeply', async () => {
         const moduleId = 'interface-definition';
         const res = transformTest(`
         export type MyInterface<T extends string>{
@@ -124,24 +124,29 @@ describe('schema-extract - generic interface', () => {
                             $ref: FunctionSchemaId,
                             arguments: [
                                 {
-                                    name: 'values',
-                                    type: 'array',
-                                    items: {
-                                        $ref: '#MyInterface!T',
-                                    },
-                                }, {
-                                    name: 'filter',
-                                    $ref: FunctionSchemaId,
-                                    arguments: [
-                                        {
-                                            name: 'item',
-                                            $ref: '#MyInterface!T',
+                                    name: 'arg',
+                                    type: 'object',
+                                    properties: {
+                                        values: {
+                                            type: 'array',
+                                            items: {
+                                                $ref: '#MyInterface!T'
+                                            }
                                         },
-                                    ],
-                                    returns: {
-                                        type: 'boolean',
-                                    },
-                                },
+                                        filter: {
+                                            $ref: FunctionSchemaId,
+                                            arguments: [
+                                                {
+                                                    name: 'item',
+                                                    $ref: '#MyInterface!T'
+                                                }
+                                            ],
+                                            returns: {
+                                                type: 'boolean'
+                                            }
+                                        }
+                                    }
+                                }
                             ],
                             returns: {
                                 type: 'object',
@@ -152,15 +157,59 @@ describe('schema-extract - generic interface', () => {
                                     results: {
                                         type: 'array',
                                         items: {
-                                            $ref: '#MyInterface!T',
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
+                                            $ref: '#MyInterface!T'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             },
+            properties: {}
+        };
+        expect(res).to.eql(expected);
+    });
+
+    it('should support generic imports', async () => {
+        const moduleId = 'interface-definition';
+        const res = transformTest(`
+        import * as Event from 'event';
+
+        export type MyInterface{
+            func: (event: Event<A>) => void;
+        };
+        `, moduleId);
+
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            definitions: {
+                MyInterface : {
+                    type: 'object',
+                    properties: {
+                        func: {
+                            $ref: 'common/function',
+                            arguments: [
+                                {
+                                    $ref: 'event',
+                                    genericArguments: [
+                                        {
+                                            $ref: '#A'
+                                        }
+                                    ],
+                                    name: 'event'
+                                }
+                            ],
+                            returns: {
+                                $ref: 'common/undefined'
+                            },
+                        }
+                    }
+                }
+            },
+            properties: {}
         };
         expect(res).to.eql(expected);
     });

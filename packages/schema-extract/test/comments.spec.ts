@@ -131,34 +131,28 @@ describe('schema-extract - comments', () => {
             $id: '/src/' + moduleId,
             $ref: 'common/module',
             definitions: {
-                'typeof C' : {
-                    $ref: ClassConstructorSchemaId,
-                    description: 'constructor documentation',
-                    arguments: [
-                        {
-                            type: 'string',
-                            name: 'a',
-                            description: 'my parameter documentation',
-                        },
-                        {
-                            $ref: '#C',
-                            name: 'b',
-                            description: 'another parameter documentation',
-                        },
-                    ],
-                    returns: {
-                        $ref: '#C',
-                    },
-                    properties: {},
-                },
-                'C' : {
+                C : {
                     $ref: ClassSchemaId,
                     description: 'Documentation for C',
                     constructor: {
-                        $ref: '#typeof C',
+                        $ref: ClassConstructorSchemaId,
+                        description: 'constructor documentation',
+                        arguments: [
+                            {
+                                type: 'string',
+                                name: 'a',
+                                description: 'my parameter documentation'
+                            },
+                            {
+                                $ref: '#C',
+                                name: 'b',
+                                description: 'another parameter documentation'
+                            }
+                        ],
                     },
                     properties: {},
-                },
+                    staticProperties: {}
+                }
             },
             properties: {
                 C: {
@@ -186,26 +180,20 @@ describe('schema-extract - comments', () => {
             $id: '/src/' + moduleId,
             $ref: 'common/module',
             definitions: {
-                'typeof C' : {
-                    $ref: ClassConstructorSchemaId,
-                    arguments: [],
-                    returns: {
-                        $ref: '#C',
-                    },
-                    properties: {},
-                },
-                'C' : {
+                C : {
                     $ref: ClassSchemaId,
                     constructor: {
-                        $ref: '#typeof C',
+                        $ref: ClassConstructorSchemaId,
+                        arguments: []
                     },
                     properties: {
                         a: {
                             description: 'member documentation',
-                            type: 'string',
-                        },
+                            type: 'string'
+                        }
                     },
-                },
+                    staticProperties: {}
+                }
             },
             properties: {
                 C: {

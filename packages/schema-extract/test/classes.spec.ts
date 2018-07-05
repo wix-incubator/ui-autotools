@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId } from '../src/json-schema-types';
+import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId, ClassConstructorSchemaId } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform';
 
 describe('schema-extract - classes', () => {
@@ -36,16 +36,19 @@ describe('schema-extract - classes', () => {
             definitions: {
                 MyClass : {
                     $ref: ClassSchemaId,
-                    constructorArguments: [
-                        {
-                            type: 'string',
-                            name: 'id',
-                        },
-                    ],
+                    constructor: {
+                        $ref: ClassConstructorSchemaId,
+                        arguments: [
+                            {
+                                type: 'string',
+                                name: 'id'
+                            }
+                        ]
+                    },
                     staticProperties: {
                         a: {
-                            type: 'string',
-                        },
+                            type: 'string'
+                        }
                     },
                     extends: {
                         $ref: '/src/test-assets#AClass',
@@ -84,5 +87,4 @@ describe('schema-extract - classes', () => {
         };
         expect(res).to.eql(expected);
     });
-
 });

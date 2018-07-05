@@ -10,25 +10,21 @@ interface IPackageError {
   message: string;
 }
 
-class PackageError implements IPackageError {
-  constructor(public type: ErrorType, public packageName: string, public message: string) {}
-}
-
 export async function devDependencyLinter(pathToPackageJson: string) {
-  const errors: PackageError[] = [];
+  const errors: IPackageError[] = [];
   let workspaces;
 
   // Parse the root package.json and retrieve workspaces
   try {
     workspaces = JSON.parse((await readFile(pathToPackageJson)).toString()).workspaces;
   } catch (e) {
-    errors.push(new PackageError('Error', pathToPackageJson, e));
+    errors.push({type: 'Error', packageName: pathToPackageJson, message: e});
     return errors;
   }
 
   // Return an error if there aren't any workspaces
   if (!workspaces || workspaces.length === 0) {
-    errors.push(new PackageError('Error', pathToPackageJson, `Couldn't find any valid workspaces.`));
+    errors.push({type: 'Error', packageName: pathToPackageJson, message: `Couldn't find any valid workspaces.`});
     return errors;
   }
 
@@ -38,7 +34,7 @@ export async function devDependencyLinter(pathToPackageJson: string) {
 
     // If there aren't any, return an error
     if (!packages || packages.length === 0) {
-      errors.push(new PackageError('Error', workspace, `Couldn't find any packages in the workspace.`));
+      errors.push({type: 'Error', packageName: workspace, message: `Couldn't find any packages in the workspace.`});
       return errors;
     }
 
@@ -49,12 +45,12 @@ export async function devDependencyLinter(pathToPackageJson: string) {
       try {
         devDependencies = JSON.parse((await readFile(pathToPkg)).toString()).devDependencies;
       } catch (e) {
-        errors.push(new PackageError('Error', pathToPkg, e));
+        errors.push({type: 'Error', packageName: pathToPkg, message: e});
         return errors;
       }
 
       if (devDependencies) {
-        errors.push(new PackageError('Error', pathToPkg, `Package "${pkg}" cannot have devDependencies: "${Object.keys(devDependencies)}" in its package.json. This devDependency should be placed in the root package.json.`));
+        errors.push({type: 'Error', packageName: pathToPkg, message: `Package "${pkg}" cannot have devDependencies: "${Object.keys(devDependencies)}" in its package.json. This devDependency should be placed in the root package.json.`});
       }
     }
   }

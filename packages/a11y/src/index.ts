@@ -6,7 +6,7 @@ import axe from 'axe-core';
 import chalk from 'chalk';
 
 const ownPath = path.resolve(__dirname, '..');
-export const impactArray: axe.ImpactValue[] = ['minor', 'moderate', 'serious', 'critical'];
+export const impactLevels: axe.ImpactValue[] = ['minor', 'moderate', 'serious', 'critical'];
 const projectPath = process.cwd();
 const webpackConfigPath = path.join(projectPath, 'meta.webpack.config.js');
 
@@ -31,7 +31,7 @@ function formatResults(results: IResult[], impact: axe.ImpactValue): string {
       msg.push(`${index++}. ${res.comp}: Error while testing component - ${res.error}`);
     } else if (res.result) {
       res.result.violations.forEach((violation) => {
-        if (impactArray.indexOf(violation.impact) >= impactArray.indexOf(impact)) {
+        if (impactLevels.indexOf(violation.impact) >= impactLevels.indexOf(impact)) {
           violation.nodes.forEach((node) => {
             const selector = node.target.join(' > ');
             const compName = (`${res.comp} - ${selector}`);

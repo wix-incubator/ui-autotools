@@ -15,13 +15,13 @@ export interface IResult {
   error?: Error;
 }
 
-function createTestsFromSimulations(reactRoot: any) {
+function createTestsFromSimulations(reactRoot: HTMLElement) {
   const tests: ITest[] = [];
   for (const [Comp, meta] of Registry.metadata.components.entries()) {
     for (const [simIndex, sim] of meta.simulations.entries()) {
       tests.push({
         title: (Comp.displayName ? Comp.displayName : Comp.name) + ' ' + simIndex,
-        render:  (container: HTMLElement) => ReactDOM.render(<div id={Comp.name}><Comp {...sim.props} /></div>, container),
+        render:  (container: HTMLElement) => ReactDOM.render(<Comp {...sim.props} />, container),
         cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot)
       });
     }
@@ -29,10 +29,9 @@ function createTestsFromSimulations(reactRoot: any) {
   return tests;
 }
 
-const root = document.getElementById('react-root');
 async function test(rootElement: HTMLElement) {
   const results: IResult[] = [];
-  const tests = createTestsFromSimulations(root);
+  const tests = createTestsFromSimulations(rootElement);
   for (const t of tests) {
     try {
       await t.render(rootElement);
@@ -46,4 +45,4 @@ async function test(rootElement: HTMLElement) {
   (window as any).puppeteerReportResults(results);
 }
 
-test(root!);
+test(document.getElementById('react-root')!);

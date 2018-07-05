@@ -2,17 +2,19 @@
 import path from 'path';
 import puppeteer from 'puppeteer';
 import {WebpackConfigurator, serve, IServer, waitForPageError} from 'ui-autotools-utils';
-import { IResult } from "./browser/run";
+import { IResult } from './browser/run';
 import axe from 'axe-core';
 import chalk from 'chalk';
 
 const ownPath = path.resolve(__dirname, '..');
 const impactArray: axe.ImpactValue[] = ['minor', 'moderate', 'serious', 'critical'];
+const projectPath = process.cwd();
+const webpackConfigPath = path.join(projectPath, 'meta.webpack.config.js');
 
-function getWebpackConfig(configPath: string) {
-  const webpackConfigPath = path.join(process.cwd(), configPath, 'meta.webpack.config.js');
+function getWebpackConfig(entry: string | string[]) {
   return WebpackConfigurator
     .load(webpackConfigPath)
+    .setEntry('meta', entry)
     .addEntry('meta', path.join(ownPath, 'esm/browser/run'))
     .addHtml({
       template: path.join(ownPath, 'src/browser/index.html'),
@@ -32,7 +34,7 @@ function formatResults(results: IResult[], impact: number): string {
       res.result.violations.forEach((violation) => {
         if (impactArray.indexOf(violation.impact) + 1 >= impact) {
           violation.nodes.forEach((node) => {
-            const compName = violation.id === 'duplicate-id' ? 'Document' : (`${res.comp} - ${node.target[0]}`);
+            const compName = (`${res.comp} - ${node.target[0]}`);
             msg.push(`${index++}. ${chalk.red(compName)}: (Impact: ${violation.impact}) ${node.failureSummary}`);
           });
         }
@@ -42,12 +44,12 @@ function formatResults(results: IResult[], impact: number): string {
   return msg.join('\n\n');
 }
 
-export async function a11yTest(configPath: string, impact: number) {
+export async function a11yTest(entry: string | string[], impact: number) {
   let server: IServer | null = null;
   let browser: puppeteer.Browser | null = null;
   console.log('Running accessibility tests...');
   try {
-    server = await serve({webpackConfig: getWebpackConfig(configPath)});
+    server = await serve({webpackConfig: getWebpackConfig(entry)});
     browser = await puppeteer.launch({headless: true});
     const page = await browser.newPage();
     const getResults = new Promise<any[]>((resolve) =>

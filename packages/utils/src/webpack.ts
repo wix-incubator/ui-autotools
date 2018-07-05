@@ -12,6 +12,16 @@ export class WebpackConfigurator {
     return this.config;
   }
 
+  public setEntry(name: string, entry: string | string[]): this {
+    const {config} = this;
+    if (!config.entry) {
+      config.entry = {[name]: entry};
+    } else {
+      this.addEntry(name, entry);
+    }
+    return this;
+  }
+
   public addEntry(name: string, entry: string | string[]): this {
     const {config} = this;
 

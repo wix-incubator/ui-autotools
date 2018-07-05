@@ -9,7 +9,7 @@ interface ITest {
   cleanup: () => void;
 }
 
-export interface IResult {
+export interface ITests {
   comp: string;
   result?: axe.AxeResults;
   error?: Error;
@@ -18,26 +18,24 @@ export interface IResult {
 function createTestsFromSimulations(reactRoot: any) {
   const tests: ITest[] = [];
   for (const [Comp, meta] of Registry.metadata.components.entries()) {
-    meta.simulations.forEach((sim) =>  {
+    for (const [simIndex, sim] of meta.simulations.entries()) {
       tests.push({
-        title: Comp.displayName ? Comp.displayName : Comp.name,
+        title: (Comp.displayName ? Comp.displayName : Comp.name) + ' ' + simIndex,
         render:  (container: HTMLElement) => ReactDOM.render(<div id={Comp.name}><Comp {...sim.props} /></div>, container),
         cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot)
       });
-    });
+    }
   }
   return tests;
 }
 
 const root = document.getElementById('react-root');
 async function test(rootElement: HTMLElement) {
-  const results: IResult[] = [];
+  const results: ITests[] = [];
   const comps = createTestsFromSimulations(root);
   for (const c of comps) {
     try {
-      const div = document.createElement('div');
-      rootElement.appendChild(div);
-      await c.render(div);
+      await c.render(rootElement);
       const result = await axe.run(rootElement);
       results.push({comp: c.title, result});
       await c.cleanup();
@@ -45,7 +43,7 @@ async function test(rootElement: HTMLElement) {
       results.push({comp: c.title, error});
     }
   }
-  (window as any).runAxeTest(results);
+  (window as any).puppeteerReportResults(results);
 }
 
 test(root!);

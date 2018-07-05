@@ -1,7 +1,7 @@
 import path from 'path';
 import puppeteer from 'puppeteer';
-import {WebpackConfigurator, serve, IServer, waitForPageError, consoleLog, consoleError} from 'ui-autotools-utils';
-import { IResult } from './browser/run';
+import {WebpackConfigurator, serve, IServer, waitForPageError, consoleError} from 'ui-autotools-utils';
+import { ITests } from './browser/run';
 import axe from 'axe-core';
 import chalk from 'chalk';
 
@@ -23,7 +23,7 @@ function getWebpackConfig(entry: string | string[]) {
     .getConfig();
 }
 
-function formatResults(results: IResult[], impact: number): string {
+function formatResults(results: ITests[], impact: number): string {
   const msg: string[] = [];
   let index = 1;
   results.forEach((res) => {
@@ -46,13 +46,12 @@ function formatResults(results: IResult[], impact: number): string {
 export async function a11yTest(entry: string | string[], impact: number) {
   let server: IServer | null = null;
   let browser: puppeteer.Browser | null = null;
-  consoleLog('Running accessibility tests...');
   try {
     server = await serve({webpackConfig: getWebpackConfig(entry)});
     browser = await puppeteer.launch({headless: true});
     const page = await browser.newPage();
     const getResults = new Promise<any[]>((resolve) =>
-      page.exposeFunction('runAxeTest', resolve)
+      page.exposeFunction('puppeteerReportResults', resolve)
     );
     page.on('dialog', (dialog) => {
       dialog.dismiss();
@@ -62,7 +61,7 @@ export async function a11yTest(entry: string | string[], impact: number) {
     const message = formatResults(results, impact);
     if (message) {
       process.exitCode = 1;
-      consoleLog(message);
+      consoleError(message);
     }
   } catch (error) {
     consoleError(error.toString());

@@ -3,12 +3,12 @@ import {Command} from 'commander';
 import ssrTest from './ssr-test/mocha-wrapper';
 import {eyesTest} from 'ui-autotools-eyes';
 import importMeta from './import-metadata/import-meta';
-import {a11yTest} from 'a11y';
+import {a11yTest} from 'ui-autotools-a11y';
 import glob from 'glob';
 import path from 'path';
 
 const program = new Command();
-const packagePath = __dirname;
+const projectPath = process.cwd();
 const defaultMetaGlob = 'src/**/*.meta.ts?(x)';
 
 program
@@ -29,7 +29,7 @@ program
 .option('-f, --files [pattern]', 'Grep file')
 .option('-i, --impact <i>', 'Only display issues with impact level higher than <i>. Value between 1 (minor) and 4 (critical)')
 .action((options) => {
-  const entry = glob.sync(path.join(packagePath, options.files ? options.files : defaultMetaGlob));
+  const entry = glob.sync(path.join(projectPath, options.files ? options.files : defaultMetaGlob));
   const impact = Number(options.impact);
   const impactLevel = (isNaN(impact) || impact > 4 || impact < 1) ? 1 : impact;
   a11yTest(entry, impactLevel);

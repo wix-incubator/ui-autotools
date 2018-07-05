@@ -16,8 +16,14 @@ export class WebpackConfigurator {
     const {config} = this;
     if (!config.entry) {
       config.entry = {[name]: entry};
+    } else if (
+      typeof config.entry === 'object' &&
+      !Array.isArray(config.entry) &&
+      !config.entry[name]
+    ) {
+      config.entry[name] = entry;
     } else {
-      this.addEntry(name, entry);
+      throw new Error(`Error setting entry for ${name}`);
     }
     return this;
   }

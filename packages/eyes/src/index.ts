@@ -2,7 +2,7 @@
 
 import path from 'path';
 import puppeteer from 'puppeteer';
-import {WebpackConfigurator, serve, IServer} from 'ui-autotools-utils';
+import {WebpackConfigurator, serve, IServer, waitForPageError} from 'ui-autotools-utils';
 
 const packagePath = path.resolve(__dirname, '..');
 const projectPath = process.cwd();
@@ -60,19 +60,6 @@ async function runTests(url: string) {
 
     throw error;
   }
-}
-
-// TODO: move to utils
-function waitForPageError(page: puppeteer.Page): Promise<never> {
-  return new Promise((_, reject) => {
-    page.on('pageerror', (errorText: string) => {
-      reject(new Error(errorText));
-    });
-
-    page.on('error', () => {
-      reject(new Error('Page crashed'));
-    });
-  });
 }
 
 async function waitForTestsCompletion(page: puppeteer.Page, url: string):

@@ -7,9 +7,6 @@ const metaGlob = 'src/**/*.meta.ts?(x)';
 module.exports = {
   context: packagePath,
   mode: 'development',
-  entry: {
-    meta: glob.sync(path.join(packagePath, metaGlob)),
-  },
   module: {
     rules: [
       {

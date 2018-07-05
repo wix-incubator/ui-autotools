@@ -9,11 +9,16 @@
       margin: 20px;
     }
   </style>
-  <link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet" />
 </head>
 <body>
   <div id="react-root"></div>
-  <script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
-  <script>mocha.setup('bdd')</script>
+  <div id="mocha"></div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/mocha/3.4.1/mocha.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/chai/3.5.0/chai.js"></script>
+
+    <script>mocha.setup('bdd')</script>
+    <script type="module" src="../../../esm/ssr-test/ssr-test.js"></script>
+    <script>mocha.run()</script>
 </body>
 </html>

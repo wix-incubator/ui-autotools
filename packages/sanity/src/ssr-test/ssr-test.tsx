@@ -36,7 +36,8 @@ export const ssrTest = (): void => {
 
                 it('should not print anything to the console', () => {
                     renderToString(<Comp />);
-                    expect(consoleSpy.notCalled).to.equal(true);
+                    // tslint:disable-next-line:no-unused-expression
+                    expect(consoleSpy).to.not.be.called;
                 });
 
                 metadata.simulations.forEach(((simulation) => {
@@ -46,7 +47,8 @@ export const ssrTest = (): void => {
 
                     it(`should not print anything to the console with props ${JSON.stringify(simulation)}`, () => {
                         renderToString(<Comp {...simulation.props} />);
-                        expect(consoleSpy.notCalled).to.equal(true);
+                        // tslint:disable-next-line:no-unused-expression
+                        expect(consoleSpy).to.not.be.called;
                     });
                 }));
             });

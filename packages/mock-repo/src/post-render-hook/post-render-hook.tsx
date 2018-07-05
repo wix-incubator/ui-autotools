@@ -14,6 +14,8 @@ export class PostRenderHook extends React.Component<{}, IState> {
   }
 
   public render() {
+    // tslint:disable-next-line:no-console
+    console.log('tes');
     return <p>{this.state.label}</p>;
   }
 }

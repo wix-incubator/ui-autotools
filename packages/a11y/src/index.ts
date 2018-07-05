@@ -1,7 +1,6 @@
-/* tslint:disable:no-console */
 import path from 'path';
 import puppeteer from 'puppeteer';
-import {WebpackConfigurator, serve, IServer, waitForPageError} from 'ui-autotools-utils';
+import {WebpackConfigurator, serve, IServer, waitForPageError, consoleLog, consoleError} from 'ui-autotools-utils';
 import { IResult } from './browser/run';
 import axe from 'axe-core';
 import chalk from 'chalk';
@@ -47,7 +46,7 @@ function formatResults(results: IResult[], impact: number): string {
 export async function a11yTest(entry: string | string[], impact: number) {
   let server: IServer | null = null;
   let browser: puppeteer.Browser | null = null;
-  console.log('Running accessibility tests...');
+  consoleLog('Running accessibility tests...');
   try {
     server = await serve({webpackConfig: getWebpackConfig(entry)});
     browser = await puppeteer.launch({headless: true});
@@ -63,10 +62,10 @@ export async function a11yTest(entry: string | string[], impact: number) {
     const message = formatResults(results, impact);
     if (message) {
       process.exitCode = 1;
-      console.log(message);
+      consoleLog(message);
     }
   } catch (error) {
-    console.error(error.toString());
+    consoleError(error.toString());
     process.exitCode = 1;
   } finally {
     if (browser) {

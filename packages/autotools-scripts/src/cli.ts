@@ -3,7 +3,7 @@ import {Command} from 'commander';
 import ssrTest from './ssr-test/mocha-wrapper';
 import {eyesTest} from 'ui-autotools-eyes';
 import importMeta from './import-metadata/import-meta';
-import {a11yTest} from 'ui-autotools-a11y';
+import {a11yTest, impactArray} from 'ui-autotools-a11y';
 import glob from 'glob';
 import path from 'path';
 
@@ -25,14 +25,13 @@ program
 
 program
 .command('a11y')
-.description('test')
-.option('-f, --files [pattern]', 'Grep file')
-.option('-i, --impact <i>', 'Only display issues with impact level higher than <i>. Value between 1 (minor) and 4 (critical)')
+.description('run accessibility tests on components with metadata files that match the given pattern')
+.option('-f, --files [pattern]', 'metadata file pattern')
+.option('-i, --impact <i>', `Only display issues with impact level <i> and higher. Values are: ${impactArray.join(', ')}`)
 .action((options) => {
   const entry = glob.sync(path.join(projectPath, options.files ? options.files : defaultMetaGlob));
-  const impact = Number(options.impact);
-  const impactLevel = (isNaN(impact) || impact > 4 || impact < 1) ? 1 : impact;
-  a11yTest(entry, impactLevel);
+  const impact = impactArray.indexOf(options.impact) > -1 ? options.impact : 'minor';
+  a11yTest(entry, impact);
 });
 
 program

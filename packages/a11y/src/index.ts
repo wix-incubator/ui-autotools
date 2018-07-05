@@ -1,7 +1,7 @@
 import path from 'path';
 import puppeteer from 'puppeteer';
 import {WebpackConfigurator, serve, IServer, waitForPageError, consoleError} from 'ui-autotools-utils';
-import { ITests } from './browser/run';
+import { IResult } from './browser/run';
 import axe from 'axe-core';
 import chalk from 'chalk';
 
@@ -23,7 +23,7 @@ function getWebpackConfig(entry: string | string[]) {
     .getConfig();
 }
 
-function formatResults(results: ITests[], impact: number): string {
+function formatResults(results: IResult[], impact: number): string {
   const msg: string[] = [];
   let index = 1;
   results.forEach((res) => {
@@ -33,7 +33,8 @@ function formatResults(results: ITests[], impact: number): string {
       res.result.violations.forEach((violation) => {
         if (impactArray.indexOf(violation.impact) + 1 >= impact) {
           violation.nodes.forEach((node) => {
-            const compName = (`${res.comp} - ${node.target[0]}`);
+            const selector = node.target.join(' > ');
+            const compName = (`${res.comp} - ${selector}`);
             msg.push(`${index++}. ${chalk.red(compName)}: (Impact: ${violation.impact}) ${node.failureSummary}`);
           });
         }
@@ -48,7 +49,7 @@ export async function a11yTest(entry: string | string[], impact: number) {
   let browser: puppeteer.Browser | null = null;
   try {
     server = await serve({webpackConfig: getWebpackConfig(entry)});
-    browser = await puppeteer.launch({headless: true});
+    browser = await puppeteer.launch();
     const page = await browser.newPage();
     const getResults = new Promise<any[]>((resolve) =>
       page.exposeFunction('puppeteerReportResults', resolve)

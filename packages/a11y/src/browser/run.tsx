@@ -9,7 +9,7 @@ interface ITest {
   cleanup: () => void;
 }
 
-export interface ITests {
+export interface IResult {
   comp: string;
   result?: axe.AxeResults;
   error?: Error;
@@ -31,16 +31,16 @@ function createTestsFromSimulations(reactRoot: any) {
 
 const root = document.getElementById('react-root');
 async function test(rootElement: HTMLElement) {
-  const results: ITests[] = [];
-  const comps = createTestsFromSimulations(root);
-  for (const c of comps) {
+  const results: IResult[] = [];
+  const tests = createTestsFromSimulations(root);
+  for (const t of tests) {
     try {
-      await c.render(rootElement);
+      await t.render(rootElement);
       const result = await axe.run(rootElement);
-      results.push({comp: c.title, result});
-      await c.cleanup();
+      results.push({comp: t.title, result});
+      await t.cleanup();
     } catch (error) {
-      results.push({comp: c.title, error});
+      results.push({comp: t.title, error});
     }
   }
   (window as any).puppeteerReportResults(results);

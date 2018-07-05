@@ -28,7 +28,7 @@ async function main() {
     const browser = await puppeteer.launch({headless: false, devtools: true});
     const page = await browser.newPage();
     // tslint:disable-next-line:no-debugger
-    await page.evaluate(() => {debugger;});
+    await page.evaluate(() => {debugger; });
     // page.on('console', async (msg) => {
     //   const args = await Promise.all(msg.args().map((a) => a.jsonValue()));
     //   console.log(...args);

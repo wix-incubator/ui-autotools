@@ -1,6 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-
-const testFiles = require('glob').sync("./tests/**/*.spec.ts");
+const schemaPath = `${__dirname}/packages/schema-extract`;
+const testFiles = require('glob').sync(`${schemaPath}/test/**/*.spec.ts`);
 const first = testFiles.shift();
 const withMochaLoader = [`mocha-loader!${first}`].concat(testFiles);
 

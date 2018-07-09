@@ -10,7 +10,8 @@
     "build:watch": "lerna run --parallel build:watch",
     "pretest": "run-p lint build",
     "lint": "lerna run lint --stream && node -r typescript-support scripts/json-linter",
-    "test": "lerna run test --stream --"
+    "test": "lerna run test --stream --",
+    "run-browser": "webpack-dev-server --progress"
   },
   "devDependencies": {
     "@types/autobahn": "^0.9.39",

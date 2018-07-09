@@ -3,17 +3,11 @@ import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, Undefine
 import {transformTest} from '../test-kit/run-transform';
 
 describe('schema-extract - classes', () => {
-    xit('should support classes', async () => {
+    it('should support classes', async () => {
         const moduleId = 'classes';
         const res = transformTest(`
         import { AClass} from './test-assets'
 
-        /****
-         *
-         * @props.id the id of the component
-         * @props.id:minLength 12
-         *
-         * **/
         export class MyClass extends AClass{
             static a:string;
             private static b:string;

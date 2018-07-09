@@ -1,8 +1,8 @@
 // import Registry from 'metadata-tools';
 // import React from 'react';
 // import ReactDOM from 'react-dom';
-// import {ssrTest} from '../../ssr-test/ssr-test';
-import Mocha from 'mocha';
+// import {test} from '../test/sample.spec';
+import 'mocha';
 
 // [ISSUE] If the registry imported here and the registry imported by the
 // project sit in different node_modules we're screwed.

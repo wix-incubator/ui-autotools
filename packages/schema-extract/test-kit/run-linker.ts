@@ -4,7 +4,7 @@ import { MemoryFileSystem } from 'kissfs';
 import { createHost } from '../src/isomorphc-typescript-host';
 import { ModuleSchema } from '../src/json-schema-types';
 
-export function transformTest(source: string, moduleId: string): ModuleSchema<any> {
+export function linkTest(source: string, moduleId: string, entityName: string): ModuleSchema<any> {
     const memFs = new MemoryFileSystem();
     const projectName = 'someProject';
     const testedPath = '/' + projectName + '/src/tested-module';

@@ -1,6 +1,6 @@
 import {expect} from 'chai';
-import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId, ClassConstructorSchemaId, ClassSchema } from '../../src/json-schema-types';
-import {transformTest} from '../../test-kit/run-transform';
+import { ClassSchemaId, FunctionSchemaId, UndefinedSchemaId, ClassConstructorSchemaId } from '../../src/json-schema-types';
+import {linkTest} from '../../test-kit/run-linker';
 
 describe('schema-linker - classes', () => {
     it('should flatten inheritance', async () => {
@@ -29,9 +29,9 @@ describe('schema-linker - classes', () => {
 
             }
         };
-        `,'B', moduleId);
+        `, 'B', moduleId);
 
-        const expected: ClassSchema = {
+        const expected: any = {
             $ref: ClassSchemaId,
             constructor: {
                 $ref: ClassConstructorSchemaId,

@@ -12,6 +12,22 @@ export class WebpackConfigurator {
     return this.config;
   }
 
+  public setEntry(name: string, entry: string | string[]): this {
+    const {config} = this;
+    if (!config.entry) {
+      config.entry = {[name]: entry};
+    } else if (
+      typeof config.entry === 'object' &&
+      !Array.isArray(config.entry) &&
+      !config.entry[name]
+    ) {
+      config.entry[name] = entry;
+    } else {
+      throw new Error(`Error setting entry for ${name}`);
+    }
+    return this;
+  }
+
   public addEntry(name: string, entry: string | string[]): this {
     const {config} = this;
 

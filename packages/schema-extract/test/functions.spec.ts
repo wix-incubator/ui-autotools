@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import { ModuleSchema, UndefinedSchemaId, FunctionSchemaId, ModuleSchemaId } from '../src/json-schema-types';
+import { ModuleSchema, UndefinedSchemaId, FunctionSchemaId, ModuleSchemaId, JSXElement } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform';
 
 describe('schema-extract - functions', () => {
@@ -236,9 +236,39 @@ describe('schema-extract - functions', () => {
                         },
                     ],
                     returns: {
-                        $ref: '/src/test-assets#AClass'                    },
-                    },
-            },
+                        $ref: '/src/test-assets#AClass'                    }
+                    }
+            }
+
+        };
+        expect(res).to.eql(expected);
+    });
+
+    xit('should support functions that return JSX element', async () => {
+        const moduleId = 'jsx_functions';
+        const res = transformTest(`
+        import * as React from 'react';
+
+        export function jsxFunction(){
+            return <p>Hello!</p>;
+        };
+
+        `, moduleId);
+
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+
+                jsxFunction: {
+                    $ref: 'common/function',
+                    arguments: [],
+                    returns: {
+                        $ref: JSXElement
+                    }
+                }
+            }
 
         };
         expect(res).to.eql(expected);

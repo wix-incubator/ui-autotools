@@ -3,7 +3,7 @@ import { ModuleSchema, FunctionSchemaId } from '../../src/json-schema-types';
 import {transformTest} from '../../test-kit/run-transform';
 
 describe('schema-extract - generic types', () => {
-    xit('should support genric type definition', async () => {
+    it('should support genric type definition', async () => {
         const moduleId = 'type-definition';
         const res = transformTest(`
         export type MyType<T> = {
@@ -41,7 +41,7 @@ describe('schema-extract - generic types', () => {
         expect(res).to.eql(expected);
     });
 
-    xit('should support generic arguments schema', async () => {
+    it('should support generic arguments schema', async () => {
         const moduleId = 'type-definition';
         const res = transformTest(`
         export type MyType<T extends string> = {
@@ -83,7 +83,7 @@ describe('schema-extract - generic types', () => {
         expect(res).to.eql(expected);
     });
 
-    xit('generic arguments should be passed deeply', async () => {
+    it('generic arguments should be passed deeply', async () => {
         const moduleId = 'type-definition';
         const res = transformTest(`
         export type MyType<T extends string> = {
@@ -124,24 +124,30 @@ describe('schema-extract - generic types', () => {
                             $ref: FunctionSchemaId,
                             arguments: [
                                 {
-                                    name: 'values',
-                                    type: 'array',
-                                    items: {
-                                        $ref: '#MyType!T',
-                                    },
-                                }, {
-                                    name: 'filter',
-                                    $ref: FunctionSchemaId,
-                                    arguments: [
-                                        {
-                                            name: 'item',
-                                            $ref: '#MyType!T',
+                                    name: 'arg',
+                                    type: 'object',
+                                    properties: {
+                                        values: {
+                                            type: 'array',
+                                            items: {
+                                                $ref: '#MyType!T'
+                                            }
                                         },
-                                    ],
-                                    returns: {
-                                        type: 'boolean',
-                                    },
-                                },
+
+                                        filter: {
+                                            $ref: FunctionSchemaId,
+                                            arguments: [
+                                                {
+                                                    name: 'item',
+                                                    $ref: '#MyType!T'
+                                                }
+                                            ],
+                                            returns: {
+                                                type: 'boolean'
+                                            }
+                                        }
+                                    }
+                                }
                             ],
                             returns: {
                                 type: 'object',
@@ -152,15 +158,16 @@ describe('schema-extract - generic types', () => {
                                     results: {
                                         type: 'array',
                                         items: {
-                                            $ref: '#MyType!T',
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
+                                            $ref: '#MyType!T'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             },
+            properties: {}
         };
         expect(res).to.eql(expected);
     });

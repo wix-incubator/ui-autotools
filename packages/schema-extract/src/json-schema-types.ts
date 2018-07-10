@@ -4,6 +4,8 @@ export const ClassSchemaId = 'common/class';
 export const ClassConstructorSchemaId = 'common/class_constructor';
 export const UndefinedSchemaId = 'common/undefined';
 export const NullSchemaId = 'common/null';
+export const PromiseId = 'common/promise';
+export const JSXElement = 'common/JSX';
 
 export interface IObjectFields {
     additionalProperties?: Schema;
@@ -55,6 +57,8 @@ export interface ISchemaBase<T extends  SchemaTypes = SchemaTypes> {
     $oneOf?: Schema[];
     enum?: any[];
     $allOf?: Schema[];
+    genericParams?: Schema[];
+    genericArguments?: Schema[];
     default?: ITypeMap[T];
 }
 
@@ -68,32 +72,19 @@ export type ModuleSchema<T extends  SchemaTypes = SchemaTypes> = Schema<T> & {
 };
 
 export type FunctionSchema = Schema & {
-    $ref: typeof FunctionSchemaId;
+    $ref: typeof FunctionSchemaId | typeof ClassConstructorSchemaId;
     arguments: Schema[],
     restArgument?: Schema<'array'>,
-    returns: Schema
-};
-
-export type ClassConstructorSchema = Schema & {
-    $ref: typeof ClassConstructorSchemaId;
-    arguments: Schema[];
-    restArgument?: Schema<'array'>;
-    returns: Schema;
-    properties: {[name: string]: Schema};
-    extends?: Schema
+    returns?: Schema
 };
 
 export type ClassSchema = Schema & {
     $ref: typeof ClassSchemaId;
-    constructor: Schema;
+    constructor?: FunctionSchema;
     extends?: Schema;
     implements?: Schema[];
     properties: {[name: string]: Schema};
-};
-
-export type ClassConstructorPairSchema = Schema & {
-    class_def: ClassSchema;
-    constructor_def: ClassConstructorSchema;
+    staticProperties: {[name: string]: Schema};
 };
 
 export function isSchemaOfType<T extends SchemaTypes>(t: T, s: object): s is Schema<T> {

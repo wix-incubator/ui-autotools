@@ -1,19 +1,13 @@
 import {expect} from 'chai';
-import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId } from '../src/json-schema-types';
+import { ModuleSchema, ModuleSchemaId, ClassSchemaId, FunctionSchemaId, UndefinedSchemaId, ClassConstructorSchemaId } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform';
 
 describe('schema-extract - classes', () => {
-    xit('should support classes', async () => {
+    it('should support classes', async () => {
         const moduleId = 'classes';
         const res = transformTest(`
         import { AClass} from './test-assets'
 
-        /****
-         *
-         * @props.id the id of the component
-         * @props.id:minLength 12
-         *
-         * **/
         export class MyClass extends AClass{
             static a:string;
             private static b:string;
@@ -36,16 +30,19 @@ describe('schema-extract - classes', () => {
             definitions: {
                 MyClass : {
                     $ref: ClassSchemaId,
-                    constructorArguments: [
-                        {
-                            type: 'string',
-                            name: 'id',
-                        },
-                    ],
+                    constructor: {
+                        $ref: ClassConstructorSchemaId,
+                        arguments: [
+                            {
+                                type: 'string',
+                                name: 'id'
+                            }
+                        ]
+                    },
                     staticProperties: {
                         a: {
-                            type: 'string',
-                        },
+                            type: 'string'
+                        }
                     },
                     extends: {
                         $ref: '/src/test-assets#AClass',
@@ -84,5 +81,4 @@ describe('schema-extract - classes', () => {
         };
         expect(res).to.eql(expected);
     });
-
 });

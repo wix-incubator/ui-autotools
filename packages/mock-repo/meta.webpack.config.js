@@ -10,10 +10,6 @@ console.log('specFiles', specFiles);
 module.exports = {
   context: packagePath,
   mode: 'development',
-  entry: {
-    meta: metaFiles,
-    spec: specFiles
-  },
   module: {
     rules: [
       {

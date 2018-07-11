@@ -27,4 +27,31 @@ describe('schema-linker - generic types', () => {
         expect(res).to.eql(expected);
     });
 
+    it('should deep flatten genric type definition', async () => {
+        const moduleId = 'type-definition';
+        const res = linkTest(`
+        export type MyType<T> = {
+            something: {
+                a: T;
+            };
+        };
+        export type B = MyType<string>;
+        `, 'B', moduleId);
+
+        const expected: Schema<'object'> = {
+            type: 'object',
+            properties: {
+                something: {
+                    type: 'object',
+                    properties: {
+                        a: {
+                            type: 'string'
+                        }
+                    }
+                }
+            }
+        };
+        debugger;
+        expect(res).to.eql(expected);
+    });
 });

@@ -7,12 +7,14 @@ describe('schema-linker - classes', () => {
         const moduleId = 'classes';
         const res = linkTest(`
         export class A{
+            /* static property desc A */
             static a:string;
             private static b:string;
             a:number = 0;
             constructor(public id:string){
                 super();
             }
+            /* original property description */
             setTitle(newtitle:string,prefix:string):void{
 
             }
@@ -20,18 +22,19 @@ describe('schema-linker - classes', () => {
 
         export class B extends A{
             static b:string;
-            private static c:string;
-            b:number = 0;
+            private static d:string;
+            c:number = 0;
             constructor(public id2:string){
                 super(id2);
             }
+            /* property description */
             setTitle(newtitle:string,prefix:string){
 
             }
         };
         `, 'B', moduleId);
 
-        const expected: any = {
+        const expected = {
             $ref: ClassSchemaId,
             constructor: {
                 $ref: ClassConstructorSchemaId,
@@ -44,21 +47,36 @@ describe('schema-linker - classes', () => {
             },
             staticProperties: {
                 a: {
+                    inheritedFrom: '#A',
+                    description: 'static property desc A',
+                    type: 'string'
+                },
+                b: {
                     type: 'string'
                 }
             },
             extends: {
-                $ref: '/src/test-assets#AClass',
+                $ref: '#A',
             },
             properties: {
                 id: {
+                    inheritedFrom: '#A',
                     type: 'string',
                 },
                 a: {
+                    inheritedFrom: '#A',
+                    type: 'number',
+                },
+                id2: {
+                    type: 'string',
+                },
+                c: {
                     type: 'number',
                 },
                 setTitle: {
                     $ref: FunctionSchemaId,
+                    inheritedFrom: '#A',
+                    description: 'property description',
                     arguments: [
                         {type: 'string', name: 'newtitle'},
                         {type: 'string', name: 'prefix'},

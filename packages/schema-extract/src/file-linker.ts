@@ -12,45 +12,60 @@ export class SchemaLinker {
     }
 
     public flatten(file: string, name: string, moduleId: string): Schema {
-        const res: Schema = {};
         const schema = transform(this.checker, this.program.getSourceFile(file)!, '/src/' + moduleId, '/someProject');
         if (!schema.definitions) {
-            return res;
+            return {};
         }
         const entity = schema.definitions[name];
         if (isRef(entity)) {
             // need to slice according to #?
             const entityType = entity.$ref.replace('#', '');
             const refEntity = schema.definitions[entityType];
-            res.type = refEntity.type;
-            // break down to smaller ifs?
-            if (isObjectSchema(refEntity) && refEntity.genericParams && entity.genericArguments) {
-                const refProperties = refEntity.properties;
-                if (!refProperties) {
-                    return res;
-                }
-                const paramsMap = (refEntity.genericParams as Schema[]).map((param) => `#${entityType}!${param.name}`);
-                const properties: {[name: string]: Schema} = {};
-                for (const p in refProperties) {
-                    if (refProperties.hasOwnProperty(p)) {
-                        const argIndex = paramsMap.indexOf(refProperties[p].$ref!);
-                        const type = entity.genericArguments[argIndex];
-                        properties[p] = type as Schema;
-                    }
-                }
-                (res as any).properties = properties;
+            if (!refEntity.genericParams || !entity.genericArguments) {
+                return refEntity;
             }
-            return res;
+            if (isObjectSchema(refEntity)) {
+                const paramsMap = (refEntity.genericParams as Schema[]).map((param) => `#${entityType}!${param.name}`);
+                return describeObject(entity, entityType, refEntity, paramsMap);
+            }
+            return refEntity;
         } else {
-        return res;
+            return {};
         }
     }
+}
+
+function describeObject(entity: Schema, entityType: string, refEntity: Schema & IObjectFields, paramsMap: string[]) {
+    const res: typeof refEntity = {};
+    res.type = refEntity.type;
+    const refProperties = refEntity.properties;
+    if (!refProperties) {
+        return res;
+    }
+    const argsMap = entity.genericArguments || [];
+    const properties: {[name: string]: Schema} = {};
+    for (const pArray in refProperties) {
+        if (refProperties.hasOwnProperty(pArray)) {
+            const property = refProperties[pArray];
+            if (isRef(property)) {
+                const argIndex = paramsMap.indexOf(refProperties[pArray].$ref!);
+                const type = argsMap[argIndex];
+                properties[pArray] = type;
+            } else {
+                if (isObjectSchema(property)) {
+                    properties[pArray] = describeObject(entity, entityType, property, paramsMap);
+                }
+            }
+        }
+    }
+    res.properties = properties;
+    return res;
 }
 
 function isRef(schema: Schema): schema is Schema & {$ref: string} {
     return !!schema.$ref;
 }
 
-function isObjectSchema(schema: Schema): schema is IObjectFields {
+function isObjectSchema(schema: Schema): schema is Schema & IObjectFields {
     return schema.type === 'object';
 }

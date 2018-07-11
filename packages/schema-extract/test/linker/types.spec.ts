@@ -7,8 +7,8 @@ describe('schema-linker - generic types', () => {
         const moduleId = 'type-definition';
         const res = linkTest(`
         export type MyType<T, W> = {
-            something:T;
-            someone: W;
+            something:W;
+            someone: T;
         };
         export type B = MyType<string, number>;
         `, 'B', moduleId);
@@ -17,10 +17,10 @@ describe('schema-linker - generic types', () => {
             type: 'object',
             properties: {
                 something: {
-                    type: 'string'
+                    type: 'number'
                 },
                 someone: {
-                    type: 'number'
+                    type: 'string'
                 }
             }
         };
@@ -51,7 +51,6 @@ describe('schema-linker - generic types', () => {
                 }
             }
         };
-        debugger;
         expect(res).to.eql(expected);
     });
 });

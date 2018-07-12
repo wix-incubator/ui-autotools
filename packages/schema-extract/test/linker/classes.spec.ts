@@ -7,27 +7,27 @@ describe('schema-linker - classes', () => {
         const moduleId = 'classes';
         const res = linkTest(`
         export class A{
-            /* static property desc A */
+            /** static property desc A */
             static a:string;
             private static b:string;
             a:number = 0;
             constructor(public id:string){
                 super();
             }
-            /* original property description */
+            /** original property description */
             setTitle(newtitle:string,prefix:string):void{
 
             }
         };
 
         export class B extends A{
-            static b:string;
+            static c:string;
             private static d:string;
             c:number = 0;
             constructor(public id2:string){
                 super(id2);
             }
-            /* property description */
+            /** property description */
             setTitle(newtitle:string,prefix:string){
 
             }
@@ -51,7 +51,7 @@ describe('schema-linker - classes', () => {
                     description: 'static property desc A',
                     type: 'string'
                 },
-                b: {
+                c: {
                     type: 'string'
                 }
             },
@@ -87,6 +87,7 @@ describe('schema-linker - classes', () => {
                 },
             },
         };
+        debugger;
         expect(res).to.eql(expected);
     });
 });

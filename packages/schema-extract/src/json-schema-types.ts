@@ -25,7 +25,7 @@ export interface IBooleanFields {
 }
 
 export interface IArrayFields {
-    items: Schema | Schema[];
+    items?: Schema | Schema[];
 }
 
 export interface IFieldsForType {

@@ -1,10 +1,10 @@
 const puppeteer = require('puppeteer');
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+function sleep(ms: any) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function loadTestPage(page, testPageUrl, timeout) {
+async function loadTestPage(page: any, testPageUrl: any, timeout: any) {
   // This can keep the process from terminating for upto `timeout` if an error
   // occurs on the page before page load event. But the problem should not occur
   // in headless mode.
@@ -16,12 +16,12 @@ async function loadTestPage(page, testPageUrl, timeout) {
   }
 }
 
-async function waitForTestResults(page) {
+async function waitForTestResults(page: any) {
   await page.waitForFunction('mochaStatus.finished');
   return page.evaluate('mochaStatus.numFailedTests');
 }
 
-async function failIfTestsStall(page, timeout) {
+async function failIfTestsStall(page: any, timeout: any) {
   let numCompletedTests = 0;
 
   while (true) {
@@ -35,11 +35,11 @@ async function failIfTestsStall(page, timeout) {
   }
 }
 
-function failOnPageError(page) {
+function failOnPageError(page: any) {
   return new Promise((_, reject) => {
     // We don't need to handle `disconnected`, Puppeteer will throw anyway.
 
-    page.on('pageerror', errorText => {
+    page.on('pageerror', (errorText: any) => {
       reject(errorText);
     });
 
@@ -49,7 +49,7 @@ function failOnPageError(page) {
   });
 }
 
-module.exports = async ({testPageUrl, noSandbox}) => {
+module.exports = async ({testPageUrl, noSandbox}: any) => {
   const loadTimeout = 20000;
   const testTimeout = 5000;
   const viewportWidth = 800;
@@ -62,12 +62,14 @@ module.exports = async ({testPageUrl, noSandbox}) => {
     const page = await browser.newPage();
     await page.setViewport({width: viewportWidth, height: viewportHeight});
 
-    page.on('dialog', dialog => {
+    page.on('dialog', (dialog: any) => {
       dialog.dismiss();
     });
 
-    page.on('console', async msg => {
-      const args = await Promise.all(msg.args().map(a => a.jsonValue()));
+    page.on('console', async (msg: any) => {
+      // tslint:disable-next-line:no-shadowed-variable
+      const args = await Promise.all(msg.args().map((a: any) => a.jsonValue()));
+      // tslint:disable-next-line:no-console
       console.log(...args);
     });
 
@@ -84,7 +86,8 @@ module.exports = async ({testPageUrl, noSandbox}) => {
     return numFailedTests;
   } finally {
     try {
-      await browser.close();
-    } catch (_) { }
+      await (browser as any)!.close();
+    // tslint:disable-next-line:no-empty
+    } catch (_) {}
   }
 };

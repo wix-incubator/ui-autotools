@@ -30,7 +30,8 @@
   "dependencies": {
     "metadata-tools": "^1.0.0",
     "puppeteer": "^1.5.0",
-    "ui-autotools-utils": "^1.0.0"
+    "ui-autotools-utils": "^1.0.0",
+    "autotools-scripts": "^1.0.0"
   },
   "peerDependencies": {
     "chai": ">=4",

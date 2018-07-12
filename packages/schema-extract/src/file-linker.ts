@@ -17,46 +17,50 @@ export class SchemaLinker {
             return {};
         }
         const entity = schema.definitions[name];
+        if (!entity) {
+            return {};
+        }
         if (isClassSchema(entity)) {
-            return describeClass(schema, entity);
+            return linkClass(schema, entity);
         }
         if (isRef(entity)) {
             // need to slice according to #?
             const entityType = entity.$ref.replace('#', '');
             const refEntity = schema.definitions[entityType];
             if (!refEntity.genericParams || !entity.genericArguments) {
-                return refEntity;
+                return entity;
             }
             if (isObjectSchema(refEntity)) {
                 const paramsMap = (refEntity.genericParams as Schema[]).map((param) => `#${entityType}!${param.name}`);
-                return describeObject(entity, entityType, refEntity, paramsMap);
+                return linkObject(entity, entityType, refEntity, paramsMap);
+            } else {
+                return entity;
             }
-            return refEntity;
         } else {
-            return {};
+            return entity;
         }
     }
 }
 
-function describeClass(schema: ModuleSchema, entity: ClassSchema): ClassSchema {
+function linkClass(schema: ModuleSchema, entity: ClassSchema): ClassSchema {
     if (!schema.definitions || !entity.extends) {
         return entity;
     }
-    const res: ClassSchema = {
+    const extendedEntity = entity.extends.$ref!.replace('#', '');
+    const refEntity = schema.definitions[extendedEntity] as ClassSchema;
+    const res = {
         $ref: ClassSchemaId,
-        constructor: Object.assign({}, entity.constructor),
+        constructor: entity.hasOwnProperty('constructor') ? Object.assign({}, entity.constructor) : Object.assign({}, refEntity.constructor),
         extends: Object.assign({}, entity.extends),
         properties: {},
         staticProperties: {}
-    };
-    const extendedEntity = entity.extends.$ref!.replace('#', '');
-    const refEntity = schema.definitions[extendedEntity] as ClassSchema;
+    } as ClassSchema;
     res.properties = extractClassData(entity, refEntity, extendedEntity, 'properties');
     res.staticProperties = extractClassData(entity, refEntity, extendedEntity, 'staticProperties');
     return res;
 }
 
-function describeObject(entity: Schema, entityType: string, refEntity: Schema & IObjectFields, paramsMap: string[]): Schema {
+function linkObject(entity: Schema, entityType: string, refEntity: Schema & IObjectFields, paramsMap: string[]): Schema {
     const res: typeof refEntity = {};
     res.type = refEntity.type;
     const refProperties = refEntity.properties;
@@ -74,7 +78,7 @@ function describeObject(entity: Schema, entityType: string, refEntity: Schema & 
                 properties[pArray] = type;
             } else {
                 if (isObjectSchema(property)) {
-                    properties[pArray] = describeObject(entity, entityType, property, paramsMap);
+                    properties[pArray] = linkObject(entity, entityType, property, paramsMap);
                 }
             }
         }
@@ -84,10 +88,9 @@ function describeObject(entity: Schema, entityType: string, refEntity: Schema & 
 }
 
 function extractClassData(entity: ClassSchema, refEntity: ClassSchema, extendedEntity: string, prop: 'properties' | 'staticProperties'): {[name: string]: Schema} {
-    const res: {[name: string]: Schema} = {};
+    const res: {[name: string]: Schema & {inheritedFrom?: string}} = {};
     const refProperties = refEntity[prop];
     const properties = entity[prop];
-    debugger;
     for (const p in properties) {
         if (properties.hasOwnProperty(p)) {
             res[p] = Object.assign({}, properties[p]);
@@ -98,6 +101,8 @@ function extractClassData(entity: ClassSchema, refEntity: ClassSchema, extendedE
             if (!properties.hasOwnProperty(p)) {
                 const o = Object.assign({inheritedFrom: `#${extendedEntity}`}, refProperties[p]);
                 res[p] = o;
+            } else {
+                res[p].inheritedFrom = `#${extendedEntity}`;
             }
         }
     }

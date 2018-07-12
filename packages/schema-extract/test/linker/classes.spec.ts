@@ -7,7 +7,7 @@ describe('schema-linker - classes', () => {
         const moduleId = 'classes';
         const res = linkTest(`
         export class A{
-            /** static property desc A */
+            /** static property desc A*/
             static a:string;
             private static b:string;
             a:number = 0;
@@ -41,7 +41,7 @@ describe('schema-linker - classes', () => {
                 arguments: [
                     {
                         type: 'string',
-                        name: 'id'
+                        name: 'id2'
                     }
                 ]
             },
@@ -87,7 +87,43 @@ describe('schema-linker - classes', () => {
                 },
             },
         };
-        debugger;
+        expect(res).to.eql(expected);
+    });
+
+    it('should flatten inheritance with no constructor', async () => {
+        const moduleId = 'classes';
+        const res = linkTest(`
+        export class A{
+            constructor(public id:string){
+                super();
+            }
+        };
+
+        export class B extends A{};
+        `, 'B', moduleId);
+
+        const expected = {
+            $ref: ClassSchemaId,
+            constructor: {
+                $ref: ClassConstructorSchemaId,
+                arguments: [
+                    {
+                        type: 'string',
+                        name: 'id'
+                    }
+                ]
+            },
+            staticProperties: {},
+            extends: {
+                $ref: '#A',
+            },
+            properties: {
+                id: {
+                    inheritedFrom: '#A',
+                    type: 'string',
+                }
+            }
+        };
         expect(res).to.eql(expected);
     });
 });

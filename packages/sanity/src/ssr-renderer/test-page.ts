@@ -1,30 +1,16 @@
 import chai from 'chai';
+// import {patchConsole} from 'ui-autotools-utils';
 (window as any).expect = chai;
 
+require('../../patch-console')();
 // Mocha officially supports these two imports in browser environment.
-
-require('mocha/mocha.css');
 require('mocha/mocha.js');
-
-// if (!__HEADLESS__) {
-//   require('./mocha-prettier.css');
-// }
-
-// if (__TEAMCITY__) {
-//   require('mocha-teamcity-reporter/lib/teamcityBrowser');
-// }
 
 mocha.setup({
   ui: 'bdd',
   reporter: 'spec',
   useColors: true
 });
-
-// Alias Mocha globals to their Jest equivalents. We can remove this once we
-// start running all the tests in Mocha.
-
-(window as any).beforeAll = window.before;
-(window as any).afterAll = window.after;
 
 // This needs to be accessible by Puppeteer.
 

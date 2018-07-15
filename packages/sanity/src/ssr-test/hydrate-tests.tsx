@@ -9,7 +9,7 @@ import sinonChai from 'sinon-chai';
 chai.use(sinonChai);
 
 export const hydrateTests = (): void => {
-  describe('Strict mode tests', () => {
+  describe('Hydration tests', () => {
     let consoleSpy: sinon.SinonSpy;
     let errorSpy: sinon.SinonSpy;
     let index = 0;
@@ -22,15 +22,13 @@ export const hydrateTests = (): void => {
           beforeEach(() => {
               consoleSpy = sinon.spy(console, 'log');
               errorSpy = sinon.spy(console, 'error');
-              if (Comp.name !== 'Modal') {
-                // Set root's HTML to the SSR component
-                root!.innerHTML = componentStrings[index];
-                // Hydrate the component
-                hydrate(<Comp {...simulation.props} />, root);
-                // Unmount the component
-                ReactDOM.unmountComponentAtNode(root as Element);
-                index++;
-              }
+              // Set root's HTML to the SSR component
+              root!.innerHTML = componentStrings[index];
+              // Hydrate the component
+              hydrate(<Comp {...simulation.props} />, root);
+              // Unmount the component
+              ReactDOM.unmountComponentAtNode(root as Element);
+              index++;
           });
 
           afterEach(() => {
@@ -38,11 +36,13 @@ export const hydrateTests = (): void => {
               errorSpy.restore();
           });
 
-          it(`should render ${Comp.name} to string with props ${JSON.stringify(simulation)} without throwing`, () => {
+          it(`should hydrate ${Comp.name} with props ${JSON.stringify(simulation)} without errors`, () => {
+            const consoleArgs = consoleSpy.getCall(0) ? consoleSpy.getCall(0).args[0] : '';
+            const errorArgs = errorSpy.getCall(0) ? errorSpy.getCall(0).args[0] : '';
               // tslint:disable-next-line:no-unused-expression
-            expect(consoleSpy).to.not.be.called;
+            expect(consoleSpy, `console was called with:\n ${consoleArgs}`).to.not.be.called;
               // tslint:disable-next-line:no-unused-expression
-            expect(errorSpy).to.not.be.called;
+            expect(errorSpy, `console error was called with:\n ${errorArgs}`).to.not.be.called;
           });
         }));
       });

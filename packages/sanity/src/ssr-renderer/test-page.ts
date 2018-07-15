@@ -16,7 +16,7 @@ require('mocha/mocha.js');
 
 mocha.setup({
   ui: 'bdd',
-  reporter: 'html',
+  reporter: 'spec',
   useColors: true
 });
 

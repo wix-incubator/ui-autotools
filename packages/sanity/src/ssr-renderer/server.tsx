@@ -3,7 +3,7 @@ import path from 'path';
 import glob from 'glob';
 import {WebpackConfigurator, serve, IServer} from 'ui-autotools-utils';
 import {runTestsInPuppeteer} from './run-in-puppeteer';
-import {importAndRenderMetadata} from './import-and-render';
+import {renderMetadata} from './import-and-render';
 
 const packageDir = path.resolve(__dirname, '..');
 const projectDir = process.cwd();
@@ -24,10 +24,10 @@ function getWebpackConfig(ssrComps: string[]) {
     .getConfig();
 }
 
-export async function sanityTest(entry: string) {
+export async function sanityTest() {
   let server: IServer | null = null;
   try {
-    const ssrComps = importAndRenderMetadata(entry);
+    const ssrComps = renderMetadata();
     server = await serve({webpackConfig: getWebpackConfig(ssrComps)});
     const numFailedTests = await runTestsInPuppeteer({testPageUrl: server.getUrl()});
     if (numFailedTests) {

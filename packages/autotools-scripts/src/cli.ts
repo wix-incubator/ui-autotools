@@ -22,7 +22,7 @@ program
   importMeta(entry);
   // Run the sanity tests for each loaded metadata
   ssrTest();
-  await sanityTest(entry);
+  await sanityTest();
 });
 
 program

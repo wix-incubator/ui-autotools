@@ -87,7 +87,8 @@ export async function runTestsInPuppeteer({testPageUrl, noSandbox}: any) {
   } finally {
     try {
       await (browser as any)!.close();
-    // tslint:disable-next-line:no-empty
-    } catch (_) { }
+    } catch (_) {
+      // Ignore the error since we're already handling an exception.
+     }
   }
 }

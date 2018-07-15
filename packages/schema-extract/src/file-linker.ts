@@ -20,26 +20,57 @@ export class SchemaLinker {
         if (!entity) {
             return {};
         }
-        if (isClassSchema(entity)) {
-            return linkClass(schema, entity);
+        return link(entity, schema);
+    }
+}
+
+function link(entity: Schema, schema: ModuleSchema): Schema {
+    if (isClassSchema(entity)) {
+        return linkClass(schema, entity);
+    }
+    if (isRef(entity)) {
+        // need to slice according to #?
+        const entityType = entity.$ref.replace('#', '');
+        const refEntity = schema.definitions![entityType];
+        if (!refEntity.genericParams || !entity.genericArguments) {
+            return entity;
         }
-        if (isRef(entity)) {
-            // need to slice according to #?
-            const entityType = entity.$ref.replace('#', '');
-            const refEntity = schema.definitions[entityType];
-            if (!refEntity.genericParams || !entity.genericArguments) {
-                return entity;
-            }
-            if (isObjectSchema(refEntity)) {
-                const paramsMap = (refEntity.genericParams as Schema[]).map((param) => `#${entityType}!${param.name}`);
-                return linkObject(entity, entityType, refEntity, paramsMap);
-            } else {
-                return entity;
-            }
+        if (isObjectSchema(refEntity)) {
+            const paramsMap = (refEntity.genericParams as Schema[]).map((param) => `#${entityType}!${param.name}`);
+            return linkObject(entity, entityType, refEntity, paramsMap);
         } else {
             return entity;
         }
     }
+    if (entity.hasOwnProperty('$allOf')) {
+        return handleIntersection(entity.$allOf!, schema);
+    }
+    return entity;
+}
+
+function handleIntersection(options: Schema[], schema: ModuleSchema) {
+    const res: Schema & IObjectFields = {type: 'object'};
+    for (const option of options) {
+        const refEntity = schema.definitions![option.$ref!.replace('#', '')];
+        const entity: IObjectFields = link(refEntity, schema);
+        if (!res.properties) {
+            res.properties = {};
+        }
+        /*
+
+        What about additionalProperties????
+
+        */
+        if (entity.properties) {
+            const properties = entity.properties;
+            for (const prop in properties) {
+                if (!res.properties.hasOwnProperty(prop)) {
+                    res.properties[prop] = properties[prop];
+                }
+            }
+        }
+    }
+    return res;
 }
 
 function linkClass(schema: ModuleSchema, entity: ClassSchema): ClassSchema {

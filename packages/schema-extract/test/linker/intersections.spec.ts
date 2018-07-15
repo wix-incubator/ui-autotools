@@ -4,8 +4,8 @@ import {linkTest} from '../../test-kit/run-linker';
 
 describe('schema-linker - intersections', () => {
     it('should flatten intersection types', async () => {
-        const moduleId = 'type-definition';
-        const res = linkTest(`
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
         export type A = {
             something:number;
         };
@@ -13,7 +13,7 @@ describe('schema-linker - intersections', () => {
             somethingElse:string;
         };
         export type C = A &  B
-        `, 'C', moduleId);
+        `}, 'C', fileName);
 
         const expected: Schema<'object'> = {
             type: 'object',
@@ -30,8 +30,8 @@ describe('schema-linker - intersections', () => {
     });
 
     it('should flatten intersection types with unions', async () => {
-        const moduleId = 'type-definition';
-        const res = linkTest(`
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
         export type A = {
             something:number;
         };
@@ -42,7 +42,7 @@ describe('schema-linker - intersections', () => {
             somethingElse:number;
         };
         export type C = A  &  ( B || C );
-        `, 'C', moduleId);
+        `}, 'C', fileName);
 
         const expected: Schema<'object'> = {
             type: 'object',
@@ -66,15 +66,15 @@ describe('schema-linker - intersections', () => {
         expect(res).to.eql(expected);
     });
     it('should deep flatten genric type definition with intersections', async () => {
-        const moduleId = 'type-definition';
-        const res = linkTest(`
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
         export type MyType<T> = {
             something: {
                 a: T;
             };
         };
         export type B = MyType<string> & {id:string};
-        `, 'B', moduleId);
+        `}, 'B', fileName);
 
         const expected: Schema<'object'> = {
             type: 'object',
@@ -95,13 +95,13 @@ describe('schema-linker - intersections', () => {
         expect(res).to.eql(expected);
     });
     it('should deep flatten genric type definition with intersections 2', async () => {
-        const moduleId = 'type-definition';
-        const res = linkTest(`
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
         export type MyType<T extends object> = {
             something: T & {id:string};
         };
         export type B = MyType<{ title: string}>;
-        `, 'B', moduleId);
+        `}, 'B', fileName);
 
         const expected: Schema<'object'> = {
             type: 'object',
@@ -122,13 +122,13 @@ describe('schema-linker - intersections', () => {
         expect(res).to.eql(expected);
     });
     it('should deep flatten genric type definition with intersections 3', async () => {
-        const moduleId = 'type-definition';
-        const res = linkTest(`
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
         export type MyType<T extends object> = {
             something: T & {id:string};
         };
         export type B = MyType<{ title: string}> &  MyType<{ price: number}>;
-        `, 'B', moduleId);
+        `}, 'B', fileName);
 
         const expected: Schema<'object'> = {
             type: 'object',

@@ -4,8 +4,8 @@ import {linkTest} from '../../test-kit/run-linker';
 
 describe('schema-linker - classes', () => {
     it('should flatten inheritance', async () => {
-        const moduleId = 'classes';
-        const res = linkTest(`
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
         export class A{
             /** static property desc A*/
             static a:string;
@@ -32,7 +32,7 @@ describe('schema-linker - classes', () => {
 
             }
         };
-        `, 'B', moduleId);
+        `}, 'B', fileName);
 
         const expected = {
             $ref: ClassSchemaId,
@@ -91,8 +91,8 @@ describe('schema-linker - classes', () => {
     });
 
     it('should flatten inheritance with no constructor', async () => {
-        const moduleId = 'classes';
-        const res = linkTest(`
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
         export class A{
             constructor(public id:string){
                 super();
@@ -100,7 +100,7 @@ describe('schema-linker - classes', () => {
         };
 
         export class B extends A{};
-        `, 'B', moduleId);
+        `}, 'B', fileName);
 
         const expected = {
             $ref: ClassSchemaId,
@@ -128,15 +128,15 @@ describe('schema-linker - classes', () => {
     });
 
     it('should flatten inheritance with generics', async () => {
-        const moduleId = 'classes';
-        const res = linkTest(`
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
         export class A<T, W>{
             static a: T;
             b: W
         };
 
         export class B<G> extends A<string, G>{};
-        `, 'B', moduleId);
+        `}, 'B', fileName);
 
         const expected = {
             $ref: ClassSchemaId,
@@ -161,4 +161,63 @@ describe('schema-linker - classes', () => {
         };
         expect(res).to.eql(expected);
     });
+
+    // xit('should flatten inheritance with generics', async () => {
+    //     const fileName = 'index.ts';
+    //     const res = linkTest({[fileName]: `
+    //     export HTMLButtonElement {
+    //         text: string;
+    //     }
+
+    //     export interface ButtonProps extends HTMLButtonElement {
+    //         /** Text size */
+    //         size?: 'small' | 'large';
+    //     }
+
+    //     export class Button extends React.Component<ButtonProps, {}> {
+    //         static defaultProps: Partial<ButtonProps> = {size: 'small'}
+    //         /** does nothing */
+    //         focus = () => {}
+    //     }
+    //     `}, 'Button', fileName);
+
+    //     const expected = {
+    //         $ref: ClassSchemaId,
+    //         staticProperties: {
+    //             defaultProps: {
+    //                 size: {
+    //                     enum: ['small', 'large'],
+    //                     type: 'string'
+    //                 }
+    //             }
+    //         },
+    //         extends: {
+    //             $ref: '#react!Component',
+    //             genericArguments: {
+    //                 '?': '?'
+    //             }
+    //         },
+    //         properties: {
+    //             focus: {
+    //                 description: 'does nothing',
+    //                 $ref: 'common/function',
+    //                 arguments: [],
+    //                 returns: {$ref: 'common/undefined'}
+    //             },
+    //             props: {
+    //                 size: {
+    //                     inheritedFrom: '#ButtonProps',
+    //                     description: 'Text size',
+    //                     enum: ['small', 'large'],
+    //                     type: 'string'
+    //                 },
+    //                 text: {
+    //                     inheritedFrom: '#HTMLButtonProps',
+    //                     type: 'string'
+    //                 }
+    //             }
+    //         }
+    //     };
+    //     expect(res).to.eql(expected);
+    // });
 });

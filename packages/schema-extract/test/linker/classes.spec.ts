@@ -120,7 +120,42 @@ describe('schema-linker - classes', () => {
             properties: {
                 id: {
                     inheritedFrom: '#A',
-                    type: 'string',
+                    type: 'string'
+                }
+            }
+        };
+        expect(res).to.eql(expected);
+    });
+
+    it('should flatten inheritance with generics', async () => {
+        const moduleId = 'classes';
+        const res = linkTest(`
+        export class A<T, W>{
+            static a: T;
+            b: W
+        };
+
+        export class B<G> extends A<string, G>{};
+        `, 'B', moduleId);
+
+        const expected = {
+            $ref: ClassSchemaId,
+            genericParams: [{
+                name: 'G'
+            }],
+            staticProperties: {
+                a: {
+                    inheritedFrom: '#A',
+                    type: 'string'
+                }
+            },
+            extends: {
+                $ref: '#A',
+            },
+            properties: {
+                b: {
+                    inheritedFrom: '#A',
+                    $ref: '#B!G'
                 }
             }
         };

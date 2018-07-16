@@ -84,14 +84,15 @@ describe('schema-linker - intersections', () => {
                     properties: {
                         a: {
                             type: 'string'
-                        },
-                        id: {
-                            type: 'string'
                         }
                     }
+                },
+                id: {
+                    type: 'string'
                 }
             }
         };
+        debugger;
         expect(res).to.eql(expected);
     });
     it('should deep flatten genric type definition with intersections 2', async () => {

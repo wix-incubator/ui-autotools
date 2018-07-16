@@ -51,14 +51,12 @@ function link(entity: Schema, schema: ModuleSchema): Schema {
 }
 
 function handleIntersection(options: Schema[], schema: ModuleSchema): Schema {
-    const res: Schema & IObjectFields = {};
+    debugger;
+    const res: Schema & IObjectFields = {properties: {}};
     for (const option of options) {
         if (isRef(option)) {
-            const refEntity = schema.definitions![option.$ref!.replace('#', '')];
+            const refEntity = option.genericArguments ? option : schema.definitions![option.$ref!.replace('#', '')];
             const entity: IObjectFields = link(refEntity, schema);
-            if (!res.properties) {
-                res.properties = {};
-            }
             /*
 
             What about additionalProperties????
@@ -67,15 +65,21 @@ function handleIntersection(options: Schema[], schema: ModuleSchema): Schema {
             if (entity.properties) {
                 const properties = entity.properties;
                 for (const prop in properties) {
-                    if (!res.properties.hasOwnProperty(prop)) {
-                        res.properties[prop] = properties[prop];
+                    if (!res.properties!.hasOwnProperty(prop)) {
+                        res.properties![prop] = properties[prop];
+                    }
+                }
+            }
+        } else if (isSchemaOfType('object', option)) {
+            if (option.properties) {
+                const properties = option.properties;
+                for (const prop in properties) {
+                    if (!res.properties!.hasOwnProperty(prop)) {
+                        res.properties![prop] = properties[prop];
                     }
                 }
             }
         }
-        // } else if (isUnion(option)) {
-        //     return handleUnion(option.$oneOf, schema);
-        // }
     }
     return res;
 }

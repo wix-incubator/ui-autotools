@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 import { transform } from '../src/file-transformer';
-import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema } from './json-schema-types';
+import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema } from './json-schema-types';
 
 export class SchemaLinker {
     private checker: ts.TypeChecker;
@@ -35,43 +35,78 @@ function link(entity: Schema, schema: ModuleSchema): Schema {
         if (!refEntity.genericParams || !entity.genericArguments) {
             return entity;
         }
-        if (isObjectSchema(refEntity)) {
+        if (isSchemaOfType('object', refEntity)) {
             const paramsMap = (refEntity.genericParams as Schema[]).map((param) => `#${entityType}!${param.name}`);
             return linkObject(entity, entityType, refEntity, paramsMap);
         } else {
             return entity;
         }
     }
-    if (entity.hasOwnProperty('$allOf')) {
-        return handleIntersection(entity.$allOf!, schema);
+    if (entity.$allOf) {
+        const res = handleIntersection(entity.$allOf, schema);
+        res.type = 'object';
+        return res;
     }
     return entity;
 }
 
-function handleIntersection(options: Schema[], schema: ModuleSchema) {
-    const res: Schema & IObjectFields = {type: 'object'};
+function handleIntersection(options: Schema[], schema: ModuleSchema): Schema {
+    const res: Schema & IObjectFields = {};
     for (const option of options) {
-        const refEntity = schema.definitions![option.$ref!.replace('#', '')];
-        const entity: IObjectFields = link(refEntity, schema);
-        if (!res.properties) {
-            res.properties = {};
-        }
-        /*
+        if (isRef(option)) {
+            const refEntity = schema.definitions![option.$ref!.replace('#', '')];
+            const entity: IObjectFields = link(refEntity, schema);
+            if (!res.properties) {
+                res.properties = {};
+            }
+            /*
 
-        What about additionalProperties????
+            What about additionalProperties????
 
-        */
-        if (entity.properties) {
-            const properties = entity.properties;
-            for (const prop in properties) {
-                if (!res.properties.hasOwnProperty(prop)) {
-                    res.properties[prop] = properties[prop];
+            */
+            if (entity.properties) {
+                const properties = entity.properties;
+                for (const prop in properties) {
+                    if (!res.properties.hasOwnProperty(prop)) {
+                        res.properties[prop] = properties[prop];
+                    }
                 }
             }
         }
+        // } else if (isUnion(option)) {
+        //     return handleUnion(option.$oneOf, schema);
+        // }
     }
     return res;
 }
+
+// function handleUnion(options: Schema[], schema: ModuleSchema): Schema {
+//     const res: Schema & IObjectFields = {properties: {}};
+//     const propArray = [];
+//     for (const option of options) {
+//         if (isRef(option)) {
+//             const refEntity = schema.definitions![option.$ref!.replace('#', '')];
+//             const entity: IObjectFields = link(refEntity, schema);
+//             if (entity.properties) {
+//                 const properties = entity.properties;
+//                 for (const prop in properties) {
+//                     if (!res.properties!.hasOwnProperty(prop)) {
+//                         res.properties![prop] = properties[prop];
+//                     } else {
+//                         if (isUnion(res.properties![prop])) {
+//                             res.properties![prop].$oneOf!.push(properties[prop]);
+//                         }
+//                         res.properties![prop] = {$oneOf: [res.properties![prop], properties[prop]]};
+//                     }
+//                 }
+//             }
+//         }
+//         // } else if (isUnion(option)) {
+//         //     res.push({$oneOf: handleUnion(option.$oneOf, schema)});
+//         // }
+//     }
+//     return res;
+// }
 
 function linkClass(schema: ModuleSchema, entity: ClassSchema): ClassSchema {
     if (!schema.definitions || !entity.extends) {
@@ -147,7 +182,7 @@ function linkObject(entity: Schema, entityType: string, refEntity: Schema & IObj
                 const type = argsMap[argIndex];
                 properties[pArray] = type;
             } else {
-                if (isObjectSchema(property)) {
+                if (isSchemaOfType('object', property)) {
                     properties[pArray] = linkObject(entity, entityType, property, paramsMap);
                 }
             }
@@ -155,16 +190,4 @@ function linkObject(entity: Schema, entityType: string, refEntity: Schema & IObj
     }
     res.properties = properties;
     return res;
-}
-
-function isRef(schema: Schema): schema is Schema & {$ref: string} {
-    return !!schema.$ref;
-}
-
-function isObjectSchema(schema: Schema): schema is Schema & IObjectFields {
-    return schema.type === 'object';
-}
-
-function isClassSchema(schema: Schema): schema is Schema & ClassSchema {
-    return !!schema.$ref && schema.$ref === ClassSchemaId;
 }

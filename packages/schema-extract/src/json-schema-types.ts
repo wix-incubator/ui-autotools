@@ -10,6 +10,7 @@ export const JSXElement = 'common/JSX';
 export interface IObjectFields {
     additionalProperties?: Schema;
     properties?: {[name: string]: Schema};
+    required?:string[];
 }
 
 // tslint:disable-next-line:no-empty-interface

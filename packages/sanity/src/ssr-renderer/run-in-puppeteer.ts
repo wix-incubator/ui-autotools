@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer';
-import {consoleLog} from 'ui-autotools-utils';
+import {consoleLog, consoleError} from 'ui-autotools-utils';
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -68,9 +68,8 @@ export async function runTestsInPuppeteer({testPageUrl, noSandbox}: any) {
     });
 
     page.on('console', async (msg) => {
-      // tslint:disable-next-line:no-shadowed-variable
-      const args = await Promise.all(msg.args().map((a) => a.jsonValue()));
-      consoleLog(...args);
+      const msgArgs = await Promise.all(msg.args().map((a) => a.jsonValue()));
+      consoleLog(...msgArgs);
     });
 
     const numFailedTests = await Promise.race([
@@ -84,6 +83,9 @@ export async function runTestsInPuppeteer({testPageUrl, noSandbox}: any) {
     ]);
 
     return numFailedTests;
+  } catch (error) {
+    consoleError(error.toString());
+    process.exitCode = 1;
   } finally {
     try {
       await (browser as any)!.close();

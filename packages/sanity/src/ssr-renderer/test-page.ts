@@ -1,6 +1,12 @@
 import chai from 'chai';
-// import {patchConsole} from 'ui-autotools-utils';
 (window as any).expect = chai;
+
+// In headless mode we run Mocha with console reporter and pipe all console
+// output into stdout. But passing structures - especially circular - between
+// browser and Node is inefficient and can cause Puppeteer to freeze. The
+// solution is to wrap console.log with a function that does all formatting
+// in the browser. This allows us to pass only primitive values to Node.
+// __HEADLESS__ is a boolean value injected by Webpack.
 
 require('../../patch-console')();
 // Mocha officially supports these two imports in browser environment.

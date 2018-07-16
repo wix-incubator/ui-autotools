@@ -149,7 +149,6 @@ describe('schema-linker - intersections', () => {
                 }
             }
         };
-        debugger;
         expect(res).to.eql(expected);
     });
 });

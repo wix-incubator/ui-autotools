@@ -7,11 +7,11 @@ These tools rely on `*.meta.tsx` files in the project.
 
 The tools use a similiar command-line pattern:
 ```
-$ auto-tools [tool name] --files [meta files matching glob]
+$ autotools [tool name] --files [meta files matching glob]
 ```
 For example:
 ```
-$ auto-tools sanity --files ./components/**/*.meta.ts
+$ autotools sanity --files ./components/**/*.meta.ts
 ```
 Common CLI parameters:
 - `files` - meta files matching glob (default: './**/*.meta.tsx')
@@ -25,39 +25,37 @@ Common CLI parameters:
     - client side hydration on SSR result
     - fails for any console message
     - fails for every event listener left after component unmounts
-- `photoshoot` - tools for generating and testing component images
-    - compares already saved component image snapshots to current view
 - `a11y` - accessibility test:
     - checks component render result for accessibility using axe-core
+
+## WIP Tools
+- `eyes` - tools for generating and testing component images
+    - compares already saved component image snapshots to current view
 - `website`
     - auto generated static documentation and playgrounds site.
     - dev mode - fast reloading of changed resources
 
-we encourge anyone to add more tools that utilize this meta-data repo.
+We encourge anyone to add more tools that utilize this meta-data repo. Please open pull requests for any tools and issues with half baked dreams :)
 
-please pull request with tools and issues with half baked dreams :)
+## Metadata Registry
 
-## MetaData registry
+Offers a [common API](./docs/registry.md) for code metadata. This allows many different tools to use this metadata as their configuration.
 
-offers a [common API](./docs/registry.md) for code metadata.
-this allows many different tools to use this metadata as their configuration.
-
-
-registering metadata is done by requiring the Registry and creating a component description.
+Registering metadata is done by requiring the Registry and creating a component description:
 
 ```ts
-import MetaData from 'ui-autotools';
+import Registry from 'ui-autotools';
 import MyComp from './my-comp.tsx';
 import mdFile from './my-comp-usage.md';
 
 
-const desc = MetaData.describe(MyComp);
-desc.addSimulation('empty',{
+const myComponentMetadata = Registry.describe(MyComp);
+myComponentMetadata.addSimulation('empty',{
     items:[]
 });
 
-desc.addDocumentation('Accesability','some inline documenttion here');
-desc.addDocumentation('Usage',mdFile);
+myComponentMetadata.addDocumentation('Accesability','some inline documenttion here');
+myComponentMetadata.addDocumentation('Usage',mdFile);
 ```
 
 (missing context)

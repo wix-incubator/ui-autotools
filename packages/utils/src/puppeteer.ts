@@ -1,9 +1,6 @@
 import puppeteer from 'puppeteer';
-import fs from 'fs';
-import path from 'path';
 import {consoleLog, consoleError} from './index';
-
-const packageDir = path.resolve(__dirname, '..');
+const {patchConsole} = require('../patch-console');
 
 export function waitForPageError(page: puppeteer.Page): Promise<never> {
     return new Promise((_, reject) => {
@@ -17,24 +14,23 @@ export function waitForPageError(page: puppeteer.Page): Promise<never> {
     });
 }
 
+export function logConsoleMessages(page: puppeteer.Page) {
+    page.on('console', async (msg) => {
+        const msgArgs = await Promise.all(msg.args().map((a) => a.jsonValue()));
+        consoleLog(...msgArgs);
+    });
+}
+
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function loadTestPage(page: any, testPageUrl: string, timeout: number) {
+async function loadTestPage(page: puppeteer.Page, testPageUrl: string, timeout: number) {
   // This can keep the process from terminating for upto `timeout` if an error
   // occurs on the page before page load event. But the problem should not occur
   // in headless mode.
   // Bug: https://github.com/GoogleChrome/puppeteer/issues/2721
-  try {
-    const patchConsole = fs.readFileSync(path.join(packageDir, 'patch-console.js')).toString();
-    if (patchConsole) {
-        await page.evaluateOnNewDocument(patchConsole);
-    }
-  } catch (e) {
-    consoleError(e);
-  }
-
+  await page.evaluateOnNewDocument(patchConsole);
   await page.goto(testPageUrl, {timeout});
 
   if (await page.evaluate(`typeof mochaStatus === 'undefined'`)) {
@@ -92,10 +88,7 @@ export async function runTestsInPuppeteer({testPageUrl, noSandbox}: any) {
       dialog.dismiss();
     });
 
-    page.on('console', async (msg) => {
-      const msgArgs = await Promise.all(msg.args().map((a) => a.jsonValue()));
-      consoleLog(...msgArgs);
-    });
+    logConsoleMessages(page);
 
     const numFailedTests = await Promise.race([
       failOnPageError(page),

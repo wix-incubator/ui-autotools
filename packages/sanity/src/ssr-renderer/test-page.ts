@@ -1,7 +1,4 @@
-import chai from 'chai';
-(window as any).expect = chai;
-
-// Mocha officially supports these two imports in browser environment.
+// Mocha officially supports this import in browser environment
 require('mocha/mocha.js');
 
 mocha.setup({

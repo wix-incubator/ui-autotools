@@ -1,5 +1,3 @@
-import {hydrateTests} from './hydrate-tests';
-import {strictModeTests} from './strict-mode';
+import {sanityTests} from './sanity-tests';
 
-hydrateTests();
-strictModeTests();
+sanityTests();

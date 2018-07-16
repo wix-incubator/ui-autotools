@@ -1,13 +1,9 @@
 import puppeteer from 'puppeteer';
+import fs from 'fs';
+import path from 'path';
 import {consoleLog, consoleError} from './index';
 
-// In headless mode we run Mocha with console reporter and pipe all console
-// output into stdout. But passing structures - especially circular - between
-// browser and Node is inefficient and can cause Puppeteer to freeze. The
-// solution is to wrap console.log with a function that does all formatting
-// in the browser. This allows us to pass only primitive values to Node.
-// __HEADLESS__ is a boolean value injected by Webpack.
-require('../patch-console')();
+const packageDir = path.resolve(__dirname, '..');
 
 export function waitForPageError(page: puppeteer.Page): Promise<never> {
     return new Promise((_, reject) => {
@@ -30,6 +26,15 @@ async function loadTestPage(page: any, testPageUrl: string, timeout: number) {
   // occurs on the page before page load event. But the problem should not occur
   // in headless mode.
   // Bug: https://github.com/GoogleChrome/puppeteer/issues/2721
+  try {
+    const patchConsole = fs.readFileSync(path.join(packageDir, 'patch-console.js')).toString();
+    if (patchConsole) {
+        await page.evaluateOnNewDocument(patchConsole);
+    }
+  } catch (e) {
+    consoleError(e);
+  }
+
   await page.goto(testPageUrl, {timeout});
 
   if (await page.evaluate(`typeof mochaStatus === 'undefined'`)) {

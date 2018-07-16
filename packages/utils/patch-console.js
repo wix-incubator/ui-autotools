@@ -1,4 +1,10 @@
 // Based on an old version of util.inspect from Node.
+// In headless mode we run Mocha with console reporter and pipe all console
+// output into stdout. But passing structures - especially circular - between
+// browser and Node is inefficient and can cause Puppeteer to freeze. The
+// solution is to wrap console.log with a function that does all formatting
+// in the browser. This allows us to pass only primitive values to Node.
+// __HEADLESS__ is a boolean value injected by Webpack.
 
 const colors = {
   'bold': [1, 22],
@@ -316,7 +322,7 @@ function isPrimitive(x) {
   return Object(x) !== x;
 }
 
-module.exports = function() {
+(function() {
   const consoleLog = console.log;
   console.log = function(...args) {
     args = args.length ?
@@ -325,4 +331,4 @@ module.exports = function() {
 
     consoleLog.apply(console, args);
   };
-};
+})();

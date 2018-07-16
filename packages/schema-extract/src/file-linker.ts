@@ -32,12 +32,15 @@ function link(entity: Schema, schema: ModuleSchema): Schema {
         // need to slice according to #?
         const entityType = entity.$ref.replace('#', '');
         const refEntity = schema.definitions![entityType];
-        if (!refEntity.genericParams || !entity.genericArguments) {
+        if (!refEntity || !refEntity.genericParams || !entity.genericArguments) {
             return entity;
         }
         if (isSchemaOfType('object', refEntity)) {
-            const paramsMap = (refEntity.genericParams as Schema[]).map((param) => `#${entityType}!${param.name}`);
-            return linkObject(entity, entityType, refEntity, paramsMap);
+            const pMap = new Map();
+            refEntity.genericParams!.forEach((param, index) => {
+                pMap.set(`#${entityType}!${param.name}`, entity.genericArguments![index]);
+            });
+            return linkObject(entity, entityType, refEntity, pMap, schema);
         } else {
             return entity;
         }
@@ -50,13 +53,20 @@ function link(entity: Schema, schema: ModuleSchema): Schema {
     return entity;
 }
 
-function handleIntersection(options: Schema[], schema: ModuleSchema): Schema {
-    debugger;
+function handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
     const res: Schema & IObjectFields = {properties: {}};
     for (const option of options) {
         if (isRef(option)) {
-            const refEntity = option.genericArguments ? option : schema.definitions![option.$ref!.replace('#', '')];
-            const entity: IObjectFields = link(refEntity, schema);
+            let entity: Schema & IObjectFields;
+            if (paramsMap) {
+                // need to check if entity is defined
+                entity = paramsMap!.get(option.$ref)!;
+                // This could be a mistake
+                res.type = entity.type;
+            } else {
+                const refEntity = option.genericArguments ? option : schema.definitions![option.$ref!.replace('#', '')];
+                entity = link(refEntity, schema);
+            }
             /*
 
             What about additionalProperties????
@@ -169,25 +179,24 @@ function extractClassData(entity: ClassSchema, refEntity: ClassSchema, extendedE
     return res;
 }
 
-function linkObject(entity: Schema, entityType: string, refEntity: Schema & IObjectFields, paramsMap: string[]): Schema {
+function linkObject(entity: Schema, entityType: string, refEntity: Schema & IObjectFields, paramsMap: Map<string, Schema>, schema: ModuleSchema): Schema {
     const res: typeof refEntity = {};
     res.type = refEntity.type;
     const refProperties = refEntity.properties;
     if (!refProperties) {
         return res;
     }
-    const argsMap = entity.genericArguments || [];
     const properties: {[name: string]: Schema} = {};
     for (const pArray in refProperties) {
         if (refProperties.hasOwnProperty(pArray)) {
             const property = refProperties[pArray];
             if (isRef(property)) {
-                const argIndex = paramsMap.indexOf(property.$ref);
-                const type = argsMap[argIndex];
-                properties[pArray] = type;
+                properties[pArray] = paramsMap.get(property.$ref)!;
+            } else if (property.$allOf) {
+                properties[pArray] = handleIntersection(property.$allOf, schema, paramsMap);
             } else {
                 if (isSchemaOfType('object', property)) {
-                    properties[pArray] = linkObject(entity, entityType, property, paramsMap);
+                    properties[pArray] = linkObject(entity, entityType, property, paramsMap, schema);
                 }
             }
         }

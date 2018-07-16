@@ -16,13 +16,13 @@ program
 .command('sanity')
 .description('run sanity checks on all components with a metadata description')
 .option('-f, --files [pattern]', 'Grep file')
-.action(async (options) => {
+.action((options) => {
   const entry = path.join(projectPath, options.files ? options.files : defaultMetaGlob);
   // Load metadata for each component that should be sanity tested
   importMeta(entry);
   // Run the sanity tests for each loaded metadata
   ssrTest();
-  await sanityTest();
+  sanityTest();
 });
 
 program

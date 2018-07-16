@@ -53,7 +53,6 @@
     "lerna": "next",
     "mocha": "^5.2.0",
     "mocha-loader": "^1.1.3",
-    "mocha-teamcity-reporter": "^2.4.0",
     "npm-run-all": "^4.1.3",
     "postcss": "^6.0.23",
     "proper-fs": "^1.0.0",
@@ -61,17 +60,13 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "rimraf": "^2.6.2",
-    "sinon": "^6.1.3",
-    "sinon-chai": "^3.2.0",
-    "source-map-support": "0.4.3",
     "ts-loader": "^4.4.1",
     "tslint": "^5.10.0",
     "tslint-wix-react": "^6.0.3",
     "typescript": "~2.9.2",
     "typescript-support": "^0.4.1",
     "url-loader": "^1.0.1",
-    "webpack": "^4.12.1",
-    "webpack-cli": "^3.0.8"
+    "webpack": "^4.12.1"
   },
   "engines": {
     "node": ">=8"

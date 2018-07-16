@@ -1,8 +1,7 @@
 import 'typescript-support';
 import path from 'path';
 import glob from 'glob';
-import {WebpackConfigurator, serve, IServer} from 'ui-autotools-utils';
-import {runTestsInPuppeteer} from './run-in-puppeteer';
+import {WebpackConfigurator, runTestsInPuppeteer, serve, IServer} from 'ui-autotools-utils';
 import {renderMetadata} from './import-and-render';
 
 const packageDir = path.resolve(__dirname, '..');
@@ -18,7 +17,7 @@ function getWebpackConfig(ssrComps: string[]) {
     .addEntry('meta', path.join(packageDir, 'ssr-test', 'index.js'))
     .addHtml({
       template: path.join(packageDir, '../src/ssr-renderer', 'test-page.html'),
-      title: JSON.stringify(ssrComps)
+      components: JSON.stringify(ssrComps)
     })
     .suppressReactDevtoolsSuggestion()
     .getConfig();

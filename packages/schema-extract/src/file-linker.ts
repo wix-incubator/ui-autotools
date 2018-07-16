@@ -61,8 +61,6 @@ function handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?:
             if (paramsMap) {
                 // need to check if entity is defined
                 entity = paramsMap!.get(option.$ref)!;
-                // This could be a mistake
-                res.type = entity.type;
             } else {
                 const refEntity = option.genericArguments ? option : schema.definitions![option.$ref!.replace('#', '')];
                 entity = link(refEntity, schema);
@@ -73,15 +71,20 @@ function handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?:
 
             */
             if (entity.properties) {
+                res.type = entity.type;
                 const properties = entity.properties;
                 for (const prop in properties) {
                     if (!res.properties!.hasOwnProperty(prop)) {
                         res.properties![prop] = properties[prop];
+                    } else {
+                        // ?????
+                        res.properties![prop] = handleIntersection([res.properties![prop], properties[prop]], schema);
                     }
                 }
             }
         } else if (isSchemaOfType('object', option)) {
             if (option.properties) {
+                res.type = option.type;
                 const properties = option.properties;
                 for (const prop in properties) {
                     if (!res.properties!.hasOwnProperty(prop)) {

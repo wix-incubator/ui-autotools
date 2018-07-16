@@ -71,9 +71,7 @@
     "typescript-support": "^0.4.1",
     "url-loader": "^1.0.1",
     "webpack": "^4.12.1",
-    "webpack-cli": "^3.0.8",
-    "webpack-dev-server": "^3.1.4",
-    "webpack-serve": "^1.0.4"
+    "webpack-cli": "^3.0.8"
   },
   "engines": {
     "node": ">=8"

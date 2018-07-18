@@ -53,6 +53,4 @@ describe('schema-linker - generic types', () => {
         };
         expect(res).to.eql(expected);
     });
-
-
 });

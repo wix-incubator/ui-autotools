@@ -124,8 +124,12 @@ function linkClass(schema: ModuleSchema, entity: ClassSchema): ClassSchema {
 
 function extractClassData(entity: ClassSchema, refEntity: ClassSchema, extendedEntity: string, prop: 'properties' | 'staticProperties'): {[name: string]: Schema} {
     const res: {[name: string]: Schema & {inheritedFrom?: string}} = {};
-    const paramsMap = refEntity.genericParams ? (refEntity.genericParams as Schema[]).map((param) => `#${extendedEntity}!${param.name}`) : [];
-    const argsMap = entity.extends!.genericArguments || [];
+    const paramsMap = new Map();
+    if (refEntity.genericParams) {
+        refEntity.genericParams!.forEach((param, index) => {
+            paramsMap.set(`#${extendedEntity}!${param.name}`, entity.extends!.genericArguments![index]);
+        });
+    }
     const refProperties = refEntity[prop];
     const properties = entity[prop];
     for (const p in properties) {
@@ -139,12 +143,9 @@ function extractClassData(entity: ClassSchema, refEntity: ClassSchema, extendedE
                 const property = refProperties[p];
                 if (isRef(property)) {
                     const refType = property.$ref.startsWith(`#${extendedEntity}`) ? property.$ref : `#${extendedEntity}!${property.$ref.replace('#', '')}`;
-                    const argIndex = paramsMap.indexOf(refType);
-                    const o = Object.assign({inheritedFrom: `#${extendedEntity}`}, argsMap[argIndex]);
-                    (res[p] as any) = o;
+                    res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, paramsMap.get(refType));
                 } else {
-                    const o = Object.assign({inheritedFrom: `#${extendedEntity}`}, refProperties[p]);
-                    res[p] = o;
+                    res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, refProperties[p]);
                 }
             } else {
                 res[p].inheritedFrom = `#${extendedEntity}`;
@@ -161,17 +162,17 @@ function linkObject(entity: Schema, entityType: string, refEntity: Schema & IObj
     if (!refProperties) {
         return res;
     }
-    const properties: {[name: string]: Schema} = {};
-    for (const pArray in refProperties) {
-        if (refProperties.hasOwnProperty(pArray)) {
-            const property = refProperties[pArray];
+    const properties: typeof refProperties = {};
+    for (const propName in refProperties) {
+        if (refProperties.hasOwnProperty(propName)) {
+            const property = refProperties[propName];
             if (isRef(property)) {
-                properties[pArray] = paramsMap.get(property.$ref)!;
+                properties[propName] = paramsMap.get(property.$ref)!;
             } else if (property.$allOf) {
-                properties[pArray] = handleIntersection(property.$allOf, schema, paramsMap);
+                properties[propName] = handleIntersection(property.$allOf, schema, paramsMap);
             } else {
                 if (isSchemaOfType('object', property)) {
-                    properties[pArray] = linkObject(entity, entityType, property, paramsMap, schema);
+                    properties[propName] = linkObject(entity, entityType, property, paramsMap, schema);
                 }
             }
         }

@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer';
-import {consoleLog, consoleError} from './index';
+import {consoleLog} from './index';
 const {patchConsole} = require('../patch-console');
 
 export function waitForPageError(page: puppeteer.Page): Promise<never> {

@@ -29,7 +29,6 @@ function link(entity: Schema, schema: ModuleSchema): Schema {
         return linkClass(schema, entity);
     }
     if (isRef(entity)) {
-        // need to slice according to #?
         const entityType = entity.$ref.replace('#', '');
         const refEntity = schema.definitions![entityType];
         if (!refEntity || !refEntity.genericParams || !entity.genericArguments) {
@@ -59,8 +58,10 @@ function handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?:
         if (isRef(option)) {
             let entity: Schema & IObjectFields;
             if (paramsMap) {
-                // need to check if entity is defined
                 entity = paramsMap!.get(option.$ref)!;
+                if (!entity) {
+                    return res;
+                }
             } else {
                 const refEntity = option.genericArguments ? option : schema.definitions![option.$ref!.replace('#', '')];
                 entity = link(refEntity, schema);
@@ -77,8 +78,7 @@ function handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?:
                     if (!res.properties!.hasOwnProperty(prop)) {
                         res.properties![prop] = properties[prop];
                     } else {
-                        // ?????
-                        res.properties![prop] = handleIntersection([res.properties![prop], properties[prop]], schema);
+                        res.properties![prop] = handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
                     }
                 }
             }
@@ -96,34 +96,6 @@ function handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?:
     }
     return res;
 }
-
-// function handleUnion(options: Schema[], schema: ModuleSchema): Schema {
-//     const res: Schema & IObjectFields = {properties: {}};
-//     const propArray = [];
-//     for (const option of options) {
-//         if (isRef(option)) {
-//             const refEntity = schema.definitions![option.$ref!.replace('#', '')];
-//             const entity: IObjectFields = link(refEntity, schema);
-//             if (entity.properties) {
-//                 const properties = entity.properties;
-//                 for (const prop in properties) {
-//                     if (!res.properties!.hasOwnProperty(prop)) {
-//                         res.properties![prop] = properties[prop];
-//                     } else {
-//                         if (isUnion(res.properties![prop])) {
-//                             res.properties![prop].$oneOf!.push(properties[prop]);
-//                         }
-//                         res.properties![prop] = {$oneOf: [res.properties![prop], properties[prop]]};
-//                     }
-//                 }
-//             }
-//         }
-//         // } else if (isUnion(option)) {
-//         //     res.push({$oneOf: handleUnion(option.$oneOf, schema)});
-//         // }
-//     }
-//     return res;
-// }
 
 function linkClass(schema: ModuleSchema, entity: ClassSchema): ClassSchema {
     if (!schema.definitions || !entity.extends) {

@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "autotools-scripts": "^1.0.0",
-    "metadata-tools": "^1.0.0",
+    "ui-autotools-registry": "^1.0.0",
     "react-dom": "^16.4.1",
     "react": "^16.4.1"
   }

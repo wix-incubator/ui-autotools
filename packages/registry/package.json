@@ -1,5 +1,5 @@
 {
-  "name": "metadata-tools",
+  "name": "ui-autotools-registry",
   "version": "1.0.0",
   "main": "cjs/index.js",
   "module": "esm/index.js",

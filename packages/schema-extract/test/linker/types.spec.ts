@@ -54,7 +54,7 @@ describe('schema-linker - generic types', () => {
         expect(res).to.eql(expected);
     });
 
-    it('should return the correct type if there is no need for linking', async () => {
+    it('should return the reference type when refering to a different type', async () => {
         const fileName = 'index.ts';
         const res = linkTest({[fileName]: `
         export type MyType = {

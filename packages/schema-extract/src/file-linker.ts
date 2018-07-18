@@ -31,8 +31,11 @@ function link(entity: Schema, schema: ModuleSchema): Schema {
     if (isRef(entity)) {
         const entityType = entity.$ref.replace('#', '');
         const refEntity = schema.definitions![entityType];
-        if (!refEntity || !refEntity.genericParams || !entity.genericArguments) {
+        if (!refEntity) {
             return entity;
+        }
+        if (!refEntity.genericParams || !entity.genericArguments) {
+            return refEntity;
         }
         if (isSchemaOfType('object', refEntity)) {
             const pMap = new Map();

@@ -53,4 +53,28 @@ describe('schema-linker - generic types', () => {
         };
         expect(res).to.eql(expected);
     });
+
+    it('should return the correct type if there is no need for linking', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
+        export type MyType = {
+            something:string;
+            someone:number;
+        };
+        export type B = MyType;
+        `}, 'B', fileName);
+
+        const expected: Schema<'object'> = {
+            type: 'object',
+            properties: {
+                something: {
+                    type: 'string'
+                },
+                someone: {
+                    type: 'number'
+                }
+            }
+        };
+        expect(res).to.eql(expected);
+    });
 });

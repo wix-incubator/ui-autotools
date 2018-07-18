@@ -12,7 +12,6 @@ export class SchemaLinker {
     }
 
     public flatten(file: string, name: string, moduleId: string): Schema {
-        debugger;
         const schema = transform(this.checker, this.program.getSourceFile(file)!, '/src/' + moduleId, '/someProject');
         if (!schema.definitions) {
             return {};

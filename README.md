@@ -91,12 +91,10 @@ autotools sanity --files ./components/**/*.meta.ts
 
 ### A11Y
 
-Asserts that components are compatable with axe-core. Allows for varying levels of error impact.
+Asserts that components are compatable with axe-core. Allows for varying levels of error impact (one of `minor`, `moderate`, `serious`, or `critical`).
 
 #### Usage
 
-TODO: TALK TO DANIEL
-
 ```shell
-autotools a11y --files ./components/**/*.meta.ts --impact 4
+autotools a11y --files ./components/**/*.meta.ts --impact minor
 ```

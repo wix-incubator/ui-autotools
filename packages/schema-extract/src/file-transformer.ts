@@ -27,8 +27,6 @@ export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, mo
     };
     const exports = checker.getExportsOfModule(moduleSymbol);
 
-    (window as any).ts = ts;
-
     // tslint:disable-next-line:no-unused-expression
     ts.isAccessor;
 

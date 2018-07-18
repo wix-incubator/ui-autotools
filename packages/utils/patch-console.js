@@ -4,7 +4,7 @@
 // browser and Node is inefficient and can cause Puppeteer to freeze. The
 // solution is to wrap console.log with a function that does all formatting
 // in the browser. This allows us to pass only primitive values to Node.
-module.exports.patchConsole = function() {
+exports.patchConsole = function() {
   const colors = {
     'bold': [1, 22],
     'italic': [3, 23],
@@ -321,14 +321,12 @@ module.exports.patchConsole = function() {
     return Object(x) !== x;
   }
   
-  (function() {
-    const consoleLog = console.log;
-    console.log = function(...args) {
-      args = args.length ?
-        args.map(arg => isPrimitive(arg) ? arg : inspect(arg, {colors: true})) :
-        [''];
-  
-      consoleLog.apply(console, args);
-    };
-  })();
+  const consoleLog = console.log;
+  console.log = function(...args) {
+    args = args.length ?
+      args.map(arg => isPrimitive(arg) ? arg : inspect(arg, {colors: true})) :
+      [''];
+
+    consoleLog.apply(console, args);
+  };
 }

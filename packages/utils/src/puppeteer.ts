@@ -27,8 +27,7 @@ function sleep(ms: number) {
 
 async function loadTestPage(page: puppeteer.Page, testPageUrl: string, timeout: number) {
   // This can keep the process from terminating for upto `timeout` if an error
-  // occurs on the page before page load event. But the problem should not occur
-  // in headless mode.
+  // occurs on the page before page load event.
   // Bug: https://github.com/GoogleChrome/puppeteer/issues/2721
   await page.evaluateOnNewDocument(patchConsole);
   await page.goto(testPageUrl, {timeout});
@@ -71,7 +70,7 @@ function failOnPageError(page: any) {
   });
 }
 
-export async function runTestsInPuppeteer({testPageUrl, noSandbox}: any) {
+export async function runTestsInPuppeteer({testPageUrl, noSandbox}: {testPageUrl: string, noSandbox?: boolean}) {
   const loadTimeout = 20000;
   const testTimeout = 5000;
   const viewportWidth = 800;

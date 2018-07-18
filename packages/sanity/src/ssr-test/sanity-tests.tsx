@@ -18,38 +18,21 @@ export const sanityTests = (): void => {
 
     Registry.metadata.components.forEach((metadata, Comp) => {
       describe(Comp.name, () => {
-        metadata.simulations.forEach(((simulation) => {
-          beforeEach(() => {
-            consoleSpy = sinon.spy(console, 'log');
-            errorSpy = sinon.spy(console, 'error');
-          });
+        beforeEach(() => {
+          consoleSpy = sinon.spy(console, 'log');
+          errorSpy = sinon.spy(console, 'error');
+        });
 
-          afterEach(() => {
-            consoleSpy.restore();
-            errorSpy.restore();
-          });
+        afterEach(() => {
+          consoleSpy.restore();
+          errorSpy.restore();
+        });
 
-          it(`should render ${Comp.name} in strict mode with props ${JSON.stringify(simulation)} without errors`, () => {
-            // Hydrate the component
-            ReactDOM.render(<React.StrictMode><Comp {...simulation.props} /></React.StrictMode>, root);
-            // Unmount the component
-            ReactDOM.unmountComponentAtNode(root);
-            // If args is not a primitive, it's not really of interest to us, since any React errors will be
-            // strings. Therefore it's fine to print [object Object] in other cases
-            const consoleArgs = consoleSpy.getCall(0) ? consoleSpy.getCall(0).args[0] : '';
-            const errorArgs = errorSpy.getCall(0) ? errorSpy.getCall(0).args[0] : '';
-              // tslint:disable-next-line:no-unused-expression
-            expect(consoleSpy, `console was called with:\n ${consoleArgs}`).to.not.be.called;
-              // tslint:disable-next-line:no-unused-expression
-            expect(errorSpy, `console error was called with:\n ${errorArgs}`).to.not.be.called;
-          });
-
-          it(`should hydrate ${Comp.name} with props ${JSON.stringify(simulation)} without errors`, () => {
+        metadata.simulations.forEach((simulation) => {
+          it(`should hydrate ${Comp.name} in strict mode, with props ${JSON.stringify(simulation)} without errors`, () => {
             // Set root's HTML to the SSR component
             root!.innerHTML = componentStrings[index];
-            // Hydrate the component
-            hydrate(<Comp {...simulation.props} />, root);
-            // Unmount the component
+            hydrate(<React.StrictMode><Comp {...simulation.props} /></React.StrictMode>, root);
             ReactDOM.unmountComponentAtNode(root);
             index++;
             // If args is not a primitive, it's not really of interest to us, since any React errors will be
@@ -61,7 +44,7 @@ export const sanityTests = (): void => {
               // tslint:disable-next-line:no-unused-expression
             expect(errorSpy, `console error was called with:\n ${errorArgs}`).to.not.be.called;
           });
-        }));
+        });
       });
     });
   });

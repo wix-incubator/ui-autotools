@@ -99,6 +99,7 @@ describe('schema-extract - union', () => {
                                     type: 'number',
                                 },
                             },
+                            required:['value']
                         },
                     ],
                 },

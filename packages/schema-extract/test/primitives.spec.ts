@@ -85,4 +85,5 @@ describe('schema-extract - primitives', () => {
         };
         expect(res).to.eql(expected);
     });
+    
 });

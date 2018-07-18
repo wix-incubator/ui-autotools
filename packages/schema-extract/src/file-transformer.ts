@@ -83,7 +83,7 @@ export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, mo
     return res;
 }
 
-export type TsNodeDescriber<N extends ts.Node, S extends Schema = Schema> = (n: N, checker: ts.TypeChecker, env: IEnv, symb?: ts.Symbol) => {schema:S};
+export type TsNodeDescriber<N extends ts.Node, S extends Schema = Schema> = (n: N, checker: ts.TypeChecker, env: IEnv, symb?: ts.Symbol) => {schema:S, required?:boolean};
 
 function getNode(symb: ts.Symbol): ts.Node | undefined {
     if (!symb) {
@@ -146,9 +146,15 @@ const assignmentDescriber: TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWi
 
 const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.PropertySignature | ts.ParameterDeclaration | ts.PropertyDeclaration> = (decl, checker, env) => {
     let res: Schema | undefined;
+    let isRequired = true;
     if (decl.type) {
+        
         res = describeTypeNode(decl.type!, checker, env).schema;
+        if(decl.initializer){
+            isRequired = false;
+        }
     } else  if (decl.initializer) {
+        isRequired = false;
 
         if (ts.isIdentifier(decl.initializer)) {
             res =  describeIdentifier(decl.initializer, checker, env).schema;
@@ -166,8 +172,14 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
             };
         }
     }
+    if(ts.isPropertyDeclaration(decl) ||  ts.isPropertySignature(decl) ||  ts.isParameter(decl)){
+        if(decl.questionToken){
+            isRequired = false;
+        }
+    }
+    
     if (!res) {
-
+        isRequired = false;
         res =  serializeType(checker.getTypeAtLocation(decl), decl, checker, env).schema;
     }
     const jsDocs = extraCommentsHack(decl);
@@ -182,7 +194,8 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
 
     }
     return {
-        schema:res!
+        schema:res!,
+        required:isRequired
     };
 };
 
@@ -238,10 +251,12 @@ const describeFunction: TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunctio
     const returns = getReturnSchema(decl, checker, env);
     const funcArguments: Schema[] = [];
     let restSchema: Schema<'array'> | undefined;
+    const required:string[] = [];
     decl.parameters.forEach((p) => {
         // tslint:disable-next-line:no-shadowed-variable
         const res = describeVariableDeclaration(p, checker, env);
         res.schema.name = p.name.getText();
+        
         const tags = ts.getJSDocParameterTags(p);
         const tag = (tags && tags.length) ? (tags.map((t) => t.comment)).join('') : '';
         if (tag) {
@@ -251,6 +266,9 @@ const describeFunction: TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunctio
             restSchema = res.schema as Schema<'array'>;
         } else {
             funcArguments.push(res.schema);
+            if(res.required){
+                required.push(res.schema.name)
+            }
         }
     });
     const res: FunctionSchema = {
@@ -272,6 +290,9 @@ const describeFunction: TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunctio
     }
     if (restSchema) {
         res.restArgument = restSchema;
+    }
+    if(required.length){
+        res.requiredArguments = required;
     }
     return {
         schema:res
@@ -492,7 +513,13 @@ const describeTypeLiteral: TsNodeDescriber<ts.TypeLiteralNode | ts.InterfaceDecl
     decl.members.forEach((member) => {
         if (ts.isPropertySignature(member)) {
             res.properties = res.properties || {};
-            res.properties[member.name.getText()] = describeVariableDeclaration(member, checker, env).schema;
+            const desc = describeVariableDeclaration(member, checker, env);
+            const memberName = member.name.getText();
+            res.properties[memberName] = desc.schema;
+            if(desc.required){
+                res.required = res.required || [];
+                res.required.push(memberName)
+            }
         } else if (ts.isIndexSignatureDeclaration(member)) {
             res.additionalProperties = describeTypeNode(member.type!, checker, env).schema;
         }
@@ -694,9 +721,12 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
 
     if (properties.length) {
         res.properties = {};
+        res.required = [];
         properties.forEach((prop) => {
             const fieldType = checker.getTypeOfSymbolAtLocation(prop, rootNode);
+            
             res.properties![prop.getName()] = serializeType(fieldType, rootNode, checker, env).schema;
+            res.required!.push(prop.getName());
         });
     }
 

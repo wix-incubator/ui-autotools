@@ -29,6 +29,48 @@ describe('schema-linker - intersections', () => {
         expect(res).to.eql(expected);
     });
 
+    it('should flatten intersection types inside union', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
+        export type A = {
+            something:number;
+        };
+        export type B = {
+            somethingElse:string;
+        };
+        export type C = {
+            somethingNew:number;
+        };
+        export type D = A  |  ( B & C );
+        `}, 'D', fileName);
+
+        const expected: Schema<'object'> = {
+            type: 'object',
+            $oneOf: [
+                {
+                    type: 'object',
+                    properties: {
+                        something: {
+                            type: 'number'
+                        }
+                    }
+                },
+                {
+                    type: 'object',
+                    properties: {
+                        somethingElse: {
+                            type: 'string'
+                        },
+                        somethingNew: {
+                            type: 'number'
+                        }
+                    }
+                }
+            ]
+        };
+        expect(res).to.eql(expected);
+    });
+
     xit('should flatten intersection types with unions', async () => {
         const fileName = 'index.ts';
         const res = linkTest({[fileName]: `

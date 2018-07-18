@@ -12,6 +12,7 @@ export class SchemaLinker {
     }
 
     public flatten(file: string, name: string, moduleId: string): Schema {
+        debugger;
         const schema = transform(this.checker, this.program.getSourceFile(file)!, '/src/' + moduleId, '/someProject');
         if (!schema.definitions) {
             return {};
@@ -50,6 +51,13 @@ function link(entity: Schema, schema: ModuleSchema): Schema {
     if (entity.$allOf) {
         const res = handleIntersection(entity.$allOf, schema);
         res.type = 'object';
+        return res;
+    }
+    if (entity.$oneOf) {
+        const res: Schema = {type: 'object', $oneOf: []};
+        for (const type of entity.$oneOf) {
+            res.$oneOf!.push(link(type, schema));
+        }
         return res;
     }
     return entity;

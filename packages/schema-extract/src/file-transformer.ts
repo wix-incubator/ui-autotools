@@ -27,6 +27,8 @@ export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, mo
     };
     const exports = checker.getExportsOfModule(moduleSymbol);
 
+    (window as any).ts = ts;
+
     // tslint:disable-next-line:no-unused-expression
     ts.isAccessor;
 
@@ -193,6 +195,8 @@ const describeTypeNode: TsNodeDescriber<ts.TypeNode> = (decl, checker, env) => {
         return describeIntersectionType(decl, checker, env);
     } else if (ts.isFunctionTypeNode(decl)) {
         return describeFunction(decl, checker, env);
+    } else if (ts.isParenthesizedTypeNode(decl)) {
+        return describeTypeNode(decl.type, checker, env);
     }
 
     const t = checker.getTypeAtLocation(decl);

@@ -120,7 +120,7 @@ const exportSpecifierDescriber: TsNodeDescriber<ts.ExportSpecifier> = (decl, che
     };
 };
 
-const assignmentDescriber: TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWithTypeArguments> = (decl, checker, env, symb) => {
+const assignmentDescriber: TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWithTypeArguments > = (decl, checker, env, symb) => {
     const expression: ts.Node = decl.expression;
     if (ts.isIdentifier(expression)) {
 
@@ -144,7 +144,7 @@ const assignmentDescriber: TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWi
     // return resolveNode(decl.expression, checker, env);
 };
 
-const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.PropertySignature | ts.ParameterDeclaration | ts.PropertyDeclaration> = (decl, checker, env) => {
+const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.PropertySignature | ts.ParameterDeclaration | ts.PropertyDeclaration > = (decl, checker, env) => {
     let res: Schema | undefined;
     let isRequired = true;
     if (decl.type) {
@@ -212,10 +212,23 @@ const describeTypeNode: TsNodeDescriber<ts.TypeNode> = (decl, checker, env) => {
         return describeIntersectionType(decl, checker, env);
     } else if (ts.isFunctionTypeNode(decl)) {
         return describeFunction(decl, checker, env);
+    } else if (ts.isMappedTypeNode(decl)){
+        return describeMappedType(decl, checker, env)
     }
 
     const t = checker.getTypeAtLocation(decl);
     return serializeType(t, decl, checker, env);
+};
+
+const describeMappedType: TsNodeDescriber<ts.MappedTypeNode> = (decl, checker, env) => {
+    const res:Schema<'object'> = {
+        type:"object",
+        additionalProperties:describeTypeNode(decl.type!, checker, env).schema,
+        propertyNames:describeTypeNode(decl.typeParameter.constraint!, checker, env).schema,
+    }
+    return {
+        schema:res
+    }
 };
 
 const describeTypeAlias: TsNodeDescriber<ts.TypeAliasDeclaration> = (decl, checker, env) => {
@@ -587,13 +600,17 @@ const describeUnionType: TsNodeDescriber<ts.UnionTypeNode> = (decl, checker, env
         groupedSchemas.push(specificNumber);
     }
 
-    const res: Schema = {
-        $oneOf: groupedSchemas,
-    };
-
-    return{
-        schema:res
-    };
+    if(groupedSchemas.length>1){
+        return{
+            schema: {
+                $oneOf: groupedSchemas,
+            }
+        };
+    }
+    return {
+        schema:groupedSchemas[0] || {}
+    }
+   
 };
 
 function isUnionType(t: ts.Type): t is ts.UnionType {

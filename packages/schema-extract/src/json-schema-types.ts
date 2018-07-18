@@ -11,6 +11,7 @@ export interface IObjectFields {
     additionalProperties?: Schema;
     properties?: {[name: string]: Schema};
     required?:string[];
+    propertyNames?:Schema<'string'>
 }
 
 // tslint:disable-next-line:no-empty-interface

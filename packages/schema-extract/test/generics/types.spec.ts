@@ -181,3 +181,6 @@ describe('schema-extract - generic types', () => {
         expect(res).to.eql(expected);
     });
 });
+
+
+

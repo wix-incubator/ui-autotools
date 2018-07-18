@@ -176,4 +176,53 @@ describe('schema-extract - objects', () => {
         expect(res).to.eql(expected);
     });
 
+
+    it('should objects with specific index signature', async () => {
+        const moduleId = 'index-signatures';
+        const res = transformTest(`
+        import { AType } from './test-assets';
+
+        export let declared_object_with_specific_index:{[key in 'a' | 'b']:string};
+
+        export type keys = 'a' | 'b' | 'c'
+        export let declared_object_with_specific_index2:{[key in keys]:string};
+
+        `, moduleId);
+
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            definitions:{
+                keys:{
+                    type:'string',
+                    enum:['a','b','c']
+                },
+            },
+            properties: {
+                declared_object_with_specific_index: {
+                    type: 'object',
+                    additionalProperties: {
+                        type: 'string',
+                    },
+                    propertyNames:{
+                        type:'string',
+                        enum:['a','b']
+                    }
+                },
+                
+                declared_object_with_specific_index2: {
+                    type: 'object',
+                    additionalProperties: {
+                        type: 'string',
+                    },
+                    propertyNames:{
+                        $ref:'#keys'
+                    }
+                }
+            },
+        };
+        expect(res).to.eql(expected);
+    });
 });
+

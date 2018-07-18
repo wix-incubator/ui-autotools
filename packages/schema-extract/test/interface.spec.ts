@@ -107,4 +107,6 @@ describe('schema-extract - interfaces', () => {
         };
         expect(res).to.eql(expected);
     });
+
+    
 });

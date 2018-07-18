@@ -100,9 +100,6 @@ export async function runTestsInPuppeteer({testPageUrl, noSandbox}: {testPageUrl
     ]);
 
     return numFailedTests;
-  } catch (error) {
-    consoleError(error.toString());
-    process.exitCode = 1;
   } finally {
     try {
       await (browser as any)!.close();

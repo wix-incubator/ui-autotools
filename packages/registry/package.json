@@ -26,5 +26,8 @@
   },
   "repository": "git@github.com:wix-incubator/ui-autotools.git",
   "author": "Wix.com",
-  "license": "BSD-3-Clause"
+  "license": "BSD-3-Clause",
+  "publishConfig": {
+    "access": "public"
+  }
 }

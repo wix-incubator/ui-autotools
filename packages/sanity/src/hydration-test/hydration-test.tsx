@@ -8,8 +8,8 @@ import {hydrate} from 'react-dom';
 
 chai.use(sinonChai);
 
-export const sanityTests = (): void => {
-  describe('Sanity tests', () => {
+export const hydrationTest = (): void => {
+  describe('Hydration test', () => {
     let consoleSpy: sinon.SinonSpy;
     let errorSpy: sinon.SinonSpy;
     const root = document.getElementById('root') as HTMLElement;
@@ -31,7 +31,7 @@ export const sanityTests = (): void => {
         metadata.simulations.forEach((simulation) => {
           it(`should hydrate ${Comp.name} in strict mode, with props ${JSON.stringify(simulation)} without errors`, () => {
             // Set root's HTML to the SSR component
-            root!.innerHTML = componentStrings[index];
+            root.innerHTML = componentStrings[index];
             hydrate(<React.StrictMode><Comp {...simulation.props} /></React.StrictMode>, root);
             ReactDOM.unmountComponentAtNode(root);
             index++;

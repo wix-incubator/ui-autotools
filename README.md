@@ -20,17 +20,16 @@ autotools sanity --files ./components/**/*.meta.ts
 
 Common CLI parameters:
 
-- `files` - meta files matching glob (default: `./**/*.meta.tsx`)
+- `files` - meta files matching glob (default: `src/**/*.meta.tsx`)
 - `debug` - true/false (default: false)
 
 ## Available Tools
 
-- `sanity` - component sanity test suite:
-    - renders component in <React.StrictMode /> (add link here)
-    - Checks server side rendering
-    - client side hydration on SSR result
-    - fails for any console message
-    - fails for every event listener left after component unmounts
+- `sanity` - component sanity test suite, asserts that:
+    - the component can render to string
+    - hydration in the client works as intended
+    - the component has no errors in <React.StrictMode />
+    - nothing was printed to the console
 - `a11y` - accessibility test:
     - checks component render result for accessibility using axe-core
 
@@ -76,9 +75,9 @@ myComponentMetadata.addSimulation('many items',{
 
 Runs over every simulation and asserts the following:
 
-- the component can render to string
-- hydration in the client works as intended
-- the component has no errors in <React.StrictMode />
+- the component can render to string (i.e. renderToString doesn't throw)
+- hydration in the client works as intended (no errors in the console)
+- the component has no errors while rendering with <React.StrictMode />
 - nothing was printed to the console
 
 Sanity uses puppeteer to test client-side hydration. Results are printed in the terminal.

@@ -35,5 +35,8 @@
     "mocha": ">=5",
     "react": ">=16",
     "react-dom": ">=16"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

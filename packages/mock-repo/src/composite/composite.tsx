@@ -1,6 +1,11 @@
 import * as React from 'react';
 import {ChildComp} from './child';
 
-export const ParentComp: React.SFC = () => {
-  return <div><ChildComp text="This is the child" /></div>;
-};
+interface IProps {
+  text?: React.ReactNode;
+}
+
+export const Composite: React.SFC<IProps> = (props) =>
+  <div><ChildComp text={props.text} /></div>;
+
+Composite.displayName = 'Composite';

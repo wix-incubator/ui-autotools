@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {ParentComp} from './composite/composite';
+import {Composite} from './composite/composite';
 import {Modal} from './modal/modal';
 import {PostRenderHook} from './post-render-hook/post-render-hook';
 
@@ -16,7 +16,7 @@ const App: React.SFC = () => {
       <div>
         Other Div
       </div>
-      <ParentComp />
+      <Composite />
       <PostRenderHook />
     </div>
   );

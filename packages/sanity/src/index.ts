@@ -1,2 +1,2 @@
 export * from './ssr-test/ssr-test';
-export * from './ssr-renderer/server';
+export * from './hydration-test/server';

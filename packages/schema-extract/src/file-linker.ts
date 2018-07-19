@@ -11,12 +11,12 @@ export class SchemaLinker {
         this.program = program;
     }
 
-    public flatten(file: string, name: string, moduleId: string): Schema {
-        const schema = transform(this.checker, this.program.getSourceFile(file)!, '/src/' + moduleId, '/someProject');
+    public flatten(file: string, entityName: string, fileName: string): Schema {
+        const schema = transform(this.checker, this.program.getSourceFile(file)!, '/src/' + fileName, '/someProject');
         if (!schema.definitions) {
             return {};
         }
-        const entity = schema.definitions[name];
+        const entity = schema.definitions[entityName];
         if (!entity) {
             return {};
         }

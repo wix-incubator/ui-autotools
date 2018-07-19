@@ -1,6 +1,6 @@
 import React from 'react';
 import {renderToString} from 'react-dom/server';
-import Registry from 'metadata-tools';
+import Registry from 'ui-autotools-registry';
 
 export function renderMetadata() {
   const renderedComps: string[] = [];

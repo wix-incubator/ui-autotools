@@ -4,6 +4,7 @@
   "private": true,
   "author": "Wix.com",
   "license": "BSD-3-Clause",
+  "private": true,
   "scripts": {
     "start": "webpack-dev-server --progress",
     "clean": "rimraf ./cjs ./esm",

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "cjs/index.js",
   "module": "esm/index.js",
+  "private": true,
   "types": "esm/index.d.ts",
   "scripts": {
     "clean": "rimraf ./cjs ./esm",

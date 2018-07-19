@@ -16,7 +16,8 @@
     "test": "mocha -r typescript-support \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
   },
   "files": [
-    "cjs"
+    "cjs",
+    "bin"
   ],
   "engines": {
     "node": ">=8"

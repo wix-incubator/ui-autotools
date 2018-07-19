@@ -2,7 +2,7 @@
 
 import path from 'path';
 import puppeteer from 'puppeteer';
-import {WebpackConfigurator, serve, IServer, waitForPageError, logConsoleMessages} from 'ui-autotools-utils';
+import {WebpackConfigurator, serve, IServer, waitForPageError, logConsoleMessages} from '@ui-autotools/utils';
 
 const packagePath = path.resolve(__dirname, '..');
 const projectPath = process.cwd();

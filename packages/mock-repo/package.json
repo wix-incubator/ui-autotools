@@ -1,5 +1,5 @@
 {
-  "name": "ui-autotools-mock-repo",
+  "name": "@ui-autotools/mock-repo",
   "version": "1.0.0",
   "private": true,
   "author": "Wix.com",
@@ -19,8 +19,8 @@
     "test": "mocha -r typescript-support \"./test/node/**/*.node-spec.ts?(x)\" --watch-extensions ts,tsx"
   },
   "dependencies": {
-    "autotools-scripts": "^1.0.0",
-    "metadata-tools": "^1.0.0",
+    "@ui-autotools/scripts": "^1.0.0",
+    "@ui-autotools/registry": "^1.0.0",
     "react-dom": "^16.4.1",
     "react": "^16.4.1"
   }

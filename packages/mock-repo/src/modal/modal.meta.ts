@@ -1,4 +1,4 @@
-import Registry from 'metadata-tools';
+import Registry from '@ui-autotools/registry';
 import {Modal} from './modal';
 
 Registry.getComponentMetadata(Modal)

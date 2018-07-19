@@ -1,3 +1,3 @@
-import {ssrTest} from 'ui-autotools-sanity';
+import {ssrTest} from '@ui-autotools/sanity';
 
 ssrTest();

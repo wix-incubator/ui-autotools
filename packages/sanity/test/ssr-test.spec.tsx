@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import ssrTest from './ssr-test-fixtures/mocha-wrapper';
-import Registry from 'ui-autotools-registry';
+import Registry from '@ui-autotools/registry';
 
 interface IProps {
   text?: string;

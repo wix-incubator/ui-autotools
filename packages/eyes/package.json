@@ -1,5 +1,5 @@
 {
-  "name": "ui-autotools-eyes",
+  "name": "@ui-autotools/eyes",
   "version": "1.0.0",
   "main": "cjs/index.js",
   "module": "esm/index.js",
@@ -29,9 +29,9 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "ui-autotools-registry": "^1.0.0",
+    "@ui-autotools/registry": "^1.0.0",
     "puppeteer": "^1.5.0",
-    "ui-autotools-utils": "^1.0.0"
+    "@ui-autotools/utils": "^1.0.0"
   },
   "peerDependencies": {
     "react": ">=16",

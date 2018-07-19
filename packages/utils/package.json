@@ -1,5 +1,5 @@
 {
-  "name": "ui-autotools-utils",
+  "name": "@ui-autotools/utils",
   "version": "1.0.0",
   "main": "cjs/index.js",
   "module": "esm/index.js",

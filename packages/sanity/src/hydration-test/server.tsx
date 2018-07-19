@@ -1,6 +1,6 @@
 import path from 'path';
 import glob from 'glob';
-import {WebpackConfigurator, runTestsInPuppeteer, serve, IServer} from 'ui-autotools-utils';
+import {WebpackConfigurator, runTestsInPuppeteer, serve, IServer} from '@ui-autotools/utils';
 import {renderMetadata} from './render-metadata';
 
 const packageDir = path.resolve(__dirname, '..');

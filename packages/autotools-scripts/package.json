@@ -1,5 +1,5 @@
 {
-  "name": "ui-autotools-scripts",
+  "name": "@ui-autotools/scripts",
   "version": "1.0.0",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
@@ -25,8 +25,8 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "ui-autotools-sanity": "^1.0.0",
-    "ui-autotools-registry": "^1.0.0",
+    "@ui-autotools/sanity": "^1.0.0",
+    "@ui-autotools/registry": "^1.0.0",
     "commander": "^2.15.1",
     "glob": "^7.1.2",
     "typescript-support": "^0.4.1"

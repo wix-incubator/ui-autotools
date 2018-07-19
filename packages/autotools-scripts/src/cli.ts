@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import {Command} from 'commander';
 import ssrTest from './ssr-test/mocha-wrapper';
-import {hydrationTest} from 'ui-autotools-sanity';
-import {eyesTest} from 'ui-autotools-eyes';
+import {hydrationTest} from '@ui-autotools/sanity';
+import {eyesTest} from '@ui-autotools/eyes';
 import importMeta from './import-metadata/import-meta';
-import {a11yTest, impactLevels} from 'ui-autotools-a11y';
+import {a11yTest, impactLevels} from '@ui-autotools/a11y';
 import glob from 'glob';
 import path from 'path';
 

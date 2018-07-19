@@ -11,8 +11,9 @@ export class SchemaLinker {
         this.program = program;
     }
 
-    public flatten(file: string, entityName: string, fileName: string): Schema {
-        const schema = transform(this.checker, this.program.getSourceFile(file)!, '/src/' + fileName, '/someProject');
+    public flatten(file: string, entityName: string, fileName: string, projectPath: string): Schema {
+        const schema = transform(this.checker, this.program.getSourceFile(file)!, '/src/' + fileName, projectPath);
+        debugger;
         if (!schema.definitions) {
             return {};
         }
@@ -20,6 +21,7 @@ export class SchemaLinker {
         if (!entity) {
             return {};
         }
+        const bla = transform(this.checker, this.program.getSourceFile(projectPath + entity.$ref!.split('#')[0])!, entity.$ref!, projectPath);
         return link(entity, schema);
     }
 }

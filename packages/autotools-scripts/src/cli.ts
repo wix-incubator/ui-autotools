@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import {Command} from 'commander';
 import ssrTest from './ssr-test/mocha-wrapper';
+import {sanityTest} from 'sanity';
 import {eyesTest} from 'ui-autotools-eyes';
 import importMeta from './import-metadata/import-meta';
 import {a11yTest, impactLevels} from 'ui-autotools-a11y';
@@ -16,11 +17,12 @@ program
 .description('run sanity checks on all components with a metadata description')
 .option('-f, --files [pattern]', 'Grep file')
 .action((options) => {
-  const searchString = arguments.length === 1 ? '' : options.files;
+  const entry = path.join(projectPath, options.files ? options.files : defaultMetaGlob);
   // Load metadata for each component that should be sanity tested
-  importMeta(searchString);
+  importMeta(entry);
   // Run the sanity tests for each loaded metadata
   ssrTest();
+  sanityTest();
 });
 
 program

@@ -20,6 +20,11 @@ module.exports = {
             }
           }
         }
+      },
+      {
+        test: /\.css$/,
+        exclude: /\.st\.css$/,
+        use: ['style-loader', 'css-loader']
       }
     ]
   },

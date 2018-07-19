@@ -85,7 +85,7 @@ Sanity uses puppeteer to test client-side hydration. Results are printed in the 
 #### Usage
 
 ```shell
-autotools sanity --files ./components/**/*.meta.ts 
+autotools sanity --files ./components/**/*.meta.ts
 ```
 
 ### A11Y

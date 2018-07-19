@@ -2,11 +2,7 @@
 
 [![Build Status](https://travis-ci.org/wix-incubator/ui-autotools.svg?branch=master)](https://travis-ci.org/wix-incubator/ui-autotools)
 
-A set of tools designed to automate and improve the process of developing components.
-
-These tools rely on `*.meta.tsx` files in the project.
-
-The tools use a similiar command-line pattern:
+UI-autotools comprises a set of tools designed to automate and improve the process of developing components. These tools consume `*.meta.tsx` files in the project, which are described below. All tools share a similar command pattern:
 
 ```shell
 autotools [tool name] --files [meta files matching glob]
@@ -26,7 +22,7 @@ Common CLI parameters:
 ## Available Tools
 
 - `sanity` - component sanity test suite, asserts that:
-    - the component can render to string
+    - the component can render to string (for SSR compatibility)
     - hydration in the client works as intended
     - the component has no errors in <React.StrictMode />
     - nothing was printed to the console
@@ -35,8 +31,7 @@ Common CLI parameters:
 
 ## WIP Tools
 
-- `eyes` - tools for generating and testing component images
-    - compares already saved component image snapshots to current view
+- `eyes` - tool for generating and testing component snapshots
 - `website`
     - auto generated static documentation and playgrounds site.
     - dev mode - fast reloading of changed resources
@@ -90,7 +85,7 @@ autotools sanity --files ./components/**/*.meta.ts
 
 ### A11Y
 
-Asserts that components are compatable with axe-core. Allows for varying levels of error impact (one of `minor`, `moderate`, `serious`, or `critical`).
+Asserts that components are compatable with axe-core. Allows for varying levels of error impact (one of `minor`, `moderate`, `serious`, or `critical`). Specifying a level of impact specifies *that* level and *above* (so specifying `moderate` would target `moderate`, `serious`, and `critical`).
 
 #### Usage
 

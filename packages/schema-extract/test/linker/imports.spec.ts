@@ -23,7 +23,30 @@ describe('schema-linker - imports', () => {
                 },
             }
         };
-        debugger;
+        expect(res).to.eql(expected);
+    });
+
+    it('should link imported type from an outside package', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({
+            [fileName]: `
+                export class B extends React.Component<{}, {}> {
+                    render();
+                }`,
+            node_modules: `{
+                gaga: {
+                    'package.json': '{name: gaga, main: library.d.ts'
+                    'library.d.ts': 'export type A = {something: string}'
+                }
+            }`
+        }, 'B', fileName);
+
+        const expected = {
+            $ref: ClassSchemaId,
+            extends: {
+                $ref: 'react#Component',
+            },
+        };
         expect(res).to.eql(expected);
     });
 

@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 import { transform } from '../src/file-transformer';
-import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema } from './json-schema-types';
+import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId } from './json-schema-types';
 
 export class SchemaLinker {
     private checker: ts.TypeChecker;
@@ -63,9 +63,12 @@ function link(entity: Schema, schema: ModuleSchema): Schema {
 }
 
 function handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
-    const res: Schema & IObjectFields = {properties: {}};
+    const res: Schema & IObjectFields = {};
     for (const option of options) {
         if (isRef(option)) {
+            if (!res.properties) {
+                res.properties = {};
+            }
             let entity: Schema & IObjectFields;
             if (paramsMap) {
                 entity = paramsMap!.get(option.$ref)!;
@@ -85,21 +88,53 @@ function handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?:
                 res.type = entity.type;
                 const properties = entity.properties;
                 for (const prop in properties) {
-                    if (!res.properties!.hasOwnProperty(prop)) {
-                        res.properties![prop] = properties[prop];
+                    if (!res.properties.hasOwnProperty(prop)) {
+                        res.properties[prop] = properties[prop];
                     } else {
-                        res.properties![prop] = handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
+                        res.properties[prop] = handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
                     }
                 }
             }
         } else if (isSchemaOfType('object', option)) {
+            if (!res.properties) {
+                res.properties = {};
+            }
             if (option.properties) {
                 res.type = option.type;
                 const properties = option.properties;
                 for (const prop in properties) {
-                    if (!res.properties!.hasOwnProperty(prop)) {
-                        res.properties![prop] = properties[prop];
+                    if (!res.properties.hasOwnProperty(prop)) {
+                        res.properties[prop] = properties[prop];
                     }
+                }
+            }
+        } else {
+            if (!res.type) {
+                res.type = option.type;
+                if (option.enum) {
+                    // maybe copy instead of assign?
+                    res.enum = option.enum;
+                }
+            } else {
+                if (option.type === res.type) {
+                    if (option.enum) {
+                        // can enum have an arrays. something like type x = ['gaga']?
+                        if (!res.enum) {
+                            res.enum = option.enum;
+                        } else {
+                            if (res.enum.length === option.enum.length) {
+                                for (let i = 0; i < option.enum.length; i++) {
+                                    if (option.enum[i] !== res.enum![i]) {
+                                        return {$ref: NeverId};
+                                    }
+                                }
+                            } else {
+                                return {$ref: NeverId};
+                            }
+                        }
+                    }
+                } else {
+                    return {$ref: NeverId};
                 }
             }
         }

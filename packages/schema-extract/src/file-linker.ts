@@ -109,7 +109,6 @@ function handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?:
                 }
             }
         } else {
-            debugger;
             const prop = option.$oneOf ? option.$oneOf[0] : option;
             if (Object.keys(res).length === 0) {
                 if (prop.type) {

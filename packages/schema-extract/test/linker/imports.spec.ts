@@ -23,6 +23,7 @@ describe('schema-linker - imports', () => {
                 },
             }
         };
+        debugger;
         expect(res).to.eql(expected);
     });
 

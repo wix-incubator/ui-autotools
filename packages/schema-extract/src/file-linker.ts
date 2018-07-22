@@ -13,7 +13,6 @@ export class SchemaLinker {
 
     public flatten(file: string, entityName: string, fileName: string, projectPath: string): Schema {
         const schema = transform(this.checker, this.program.getSourceFile(file)!, '/src/' + fileName, projectPath);
-        debugger;
         if (!schema.definitions) {
             return {};
         }
@@ -22,6 +21,12 @@ export class SchemaLinker {
             return {};
         }
         const bla = transform(this.checker, this.program.getSourceFile(projectPath + entity.$ref!.split('#')[0])!, entity.$ref!, projectPath);
+        const def = bla.definitions!;
+        for (const d in def) {
+            if (def.hasOwnProperty(d)) {
+                schema.definitions[d] = def[d];
+            }
+        }
         return link(entity, schema);
     }
 }

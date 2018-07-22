@@ -19,7 +19,8 @@
   },
   "files": [
     "cjs",
-    "esm"
+    "esm",
+    "patch-console.js"
   ],
   "engines": {
     "node": ">=8"

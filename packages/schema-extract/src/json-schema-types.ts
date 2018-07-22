@@ -6,6 +6,7 @@ export const UndefinedSchemaId = 'common/undefined';
 export const NullSchemaId = 'common/null';
 export const PromiseId = 'common/promise';
 export const JSXElement = 'common/JSX';
+export const NeverId = 'common/never';
 
 export interface IObjectFields {
     additionalProperties?: Schema;

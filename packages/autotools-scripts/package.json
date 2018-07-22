@@ -28,6 +28,7 @@
   "dependencies": {
     "@ui-autotools/registry": "^1.0.1",
     "@ui-autotools/sanity": "^1.0.2",
+    "@ui-autotools/a11y" :"^1.0.2",
     "commander": "^2.15.1",
     "glob": "^7.1.2",
     "typescript-support": "^0.4.1"

@@ -109,27 +109,32 @@ function handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?:
                 }
             }
         } else {
-            if (!res.type) {
-                res.type = option.type;
-                if (option.enum) {
-                    // maybe copy instead of assign?
-                    res.enum = option.enum;
+            debugger;
+            const prop = option.$oneOf ? option.$oneOf[0] : option;
+            if (Object.keys(res).length === 0) {
+                if (prop.type) {
+                    res.type = prop.type;
+                    if (prop.enum) {
+                        res.enum = prop.enum;
+                    }
                 }
             } else {
-                if (option.type === res.type) {
-                    if (option.enum) {
+                if (prop.type === res.type) {
+                    if (prop.enum) {
                         // can enum have an arrays. something like type x = ['gaga']?
                         if (!res.enum) {
-                            res.enum = option.enum;
+                            res.enum = prop.enum;
                         } else {
-                            if (res.enum.length === option.enum.length) {
-                                for (let i = 0; i < option.enum.length; i++) {
-                                    if (option.enum[i] !== res.enum![i]) {
-                                        return {$ref: NeverId};
-                                    }
+                            const enums = [];
+                            for (let i = 0; i < prop.enum.length; i++) {
+                                if (prop.enum.includes(res.enum![i])) {
+                                    enums.push(prop.enum[i]);
                                 }
-                            } else {
+                            }
+                            if (enums.length === 0) {
                                 return {$ref: NeverId};
+                            } else {
+                                res.enum = enums;
                             }
                         }
                     }

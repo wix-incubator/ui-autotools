@@ -14,7 +14,7 @@ function getWebpackConfig(ssrComps: string[], metaGlob: string) {
     .addEntry('meta', path.join(packageDir, 'hydration-test', 'test-page.js'))
     .addEntry('meta', path.join(packageDir, 'hydration-test', 'index.js'))
     .addHtml({
-      template: path.join(packageDir, '../src/hydration-test', 'test-page.html'),
+      template: path.join(packageDir, '../templates/', 'test-page.html'),
       components: JSON.stringify(ssrComps)
     })
     .suppressReactDevtoolsSuggestion()

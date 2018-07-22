@@ -6,6 +6,7 @@ export const UndefinedSchemaId = 'common/undefined';
 export const NullSchemaId = 'common/null';
 export const PromiseId = 'common/promise';
 export const JSXElement = 'common/JSX';
+export const NeverId = 'common/never';
 
 export interface IObjectFields {
     additionalProperties?: Schema;
@@ -25,7 +26,7 @@ export interface IBooleanFields {
 }
 
 export interface IArrayFields {
-    items: Schema | Schema[];
+    items?: Schema | Schema[];
 }
 
 export interface IFieldsForType {
@@ -89,4 +90,12 @@ export type ClassSchema = Schema & {
 
 export function isSchemaOfType<T extends SchemaTypes>(t: T, s: object): s is Schema<T> {
     return (s as any).type === t;
+}
+
+export function isRef(schema: Schema): schema is Schema & {$ref: string} {
+    return !!schema.$ref;
+}
+
+export function isClassSchema(schema: Schema): schema is Schema & ClassSchema {
+    return !!schema.$ref && schema.$ref === ClassSchemaId;
 }

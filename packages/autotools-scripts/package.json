@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/scripts",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
   "bin": {
@@ -27,7 +27,7 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "@ui-autotools/registry": "^1.0.1",
-    "@ui-autotools/sanity": "^1.0.1",
+    "@ui-autotools/sanity": "^1.0.2",
     "commander": "^2.15.1",
     "glob": "^7.1.2",
     "typescript-support": "^0.4.1"

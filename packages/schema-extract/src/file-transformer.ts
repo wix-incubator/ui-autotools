@@ -1,7 +1,7 @@
 import * as ts from 'typescript';
 import {ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchemaId, ClassSchemaId} from './json-schema-types';
 import * as path from 'path';
-
+import {generateDataLiteral, isFailedInference} from './data-literal-transformer';
 // console.log(types)
 const posix: typeof path.posix = path.posix ? path.posix : path;
 
@@ -152,10 +152,15 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
         res = describeTypeNode(decl.type!, checker, env).schema;
         if(decl.initializer){
             isRequired = false;
+            const defaultVal = generateDataLiteral(checker,decl.initializer);
+            if(isFailedInference(defaultVal)){
+                res!.initializer =  defaultVal.expression             
+            }else{
+                res!.default = defaultVal
+            }
         }
     } else  if (decl.initializer) {
         isRequired = false;
-
         if (ts.isIdentifier(decl.initializer)) {
             res =  describeIdentifier(decl.initializer, checker, env).schema;
             res.$ref = res.$ref!.replace('#', '#typeof ');
@@ -170,6 +175,14 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
             res = {
                 $ref: ref,
             };
+        }else{
+            res =  serializeType(checker.getTypeAtLocation(decl), decl, checker, env).schema;
+            const defaultVal = generateDataLiteral(checker,decl.initializer);
+            if(isFailedInference(defaultVal)){
+                res!.initializer =  defaultVal.expression             
+            }else{
+                res!.default = defaultVal
+            }
         }
     }
     if(ts.isPropertyDeclaration(decl) ||  ts.isPropertySignature(decl) ||  ts.isParameter(decl)){
@@ -181,6 +194,16 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
     if (!res) {
         isRequired = false;
         res =  serializeType(checker.getTypeAtLocation(decl), decl, checker, env).schema;
+        const child = decl.getChildAt(0);
+        if(child && ts.isObjectBindingPattern(child)){
+            const defaultVal = generateDataLiteral(checker,child);
+            if(isFailedInference(defaultVal)){
+                res!.initializer =  defaultVal.expression             
+            }else{
+                res!.default = defaultVal
+            }
+        }
+        
     }
     const jsDocs = extraCommentsHack(decl);
     if (jsDocs) {

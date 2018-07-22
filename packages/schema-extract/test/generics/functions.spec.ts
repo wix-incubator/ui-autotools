@@ -6,10 +6,11 @@ describe('schema-extract - generic functions', () => {
 
     it('should support declared generic functions', async () => {
         const moduleId = 'functions';
-        const res = transformTest(`
-        export const declaredFunction: <T extends string>(str:T)=>T = (str)=>{
+        const functionIntializer = `(str)=>{
             return str
-        };
+        }`
+        const res = transformTest(`
+        export const declaredFunction: <T extends string>(str:T)=>T = ${functionIntializer};
 
         `, moduleId);
 
@@ -34,6 +35,7 @@ describe('schema-extract - generic functions', () => {
                     returns: {
                         $ref: '#declaredFunction!T',
                     },
+                    initializer:functionIntializer
                 },
             },
 
@@ -74,7 +76,7 @@ describe('schema-extract - generic functions', () => {
                                 },
 
                             },
-                            required:['x','y'],
+                            required:['x','y']
                         },
                     ],
                     requiredArguments:['{x, y}'],
@@ -88,10 +90,11 @@ describe('schema-extract - generic functions', () => {
     });
     it('should support generic functions with rest params', async () => {
         const moduleId = 'functions';
-        const res = transformTest(`
-        export let functionWithRestParams:<T>(str:T, ...rest:T[])=>T = (str)=>{
+        const functionIntializer = `(str)=>{
             return str;
-        }
+        }`
+        const res = transformTest(`
+        export let functionWithRestParams:<T>(str:T, ...rest:T[])=>T = ${functionIntializer};
         `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
@@ -121,6 +124,7 @@ describe('schema-extract - generic functions', () => {
                     returns: {
                         $ref: '#functionWithRestParams!T',
                     },
+                    initializer:functionIntializer
                 },
             },
         };

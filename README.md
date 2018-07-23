@@ -53,16 +53,25 @@ import MyComp from './my-comp.tsx';
 const myComponentMetadata = Registry.getComponentMetadata(MyComp);
 
 // Simulations are configurations of component props and state
-myComponentMetadata.addSimulation('empty',{
-    items:[]
+myComponentMetadata.addSim({
+    title: 'empty',
+    props: {
+        items:[]
+    }
 });
 
-myComponentMetadata.addSimulation('one item',{
-    items:['🐊 ']
+myComponentMetadata.addSim({
+    title: 'one item',
+    props: {
+        items:['🐊 ']
+    }
 });
 
-myComponentMetadata.addSimulation('many items',{
-    items:['🧒 ', '👶 ', '🐊 ']
+myComponentMetadata.addSim({
+    title: 'many items',
+    props: {
+        items:['🧒 ', '👶 ', '🐊 ']
+    }
 });
 ```
 

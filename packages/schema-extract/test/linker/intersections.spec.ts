@@ -53,7 +53,8 @@ describe('schema-linker - intersections', () => {
                         something: {
                             type: 'number'
                         }
-                    }
+                    },
+                    required: ['something']
                 },
                 {
                     type: 'object',
@@ -64,7 +65,8 @@ describe('schema-linker - intersections', () => {
                         somethingNew: {
                             type: 'number'
                         }
-                    }
+                    },
+                    required: ['somethingElse', 'somethingNew']
                 }
             ]
         };

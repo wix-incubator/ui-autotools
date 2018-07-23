@@ -24,7 +24,8 @@ describe('schema-linker - intersections', () => {
                 somethingElse: {
                     type: 'string'
                 }
-            }
+            },
+            required: ['something', 'somethingElse']
         };
         expect(res).to.eql(expected);
     });
@@ -129,12 +130,14 @@ describe('schema-linker - intersections', () => {
                         a: {
                             type: 'string'
                         }
-                    }
+                    },
+                    required: ['a']
                 },
                 id: {
                     type: 'string'
                 }
-            }
+            },
+            required: ['something', 'id']
         };
         expect(res).to.eql(expected);
     });
@@ -159,9 +162,11 @@ describe('schema-linker - intersections', () => {
                         id: {
                             type: 'string'
                         }
-                    }
+                    },
+                    required: ['title', 'id']
                 }
-            }
+            },
+            required: ['something']
         };
         expect(res).to.eql(expected);
     });
@@ -189,9 +194,11 @@ describe('schema-linker - intersections', () => {
                         price: {
                             type: 'number'
                         }
-                    }
+                    },
+                    required: ['title', 'id', 'price']
                 }
-            }
+            },
+            required: ['something']
         };
         expect(res).to.eql(expected);
     });
@@ -214,7 +221,8 @@ describe('schema-linker - intersections', () => {
                     type: 'string',
                     enum: ['gaga'],
                 }
-            }
+            },
+            required: ['something']
         };
         expect(res).to.eql(expected);
     });
@@ -237,7 +245,8 @@ describe('schema-linker - intersections', () => {
                     type: 'string',
                     enum: ['gaga'],
                 }
-            }
+            },
+            required: ['something']
         };
         expect(res).to.eql(expected);
     });
@@ -260,7 +269,8 @@ describe('schema-linker - intersections', () => {
                     type: 'string',
                     enum: ['gaga'],
                 }
-            }
+            },
+            required: ['something']
         };
         expect(res).to.eql(expected);
     });
@@ -282,7 +292,8 @@ describe('schema-linker - intersections', () => {
                 something: {
                     $ref: NeverId
                 }
-            }
+            },
+            required: ['something']
         };
         expect(res).to.eql(expected);
     });

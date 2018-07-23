@@ -1,4 +1,5 @@
 import * as ts from 'typescript';
+import {union} from 'lodash';
 import { transform } from '../src/file-transformer';
 import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId } from './json-schema-types';
 
@@ -140,7 +141,7 @@ function mergeProperties(entity: Schema & IObjectFields, res: Schema & IObjectFi
             if (!res.required) {
                 res.required = entity.required;
             } else {
-                res.required = [...res.required, ...entity.required];
+                res.required = union(res.required, entity.required);
             }
         }
     }
@@ -227,5 +228,8 @@ function linkObject(entity: Schema, entityType: string, refEntity: Schema & IObj
         }
     }
     res.properties = properties;
+    if (refEntity.required) {
+        res.required = refEntity.required;
+    }
     return res;
 }

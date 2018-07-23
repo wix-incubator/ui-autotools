@@ -22,7 +22,8 @@ describe('schema-linker - generic types', () => {
                 someone: {
                     type: 'string'
                 }
-            }
+            },
+            required: ['something', 'someone']
         };
         expect(res).to.eql(expected);
     });
@@ -47,9 +48,11 @@ describe('schema-linker - generic types', () => {
                         a: {
                             type: 'string'
                         }
-                    }
+                    },
+                    required: ['a']
                 }
-            }
+            },
+            required: ['something']
         };
         expect(res).to.eql(expected);
     });

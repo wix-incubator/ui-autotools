@@ -17,12 +17,12 @@ export const ssrTest = (): void => {
 
         Registry.metadata.components.forEach((metadata, Comp) => {
             describe(Comp.name, () => {
-                it(`should render ${Comp.name} to string without throwing`, () => {
+                it(`should render component: "${Comp.name}" to string without throwing`, () => {
                     expect(() => renderToString(<Comp />), 'RenderToString threw an error').not.to.throw();
                 });
 
                 metadata.simulations.forEach(((simulation) => {
-                    it(`should render ${Comp.name} to string with props of simulation ${simulation.title} without throwing`, () => {
+                    it(`should render component: "${Comp.name}" to string with props of simulation: "${simulation.title}" without throwing`, () => {
                         expect(() => renderToString(<Comp {...simulation.props} />), 'RenderToString threw an error').not.to.throw();
                     });
                 }));

@@ -81,10 +81,8 @@ export class SchemaLinker {
     private handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
         const res: Schema & IObjectFields = {};
         for (const option of options) {
+            // Refactor this part, there are duplications here
             if (isRef(option)) {
-                if (!res.properties) {
-                    res.properties = {};
-                }
                 let entity: Schema & IObjectFields;
                 if (paramsMap) {
                     entity = paramsMap!.get(option.$ref)!;
@@ -100,30 +98,9 @@ export class SchemaLinker {
                 What about additionalProperties????
 
                 */
-                if (entity.properties) {
-                    res.type = entity.type;
-                    const properties = entity.properties;
-                    for (const prop in properties) {
-                        if (!res.properties.hasOwnProperty(prop)) {
-                            res.properties[prop] = properties[prop];
-                        } else {
-                            res.properties[prop] = this.handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
-                        }
-                    }
-                }
+                this.mergeProperties(entity, res, schema, paramsMap);
             } else if (isSchemaOfType('object', option)) {
-                if (!res.properties) {
-                    res.properties = {};
-                }
-                if (option.properties) {
-                    res.type = option.type;
-                    const properties = option.properties;
-                    for (const prop in properties) {
-                        if (!res.properties.hasOwnProperty(prop)) {
-                            res.properties[prop] = properties[prop];
-                        }
-                    }
-                }
+                this.mergeProperties(option, res, schema, paramsMap);
             } else {
                 const prop = option.$oneOf ? option.$oneOf[0] : option;
                 if (Object.keys(res).length === 0) {
@@ -160,6 +137,23 @@ export class SchemaLinker {
             }
         }
         return res;
+    }
+
+    private mergeProperties(entity: Schema & IObjectFields, res: Schema & IObjectFields, schema: ModuleSchema, paramsMap?: Map<string, Schema>) {
+        if (!res.properties) {
+            res.properties = {};
+        }
+        if (entity.properties) {
+            res.type = entity.type;
+            const properties = entity.properties;
+            for (const prop in properties) {
+                if (!res.properties.hasOwnProperty(prop)) {
+                    res.properties[prop] = properties[prop];
+                } else {
+                    res.properties[prop] = this.handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
+                }
+            }
+        }
     }
 
     private linkClass(schema: ModuleSchema, entity: ClassSchema): ClassSchema {

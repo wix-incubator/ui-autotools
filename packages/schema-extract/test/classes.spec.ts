@@ -38,7 +38,7 @@ describe('schema-extract - classes', () => {
                                 name: 'id'
                             }
                         ],
-                        requiredArguments:['id']
+                        requiredArguments: ['id']
                     },
                     staticProperties: {
                         a: {
@@ -61,7 +61,7 @@ describe('schema-extract - classes', () => {
                                 {type: 'string', name: 'newtitle'},
                                 {type: 'string', name: 'prefix'},
                             ],
-                            requiredArguments:['newtitle'],
+                            requiredArguments: ['newtitle'],
                             returns: {
                                 $ref: UndefinedSchemaId,
                             },

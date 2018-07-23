@@ -60,7 +60,7 @@ describe('schema-extract - objects', () => {
                             type: 'string',
                         },
                     },
-                    required:['prop']
+                    required: ['prop']
                 },
                 infered_object: {
                     type: 'object',
@@ -72,7 +72,7 @@ describe('schema-extract - objects', () => {
                             type: 'string',
                         },
                     },
-                    required:['prop']
+                    required: ['prop']
                 },
                 declared_with_import: {
                     type: 'object',
@@ -81,7 +81,7 @@ describe('schema-extract - objects', () => {
                             $ref: '/src/test-assets#AType',
                         },
                     },
-                    required:['imported']
+                    required: ['imported']
                 },
             },
         };
@@ -97,7 +97,7 @@ describe('schema-extract - objects', () => {
             prop1?:string
             prop2:number
         };
- 
+
         `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
@@ -105,7 +105,7 @@ describe('schema-extract - objects', () => {
             $id: '/src/' + moduleId,
             $ref: 'common/module',
             properties: {
-                
+
                 declared_object_with_props: {
                     type: 'object',
                     properties: {
@@ -116,9 +116,9 @@ describe('schema-extract - objects', () => {
                             type: 'number',
                         },
                     },
-                    required:["prop2"]
+                    required: ['prop2']
                 },
-                
+
             },
         };
         expect(res).to.eql(expected);
@@ -160,7 +160,7 @@ describe('schema-extract - objects', () => {
                             type: 'string',
                         },
                     },
-                    required:['cnst'],
+                    required: ['cnst'],
                     additionalProperties: {
                         type: 'string',
                     },

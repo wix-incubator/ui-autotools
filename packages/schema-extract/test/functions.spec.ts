@@ -25,7 +25,7 @@ describe('schema-extract - functions', () => {
                             name: 'str',
                         },
                     ],
-                    requiredArguments:['str'],
+                    requiredArguments: ['str'],
                     returns: {
                         type: 'string',
                     },
@@ -60,7 +60,7 @@ describe('schema-extract - functions', () => {
                             name: 'str',
                         },
                     ],
-                    requiredArguments:['str'],
+                    requiredArguments: ['str'],
                     returns: {
                         type: 'string',
                     },
@@ -100,7 +100,7 @@ describe('schema-extract - functions', () => {
                             name: 'num',
                         },
                     ],
-                    requiredArguments:['str'],
+                    requiredArguments: ['str'],
                     returns: {
                         type: 'string',
                     },
@@ -139,7 +139,7 @@ describe('schema-extract - functions', () => {
                             name: 'num',
                         },
                     ],
-                    requiredArguments:['str'],
+                    requiredArguments: ['str'],
                     returns: {
                         type: 'string',
                     },
@@ -180,9 +180,9 @@ describe('schema-extract - functions', () => {
                                 },
 
                             },
-                            required:['x','y']
+                            required: ['x', 'y']
                         },
-                        
+
                     ],
                     returns: {
                         type: 'string',
@@ -215,9 +215,8 @@ describe('schema-extract - functions', () => {
                             name: 'str',
                         },
                     ],
-                    requiredArguments:['str'],
-                    
-                    
+                    requiredArguments: ['str'],
+
                     restArgument: {
                         name: 'rest',
                         type: 'array',
@@ -256,7 +255,7 @@ describe('schema-extract - functions', () => {
                             name: 'str',
                         },
                     ],
-                    requiredArguments:['str'],
+                    requiredArguments: ['str'],
                     returns: {
                         $ref: UndefinedSchemaId,
                     },
@@ -288,7 +287,7 @@ describe('schema-extract - functions', () => {
                             name: 'str',
                         },
                     ],
-                    requiredArguments:['str'],
+                    requiredArguments: ['str'],
                     returns: {
                         $ref: UndefinedSchemaId,
                     },
@@ -323,7 +322,7 @@ describe('schema-extract - functions', () => {
                             name: 'str',
                         },
                     ],
-                    requiredArguments:['str'],
+                    requiredArguments: ['str'],
                     returns: {
                         $ref: '/src/test-assets#AClass'                    }
                     }

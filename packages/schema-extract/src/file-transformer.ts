@@ -212,6 +212,8 @@ const describeTypeNode: TsNodeDescriber<ts.TypeNode> = (decl, checker, env) => {
         return describeIntersectionType(decl, checker, env);
     } else if (ts.isFunctionTypeNode(decl)) {
         return describeFunction(decl, checker, env);
+    } else if (ts.isParenthesizedTypeNode(decl)) {
+        return describeTypeNode(decl.type, checker, env);
     }
 
     const t = checker.getTypeAtLocation(decl);
@@ -348,20 +350,18 @@ const describeClass: TsNodeDescriber<ts.ClassDeclaration, ClassSchema> = (decl, 
             }
         }
     });
-    if (!constructorSign) {
-        constructorSign = {
-            $ref: ClassConstructorSchemaId,
-            arguments: []
-        };
-    }
     const comments = checker.getSymbolAtLocation(decl.name!)!.getDocumentationComment(checker);
     const comment = comments.length ? (comments.map((c) => c.kind === 'lineBreak' ? c.text : c.text.trim().replace(/\r\n/g, '\n')).join('')) : '';
-    const classDef: ClassSchema = {
+    const classDef = {
         $ref: ClassSchemaId,
         properties,
-        staticProperties,
-        constructor: constructorSign
-    };
+        staticProperties
+    } as ClassSchema;
+
+    if (constructorSign) {
+        (classDef.constructor as FunctionSchema) = constructorSign;
+    }
+
     if (comment) {
         classDef.description = comment;
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Registry from 'metadata-tools';
+import Registry from '@ui-autotools/registry';
 import axe from 'axe-core';
 
 interface ITest {

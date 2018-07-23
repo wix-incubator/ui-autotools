@@ -1,6 +1,6 @@
 import path from 'path';
 import puppeteer from 'puppeteer';
-import {WebpackConfigurator, serve, IServer, waitForPageError, consoleError} from 'ui-autotools-utils';
+import {WebpackConfigurator, serve, IServer, waitForPageError, consoleError} from '@ui-autotools/utils';
 import { IResult } from './browser/run';
 import axe from 'axe-core';
 import chalk from 'chalk';

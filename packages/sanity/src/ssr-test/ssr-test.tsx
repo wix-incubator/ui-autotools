@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import {renderToString} from 'react-dom/server';
-import Registry from 'metadata-tools';
+import Registry from '@ui-autotools/registry';
 import {expect} from 'chai';
 
 export const ssrTest = (): void => {

@@ -185,10 +185,6 @@ describe('schema-extract - comments', () => {
             definitions: {
                 C : {
                     $ref: ClassSchemaId,
-                    constructor: {
-                        $ref: ClassConstructorSchemaId,
-                        arguments: []
-                    },
                     properties: {
                         a: {
                             description: 'member documentation',

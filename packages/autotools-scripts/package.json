@@ -1,6 +1,6 @@
 {
-  "name": "autotools-scripts",
-  "version": "1.0.0",
+  "name": "@ui-autotools/scripts",
+  "version": "1.0.5",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
   "bin": {
@@ -16,7 +16,8 @@
     "test": "mocha -r typescript-support \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
   },
   "files": [
-    "cjs"
+    "cjs",
+    "bin"
   ],
   "engines": {
     "node": ">=8"
@@ -25,8 +26,9 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "sanity": "^1.0.0",
-    "metadata-tools": "^1.0.0",
+    "@ui-autotools/a11y": "^1.0.2",
+    "@ui-autotools/registry": "^1.0.1",
+    "@ui-autotools/sanity": "^1.0.3",
     "commander": "^2.15.1",
     "glob": "^7.1.2",
     "typescript-support": "^0.4.1"
@@ -35,5 +37,8 @@
     "mocha": ">=5",
     "react": ">=16",
     "react-dom": ">=16"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

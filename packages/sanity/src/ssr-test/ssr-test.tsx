@@ -2,9 +2,10 @@
  * @jest-environment node
  */
 
-import * as React from 'react';
+import React from 'react';
 import {renderToString} from 'react-dom/server';
 import Registry from '@ui-autotools/registry';
+import {simulationToJSX} from '@ui-autotools/utils';
 import {expect} from 'chai';
 
 export const ssrTest = (): void => {

@@ -1,4 +1,5 @@
 import * as ts from 'typescript';
+import {union} from 'lodash';
 import { transform } from '../src/file-transformer';
 import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId } from './json-schema-types';
 
@@ -154,6 +155,13 @@ export class SchemaLinker {
                 }
             }
         }
+        if (entity.required) {
+            if (!res.required) {
+                res.required = entity.required;
+            } else {
+                res.required = union(res.required, entity.required);
+            }
+        }
     }
 
     private linkClass(schema: ModuleSchema, entity: ClassSchema): ClassSchema {
@@ -237,6 +245,9 @@ export class SchemaLinker {
             }
         }
         res.properties = properties;
+        if (refEntity.required) {
+            res.required = refEntity.required;
+        }
         return res;
     }
 }

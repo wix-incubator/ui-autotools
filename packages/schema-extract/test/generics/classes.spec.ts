@@ -14,7 +14,7 @@ describe('schema-extract - generic classes', () => {
             constructor(x:T, y:P){
                 super();
             }
-            setA(newA:T,prefix:P):void{
+            setA(newA:T,prefix?:P):void{
 
             }
         };
@@ -38,6 +38,7 @@ describe('schema-extract - generic classes', () => {
                                 name: 'y'
                             }
                         ],
+                        requiredArguments: ['x', 'y'],
                     },
                     genericParams: [{
                         name: 'P'
@@ -63,6 +64,7 @@ describe('schema-extract - generic classes', () => {
                                 {$ref: '#MyClass!T', name: 'newA'},
                                 {$ref: '#MyClass!P', name: 'prefix'},
                             ],
+                            requiredArguments: ['newA'],
                             returns: {
                                 $ref: UndefinedSchemaId
                             }

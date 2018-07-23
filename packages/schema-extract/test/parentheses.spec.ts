@@ -36,8 +36,9 @@ describe('schema-extract - parentheses types', () => {
                         },
                         c: {
                             type: 'string',
-                        },
+                        }
                     },
+                    required: ['a', 'b', 'c']
                 },
                 RGB: {
                     type: 'object',
@@ -50,8 +51,9 @@ describe('schema-extract - parentheses types', () => {
                         },
                         b: {
                             type: 'string',
-                        },
+                        }
                     },
+                    required: ['r', 'g', 'b']
                 },
                 Intersection: {
                     $allOf: [
@@ -167,6 +169,7 @@ describe('schema-extract - parentheses types', () => {
                                     type: 'number',
                                 },
                             },
+                            required: ['value']
                         },
                     ],
                 },
@@ -198,7 +201,8 @@ describe('schema-extract - parentheses types', () => {
                                         id: {
                                             type: 'string'
                                         }
-                                    }
+                                    },
+                                    required: ['id']
                                 },
                                 {
                                     type: 'object',
@@ -206,7 +210,8 @@ describe('schema-extract - parentheses types', () => {
                                         name: {
                                             type: 'string'
                                         }
-                                    }
+                                    },
+                                    required: ['name']
                                 }
                             ]
                         }

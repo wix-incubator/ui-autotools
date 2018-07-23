@@ -11,6 +11,7 @@ export const NeverId = 'common/never';
 export interface IObjectFields {
     additionalProperties?: Schema;
     properties?: {[name: string]: Schema};
+    required?: string[];
 }
 
 // tslint:disable-next-line:no-empty-interface
@@ -76,6 +77,7 @@ export type FunctionSchema = Schema & {
     $ref: typeof FunctionSchemaId | typeof ClassConstructorSchemaId;
     arguments: Schema[],
     restArgument?: Schema<'array'>,
+    requiredArguments?: string[],
     returns?: Schema
 };
 

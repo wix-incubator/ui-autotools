@@ -20,8 +20,9 @@ describe('schema-linker - imports', () => {
             properties: {
                 something: {
                     type: 'string'
-                },
-            }
+                }
+            },
+            required: ['something']
         };
         expect(res).to.eql(expected);
     });

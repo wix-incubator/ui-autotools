@@ -15,7 +15,7 @@ describe('schema-extract - classes', () => {
             constructor(public id:string){
                 super();
             }
-            setTitle(newtitle:string,prefix:string):void{
+            setTitle(newtitle:string,prefix?:string):void{
 
             }
         };
@@ -37,7 +37,8 @@ describe('schema-extract - classes', () => {
                                 type: 'string',
                                 name: 'id'
                             }
-                        ]
+                        ],
+                        requiredArguments: ['id']
                     },
                     staticProperties: {
                         a: {
@@ -60,6 +61,7 @@ describe('schema-extract - classes', () => {
                                 {type: 'string', name: 'newtitle'},
                                 {type: 'string', name: 'prefix'},
                             ],
+                            requiredArguments: ['newtitle'],
                             returns: {
                                 $ref: UndefinedSchemaId,
                             },

@@ -30,6 +30,7 @@ describe('schema-extract - type declarations', () => {
                             $ref: '/src/test-assets#AType',
                         },
                     },
+                    required: ['title', 'imported']
                 },
             },
             properties: {
@@ -86,6 +87,7 @@ describe('schema-extract - type declarations', () => {
                             $ref: '#recurse',
                         },
                     },
+                    required: ['prop']
                 },
             },
             properties: {

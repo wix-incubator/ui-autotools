@@ -49,9 +49,9 @@ describe('schema-extract - primitives', () => {
                 },
                 infered_boolean: {
                     type: 'boolean',
-                },
-
+                }
             },
+            // required:["declared_string","declared_number","infered_string","infered_number","infered_boolean"]
         };
         expect(res).to.eql(expected);
     });
@@ -85,4 +85,5 @@ describe('schema-extract - primitives', () => {
         };
         expect(res).to.eql(expected);
     });
+
 });

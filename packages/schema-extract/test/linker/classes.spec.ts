@@ -43,7 +43,8 @@ describe('schema-linker - classes', () => {
                         type: 'string',
                         name: 'id2'
                     }
-                ]
+                ],
+                requiredArguments: ['id2']
             },
             staticProperties: {
                 a: {
@@ -81,6 +82,10 @@ describe('schema-linker - classes', () => {
                         {type: 'string', name: 'newtitle'},
                         {type: 'string', name: 'prefix'},
                     ],
+                    requiredArguments: [
+                        'newtitle',
+                        'prefix'
+                    ],
                     returns: {
                         $ref: UndefinedSchemaId,
                     },
@@ -111,7 +116,8 @@ describe('schema-linker - classes', () => {
                         type: 'string',
                         name: 'id'
                     }
-                ]
+                ],
+                requiredArguments: ['id']
             },
             staticProperties: {},
             extends: {

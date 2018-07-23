@@ -29,6 +29,7 @@ describe('schema-extract - interfaces', () => {
                             type: 'string',
                         },
                     },
+                    required: ['title']
                 },
                 Extendz : {
                     $allOf: [
@@ -41,6 +42,7 @@ describe('schema-extract - interfaces', () => {
                                     type: 'string',
                                 },
                             },
+                            required: ['desc']
                         },
                     ],
                 },
@@ -82,6 +84,7 @@ describe('schema-extract - interfaces', () => {
                             $ref: '#MyInterface2',
                         },
                     },
+                    required: ['a']
                 },
                 MyInterface2 : {
                     type: 'object',
@@ -90,6 +93,7 @@ describe('schema-extract - interfaces', () => {
                             $ref: '#MyInterface',
                         },
                     },
+                    required: ['b']
                 },
             },
             properties: {

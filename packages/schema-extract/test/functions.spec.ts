@@ -25,6 +25,7 @@ describe('schema-extract - functions', () => {
                             name: 'str',
                         },
                     ],
+                    requiredArguments: ['str'],
                     returns: {
                         type: 'string',
                     },
@@ -59,6 +60,86 @@ describe('schema-extract - functions', () => {
                             name: 'str',
                         },
                     ],
+                    requiredArguments: ['str'],
+                    returns: {
+                        type: 'string',
+                    },
+                },
+            },
+
+        };
+        expect(res).to.eql(expected);
+    });
+
+    it('should support declared functions with optional params', async () => {
+        const moduleId = 'functions';
+        const res = transformTest(`
+
+        export const declaredFunction:(str:string,num?:number)=>string = (str:string)=>{
+            return str+'a'
+        };
+
+
+        `, moduleId);
+
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+
+                declaredFunction: {
+                    $ref: 'common/function',
+                    arguments: [
+                        {
+                            type: 'string',
+                            name: 'str',
+                        },
+                        {
+                            type: 'number',
+                            name: 'num',
+                        },
+                    ],
+                    requiredArguments: ['str'],
+                    returns: {
+                        type: 'string',
+                    },
+                },
+            },
+
+        };
+        expect(res).to.eql(expected);
+    });
+    it('should support declared functions with optional params (default value)', async () => {
+        const moduleId = 'functions';
+        const res = transformTest(`
+
+        export const declaredFunction:(str:string,num:number = 5)=>string = (str:string)=>{
+            return str+'a'
+        };
+
+
+        `, moduleId);
+
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            properties: {
+
+                declaredFunction: {
+                    $ref: 'common/function',
+                    arguments: [
+                        {
+                            type: 'string',
+                            name: 'str',
+                        },
+                        {
+                            type: 'number',
+                            name: 'num',
+                        },
+                    ],
+                    requiredArguments: ['str'],
                     returns: {
                         type: 'string',
                     },
@@ -99,7 +180,9 @@ describe('schema-extract - functions', () => {
                                 },
 
                             },
+                            required: ['x', 'y']
                         },
+
                     ],
                     returns: {
                         type: 'string',
@@ -132,6 +215,8 @@ describe('schema-extract - functions', () => {
                             name: 'str',
                         },
                     ],
+                    requiredArguments: ['str'],
+
                     restArgument: {
                         name: 'rest',
                         type: 'array',
@@ -170,6 +255,7 @@ describe('schema-extract - functions', () => {
                             name: 'str',
                         },
                     ],
+                    requiredArguments: ['str'],
                     returns: {
                         $ref: UndefinedSchemaId,
                     },
@@ -201,6 +287,7 @@ describe('schema-extract - functions', () => {
                             name: 'str',
                         },
                     ],
+                    requiredArguments: ['str'],
                     returns: {
                         $ref: UndefinedSchemaId,
                     },
@@ -235,6 +322,7 @@ describe('schema-extract - functions', () => {
                             name: 'str',
                         },
                     ],
+                    requiredArguments: ['str'],
                     returns: {
                         $ref: '/src/test-assets#AClass'                    }
                     }

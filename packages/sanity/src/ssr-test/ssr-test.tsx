@@ -22,7 +22,7 @@ export const ssrTest = (): void => {
                 });
 
                 metadata.simulations.forEach(((simulation) => {
-                    it(`should render ${Comp.name} to string with props ${JSON.stringify(simulation)} without throwing`, () => {
+                    it(`should render ${Comp.name} to string with props of simulation ${simulation.title} without throwing`, () => {
                         expect(() => renderToString(<Comp {...simulation.props} />), 'RenderToString threw an error').not.to.throw();
                     });
                 }));

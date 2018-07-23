@@ -29,7 +29,7 @@ export const hydrationTest = (): void => {
         });
 
         metadata.simulations.forEach((simulation) => {
-          it(`should hydrate ${Comp.name} in strict mode, with props ${JSON.stringify(simulation)} without errors`, () => {
+          it(`should hydrate ${Comp.name} in strict mode, with props of simulation ${simulation.title} without errors`, () => {
             // Set root's HTML to the SSR component
             root.innerHTML = componentStrings[index];
             hydrate(<React.StrictMode><Comp {...simulation.props} /></React.StrictMode>, root);

@@ -36,6 +36,13 @@ describe('Component Metadata', () => {
       myCompMetadata.addSim(testSim);
       expect(myCompMetadata.simulations[0]).to.equal(testSim);
     });
+
+    it('throws an error when adding a new simulation to the component metadata if a sim with that title already exists', () => {
+      const myCompMetadata = Registry.getComponentMetadata(TestComp);
+      myCompMetadata.addSim(testSim);
+      expect(myCompMetadata.simulations[0]).to.equal(testSim);
+      expect(() => myCompMetadata.addSim(testSim)).to.throw();
+    });
   });
 
   describe('The addStyle method', () => {

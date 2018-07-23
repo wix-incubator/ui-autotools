@@ -62,6 +62,7 @@ describe('schema-extract - comments', () => {
                             minLength: 5,
                         },
                     },
+                    required: ['prop']
                 },
             },
             properties: {},
@@ -98,6 +99,7 @@ describe('schema-extract - comments', () => {
                             name: 'a',
                         },
                     ],
+                    requiredArguments: ['a'],
                     returns: {
                         description: 'return documentation',
                         type: 'string',
@@ -149,6 +151,7 @@ describe('schema-extract - comments', () => {
                                 description: 'another parameter documentation'
                             }
                         ],
+                        requiredArguments: ['a', 'b'],
                     },
                     properties: {},
                     staticProperties: {}

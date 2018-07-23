@@ -30,6 +30,7 @@ describe('schema-extract - generic functions', () => {
                             $ref: '#declaredFunction!T',
                         },
                     ],
+                    requiredArguments: ['str'],
                     returns: {
                         $ref: '#declaredFunction!T',
                     },
@@ -73,8 +74,10 @@ describe('schema-extract - generic functions', () => {
                                 },
 
                             },
+                            required: ['x', 'y'],
                         },
                     ],
+                    requiredArguments: ['{x, y}'],
                     returns: {
                         $ref: '#declaredDeconstruct!T'
                     }
@@ -107,6 +110,7 @@ describe('schema-extract - generic functions', () => {
                             name: 'str'
                         }
                     ],
+                    requiredArguments: ['str'],
                     restArgument: {
                         name: 'rest',
                         type: 'array',

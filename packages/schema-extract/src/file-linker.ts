@@ -1,4 +1,5 @@
 import * as ts from 'typescript';
+import {union} from 'lodash';
 import { transform } from '../src/file-transformer';
 import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId } from './json-schema-types';
 
@@ -66,9 +67,6 @@ function handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?:
     const res: Schema & IObjectFields = {};
     for (const option of options) {
         if (isRef(option)) {
-            if (!res.properties) {
-                res.properties = {};
-            }
             let entity: Schema & IObjectFields;
             if (paramsMap) {
                 entity = paramsMap!.get(option.$ref)!;
@@ -84,30 +82,9 @@ function handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?:
             What about additionalProperties????
 
             */
-            if (entity.properties) {
-                res.type = entity.type;
-                const properties = entity.properties;
-                for (const prop in properties) {
-                    if (!res.properties.hasOwnProperty(prop)) {
-                        res.properties[prop] = properties[prop];
-                    } else {
-                        res.properties[prop] = handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
-                    }
-                }
-            }
+            mergeProperties(entity, res, schema, paramsMap);
         } else if (isSchemaOfType('object', option)) {
-            if (!res.properties) {
-                res.properties = {};
-            }
-            if (option.properties) {
-                res.type = option.type;
-                const properties = option.properties;
-                for (const prop in properties) {
-                    if (!res.properties.hasOwnProperty(prop)) {
-                        res.properties[prop] = properties[prop];
-                    }
-                }
-            }
+            mergeProperties(option, res, schema, paramsMap);
         } else {
             const prop = option.$oneOf ? option.$oneOf[0] : option;
             if (Object.keys(res).length === 0) {
@@ -144,6 +121,30 @@ function handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?:
         }
     }
     return res;
+}
+
+function mergeProperties(entity: Schema & IObjectFields, res: Schema & IObjectFields, schema: ModuleSchema, paramsMap?: Map<string, Schema> ) {
+    if (entity.properties) {
+        if (!res.properties) {
+            res.properties = {};
+        }
+        res.type = entity.type;
+        const properties = entity.properties;
+        for (const prop in properties) {
+            if (!res.properties.hasOwnProperty(prop)) {
+                res.properties[prop] = properties[prop];
+            } else {
+                res.properties[prop] = handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
+            }
+        }
+        if (entity.required) {
+            if (!res.required) {
+                res.required = entity.required;
+            } else {
+                res.required = union(res.required, entity.required);
+            }
+        }
+    }
 }
 
 function linkClass(schema: ModuleSchema, entity: ClassSchema): ClassSchema {
@@ -227,5 +228,8 @@ function linkObject(entity: Schema, entityType: string, refEntity: Schema & IObj
         }
     }
     res.properties = properties;
+    if (refEntity.required) {
+        res.required = refEntity.required;
+    }
     return res;
 }

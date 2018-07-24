@@ -57,14 +57,14 @@ describe('schema-linker - generic types', () => {
         expect(res).to.eql(expected);
     });
 
-    it('should deep flatten type definitions 2', async () => {
+    it('should deep flatten type definitions', async () => {
         const fileName = 'index.ts';
         const res = linkTest({[fileName]: `
-        export type B = {bla: 'string};
+        export type B = {bla: string};
         export type MyType = {
             something: {
-                a: T;
-            };
+                a: B
+            }
         };
         `}, 'MyType', fileName);
 

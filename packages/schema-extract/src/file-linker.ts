@@ -53,6 +53,9 @@ export class SchemaLinker {
             }
             return res;
         }
+        if (isSchemaOfType('object', entity)) {
+            return this.handleObject(entity, schema);
+        }
         return entity;
     }
 
@@ -111,7 +114,6 @@ export class SchemaLinker {
             } else {
                 const prop = option.$oneOf ? option.$oneOf[0] : option;
                 //There is probably a bug here
-
 
                 if (!res.type && prop.type) {
                     res.type = prop.type;
@@ -255,6 +257,13 @@ export class SchemaLinker {
         if (refEntity.required) {
             res.required = refEntity.required;
         }
+        return res;
+    }
+
+    private handleObject(entity: Schema & IObjectFields, schema: ModuleSchema): Schema {
+        const res: typeof entity = {};
+        res.type = entity.type;
+        this.mergeProperties(entity, res, schema);
         return res;
     }
 }

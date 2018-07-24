@@ -1,8 +1,12 @@
 import puppeteer from 'puppeteer';
+import {sleep} from './sleep';
 import {consoleLog} from './index';
 const {patchConsole} = require('../patch-console');
 
 export function waitForPageError(page: puppeteer.Page): Promise<never> {
+    // We don't need to handle `disconnected` event because any of the
+    // Puppeteer functions we're awaiting on will throw on disconnect anyway.
+
     return new Promise((_, reject) => {
         page.on('pageerror', (errorText: string) => {
             reject(new Error(errorText));
@@ -21,10 +25,6 @@ export function logConsoleMessages(page: puppeteer.Page) {
     });
 }
 
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 async function loadTestPage(page: puppeteer.Page, testPageUrl: string, timeout: number) {
   // This can keep the process from terminating for upto `timeout` if an error
   // occurs on the page before page load event.
@@ -37,12 +37,12 @@ async function loadTestPage(page: puppeteer.Page, testPageUrl: string, timeout: 
   }
 }
 
-async function waitForTestResults(page: any) {
+async function waitForTestResults(page: puppeteer.Page) {
   await page.waitForFunction('mochaStatus.finished');
   return page.evaluate('mochaStatus.numFailedTests');
 }
 
-async function failIfTestsStall(page: any, timeout: number) {
+async function failIfTestsStall(page: puppeteer.Page, timeout: number) {
   let numCompletedTests = 0;
 
   while (true) {
@@ -56,27 +56,13 @@ async function failIfTestsStall(page: any, timeout: number) {
   }
 }
 
-function failOnPageError(page: any) {
-  return new Promise((_, reject) => {
-    // We don't need to handle `disconnected`, Puppeteer will throw anyway.
-
-    page.on('pageerror', (errorText: string) => {
-      reject(errorText);
-    });
-
-    page.on('error', () => {
-      reject(new Error('Page crashed'));
-    });
-  });
-}
-
 export async function runTestsInPuppeteer({testPageUrl, noSandbox}: {testPageUrl: string, noSandbox?: boolean}) {
   const loadTimeout = 20000;
   const testTimeout = 5000;
   const viewportWidth = 800;
   const viewportHeight = 600;
 
-  let browser;
+  let browser: puppeteer.Browser | undefined;
   try {
     const args = noSandbox ? ['--no-sandbox', '--disable-setuid-sandbox'] : [];
     browser = await puppeteer.launch({headless: true, args});
@@ -90,7 +76,7 @@ export async function runTestsInPuppeteer({testPageUrl, noSandbox}: {testPageUrl
     logConsoleMessages(page);
 
     const numFailedTests = await Promise.race([
-      failOnPageError(page),
+      waitForPageError(page),
       loadTestPage(page, testPageUrl, loadTimeout).then(() =>
         Promise.race([
           waitForTestResults(page),
@@ -102,9 +88,12 @@ export async function runTestsInPuppeteer({testPageUrl, noSandbox}: {testPageUrl
     return numFailedTests;
   } finally {
     try {
-      await (browser as any)!.close();
+      if (browser) {
+        browser.close();
+      }
     } catch (_) {
-      // Ignore the error since we're already handling an exception.
-     }
+      // If the main code throws and browser.close() also throws, we don't want
+      // to override the original exception.
+    }
   }
 }

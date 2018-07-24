@@ -24,7 +24,7 @@ export const ssrTest = (): void => {
 
                 metadata.simulations.forEach(((simulation) => {
                     it(`should render component: "${Comp.name}" to string with props of simulation: "${simulation.title}" without throwing`, () => {
-                        expect(() => renderToString(<Comp {...simulation.props} />), 'RenderToString threw an error').not.to.throw();
+                        expect(() => renderToString(simulationToJSX(Comp, simulation)), 'RenderToString threw an error').not.to.throw();
                     });
                 }));
             });

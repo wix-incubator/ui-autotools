@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import {registerRequireHooks} from '@ui-autotools/utils';
 import {Command} from 'commander';
 import ssrTest from './ssr-test/mocha-wrapper';
 import {hydrationTest} from '@ui-autotools/sanity';
@@ -6,6 +7,8 @@ import importMeta from './import-metadata/import-meta';
 import {a11yTest, impactLevels} from '@ui-autotools/a11y';
 import glob from 'glob';
 import path from 'path';
+
+registerRequireHooks();
 
 const program = new Command();
 const projectPath = process.cwd();

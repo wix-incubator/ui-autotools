@@ -16,9 +16,9 @@ const reactRoot = document.querySelector('#react-root')!;
 function createTestsFromSimulations() {
   const tests = [];
   for (const [Comp, meta] of Registry.metadata.components.entries()) {
-    for (const [simIndex, sim] of meta.simulations.entries()) {
+    for (const sim of meta.simulations) {
       tests.push({
-        title: Comp.name + ' ' + simIndex,
+        title: Comp.name + ' ' + sim.title,
         render:  () => ReactDOM.render(<Comp {...sim.props} />, reactRoot),
         cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot)
       });

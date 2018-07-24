@@ -5,7 +5,7 @@ import chai, {expect} from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import {hydrate} from 'react-dom';
-import {simulationToJSX} from '@ui-autotools/utils';
+import {simulationToJSX} from '@ui-autotools/utils/esm/metadata/simulation-to-jsx';
 
 chai.use(sinonChai);
 

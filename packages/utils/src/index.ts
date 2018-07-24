@@ -4,3 +4,4 @@ export {waitForPageError, logConsoleMessages, runTestsInPuppeteer} from './puppe
 export {consoleError} from './console/console-error';
 export {consoleLog} from './console/console-log';
 export {simulationToJSX} from './metadata/simulation-to-jsx';
+export {registerRequireHooks} from './require-hooks/require-hooks';

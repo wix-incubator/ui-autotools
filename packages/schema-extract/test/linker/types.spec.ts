@@ -57,6 +57,42 @@ describe('schema-linker - generic types', () => {
         expect(res).to.eql(expected);
     });
 
+    it('should deep flatten type definitions 2', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
+        export type B = {bla: 'string};
+        export type MyType = {
+            something: {
+                a: T;
+            };
+        };
+        `}, 'MyType', fileName);
+
+        const expected: Schema<'object'> = {
+            type: 'object',
+            properties: {
+                something: {
+                    type: 'object',
+                    properties: {
+                        a: {
+                            type: 'object',
+                            properties: {
+                                bla: {
+                                    type: 'string'
+                                }
+                            },
+                            required: ['bla']
+                        }
+                    },
+                    required: ['a']
+                }
+            },
+            required: ['something']
+        };
+        debugger;
+        expect(res).to.eql(expected);
+    });
+
     it('should return the reference type when refering to a different type', async () => {
         const fileName = 'index.ts';
         const res = linkTest({[fileName]: `

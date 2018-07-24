@@ -14,10 +14,12 @@ export class SchemaLinker {
 
     public flatten(file: string, entityName: string, fileName: string, projectPath: string): Schema {
         const schema = transform(this.checker, this.program.getSourceFile(file)!, '/src/' + fileName, projectPath);
-        if (!schema.definitions) {
-            return {};
+        let entity;
+        if (schema.definitions) {
+            entity = schema.definitions[entityName];
+        } else if (schema.properties) {
+            entity = schema.properties[entityName];
         }
-        const entity = schema.definitions[entityName];
         if (!entity) {
             return {};
         }
@@ -37,32 +39,7 @@ export class SchemaLinker {
             return this.linkClass(schema, entity);
         }
         if (isRef(entity)) {
-            const ref = entity.$ref;
-            const poundIndex = entity.$ref.indexOf('#');
-            const entityType = ref.slice(poundIndex + 1);
-            let refEntity = schema.definitions![ref.replace('#', '')];
-            if (!refEntity) {
-                const importSchema = this.getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1));
-                if (importSchema) {
-                    refEntity = importSchema.definitions![entityType];
-                }
-                // Ifception
-                if (!refEntity) {
-                    return entity;
-                }
-            }
-            if (!refEntity.genericParams || !entity.genericArguments) {
-                return refEntity;
-            }
-            if (isSchemaOfType('object', refEntity)) {
-                const pMap = new Map();
-                refEntity.genericParams!.forEach((param, index) => {
-                    pMap.set(`#${entityType}!${param.name}`, entity.genericArguments![index]);
-                });
-                return this.linkObject(entity, entityType, refEntity, pMap, schema);
-            } else {
-                return entity;
-            }
+            return this.handleRef(entity, schema);
         }
         if (entity.$allOf) {
             const res = this.handleIntersection(entity.$allOf, schema);
@@ -77,6 +54,35 @@ export class SchemaLinker {
             return res;
         }
         return entity;
+    }
+
+    private handleRef(entity: Schema & {$ref: string}, schema: ModuleSchema) {
+        const ref = entity.$ref;
+        const poundIndex = entity.$ref.indexOf('#');
+        const entityType = ref.slice(poundIndex + 1);
+        let refEntity = schema.definitions![ref.replace('#', '')];
+        if (!refEntity) {
+                const importSchema = this.getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1));
+                if (importSchema) {
+                    refEntity = importSchema.definitions![entityType];
+                }
+                // Ifception
+                if (!refEntity) {
+                    return entity;
+                }
+            }
+        if (!refEntity.genericParams || !entity.genericArguments) {
+                return refEntity;
+            }
+        if (isSchemaOfType('object', refEntity)) {
+            const pMap = new Map();
+            refEntity.genericParams!.forEach((param, index) => {
+                pMap.set(`#${entityType}!${param.name}`, entity.genericArguments![index]);
+            });
+            return this.linkObject(refEntity, pMap, schema);
+        } else {
+            return entity;
+        }
     }
 
     private handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
@@ -100,16 +106,17 @@ export class SchemaLinker {
 
                 */
                 this.mergeProperties(entity, res, schema, paramsMap);
-            } else if (isSchemaOfType('object', option)) {
+            } else if (isSchemaOfType('object', option) && !option.$oneOf) {
                 this.mergeProperties(option, res, schema, paramsMap);
             } else {
                 const prop = option.$oneOf ? option.$oneOf[0] : option;
-                if (Object.keys(res).length === 0) {
-                    if (prop.type) {
-                        res.type = prop.type;
-                        if (prop.enum) {
-                            res.enum = prop.enum;
-                        }
+                //There is probably a bug here
+
+
+                if (!res.type && prop.type) {
+                    res.type = prop.type;
+                    if (prop.enum) {
+                        res.enum = prop.enum;
                     }
                 } else {
                     if (prop.type === res.type) {
@@ -149,7 +156,7 @@ export class SchemaLinker {
             const properties = entity.properties;
             for (const prop in properties) {
                 if (!res.properties.hasOwnProperty(prop)) {
-                    res.properties[prop] = properties[prop];
+                    res.properties[prop] = this.link(properties[prop], schema);
                 } else {
                     res.properties[prop] = this.handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
                 }
@@ -222,7 +229,7 @@ export class SchemaLinker {
         return res;
     }
 
-    private linkObject(entity: Schema, entityType: string, refEntity: Schema & IObjectFields, paramsMap: Map<string, Schema>, schema: ModuleSchema): Schema {
+    private linkObject(refEntity: Schema & IObjectFields, paramsMap: Map<string, Schema>, schema: ModuleSchema): Schema {
         const res: typeof refEntity = {};
         res.type = refEntity.type;
         const refProperties = refEntity.properties;
@@ -239,7 +246,7 @@ export class SchemaLinker {
                     properties[propName] = this.handleIntersection(property.$allOf, schema, paramsMap);
                 } else {
                     if (isSchemaOfType('object', property)) {
-                        properties[propName] = this.linkObject(entity, entityType, property, paramsMap, schema);
+                        properties[propName] = this.linkObject(property, paramsMap, schema);
                     }
                 }
             }

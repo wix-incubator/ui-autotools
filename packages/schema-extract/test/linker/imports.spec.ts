@@ -31,8 +31,8 @@ describe('schema-linker - imports', () => {
         const fileName = 'index.ts';
         const res = linkTest({
             [fileName]: `
-                export class B extends React.Component<{}, {}> {
-                    render();
+                import {A} from 'gaga';
+                export type B = {id: A} {
                 }`,
             node_modules: `{
                 gaga: {

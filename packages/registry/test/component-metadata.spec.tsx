@@ -10,6 +10,8 @@ const TestComp: React.SFC<ITestProps> = (props: ITestProps) => {
   return <h1>Hey {props.text} person</h1>;
 };
 
+TestComp.displayName = 'Test Comp';
+
 const testSim = {
   title: 'testSim',
   props: {

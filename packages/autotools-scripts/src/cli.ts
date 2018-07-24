@@ -7,6 +7,7 @@ import {hydrationTest} from '@ui-autotools/sanity';
 import {eyesTest} from '@ui-autotools/eyes';
 import importMeta from './import-metadata/import-meta';
 import {a11yTest, impactLevels} from '@ui-autotools/a11y';
+import {startWebsite} from '@ui-autotools/website';
 import glob from 'glob';
 import path from 'path';
 
@@ -52,6 +53,22 @@ program
   const entry = glob.sync(path.join(projectPath, options.files ? options.files : defaultMetaGlob));
 
   eyesTest(entry, projectPath, webpackConfigPath);
+});
+
+program.command('website')
+.description('create a website that shows component APIs and demos')
+.option('-f, --files [pattern]', 'metadata file pattern')
+.option('--output [dir]', 'output folder for the generated website')
+.action((options) => {
+  startWebsite({
+    projectPath,
+    metadataGlob: options.files ? options.files : defaultMetaGlob,
+    sourceGlob: 'src/**/*.ts?(x)',
+    outputPath: options.output,
+    host: '127.0.0.1',
+    port: 8888,
+    webpackConfigPath: path.join(projectPath, 'meta.webpack.config.js')
+  });
 });
 
 program.parse(process.argv);

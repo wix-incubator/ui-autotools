@@ -6,6 +6,7 @@ import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef,
 export class SchemaLinker {
     private checker: ts.TypeChecker;
     private program: ts.Program;
+    private projectPath = '';
 
     constructor(program: ts.Program, checker: ts.TypeChecker) {
         this.checker = checker;
@@ -13,6 +14,7 @@ export class SchemaLinker {
     }
 
     public flatten(file: string, entityName: string, fileName: string, projectPath: string): Schema {
+        this.projectPath = projectPath;
         const schema = transform(this.checker, this.program.getSourceFile(file)!, '/src/' + fileName, projectPath);
         let entity;
         if (schema.definitions) {
@@ -27,7 +29,7 @@ export class SchemaLinker {
     }
 
     private getSchemaFromImport(path: string, ref: string): ModuleSchema | null {
-        const importSourceFile = this.program.getSourceFile('/someProject' + path);
+        const importSourceFile = this.program.getSourceFile(this.projectPath + path);
         if (!importSourceFile) {
             return null;
         }
@@ -47,11 +49,7 @@ export class SchemaLinker {
             return res;
         }
         if (entity.$oneOf) {
-            const res: Schema = {type: 'object', $oneOf: []};
-            for (const type of entity.$oneOf) {
-                res.$oneOf!.push(this.link(type, schema));
-            }
-            return res;
+            return this.handleUnion(entity.$oneOf, schema);
         }
         if (isSchemaOfType('object', entity)) {
             return this.handleObject(entity, schema);
@@ -82,16 +80,15 @@ export class SchemaLinker {
             refEntity.genericParams!.forEach((param, index) => {
                 pMap.set(`#${entityType}!${param.name}`, entity.genericArguments![index]);
             });
-            return this.linkObject(refEntity, pMap, schema);
+            return this.linkRefObject(refEntity, pMap, schema);
         } else {
-            return entity;
+            return refEntity;
         }
     }
 
     private handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
         const res: Schema & IObjectFields = {};
         for (const option of options) {
-            // Refactor this part, there are duplications here
             if (isRef(option)) {
                 let entity: Schema & IObjectFields;
                 if (paramsMap) {
@@ -103,18 +100,11 @@ export class SchemaLinker {
                     const refEntity = option.genericArguments ? option : schema.definitions![option.$ref!.replace('#', '')];
                     entity = this.link(refEntity, schema);
                 }
-                /*
-
-                What about additionalProperties????
-
-                */
                 this.mergeProperties(entity, res, schema, paramsMap);
             } else if (isSchemaOfType('object', option) && !option.$oneOf) {
                 this.mergeProperties(option, res, schema, paramsMap);
             } else {
                 const prop = option.$oneOf ? option.$oneOf[0] : option;
-                //There is probably a bug here
-
                 if (!res.type && prop.type) {
                     res.type = prop.type;
                     if (prop.enum) {
@@ -123,7 +113,6 @@ export class SchemaLinker {
                 } else {
                     if (prop.type === res.type) {
                         if (prop.enum) {
-                            // can enum have an arrays. something like type x = ['gaga']?
                             if (!res.enum) {
                                 res.enum = prop.enum;
                             } else {
@@ -145,6 +134,14 @@ export class SchemaLinker {
                     }
                 }
             }
+        }
+        return res;
+    }
+
+    private handleUnion(types: Schema[], schema: ModuleSchema) {
+        const res: Schema = {type: 'object', $oneOf: []};
+        for (const type of types) {
+            res.$oneOf!.push(this.link(type, schema));
         }
         return res;
     }
@@ -231,7 +228,7 @@ export class SchemaLinker {
         return res;
     }
 
-    private linkObject(refEntity: Schema & IObjectFields, paramsMap: Map<string, Schema>, schema: ModuleSchema): Schema {
+    private linkRefObject(refEntity: Schema & IObjectFields, paramsMap: Map<string, Schema>, schema: ModuleSchema): Schema {
         const res: typeof refEntity = {};
         res.type = refEntity.type;
         const refProperties = refEntity.properties;
@@ -246,10 +243,8 @@ export class SchemaLinker {
                     properties[propName] = paramsMap.get(property.$ref)!;
                 } else if (property.$allOf) {
                     properties[propName] = this.handleIntersection(property.$allOf, schema, paramsMap);
-                } else {
-                    if (isSchemaOfType('object', property)) {
-                        properties[propName] = this.linkObject(property, paramsMap, schema);
-                    }
+                } else if (isSchemaOfType('object', property)) {
+                    properties[propName] = this.linkRefObject(property, paramsMap, schema);
                 }
             }
         }

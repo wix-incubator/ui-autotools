@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/utils",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -29,7 +29,8 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@ui-autotools/registry": "^1.0.1",
+    "@stylable/node": "^0.0.2",
+    "@ui-autotools/registry": "^1.0.2",
     "html-webpack-plugin": "^3.2.0",
     "koa": "^2.5.1",
     "koa-webpack": "^5.0.2"

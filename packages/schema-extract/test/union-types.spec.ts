@@ -22,6 +22,8 @@ describe('schema-extract - union', () => {
         export let inline_union: number | {
             value:number
         }
+
+        export type strings = 'a' | 'b' | 'c';
         `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
@@ -39,6 +41,12 @@ describe('schema-extract - union', () => {
                             enum: ['hello', 'goodbye'],
                         },
                     ],
+                },
+                strings: {
+                    type: 'string',
+                    enum: [
+                        'a', 'b', 'c'
+                    ]
                 },
             },
             properties: {
@@ -102,7 +110,7 @@ describe('schema-extract - union', () => {
                             required: ['value']
                         },
                     ],
-                },
+                }
             },
         };
         expect(res).to.eql(expected);

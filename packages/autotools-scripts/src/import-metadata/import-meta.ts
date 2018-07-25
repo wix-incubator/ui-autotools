@@ -1,4 +1,3 @@
-import 'typescript-support';
 import * as glob from 'glob';
 
 const importMeta = (filePattern: string) => {

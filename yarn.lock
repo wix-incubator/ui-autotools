@@ -770,20 +770,6 @@
   version "2.4.31"
   resolved "https://registry.yarnpkg.com/@types/when/-/when-2.4.31.tgz#7a4dbf009957c48fcd7ac469cadb82758ac970bf"
 
-"@ui-autotools/registry@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@ui-autotools/registry/-/registry-1.0.2.tgz#77c5c017f3d73229211b5cac0d6fd6a0856c1722"
-
-"@ui-autotools/utils@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@ui-autotools/utils/-/utils-1.0.3.tgz#fc668697513a47f8be630c47f02a5c3b32875d4c"
-  dependencies:
-    "@stylable/node" "^0.0.2"
-    "@ui-autotools/registry" "^1.0.2"
-    html-webpack-plugin "^3.2.0"
-    koa "^2.5.1"
-    koa-webpack "^5.0.2"
-
 "@webassemblyjs/ast@1.5.12":
   version "1.5.12"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.5.12.tgz#a9acbcb3f25333c4edfa1fdf3186b1ccf64e6664"

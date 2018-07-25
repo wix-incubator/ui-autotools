@@ -12,6 +12,7 @@ export interface IComponentMetadata<Props> {
   styles: Map<any, IStyleMetadata>;
   addSim: (sim: ISimulation<Props>) => void;
   addStyle: (style: any, description: IStyleMetadata) => void;
+  simulationToJSX: (sim: ISimulation<Props>) => JSX.Element;
 }
 
 export interface IMetadata {

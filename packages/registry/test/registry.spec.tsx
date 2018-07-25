@@ -18,10 +18,6 @@ const CopyCatTestComp: React.SFC<ITestProps> = (props: ITestProps) => {
 
 CopyCatTestComp.displayName = 'Test Comp';
 
-const NamelessComp: React.SFC<ITestProps> = (props: ITestProps) => {
-  return <h1>Hey {props.text} person</h1>;
-};
-
 describe('Registry', () => {
   beforeEach(() => {
     Registry.clear();
@@ -41,7 +37,7 @@ describe('Registry', () => {
     });
 
     it('throws if component does not have a "name" or a "displayName" property and does not register the component', () => {
-      expect(() => Registry.getComponentMetadata(NamelessComp)).to.throw();
+      expect(() => Registry.getComponentMetadata(() => <h1>Hey I have no name </h1>)).to.throw();
       expect(Registry.metadata.components.size).to.equal(0);
     });
 

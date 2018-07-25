@@ -22,5 +22,6 @@ export interface IStyleMetadata {
 }
 
 export interface ISimulation<Props> {
+  title: string;
   props: Props;
 }

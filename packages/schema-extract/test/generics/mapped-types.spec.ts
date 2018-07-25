@@ -25,9 +25,9 @@ describe('schema-extract - generic mapped types', () => {
                     additionalProperties: {
                         $ref: '#MyType!T',
                     },
-                    propertyNames:{
-                        type:'string',
-                        enum:['a','b']
+                    propertyNames: {
+                        type: 'string',
+                        enum: ['a', 'b']
                     }
                 },
             },
@@ -64,11 +64,11 @@ describe('schema-extract - generic mapped types', () => {
                         type: 'string',
                     }],
                     additionalProperties: {
-                        type:'string'
+                        type: 'string'
                     },
-                    propertyNames:{
+                    propertyNames: {
                         $ref: '#MyType!T'
-                        
+
                     }
                 },
             },
@@ -88,6 +88,3 @@ describe('schema-extract - generic mapped types', () => {
     });
 
 });
-
-
-

@@ -5,7 +5,11 @@ export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
   public styles: Map<any, IStyleMetadata> = new Map<any, IStyleMetadata>();
 
   public addSim(sim: ISimulation<Props>) {
-    this.simulations.push(sim);
+    if (this.simulations.every((simulation) => simulation.title !== sim.title)) {
+      this.simulations.push(sim);
+    } else {
+      throw new Error(`There's already a simulation with the title ${sim.title}. Titles should be unique.`);
+    }
   }
 
   public addStyle(style: any, description: IStyleMetadata) {

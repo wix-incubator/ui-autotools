@@ -1,11 +1,11 @@
-import Registry from 'metadata-tools';
+import Registry from '@ui-autotools/registry';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
 // [ISSUE] If the registry imported here and the registry imported by the
 // project sit in different node_modules we're screwed.
 
-// [ISSUE] metadata-tools doesn't export type for Registry.
+// [ISSUE] @ui-autotools/registry doesn't export type for Registry.
 
 // [ISSUE] simulations need to have titles, and .addSim() should check for
 // uniquness of those titles because tests in Eyes are identified by their
@@ -16,9 +16,9 @@ const reactRoot = document.querySelector('#react-root')!;
 function createTestsFromSimulations() {
   const tests = [];
   for (const [Comp, meta] of Registry.metadata.components.entries()) {
-    for (const [simIndex, sim] of meta.simulations.entries()) {
+    for (const sim of meta.simulations) {
       tests.push({
-        title: Comp.name + ' ' + simIndex,
+        title: Comp.name + ' ' + sim.title,
         render:  () => ReactDOM.render(<Comp {...sim.props} />, reactRoot),
         cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot)
       });

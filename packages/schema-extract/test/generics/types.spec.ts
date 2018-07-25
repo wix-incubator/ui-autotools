@@ -27,7 +27,7 @@ describe('schema-extract - generic types', () => {
                             $ref: '#MyType!T',
                         },
                     },
-                    required:['something']
+                    required: ['something']
                 },
             },
             properties: {
@@ -67,7 +67,7 @@ describe('schema-extract - generic types', () => {
                             $ref: '#MyType!T',
                         },
                     },
-                    required:['something'],
+                    required: ['something'],
                 },
             },
             properties: {
@@ -121,7 +121,7 @@ describe('schema-extract - generic types', () => {
                                     $ref: '#MyType!T',
                                 },
                             },
-                            required:['deepKey'],
+                            required: ['deepKey'],
                         },
                         method: {
                             $ref: FunctionSchemaId,
@@ -145,17 +145,17 @@ describe('schema-extract - generic types', () => {
                                                     $ref: '#MyType!T'
                                                 }
                                             ],
-                                            requiredArguments:['item'],
+                                            requiredArguments: ['item'],
 
                                             returns: {
                                                 type: 'boolean'
                                             }
                                         }
                                     },
-                                    required:['values','filter']
+                                    required: ['values', 'filter']
                                 }
                             ],
-                            requiredArguments:['arg'],
+                            requiredArguments: ['arg'],
                             returns: {
                                 type: 'object',
                                 properties: {
@@ -169,11 +169,11 @@ describe('schema-extract - generic types', () => {
                                         }
                                     }
                                 },
-                                required:['status','results']
+                                required: ['status', 'results']
                             }
                         }
                     },
-                    required:['something','method']
+                    required: ['something', 'method']
                 }
             },
             properties: {}
@@ -181,6 +181,3 @@ describe('schema-extract - generic types', () => {
         expect(res).to.eql(expected);
     });
 });
-
-
-

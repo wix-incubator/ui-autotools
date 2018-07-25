@@ -1,6 +1,6 @@
 {
-  "name": "metadata-tools",
-  "version": "1.0.0",
+  "name": "@ui-autotools/registry",
+  "version": "1.0.2",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -26,5 +26,8 @@
   },
   "repository": "git@github.com:wix-incubator/ui-autotools.git",
   "author": "Wix.com",
-  "license": "BSD-3-Clause"
+  "license": "BSD-3-Clause",
+  "publishConfig": {
+    "access": "public"
+  }
 }

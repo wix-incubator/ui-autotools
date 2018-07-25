@@ -1,9 +1,10 @@
 {
-  "name": "schema-extract",
-  "version": "1.0.0",
+  "name": "@ui-autotools/schema-extract",
+  "version": "1.0.3",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
+  "private": true,
   "scripts": {
     "clean": "rimraf ./cjs ./esm",
     "build": "run-p build:cjs build:esm",
@@ -24,6 +25,7 @@
     "typescript": ">=2.8.0"
   },
   "dependencies": {
+    "chalk": "^2.4.1",
     "commander": "^2.15.1",
     "glob": "^7.1.2",
     "kissfs": "^0.6.3"

@@ -44,7 +44,7 @@ describe('schema-extract - union', () => {
                 },
                 strings: {
                     type: 'string',
-                    enum:[
+                    enum: [
                         'a', 'b', 'c'
                     ]
                 },
@@ -107,7 +107,7 @@ describe('schema-extract - union', () => {
                                     type: 'number',
                                 },
                             },
-                            required:['value']
+                            required: ['value']
                         },
                     ],
                 }

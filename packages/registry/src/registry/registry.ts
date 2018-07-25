@@ -16,7 +16,7 @@ const Registry: IRegistry = {
 
       for (const component of this.metadata.components.keys()) {
         if (getCompName(component) === newCompName) {
-          throw new Error(`There already exists a component with the name: "${newCompName}". Component names must be unique.`);
+          throw new Error(`There's already a component with the name: "${newCompName}". Component names should be unique.`);
         }
       }
 

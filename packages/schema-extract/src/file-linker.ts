@@ -6,16 +6,18 @@ import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef,
 export class SchemaLinker {
     private checker: ts.TypeChecker;
     private program: ts.Program;
-    private projectPath = '';
+    private projectPath: string;
+    private nodeModulesPath: string[] = [];
 
-    constructor(program: ts.Program, checker: ts.TypeChecker) {
+    constructor(program: ts.Program, checker: ts.TypeChecker, projectPath: string, nodeModulesPath: string[]) {
         this.checker = checker;
         this.program = program;
+        this.projectPath = projectPath;
+        this.nodeModulesPath = nodeModulesPath;
     }
 
-    public flatten(file: string, entityName: string, fileName: string, projectPath: string): Schema {
-        this.projectPath = projectPath;
-        const schema = transform(this.checker, this.program.getSourceFile(file)!, '/src/' + fileName, projectPath);
+    public flatten(file: string, entityName: string, fileName: string): Schema {
+        const schema = transform(this.checker, this.program.getSourceFile(file)!, '/src/' + fileName, this.projectPath);
         let entity;
         if (schema.definitions) {
             entity = schema.definitions[entityName];
@@ -30,7 +32,10 @@ export class SchemaLinker {
 
     private getSchemaFromImport(path: string, ref: string): ModuleSchema | null {
         const importSourceFile = this.program.getSourceFile(this.projectPath + path);
+        debugger;
         if (!importSourceFile) {
+            const npath = this.nodeModulesPath[0];
+            this.program.getSourceFile(npath);
             return null;
         }
         return transform(this.checker, importSourceFile , path + ref, path);

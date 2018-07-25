@@ -34,12 +34,12 @@ describe('schema-linker - imports', () => {
                 import {A} from 'gaga';
                 export type B = {id: A} {
                 }`,
-            node_modules: `{
+            node_modules: {
                 gaga: {
-                    'package.json': '{name: gaga, main: library.d.ts'
+                    'package.json': '{name: gaga, main: library.d.ts',
                     'library.d.ts': 'export type A = {something: string}'
                 }
-            }`
+            }
         }, 'B', fileName);
 
         const expected = {

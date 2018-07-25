@@ -7,20 +7,20 @@ import { SchemaLinker } from '../src/file-linker';
 export function linkTest(sourceDir: DirectoryContent, entityName: string, fileName: string): Schema {
     const memFs = new MemoryFileSystem();
     const projectName = 'someProject';
-    const testedPath = '/' + projectName + '/src/';
+    const projectPath = `/${projectName}`;
+    const nodeModulesPath = [`${projectPath}/node_modules`];
+    const testedPath = projectPath + '/src/';
     const testedFile = testedPath + fileName;
-    const projectPath = '/someProject';
     MemoryFileSystem.addContent(memFs, {
         [projectName]: {
             src: sourceDir,
         },
     });
-
-
     // Fix this to not use the same name
-    const prg = ts.createProgram([testedFile, `${testedPath}import.ts`], {}, createHost(memFs));
+    const prg = ts.createProgram([testedFile, `${testedPath}import.ts`, nodeModulesPath[0]], {}, createHost(memFs));
+    debugger;
     const chckr = prg.getTypeChecker();
-    const linker = new SchemaLinker(prg, chckr);
+    const linker = new SchemaLinker(prg, chckr, projectPath, nodeModulesPath);
 
-    return linker.flatten(testedFile, entityName, fileName, projectPath);
+    return linker.flatten(testedFile, entityName, fileName);
 }

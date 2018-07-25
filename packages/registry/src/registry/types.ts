@@ -7,10 +7,12 @@ export interface IRegistry<AssetMap = any> {
 }
 
 export interface IComponentMetadata<Props> {
+  component: ComponentType<Props>;
   simulations: Array<ISimulation<Props>>;
   styles: Map<any, IStyleMetadata>;
   addSim: (sim: ISimulation<Props>) => void;
   addStyle: (style: any, description: IStyleMetadata) => void;
+  simulationToJSX: (sim: ISimulation<Props>) => JSX.Element;
 }
 
 export interface IMetadata {

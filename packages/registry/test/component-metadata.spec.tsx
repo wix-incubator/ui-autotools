@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Registry from '../src/registry';
+import Registry from '../src';
 import {expect} from 'chai';
 
 interface ITestProps {
@@ -9,6 +9,8 @@ interface ITestProps {
 const TestComp: React.SFC<ITestProps> = (props: ITestProps) => {
   return <h1>Hey {props.text} person</h1>;
 };
+
+TestComp.displayName = 'Test Comp';
 
 const testSim = {
   title: 'testSim',

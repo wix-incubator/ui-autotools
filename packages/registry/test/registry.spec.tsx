@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Registry, {ComponentMetadata} from '../src/registry';
+import Registry, {ComponentMetadata} from '../src';
 import {expect} from 'chai';
 
 interface ITestProps {
@@ -9,6 +9,14 @@ interface ITestProps {
 const TestComp: React.SFC<ITestProps> = (props: ITestProps) => {
   return <h1>Hey {props.text} person</h1>;
 };
+
+TestComp.displayName = 'Test Comp';
+
+const CopyCatTestComp: React.SFC<ITestProps> = (props: ITestProps) => {
+  return <h1>Hey {props.text} person</h1>;
+};
+
+CopyCatTestComp.displayName = 'Test Comp';
 
 describe('Registry', () => {
   beforeEach(() => {
@@ -26,6 +34,17 @@ describe('Registry', () => {
       const mySecondCompMetadata = Registry.getComponentMetadata(TestComp);
 
       expect(mySecondCompMetadata).to.equal(myCompMetadata);
+    });
+
+    it('throws if component does not have a "name" or a "displayName" property and does not register the component', () => {
+      expect(() => Registry.getComponentMetadata(() => <h1>Hey I have no name </h1>)).to.throw();
+      expect(Registry.metadata.components.size).to.equal(0);
+    });
+
+    it('throws if a component already exists with a certain name', () => {
+      Registry.getComponentMetadata(TestComp); // Named 'Test Comp'
+
+      expect(() => Registry.getComponentMetadata(CopyCatTestComp)).to.throw(); // Also named 'Test Comp'
     });
   });
 

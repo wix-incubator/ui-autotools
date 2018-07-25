@@ -18,9 +18,9 @@ export interface IResult {
 function createTestsFromSimulations(reactRoot: HTMLElement) {
   const tests: ITest[] = [];
   for (const [Comp, meta] of Registry.metadata.components.entries()) {
-    for (const [simIndex, sim] of meta.simulations.entries()) {
+    for (const sim of meta.simulations) {
       tests.push({
-        title: (Comp.displayName ? Comp.displayName : Comp.name) + ' ' + simIndex,
+        title: (Comp.displayName ? Comp.displayName : Comp.name) + ' ' + sim.title,
         render:  (container: HTMLElement) => ReactDOM.render(<Comp {...sim.props} />, container),
         cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot)
       });

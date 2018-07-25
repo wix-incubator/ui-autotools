@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/a11y",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
   "scripts": {
@@ -27,8 +27,8 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@ui-autotools/registry": "^1.0.1",
-    "@ui-autotools/utils": "^1.0.2",
+    "@ui-autotools/registry": "^1.0.2",
+    "@ui-autotools/utils": "^1.0.3",
     "axe-core": "^3.0.3",
     "chalk": "^2.4.1",
     "puppeteer": "^1.5.0"

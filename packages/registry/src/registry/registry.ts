@@ -2,7 +2,7 @@ import {IRegistry} from './types';
 import {ComponentType} from 'react';
 import {ComponentMetadata} from './component-metadata';
 import Metadata from './metadata';
-import {getCompName} from '@ui-autotools/utils';
+import {getCompName} from '../utils/get-comp-name';
 
 const Registry: IRegistry = {
   metadata: new Metadata(),

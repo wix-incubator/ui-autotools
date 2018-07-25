@@ -17,7 +17,6 @@ export interface IComponentMetadata<Props> {
 
 export interface IMetadata {
   components: Map<ComponentType<any>, IComponentMetadata<any>>;
-  // compNames: string[];
 }
 
 export interface IStyleMetadata {

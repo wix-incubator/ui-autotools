@@ -7,6 +7,7 @@ export interface IRegistry<AssetMap = any> {
 }
 
 export interface IComponentMetadata<Props> {
+  component: ComponentType<Props>;
   simulations: Array<ISimulation<Props>>;
   styles: Map<any, IStyleMetadata>;
   addSim: (sim: ISimulation<Props>) => void;
@@ -15,6 +16,7 @@ export interface IComponentMetadata<Props> {
 
 export interface IMetadata {
   components: Map<ComponentType<any>, IComponentMetadata<any>>;
+  // compNames: string[];
 }
 
 export interface IStyleMetadata {

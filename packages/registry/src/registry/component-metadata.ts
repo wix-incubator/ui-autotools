@@ -1,8 +1,13 @@
 import {IComponentMetadata, ISimulation, IStyleMetadata} from './types';
 
 export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
+  public component: React.ComponentType<Props>;
   public simulations: Array<ISimulation<Props>> = []; // Initialize with "empty" simulation
   public styles: Map<any, IStyleMetadata> = new Map<any, IStyleMetadata>();
+
+  public constructor(component: React.ComponentType<Props>) {
+    this.component = component;
+  }
 
   public addSim(sim: ISimulation<Props>) {
     if (this.simulations.every((simulation) => simulation.title !== sim.title)) {

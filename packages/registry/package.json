@@ -29,5 +29,8 @@
   "license": "BSD-3-Clause",
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@ui-autotools/utils": "^1.0.3"
   }
 }

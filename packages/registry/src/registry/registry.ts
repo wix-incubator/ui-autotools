@@ -2,6 +2,7 @@ import {IRegistry} from './types';
 import {ComponentType} from 'react';
 import {ComponentMetadata} from './component-metadata';
 import Metadata from './metadata';
+import {getCompName} from '@ui-autotools/utils';
 
 const Registry: IRegistry = {
   metadata: new Metadata(),
@@ -11,7 +12,14 @@ const Registry: IRegistry = {
     }
 
     if (!this.metadata.components.has(comp)) {
-      this.metadata.components.set(comp, new ComponentMetadata<Props>());
+      const newCompName = getCompName(comp);
+      for (const component of this.metadata.components.keys()) {
+        if (getCompName(component) === newCompName) {
+          throw new Error(`There already exists a component with the name: "${newCompName}". Component names must be unique.`);
+        }
+      }
+
+      this.metadata.components.set(comp, new ComponentMetadata<Props>(comp));
     }
 
     return this.metadata.components.get(comp)!;

@@ -16,7 +16,7 @@ export const hydrationTest = (): void => {
     let index = 0;
     const componentStrings = (window as any).components;
 
-    Registry.metadata.components.forEach((metadata, Comp) => {
+    Registry.metadata.components.forEach((componentMetadata, Comp) => {
       describe(getCompName(Comp), () => {
         beforeEach(() => {
           consoleSpy = sinon.spy(console, 'log');
@@ -28,11 +28,11 @@ export const hydrationTest = (): void => {
           errorSpy.restore();
         });
 
-        metadata.simulations.forEach((simulation) => {
+        componentMetadata.simulations.forEach((simulation) => {
           it(`should hydrate component: "${getCompName(Comp)}" in strict mode, with props of simulation: "${simulation.title}" without errors`, () => {
             // Set root's HTML to the SSR component
             root.innerHTML = componentStrings[index];
-            hydrate(<React.StrictMode>{metadata.simulationToJSX(simulation)}</React.StrictMode>, root);
+            hydrate(<React.StrictMode>{componentMetadata.simulationToJSX(simulation)}</React.StrictMode>, root);
             ReactDOM.unmountComponentAtNode(root);
             index++;
             // If args is not a primitive, it's not really of interest to us, since any React errors will be

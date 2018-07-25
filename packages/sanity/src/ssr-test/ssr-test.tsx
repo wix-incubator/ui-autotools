@@ -14,15 +14,15 @@ export const ssrTest = (): void => {
             expect(() => document).to.throw();
         });
 
-        Registry.metadata.components.forEach((metadata, Comp) => {
+        Registry.metadata.components.forEach((componentMetadata, Comp) => {
             describe(getCompName(Comp), () => {
                 it(`should render component: "${getCompName(Comp)}" to string without throwing`, () => {
                     expect(() => renderToString(<Comp />), 'RenderToString threw an error').not.to.throw();
                 });
 
-                metadata.simulations.forEach(((simulation) => {
+                componentMetadata.simulations.forEach(((simulation) => {
                     it(`should render component: "${getCompName(Comp)}" to string with props of simulation: "${simulation.title}" without throwing`, () => {
-                        expect(() => renderToString(metadata.simulationToJSX(simulation)), 'RenderToString threw an error').not.to.throw();
+                        expect(() => renderToString(componentMetadata.simulationToJSX(simulation)), 'RenderToString threw an error').not.to.throw();
                     });
                 }));
             });

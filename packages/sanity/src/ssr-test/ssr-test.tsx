@@ -1,11 +1,9 @@
 /**
  * @jest-environment node
  */
-
 import React from 'react';
 import {renderToString} from 'react-dom/server';
 import Registry from '@ui-autotools/registry';
-import {simulationToJSX} from '@ui-autotools/utils';
 import {expect} from 'chai';
 
 export const ssrTest = (): void => {
@@ -24,7 +22,7 @@ export const ssrTest = (): void => {
 
                 metadata.simulations.forEach(((simulation) => {
                     it(`should render component: "${Comp.name}" to string with props of simulation: "${simulation.title}" without throwing`, () => {
-                        expect(() => renderToString(simulationToJSX(Comp, simulation)), 'RenderToString threw an error').not.to.throw();
+                        expect(() => renderToString(metadata.simulationToJSX(simulation)), 'RenderToString threw an error').not.to.throw();
                     });
                 }));
             });

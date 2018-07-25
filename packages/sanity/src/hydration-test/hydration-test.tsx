@@ -5,7 +5,6 @@ import chai, {expect} from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import {hydrate} from 'react-dom';
-import {simulationToJSX} from '@ui-autotools/utils/esm/metadata/simulation-to-jsx';
 
 chai.use(sinonChai);
 
@@ -33,7 +32,7 @@ export const hydrationTest = (): void => {
           it(`should hydrate component: "${Comp.name}" in strict mode, with props of simulation: "${simulation.title}" without errors`, () => {
             // Set root's HTML to the SSR component
             root.innerHTML = componentStrings[index];
-            hydrate(<React.StrictMode>{simulationToJSX(Comp, simulation)}</React.StrictMode>, root);
+            hydrate(<React.StrictMode>{metadata.simulationToJSX(simulation)}</React.StrictMode>, root);
             ReactDOM.unmountComponentAtNode(root);
             index++;
             // If args is not a primitive, it's not really of interest to us, since any React errors will be

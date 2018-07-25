@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Registry from '../src/registry';
+import Registry from '../src';
 import {expect} from 'chai';
 
 interface ITestProps {

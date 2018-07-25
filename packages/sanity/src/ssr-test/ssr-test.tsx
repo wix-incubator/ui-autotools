@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import {renderToString} from 'react-dom/server';
-import Registry from '@ui-autotools/registry';
+import Registry, {getCompName} from '@ui-autotools/registry';
 import {expect} from 'chai';
 
 export const ssrTest = (): void => {
@@ -15,13 +15,13 @@ export const ssrTest = (): void => {
         });
 
         Registry.metadata.components.forEach((metadata, Comp) => {
-            describe(Comp.name, () => {
-                it(`should render component: "${Comp.name}" to string without throwing`, () => {
+            describe(getCompName(Comp), () => {
+                it(`should render component: "${getCompName(Comp)}" to string without throwing`, () => {
                     expect(() => renderToString(<Comp />), 'RenderToString threw an error').not.to.throw();
                 });
 
                 metadata.simulations.forEach(((simulation) => {
-                    it(`should render component: "${Comp.name}" to string with props of simulation: "${simulation.title}" without throwing`, () => {
+                    it(`should render component: "${getCompName(Comp)}" to string with props of simulation: "${simulation.title}" without throwing`, () => {
                         expect(() => renderToString(metadata.simulationToJSX(simulation)), 'RenderToString threw an error').not.to.throw();
                     });
                 }));

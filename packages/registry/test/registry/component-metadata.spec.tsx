@@ -1,19 +1,16 @@
-import * as React from 'react';
-import Registry from '../src';
+import Registry from '../../src';
 import {expect} from 'chai';
-
-interface ITestProps {
-  text: string;
-}
-
-const TestComp: React.SFC<ITestProps> = (props: ITestProps) => {
-  return <h1>Hey {props.text} person</h1>;
-};
-
-TestComp.displayName = 'Test Comp';
+import {TestComp} from '../fixtures/component-fixtures';
 
 const testSim = {
   title: 'testSim',
+  props: {
+    text: 'person',
+  },
+};
+
+const invalidTitleSim = {
+  title: '$$@#$()*E&)SD(*F&DS)F(*&(*$@)($*&@#$(*&',
   props: {
     text: 'person',
   },
@@ -44,6 +41,12 @@ describe('Component Metadata', () => {
       myCompMetadata.addSim(testSim);
       expect(myCompMetadata.simulations[0]).to.equal(testSim);
       expect(() => myCompMetadata.addSim(testSim)).to.throw();
+    });
+
+    it('throws an error when adding a simulation with an invalid title', () => {
+      const myCompMetadata = Registry.getComponentMetadata(TestComp);
+      expect(() => myCompMetadata.addSim(invalidTitleSim)).to.throw();
+      expect(myCompMetadata.simulations[0]).to.equal(undefined);
     });
   });
 

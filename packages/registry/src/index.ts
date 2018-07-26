@@ -1,5 +1,4 @@
 import Registry from './registry/registry';
-export {ComponentMetadata} from './registry/component-metadata';
-export * from './registry/types';
-export {getCompName} from './utils/get-comp-name';
+export * from './registry';
+export * from './utils';
 export default Registry;

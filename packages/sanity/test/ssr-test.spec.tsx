@@ -11,7 +11,7 @@ const TestComp: React.SFC<IProps> = (props: IProps) => {
   return <h1>Hey {props.text} person</h1>;
 };
 
-TestComp.displayName = 'Test Comp';
+TestComp.displayName = 'TestComp';
 
 const FailingTestComp: React.SFC = () => {
   const accessDocument = () => {
@@ -22,7 +22,7 @@ const FailingTestComp: React.SFC = () => {
   return null;
 };
 
-FailingTestComp.displayName = 'Failing Test Comp';
+FailingTestComp.displayName = 'FailingTestComp';
 
 describe('SSR Test', () => {
   beforeEach(() => {

@@ -1,22 +1,7 @@
 import * as React from 'react';
-import Registry, {ComponentMetadata} from '../src';
+import {TestComp, CopyCatTestComp, InvalidNameComp} from '../fixtures/component-fixtures';
+import Registry, {ComponentMetadata} from '../../src';
 import {expect} from 'chai';
-
-interface ITestProps {
-  text: string;
-}
-
-const TestComp: React.SFC<ITestProps> = (props: ITestProps) => {
-  return <h1>Hey {props.text} person</h1>;
-};
-
-TestComp.displayName = 'Test Comp';
-
-const CopyCatTestComp: React.SFC<ITestProps> = (props: ITestProps) => {
-  return <h1>Hey {props.text} person</h1>;
-};
-
-CopyCatTestComp.displayName = 'Test Comp';
 
 describe('Registry', () => {
   beforeEach(() => {
@@ -45,6 +30,10 @@ describe('Registry', () => {
       Registry.getComponentMetadata(TestComp); // Named 'Test Comp'
 
       expect(() => Registry.getComponentMetadata(CopyCatTestComp)).to.throw(); // Also named 'Test Comp'
+    });
+
+    it('throws if a component name is not valid', () => {
+      expect(() => Registry.getComponentMetadata(InvalidNameComp)).to.throw();
     });
   });
 

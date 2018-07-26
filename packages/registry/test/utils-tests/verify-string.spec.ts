@@ -4,7 +4,7 @@ import {expect} from 'chai';
 describe('Verification Methods', () => {
   describe('isValidSimulationTitle', () => {
     it('returns true for an valid string', () => {
-      const goodString = 'TestMe123';
+      const goodString = 'TestMe-123_ and a space';
 
       expect(isValidSimulationTitle(goodString)).to.equal(true);
     });

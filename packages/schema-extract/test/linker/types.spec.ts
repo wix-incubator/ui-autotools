@@ -89,7 +89,6 @@ describe('schema-linker - generic types', () => {
             },
             required: ['something']
         };
-        debugger;
         expect(res).to.eql(expected);
     });
 

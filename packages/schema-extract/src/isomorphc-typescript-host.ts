@@ -33,7 +33,7 @@ export function createHost(fs: FileSystemReadSync): ts.CompilerHost {
             const dir = posix.dirname(containingFile);
             return moduleNames.map((fileName) => {
                 return {
-                    resolvedFileName: posix.join(dir, fileName) + '.ts',
+                    resolvedFileName: posix.join(dir, fileName) + '.ts'
                 };
             });
         },

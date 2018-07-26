@@ -31,8 +31,11 @@ export class SchemaLinker {
     }
 
     private getSchemaFromImport(path: string, ref: string): ModuleSchema | null {
-        const importSourceFile = this.program.getSourceFile(this.projectPath + path);
-        debugger;
+        // Create a test for different extensions
+
+
+
+        const importSourceFile = this.program.getSourceFile(this.projectPath + path + '.ts');
         if (!importSourceFile) {
             const npath = this.nodeModulesPath[0];
             this.program.getSourceFile(npath);

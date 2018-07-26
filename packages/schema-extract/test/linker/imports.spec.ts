@@ -7,9 +7,9 @@ describe('schema-linker - imports', () => {
         const fileName = 'index.ts';
         const res = linkTest({
             [fileName]: `
-                import {MyType} from './import.ts';
+                import {MyType} from './import';
                 export type B = MyType<string>;`,
-            'import.ts': `
+            ['import.ts']: `
                 export type MyType<T> = {
                     something:T;
                 };`

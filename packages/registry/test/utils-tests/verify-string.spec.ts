@@ -1,18 +1,32 @@
-import {isAlphanumeric} from '../../src';
+import {isValidSimulationTitle, isValidComponentName} from '../../src';
 import {expect} from 'chai';
 
 describe('Verification Methods', () => {
-  describe('isAlphanumeric', () => {
-    it('returns true for an alphanumeric string', () => {
+  describe('isValidSimulationTitle', () => {
+    it('returns true for an valid string', () => {
       const goodString = 'TestMe123';
 
-      expect(isAlphanumeric(goodString)).to.equal(true);
+      expect(isValidSimulationTitle(goodString)).to.equal(true);
     });
 
-    it('should return false for a string with bad values', () => {
-      const badString = '$test-comp';
+    it('should return false for an invalid string', () => {
+      const badString = '$test-props';
 
-      expect(isAlphanumeric(badString)).to.equal(false);
+      expect(isValidSimulationTitle(badString)).to.equal(false);
+    });
+  });
+
+  describe('isValidComponentName', () => {
+    it('returns true for an valid string', () => {
+      const goodString = 'MyFavoriteCompWithANiceProperName';
+
+      expect(isValidComponentName(goodString)).to.equal(true);
+    });
+
+    it('should return false for an invalid string', () => {
+      const badString = 'Shamefully Named-comp024';
+
+      expect(isValidComponentName(badString)).to.equal(false);
     });
   });
 });

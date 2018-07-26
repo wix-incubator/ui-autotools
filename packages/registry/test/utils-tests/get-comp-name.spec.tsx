@@ -5,9 +5,9 @@ import {DefaultNameComp, TestComp} from '../fixtures/component-fixtures';
 
 describe('getCompName', () => {
   it('should return the "displayName" property first, if it exists', () => {
-    TestComp.displayName = 'Returning the displayName';
+    TestComp.displayName = 'ReturningTheDisplayName';
 
-    expect(getCompName(TestComp)).to.equal('Returning the displayName');
+    expect(getCompName(TestComp)).to.equal('ReturningTheDisplayName');
   });
 
   it('should return the "name" property, if displayName does not exist', () => {

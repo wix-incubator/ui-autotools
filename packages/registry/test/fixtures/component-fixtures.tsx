@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 interface ITestProps {
   text: string;
@@ -8,13 +8,13 @@ export const TestComp: React.SFC<ITestProps> = (props: ITestProps) => {
   return <h1>Hey {props.text} person</h1>;
 };
 
-TestComp.displayName = 'Test Comp';
+TestComp.displayName = 'TestComp';
 
 export const CopyCatTestComp: React.SFC<ITestProps> = (props: ITestProps) => {
   return <h1>Hey {props.text} person</h1>;
 };
 
-CopyCatTestComp.displayName = 'Test Comp';
+CopyCatTestComp.displayName = 'TestComp';
 
 export const InvalidNameComp: React.SFC = () => {
   return <h1>Heyperson</h1>;

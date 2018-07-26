@@ -1,6 +1,6 @@
 import React from 'react';
 import {IComponentMetadata, ISimulation, IStyleMetadata} from './types';
-import {isAlphanumeric} from '../utils';
+import {isValidSimulationTitle} from '../utils';
 
 export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
   public simulations: Array<ISimulation<Props>> = []; // Initialize with "empty" simulation
@@ -11,7 +11,7 @@ export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
   public addSim(sim: ISimulation<Props>) {
     if (!this.simulations.every((simulation) => simulation.title !== sim.title)) {
       throw new Error(`There's already a simulation with the title ${sim.title}. Titles should be unique.`);
-    } else if (!isAlphanumeric(sim.title)) {
+    } else if (!isValidSimulationTitle(sim.title)) {
       throw new Error(`Simulation titles must be alphanumeric.`);
     } else {
       this.simulations.push(sim);

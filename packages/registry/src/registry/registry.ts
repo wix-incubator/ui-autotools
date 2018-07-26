@@ -3,7 +3,7 @@ import {ComponentType} from 'react';
 import {ComponentMetadata} from './component-metadata';
 import Metadata from './metadata';
 import {getCompName} from '../utils/get-comp-name';
-import {isAlphanumeric} from '../utils';
+import {isValidComponentName} from '../utils';
 
 const Registry: IRegistry = {
   metadata: new Metadata(),
@@ -14,7 +14,7 @@ const Registry: IRegistry = {
       throw new Error('Components must have a "name" property, or a "displayName" property.');
     }
 
-    if (!isAlphanumeric(newCompName)) {
+    if (!isValidComponentName(newCompName)) {
       throw new Error('Component names must be alphanumeric.');
     }
 

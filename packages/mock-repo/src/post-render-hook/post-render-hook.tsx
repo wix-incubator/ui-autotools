@@ -10,10 +10,10 @@ export class PostRenderHook extends React.Component<{}, IState> {
   };
 
   public componentDidMount() {
-    this.setState({label: 'I mOUnTeD ANd chANgED mY lABeL'});
+    this.setState({label: 'I mounted and changed my label'});
   }
 
   public render() {
-  return (<div><p>{this.state.label}</p><p>{this.state.label}</p></div>);
+  return (<p>{this.state.label}</p>);
   }
 }

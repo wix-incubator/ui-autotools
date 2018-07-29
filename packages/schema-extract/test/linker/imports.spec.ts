@@ -36,17 +36,26 @@ describe('schema-linker - imports', () => {
                 }`,
             node_modules: {
                 gaga: {
-                    'package.json': '{name: gaga, main: library.d.ts',
+                    'package.json': '{"name": "gaga", "main": "library.d.ts"}',
                     'library.d.ts': 'export type A = {something: string}'
                 }
             }
         }, 'B', fileName);
 
         const expected = {
-            $ref: ClassSchemaId,
-            extends: {
-                $ref: 'react#Component',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'object',
+                    properties: {
+                        something: {
+                            type: 'string'
+                        }
+                    },
+                    required: ['something']
+                }
             },
+            required: ['id']
         };
         expect(res).to.eql(expected);
     });

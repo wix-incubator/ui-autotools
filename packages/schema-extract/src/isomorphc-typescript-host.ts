@@ -32,8 +32,24 @@ export function createHost(fs: FileSystemReadSync): ts.CompilerHost {
         resolveModuleNames(moduleNames: string[], containingFile: string, reusedNames?: string[]) {
             const dir = posix.dirname(containingFile);
             return moduleNames.map((fileName) => {
+                const nodeModulesPath = posix.join(dir, 'node_modules', fileName, 'package.json');
+                try {
+                    const file = fs.loadTextFileSync(nodeModulesPath);
+                    if (file) {
+                        const mainName = JSON.parse(file).main;
+                        const filePath = posix.join(dir, 'node_modules', fileName, mainName);
+                        const importedModule = fs.loadTextFileSync(filePath);
+                        if (importedModule) {
+                            return {
+                                resolvedFileName: filePath
+                            };
+                        }
+                    }
+                } catch {
+                    // No need to catch?
+                }
                 return {
-                    resolvedFileName: posix.join(dir, fileName) + '.ts'
+                    resolvedFileName: posix.join(dir, fileName) + '.ts',
                 };
             });
         },

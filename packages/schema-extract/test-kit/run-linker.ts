@@ -8,7 +8,7 @@ export function linkTest(sourceDir: DirectoryContent, entityName: string, fileNa
     const memFs = new MemoryFileSystem();
     const projectName = 'someProject';
     const projectPath = `/${projectName}`;
-    const nodeModulesPath = [`${projectPath}/node_modules`];
+    // const nodeModulesPath = [`${projectPath}/node_modules`];
     const testedPath = projectPath + '/src/';
     const testedFile = testedPath + fileName;
     MemoryFileSystem.addContent(memFs, {
@@ -18,7 +18,7 @@ export function linkTest(sourceDir: DirectoryContent, entityName: string, fileNa
     });
     const prg = ts.createProgram([testedFile], {}, createHost(memFs));
     const chckr = prg.getTypeChecker();
-    const linker = new SchemaLinker(prg, chckr, projectPath, nodeModulesPath);
+    const linker = new SchemaLinker(prg, chckr, projectPath);
 
     return linker.flatten(testedFile, entityName, fileName);
 }

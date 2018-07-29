@@ -7,17 +7,21 @@ export class SchemaLinker {
     private checker: ts.TypeChecker;
     private program: ts.Program;
     private projectPath: string;
-    private nodeModulesPath: string[] = [];
+    private sourceFile: ts.SourceFile | undefined;
 
-    constructor(program: ts.Program, checker: ts.TypeChecker, projectPath: string, nodeModulesPath: string[]) {
+    constructor(program: ts.Program, checker: ts.TypeChecker, projectPath: string) {
         this.checker = checker;
         this.program = program;
         this.projectPath = projectPath;
-        this.nodeModulesPath = nodeModulesPath;
     }
 
     public flatten(file: string, entityName: string, fileName: string): Schema {
-        const schema = transform(this.checker, this.program.getSourceFile(file)!, '/src/' + fileName, this.projectPath);
+        const sourceFile = this.program.getSourceFile(file);
+        if (!sourceFile) {
+            return {};
+        }
+        this.sourceFile = sourceFile;
+        const schema = transform(this.checker, sourceFile, '/src/' + fileName, this.projectPath);
         let entity;
         if (schema.definitions) {
             entity = schema.definitions[entityName];
@@ -31,8 +35,21 @@ export class SchemaLinker {
     }
 
     private getSchemaFromImport(path: string, ref: string): ModuleSchema | null {
-        const extensions = ['.js', '.d.ts', '.ts'];
+        const extensions = ['.js', '.d.ts', '.ts', '.tsx'];
         let importSourceFile;
+        if (this.sourceFile) {
+            /* resolvedModules is an internal ts property that exists on a sourcefile and maps the imports to the path of the imported file
+            * This can change in future versions without us knowing but there is no public way of getting this information right now.
+            */
+            const module = (this.sourceFile as any).resolvedModules && (this.sourceFile as any).resolvedModules.get(path);
+            if (module) {
+                const newRef = module.resolvedFileName;
+                importSourceFile = this.program.getSourceFile(newRef);
+                if (importSourceFile) {
+                    return transform(this.checker, importSourceFile , path + ref, path);
+                }
+            }
+        }
         for (const extension of extensions) {
             importSourceFile = this.program.getSourceFile(this.projectPath + path + extension);
             if (importSourceFile) {
@@ -40,8 +57,6 @@ export class SchemaLinker {
             }
         }
         if (!importSourceFile) {
-            const npath = this.nodeModulesPath[0];
-            this.program.getSourceFile(npath);
             return null;
         }
         return transform(this.checker, importSourceFile , path + ref, path);

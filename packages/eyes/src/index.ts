@@ -19,7 +19,13 @@ const osName      = process.platform;
 
 if (!eyesApiKey) {
   process.exitCode = 1;
-  throw new Error('"EYES_API_KEY" needs to be defined in a ".env" file located in the root.');
+  throw new Error('The environment variable "EYES_API_KEY" needs to be defined.');
+  process.exit();
+}
+
+if (!projectName) {
+  process.exitCode = 1;
+  throw new Error('The project should have a package.json file with a "name" field.');
   process.exit();
 }
 
@@ -80,17 +86,9 @@ async function runTests(url: string) {
 }
 
 function logEyesResult({name, status, isNew, appUrls}: any) {
-  const isError = status === 'Unresolved' && isNew.toString() === 'false';
-  const dividerString = '--------------------';
-  const errorString = '~~~~~~~~~~~~~~~~~~~~';
-  const divider = isError ? chalk.red(errorString) : dividerString;
-
-  consoleLog(`
-  ${divider}
-  ${isError ? chalk.red('ERROR') : ''} ${chalk.bold(name)}: ${status === 'Unresolved' ? chalk.red(status) : chalk.green(status)}. Is new: ${isNew.toString() === 'false' ? chalk.green(isNew) : chalk.yellow(isNew)}.
-  ${chalk.cyan('URL')}: ${chalk.underline(appUrls.batch)}
-  ${divider}
-  `);
+  const isError = status !== 'Passed' && !isNew;
+  const url = isError ? `${chalk.cyan('URL')}: ${chalk.underline(appUrls.session)}` : '';
+  consoleLog(`${isError ? chalk.red('👎 FAIL') : isNew ? chalk.yellow('👌  NEW') : chalk.green('👍  OK')} ${chalk.bold(name)}. ${url}`);
 }
 
 async function waitForTestsCompletion(page: puppeteer.Page, url: string):
@@ -107,28 +105,24 @@ async function waitForTestsCompletion(page: puppeteer.Page, url: string):
 
   // TODO: add a timeout for each test to make sure we terminate if they get
   // stuck.
-  let testsPassed: boolean = true;
-  consoleLog('Format: <component simName>');
+  let numTestsFailed: number = 0;
+  let result;
   for (const [i, {title}] of tests.entries()) {
-    let result;
     await page.evaluate(`puppeteerRenderTest(${i})`);
     const screenshot = await page.screenshot();
     await eyes.open(projectName, title, null);
     const {asExpected} = await eyes.checkImage(screenshot);
-    if (!asExpected && testsPassed) {
-      testsPassed = false;
-    }
     result = await eyes.close(false);
+    if (!asExpected && !result.isNew) {
+      numTestsFailed++;
+    }
     logEyesResult(result);
     await page.evaluate(`puppeteerCleanupTest(${i})`);
   }
 
-  if (!testsPassed) {
-    process.exitCode = 1;
-    process.exit();
-  }
+  consoleLog(`Batch URL: ${chalk.underline(result.appUrls.batch)}`);
 
-  return 0;
+  return numTestsFailed;
 }
 
 export async function eyesTest(entry: string | string[]) {

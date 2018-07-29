@@ -81,7 +81,7 @@ async function runTests(url: string) {
   }
 }
 
-function logResult({name, status, isNew, appUrls}: any) {
+function logEyesResult({name, status, isNew, appUrls}: any) {
   const isError = status === 'Unresolved' && isNew.toString() === 'false';
   const dividerString = '--------------------';
   const errorString = '~~~~~~~~~~~~~~~~~~~~';
@@ -121,7 +121,7 @@ async function waitForTestsCompletion(page: puppeteer.Page, url: string):
       testsPassed = false;
     }
     result = await eyes.close(false);
-    logResult(result);
+    logEyesResult(result);
     await page.evaluate(`puppeteerCleanupTest(${i})`);
   }
 

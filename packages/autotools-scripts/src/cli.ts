@@ -45,6 +45,9 @@ program
 program
 .command('eyes')
 .description('compare components to the expected appearance using Eyes')
-.action(eyesTest);
+.action((options) => {
+  const entry = glob.sync(path.join(projectPath, options.files ? options.files : defaultMetaGlob));
+  eyesTest(entry);
+});
 
 program.parse(process.argv);

@@ -1,12 +1,13 @@
 /* tslint:disable:no-console */
 
+require('dotenv').config();
+const {Eyes} = require('eyes.images');
+
 import path from 'path';
 import puppeteer from 'puppeteer';
 import {WebpackConfigurator, serve, IServer, waitForPageError, logConsoleMessages, consoleLog} from '@ui-autotools/utils';
 import chalk from 'chalk';
-require('dotenv').config();
-const uuid = require('uuid');
-const {Eyes} = require('eyes.images');
+import uuid from 'uuid';
 
 const packagePath = path.resolve(__dirname, '..');
 const projectPath = process.cwd();

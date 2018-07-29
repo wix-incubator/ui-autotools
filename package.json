@@ -31,6 +31,7 @@
     "@types/sinon": "^5.0.1",
     "@types/sinon-chai": "^3.2.0",
     "@types/tapable": "^1.0.2",
+    "@types/uuid": "^3.4.3",
     "@types/webpack": "^4.4.2",
     "@types/webpack-env": "^1.13.6",
     "@types/webpack-sources": "^0.1.4",
@@ -68,7 +69,7 @@
     "typescript": "~2.9.2",
     "typescript-support": "^0.4.1",
     "url-loader": "^1.0.1",
-    "webpack": "^4.12.1",	
+    "webpack": "^4.12.1",
     "webpack-cli": "^3.0.8",
     "webpack-dev-server": "^3.1.4"
   },

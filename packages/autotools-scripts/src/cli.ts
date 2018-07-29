@@ -45,6 +45,7 @@ program
 program
 .command('eyes')
 .description('compare components to the expected appearance using Eyes')
+.option('-f, --files [pattern]', 'metadata file pattern')
 .action((options) => {
   const entry = glob.sync(path.join(projectPath, options.files ? options.files : defaultMetaGlob));
   eyesTest(entry);

@@ -16,7 +16,6 @@ export function linkTest(sourceDir: DirectoryContent, entityName: string, fileNa
             src: sourceDir,
         },
     });
-    // Fix this to not use the same name
     const prg = ts.createProgram([testedFile], {}, createHost(memFs));
     const chckr = prg.getTypeChecker();
     const linker = new SchemaLinker(prg, chckr, projectPath, nodeModulesPath);

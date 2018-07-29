@@ -31,11 +31,14 @@ export class SchemaLinker {
     }
 
     private getSchemaFromImport(path: string, ref: string): ModuleSchema | null {
-        // Create a test for different extensions
-
-
-
-        const importSourceFile = this.program.getSourceFile(this.projectPath + path + '.ts');
+        const extensions = ['.js', '.d.ts', '.ts'];
+        let importSourceFile;
+        for (const extension of extensions) {
+            importSourceFile = this.program.getSourceFile(this.projectPath + path + extension);
+            if (importSourceFile) {
+                break;
+            }
+        }
         if (!importSourceFile) {
             const npath = this.nodeModulesPath[0];
             this.program.getSourceFile(npath);

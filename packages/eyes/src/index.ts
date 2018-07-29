@@ -3,7 +3,6 @@
 import path from 'path';
 import puppeteer from 'puppeteer';
 import {WebpackConfigurator, serve, IServer, waitForPageError, logConsoleMessages} from '@ui-autotools/utils';
-import { PassThrough } from 'stream';
 
 const packagePath = path.resolve(__dirname, '..');
 const projectPath = process.cwd();
@@ -76,7 +75,7 @@ async function waitForTestsCompletion(page: puppeteer.Page, url: string):
   for (const [i, {title}] of tests.entries()) {
     await page.evaluate(`puppeteerRenderTest(${i})`);
     const screenshot = await page.screenshot();
-    PassThrough(screenshot) to eyes
+    // PassThrough(screenshot) to eyes
     // TODO: Compare the screenshot using eyes
     console.log({title, screenshotBufferSize: screenshot.byteLength});
     await page.evaluate(`puppeteerCleanupTest(${i})`);

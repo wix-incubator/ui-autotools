@@ -8,7 +8,6 @@ export function linkTest(sourceDir: DirectoryContent, entityName: string, fileNa
     const memFs = new MemoryFileSystem();
     const projectName = 'someProject';
     const projectPath = `/${projectName}`;
-    // const nodeModulesPath = [`${projectPath}/node_modules`];
     const testedPath = projectPath + '/src/';
     const testedFile = testedPath + fileName;
     MemoryFileSystem.addContent(memFs, {

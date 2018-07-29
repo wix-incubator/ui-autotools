@@ -1,5 +1,3 @@
-/* tslint:disable:no-console */
-
 require('dotenv').config();
 const {Eyes} = require('eyes.images');
 

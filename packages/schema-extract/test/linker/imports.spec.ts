@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import { Schema, ClassSchemaId } from '../../src/json-schema-types';
+import { Schema } from '../../src/json-schema-types';
 import {linkTest} from '../../test-kit/run-linker';
 
 describe('schema-linker - imports', () => {

@@ -121,12 +121,12 @@ export class SchemaLinker {
             if (isRef(option)) {
                 let entity: Schema & IObjectFields;
                 if (paramsMap) {
-                    entity = paramsMap!.get(option.$ref)!;
+                    entity = paramsMap.get(option.$ref)!;
                     if (!entity) {
                         return res;
                     }
                 } else {
-                    const refEntity = option.genericArguments ? option : schema.definitions![option.$ref!.replace('#', '')];
+                    const refEntity = option.genericArguments ? option : schema.definitions![option.$ref.replace('#', '')];
                     entity = this.link(refEntity, schema);
                 }
                 this.mergeProperties(entity, res, schema, paramsMap);

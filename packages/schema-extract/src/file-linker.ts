@@ -231,7 +231,7 @@ export class SchemaLinker {
         const res: {[name: string]: Schema & {inheritedFrom?: string}} = {};
         const paramsMap = new Map();
         if (refEntity.genericParams) {
-            refEntity.genericParams!.forEach((param, index) => {
+            refEntity.genericParams.forEach((param, index) => {
                 paramsMap.set(`#${extendedEntity}!${param.name}`, entity.extends!.genericArguments![index]);
             });
         }

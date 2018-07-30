@@ -5,22 +5,24 @@ import {inspect} from 'util';
 import commander from 'commander';
 import chalk from 'chalk';
 import {LocalFileSystem} from 'kissfs';
-import {extractSchema} from './extract-schema';
+import {extractSchema, extractLinkedSchema} from './extract-schema';
 
 commander
   .version('0.1.0')
   .option('-f, --files <s>', 'files to scan')
   .option('-o, --output <s>', 'output dir')
+  .option('-l --linked', 'show linked schema')
   .parse(process.argv);
 
 async function run() {
   const inputDir = process.cwd();
   const outputDir = commander.output as string;
   const sourcesGlob = commander.files as string;
+  const linked = commander.linked as boolean;
 
   const fs = new LocalFileSystem(inputDir);
-
-  for (const {file, schema} of extractSchema(inputDir, sourcesGlob)) {
+  const schemas = linked ? extractLinkedSchema(inputDir, sourcesGlob) : extractSchema(inputDir, sourcesGlob);
+  for (const {file, schema} of schemas) {
     const relativePath = posix.relative(inputDir, file);
     if (outputDir) {
       const outputFilename = posix.join(outputDir, relativePath + '.json');

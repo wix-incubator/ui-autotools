@@ -26,17 +26,19 @@ export function* extractLinkedSchema(basePath: string, filesGlob: string) {
   const host = createHost(new LocalFileSystem(basePath));
   const program = typescript.createProgram(files, {}, host);
   const checker = program.getTypeChecker();
-  let linkedSchema;
   for (const file of files) {
+    let linkedSchema;
     const source = program.getSourceFile(file);
     const schema = transform(checker, source!, file, '');
     if (schema.definitions) {
+      const linkedSchemas = [];
       for (const definition in schema.definitions ) {
         if (schema.definitions.hasOwnProperty(definition)) {
           const linker = new SchemaLinker(program, checker, path.join(basePath, file));
-          linkedSchema = linker.flatten(file, definition);
+          linkedSchemas.push(linker.flatten(file, definition));
         }
       }
+      linkedSchema = linkedSchemas.join('\n\n');
     }
     yield {
       file: path.join(basePath, file),

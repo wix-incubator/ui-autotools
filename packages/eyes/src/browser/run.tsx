@@ -1,4 +1,4 @@
-import Registry from '@ui-autotools/registry';
+import Registry, {getCompName} from '@ui-autotools/registry';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -18,7 +18,7 @@ function createTestsFromSimulations() {
   for (const [Comp, meta] of Registry.metadata.components.entries()) {
     for (const sim of meta.simulations) {
       tests.push({
-        title: Comp.name + ' ' + sim.title,
+        title: getCompName(Comp) + ' ' + sim.title,
         render:  () => ReactDOM.render(<Comp {...sim.props} />, reactRoot),
         cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot)
       });

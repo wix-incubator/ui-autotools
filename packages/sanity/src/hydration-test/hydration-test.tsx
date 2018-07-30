@@ -1,11 +1,10 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import Registry from '@ui-autotools/registry';
+import Registry, {getCompName} from '@ui-autotools/registry';
 import chai, {expect} from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import {hydrate} from 'react-dom';
-import {simulationToJSX} from '@ui-autotools/utils/esm/metadata/simulation-to-jsx';
 
 chai.use(sinonChai);
 
@@ -17,8 +16,8 @@ export const hydrationTest = (): void => {
     let index = 0;
     const componentStrings = (window as any).components;
 
-    Registry.metadata.components.forEach((metadata, Comp) => {
-      describe(Comp.name, () => {
+    Registry.metadata.components.forEach((componentMetadata, Comp) => {
+      describe(getCompName(Comp), () => {
         beforeEach(() => {
           consoleSpy = sinon.spy(console, 'log');
           errorSpy = sinon.spy(console, 'error');
@@ -29,11 +28,11 @@ export const hydrationTest = (): void => {
           errorSpy.restore();
         });
 
-        metadata.simulations.forEach((simulation) => {
-          it(`should hydrate component: "${Comp.name}" in strict mode, with props of simulation: "${simulation.title}" without errors`, () => {
+        componentMetadata.simulations.forEach((simulation) => {
+          it(`should hydrate component: "${getCompName(Comp)}" in strict mode, with props of simulation: "${simulation.title}" without errors`, () => {
             // Set root's HTML to the SSR component
             root.innerHTML = componentStrings[index];
-            hydrate(<React.StrictMode>{simulationToJSX(Comp, simulation)}</React.StrictMode>, root);
+            hydrate(<React.StrictMode>{componentMetadata.simulationToJSX(simulation)}</React.StrictMode>, root);
             ReactDOM.unmountComponentAtNode(root);
             index++;
             // If args is not a primitive, it's not really of interest to us, since any React errors will be

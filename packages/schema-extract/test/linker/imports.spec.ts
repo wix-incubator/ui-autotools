@@ -59,23 +59,4 @@ describe('schema-linker - imports', () => {
         };
         expect(res).to.eql(expected);
     });
-
-    xit('should link imported type from an outside package', async () => {
-        const fileName = 'index.ts';
-        const res = linkTest({
-            [fileName]: `
-                import * as React from 'react';
-                export class B extends React.Component<{}, {}> {
-                    render();
-                }`
-        }, 'B', fileName);
-
-        const expected = {
-            $ref: ClassSchemaId,
-            extends: {
-                $ref: 'react#Component',
-            },
-        };
-        expect(res).to.eql(expected);
-    });
 });

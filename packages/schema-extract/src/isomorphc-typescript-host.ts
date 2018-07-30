@@ -45,8 +45,8 @@ export function createHost(fs: FileSystemReadSync): ts.CompilerHost {
                             };
                         }
                     }
-                } catch {
-                    // No need to catch?
+                } catch (_) {
+                    // Ignore catch since this is only for testing
                 }
                 return {
                     resolvedFileName: posix.join(dir, fileName) + '.ts',

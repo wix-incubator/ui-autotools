@@ -19,5 +19,5 @@ export function linkTest(sourceDir: DirectoryContent, entityName: string, fileNa
     const chckr = prg.getTypeChecker();
     const linker = new SchemaLinker(prg, chckr, projectPath);
 
-    return linker.flatten(testedFile, entityName, fileName);
+    return linker.flatten(testedFile, entityName);
 }

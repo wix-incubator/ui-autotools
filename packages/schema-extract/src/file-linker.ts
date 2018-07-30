@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 import {union} from 'lodash';
-import { transform } from '../src/file-transformer';
+import { transform } from './file-transformer';
 import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId } from './json-schema-types';
 
 export class SchemaLinker {
@@ -15,13 +15,13 @@ export class SchemaLinker {
         this.projectPath = projectPath;
     }
 
-    public flatten(file: string, entityName: string, fileName: string): Schema {
+    public flatten(file: string, entityName: string): Schema {
         const sourceFile = this.program.getSourceFile(file);
         if (!sourceFile) {
             return {};
         }
         this.sourceFile = sourceFile;
-        const schema = transform(this.checker, sourceFile, '/src/' + fileName, this.projectPath);
+        const schema = transform(this.checker, sourceFile, file, this.projectPath);
         let entity;
         if (schema.definitions) {
             entity = schema.definitions[entityName];
@@ -51,7 +51,7 @@ export class SchemaLinker {
             }
         }
         for (const extension of extensions) {
-            importSourceFile = this.program.getSourceFile(this.projectPath + path + extension);
+            importSourceFile = this.program.getSourceFile(path + extension);
             if (importSourceFile) {
                 break;
             }
@@ -63,6 +63,9 @@ export class SchemaLinker {
     }
 
     private link(entity: Schema, schema: ModuleSchema): Schema {
+        if (!entity) {
+            return {};
+        }
         if (isClassSchema(entity)) {
             return this.linkClass(schema, entity);
         }
@@ -90,7 +93,7 @@ export class SchemaLinker {
         let refEntity = schema.definitions![ref.replace('#', '')];
         if (!refEntity) {
                 const importSchema = this.getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1));
-                if (importSchema) {
+                if (importSchema && importSchema.definitions) {
                     refEntity = importSchema.definitions![entityType];
                 }
                 // Ifception
@@ -202,6 +205,9 @@ export class SchemaLinker {
         }
         const extendedEntity = entity.extends.$ref!.replace('#', '');
         const refEntity = schema.definitions[extendedEntity] as ClassSchema;
+        if (!refEntity) {
+            return entity;
+        }
         const res = {
             $ref: ClassSchemaId,
             extends: {$ref: entity.extends.$ref},

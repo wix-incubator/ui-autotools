@@ -96,9 +96,9 @@ export function isSchemaOfType<T extends SchemaTypes>(t: T, s: object): s is Sch
 }
 
 export function isRef(schema: Schema): schema is Schema & {$ref: string} {
-    return !!schema.$ref;
+    return !!schema && !!schema.$ref;
 }
 
 export function isClassSchema(schema: Schema): schema is Schema & ClassSchema {
-    return !!schema.$ref && schema.$ref === ClassSchemaId;
+    return !!schema && !!schema.$ref && schema.$ref === ClassSchemaId;
 }

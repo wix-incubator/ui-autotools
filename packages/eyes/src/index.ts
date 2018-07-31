@@ -111,9 +111,9 @@ async function waitForTestsCompletion(page: puppeteer.Page, url: string):
     await page.evaluate(`puppeteerRenderTest(${i})`);
     const screenshot = await page.screenshot();
     await eyes.open(projectName, title, null);
-    const {asExpected} = await eyes.checkImage(screenshot);
+    await eyes.checkImage(screenshot);
     result = await eyes.close(false);
-    if (!asExpected && !result.isNew) {
+    if (result.status !== 'Passed' && !result.isNew) {
       numTestsFailed++;
     }
     logEyesResult(result);

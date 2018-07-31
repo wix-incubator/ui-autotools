@@ -1,4 +1,3 @@
-require('dotenv').config();
 const {Eyes} = require('eyes.images');
 
 import path from 'path';
@@ -124,8 +123,13 @@ async function waitForTestsCompletion(page: puppeteer.Page, url: string):
   return numTestsFailed;
 }
 
-export async function eyesTest(entry: string | string[]) {
+export async function eyesTest(entry: string | string[], apiKey: string) {
   let server: IServer | null = null;
+  if (!apiKey) {
+    process.exitCode = 1;
+    throw new Error('The environment variable "EYES_API_KEY" needs to be defined.');
+    process.exit();
+  }
   try {
     server = await serve({webpackConfig: getWebpackConfig(entry)});
     const numFailedTests = await runTests(server.getUrl());

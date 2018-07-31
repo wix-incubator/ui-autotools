@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+require('dotenv').config();
 import {registerRequireHooks} from '@ui-autotools/utils';
 import {Command} from 'commander';
 import ssrTest from './ssr-test/mocha-wrapper';
@@ -49,12 +50,7 @@ program
 .action((options) => {
   const entry = glob.sync(path.join(projectPath, options.files ? options.files : defaultMetaGlob));
 
-  if (!process.env.EYES_API_KEY) {
-    process.exitCode = 1;
-    throw new Error('The environment variable "EYES_API_KEY" needs to be defined.');
-    process.exit();
-  }
-  eyesTest(entry);
+  eyesTest(entry, process.env.EYES_API_KEY);
 });
 
 program.parse(process.argv);

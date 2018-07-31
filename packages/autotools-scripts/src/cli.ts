@@ -50,7 +50,7 @@ program
 .action((options) => {
   const entry = glob.sync(path.join(projectPath, options.files ? options.files : defaultMetaGlob));
 
-  eyesTest(entry, process.env.EYES_API_KEY);
+  eyesTest(entry, process.env.EYES_API_KEY!);
 });
 
 program.parse(process.argv);

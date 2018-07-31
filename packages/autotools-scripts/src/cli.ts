@@ -64,7 +64,7 @@ program.command('website')
     projectPath,
     metadataGlob: options.files ? options.files : defaultMetaGlob,
     sourceGlob: 'src/**/*.ts?(x)',
-    outputPath: options.output,
+    outputPath: path.join(projectPath, options.output),
     host: '127.0.0.1',
     port: 8888,
     webpackConfigPath: path.join(projectPath, 'meta.webpack.config.js')

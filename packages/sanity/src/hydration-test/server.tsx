@@ -5,7 +5,7 @@ import {renderMetadata} from './render-metadata';
 
 const packageDir = path.resolve(__dirname, '..');
 const projectDir = process.cwd();
-const webpackConfigPath = path.join(projectDir, 'meta.webpack.config.js');
+const webpackConfigPath = path.join(projectDir, '.autotools/webpack.config.js');
 
 function getWebpackConfig(ssrComps: string[], metaGlob: string) {
   return WebpackConfigurator
@@ -14,7 +14,7 @@ function getWebpackConfig(ssrComps: string[], metaGlob: string) {
     .addEntry('meta', path.join(packageDir, 'hydration-test', 'test-page.js'))
     .addEntry('meta', path.join(packageDir, 'hydration-test', 'index.js'))
     .addHtml({
-      template: path.join(packageDir, '../templates/', 'test-page.html'),
+      template: path.join(packageDir, '../templates/', 'test-page.template'),
       components: JSON.stringify(ssrComps)
     })
     .suppressReactDevtoolsSuggestion()

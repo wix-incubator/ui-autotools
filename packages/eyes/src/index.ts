@@ -85,8 +85,7 @@ async function runTests(url: string) {
   }
 }
 
-function logEyesResult({name, status, isNew, appUrls}: any) {
-  const isError = status !== 'Passed' && !isNew;
+function logEyesResult(isError: boolean, {name, status, isNew, appUrls}: any) {
   const url = isError ? `${chalk.cyan('URL')}: ${chalk.underline(appUrls.session)}` : '';
   consoleLog(`${isError ? chalk.red('👎 FAIL') : isNew ? chalk.yellow('👌  NEW') : chalk.green('👍  OK')} ${chalk.bold(name)}. ${url}`);
 }
@@ -113,10 +112,13 @@ async function waitForTestsCompletion(page: puppeteer.Page, url: string):
     await eyes.open(projectName, title, null);
     await eyes.checkImage(screenshot);
     result = await eyes.close(false);
-    if (result.status !== 'Passed' && !result.isNew) {
+
+    const isError = result.status !== 'Passed' && !result.isNew;
+    if (isError) {
       numTestsFailed++;
     }
-    logEyesResult(result);
+
+    logEyesResult(isError, result);
     await page.evaluate(`puppeteerCleanupTest(${i})`);
   }
 

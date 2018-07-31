@@ -26,7 +26,7 @@ export interface IExportSourceAndSchema {
 export interface IMetadataAndSchemas {
   metadata: IMetadata;
   schemasByFilename: Map<string, IModuleSchemaWithFilename>;
-  schemasByComponent: Map<React.ComponentType<{}>, IExportSourceAndSchema>;
+  schemasByComponent: Map<React.ComponentType, IExportSourceAndSchema>;
 }
 
 function getSchemaForExport(

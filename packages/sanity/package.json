@@ -29,7 +29,6 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@ui-autotools/registry": "^1.0.3",
     "@ui-autotools/utils": "^1.0.4",
     "chai": "^4.1.2",
     "puppeteer": "^1.5.0",
@@ -39,7 +38,8 @@
   },
   "peerDependencies": {
     "react": ">=16",
-    "react-dom": ">=16"
+    "react-dom": ">=16",
+    "@ui-autotools/registry": ">=1"
   },
   "publishConfig": {
     "access": "public"

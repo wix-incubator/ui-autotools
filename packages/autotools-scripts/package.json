@@ -28,7 +28,6 @@
   "dependencies": {
     "@ui-autotools/a11y": "^1.0.4",
     "@ui-autotools/eyes": "^1.0.4",
-    "@ui-autotools/registry": "^1.0.3",
     "@ui-autotools/sanity": "^1.0.5",
     "@ui-autotools/utils": "^1.0.4",
     "commander": "^2.15.1",
@@ -38,7 +37,8 @@
   "peerDependencies": {
     "mocha": ">=5",
     "react": ">=16",
-    "react-dom": ">=16"
+    "react-dom": ">=16",
+    "@ui-autotools/registry": ">=1"
   },
   "publishConfig": {
     "access": "public"

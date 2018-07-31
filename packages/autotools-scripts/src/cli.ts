@@ -3,6 +3,7 @@ import {registerRequireHooks} from '@ui-autotools/utils';
 import {Command} from 'commander';
 import ssrTest from './ssr-test/mocha-wrapper';
 import {hydrationTest} from '@ui-autotools/sanity';
+import {eyesTest} from '@ui-autotools/eyes';
 import importMeta from './import-metadata/import-meta';
 import {a11yTest, impactLevels} from '@ui-autotools/a11y';
 import glob from 'glob';
@@ -39,6 +40,15 @@ program
     throw new Error(`Invalid impact level ${impact}`);
   }
   a11yTest(entry, impact);
+});
+
+program
+.command('eyes')
+.description('compare components to the expected appearance using Eyes')
+.option('-f, --files [pattern]', 'metadata file pattern')
+.action((options) => {
+  const entry = glob.sync(path.join(projectPath, options.files ? options.files : defaultMetaGlob));
+  eyesTest(entry);
 });
 
 program.parse(process.argv);

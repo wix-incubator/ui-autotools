@@ -1,16 +1,43 @@
-/* tslint:disable:no-console */
+require('dotenv').config();
+const {Eyes} = require('eyes.images');
 
 import path from 'path';
 import puppeteer from 'puppeteer';
-import {WebpackConfigurator, serve, IServer, waitForPageError, logConsoleMessages} from '@ui-autotools/utils';
+import {WebpackConfigurator, serve, IServer, waitForPageError, logConsoleMessages, consoleLog} from '@ui-autotools/utils';
+import chalk from 'chalk';
+import uuid from 'uuid';
 
 const packagePath = path.resolve(__dirname, '..');
 const projectPath = process.cwd();
 const webpackConfigPath = path.join(projectPath, 'meta.webpack.config.js');
 
-function getWebpackConfig() {
+const projectName = require(path.join(projectPath, 'package.json')).name;
+const batchName   = projectName;
+const batchId     = uuid.v4();
+const eyesApiKey  = process.env.EYES_API_KEY;
+const osName      = process.platform;
+
+if (!eyesApiKey) {
+  process.exitCode = 1;
+  throw new Error('The environment variable "EYES_API_KEY" needs to be defined.');
+  process.exit();
+}
+
+if (!projectName) {
+  process.exitCode = 1;
+  throw new Error('The project should have a package.json file with a "name" field.');
+  process.exit();
+}
+
+const eyes = new Eyes();
+eyes.setApiKey(eyesApiKey);
+eyes.setOs(osName);
+eyes.setBatch(batchName, batchId);
+
+function getWebpackConfig(entry: string | string[]) {
   return WebpackConfigurator
     .load(webpackConfigPath)
+    .setEntry('meta', entry)
     .addEntry('meta', path.join(packagePath, 'src/browser/run'))
     .addHtml({
       template: path.join(packagePath, 'src/browser/index.html'),
@@ -58,6 +85,15 @@ async function runTests(url: string) {
   }
 }
 
+function logEyesResult(isError: boolean, {name, isNew, appUrls}: any) {
+  const url = isError ? `${chalk.cyan('URL')}: ${chalk.underline(appUrls.session)}` : '';
+  const status = isError ? chalk.red('👎 FAIL') :
+               isNew ? chalk.yellow('👌  NEW') :
+               chalk.green('👍  OK');
+
+  consoleLog(`${status} ${chalk.bold(name)}. ${url}`);
+}
+
 async function waitForTestsCompletion(page: puppeteer.Page, url: string):
   Promise<number> {
   const loadTimeout = 20000;
@@ -72,21 +108,33 @@ async function waitForTestsCompletion(page: puppeteer.Page, url: string):
 
   // TODO: add a timeout for each test to make sure we terminate if they get
   // stuck.
+  let numTestsFailed: number = 0;
+  let result;
   for (const [i, {title}] of tests.entries()) {
     await page.evaluate(`puppeteerRenderTest(${i})`);
     const screenshot = await page.screenshot();
-    // TODO: Compare the screenshot using eyes
-    console.log({title, screenshotBufferSize: screenshot.byteLength});
+    await eyes.open(projectName, title, null);
+    await eyes.checkImage(screenshot);
+    result = await eyes.close(false);
+
+    const isError = result.status !== 'Passed' && !result.isNew;
+    if (isError) {
+      numTestsFailed++;
+    }
+
+    logEyesResult(isError, result);
     await page.evaluate(`puppeteerCleanupTest(${i})`);
   }
 
-  return 0;
+  consoleLog(`Batch URL: ${chalk.underline(result.appUrls.batch)}`);
+
+  return numTestsFailed;
 }
 
-export async function eyesTest() {
+export async function eyesTest(entry: string | string[]) {
   let server: IServer | null = null;
   try {
-    server = await serve({webpackConfig: getWebpackConfig()});
+    server = await serve({webpackConfig: getWebpackConfig(entry)});
     const numFailedTests = await runTests(server.getUrl());
     if (numFailedTests) {
       process.exitCode = 1;

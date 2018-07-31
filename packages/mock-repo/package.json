@@ -16,7 +16,10 @@
     "lint": "run-p lint:src lint:test",
     "lint:src": "tslint --project src",
     "lint:test": "tslint --project test",
-    "test": "mocha -r typescript-support \"./test/node/**/*.node-spec.ts?(x)\" --watch-extensions ts,tsx"
+    "test": "mocha -r typescript-support \"./test/node/**/*.node-spec.ts?(x)\" --watch-extensions ts,tsx",
+    "eyes": "npx autotools eyes",
+    "a11y": "npx autotools a11y",
+    "sanity": "npx autotools sanity"
   },
   "dependencies": {
     "@ui-autotools/registry": "^1.0.2",

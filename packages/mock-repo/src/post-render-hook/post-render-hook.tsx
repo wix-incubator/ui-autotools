@@ -14,6 +14,6 @@ export class PostRenderHook extends React.Component<{}, IState> {
   }
 
   public render() {
-    return <p>{this.state.label}</p>;
+  return (<p>{this.state.label}</p>);
   }
 }

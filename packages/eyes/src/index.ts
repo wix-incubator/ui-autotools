@@ -14,14 +14,7 @@ const webpackConfigPath = path.join(projectPath, 'meta.webpack.config.js');
 const projectName = require(path.join(projectPath, 'package.json')).name;
 const batchName   = projectName;
 const batchId     = uuid.v4();
-const eyesApiKey  = process.env.EYES_API_KEY;
 const osName      = process.platform;
-
-if (!eyesApiKey) {
-  process.exitCode = 1;
-  throw new Error('The environment variable "EYES_API_KEY" needs to be defined.');
-  process.exit();
-}
 
 if (!projectName) {
   process.exitCode = 1;
@@ -30,7 +23,7 @@ if (!projectName) {
 }
 
 const eyes = new Eyes();
-eyes.setApiKey(eyesApiKey);
+eyes.setApiKey(process.env.EYES_API_KEY);
 eyes.setOs(osName);
 eyes.setBatch(batchName, batchId);
 

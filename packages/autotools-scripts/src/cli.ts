@@ -48,6 +48,12 @@ program
 .option('-f, --files [pattern]', 'metadata file pattern')
 .action((options) => {
   const entry = glob.sync(path.join(projectPath, options.files ? options.files : defaultMetaGlob));
+
+  if (!process.env.EYES_API_KEY) {
+    process.exitCode = 1;
+    throw new Error('The environment variable "EYES_API_KEY" needs to be defined.');
+    process.exit();
+  }
   eyesTest(entry);
 });
 

@@ -7,26 +7,8 @@ import chalk from 'chalk';
 import uuid from 'uuid';
 
 const packagePath = path.resolve(__dirname, '..');
-const projectPath = process.cwd();
-const webpackConfigPath = path.join(projectPath, 'meta.webpack.config.js');
 
-const projectName = require(path.join(projectPath, 'package.json')).name;
-const batchName   = projectName;
-const batchId     = uuid.v4();
-const osName      = process.platform;
-
-if (!projectName) {
-  process.exitCode = 1;
-  throw new Error('The project should have a package.json file with a "name" field.');
-  process.exit();
-}
-
-const eyes = new Eyes();
-eyes.setApiKey(process.env.EYES_API_KEY);
-eyes.setOs(osName);
-eyes.setBatch(batchName, batchId);
-
-function getWebpackConfig(entry: string | string[]) {
+function getWebpackConfig(entry: string | string[], webpackConfigPath: string) {
   return WebpackConfigurator
     .load(webpackConfigPath)
     .setEntry('meta', entry)
@@ -39,7 +21,7 @@ function getWebpackConfig(entry: string | string[]) {
     .getConfig();
 }
 
-async function runTests(url: string) {
+async function runTests(url: string, eyes: any, projectName: string) {
   const viewportWidth = 800;
   const viewportHeight = 600;
 
@@ -58,7 +40,7 @@ async function runTests(url: string) {
 
     numFailedTests = await Promise.race([
       waitForPageError(page),
-      waitForTestsCompletion(page, url)
+      waitForTestsCompletion(page, eyes, projectName, url)
     ]);
 
     await browser.close();
@@ -86,7 +68,7 @@ function logEyesResult(isError: boolean, {name, isNew, appUrls}: any) {
   consoleLog(`${status} ${chalk.bold(name)}. ${url}`);
 }
 
-async function waitForTestsCompletion(page: puppeteer.Page, url: string):
+async function waitForTestsCompletion(page: puppeteer.Page, url: string, eyes: any, projectName: string):
   Promise<number> {
   const loadTimeout = 20000;
 
@@ -123,16 +105,33 @@ async function waitForTestsCompletion(page: puppeteer.Page, url: string):
   return numTestsFailed;
 }
 
-export async function eyesTest(entry: string | string[], apiKey: string) {
+export async function eyesTest(entry: string | string[], apiKey: string, projectPath: string, webpackConfigPath: string) {
   let server: IServer | null = null;
+  const projectName = require(path.join(projectPath, 'package.json')).name;
+  const batchName   = projectName;
+  const batchId     = uuid.v4();
+  const osName      = process.platform;
+
   if (!apiKey) {
     process.exitCode = 1;
     throw new Error('The environment variable "EYES_API_KEY" needs to be defined.');
     process.exit();
   }
+
+  if (!projectName) {
+    process.exitCode = 1;
+    throw new Error('The project should have a package.json file with a "name" field.');
+    process.exit();
+  }
+
+  const eyes = new Eyes();
+  eyes.setApiKey(process.env.EYES_API_KEY);
+  eyes.setOs(osName);
+  eyes.setBatch(batchName, batchId);
+
   try {
-    server = await serve({webpackConfig: getWebpackConfig(entry)});
-    const numFailedTests = await runTests(server.getUrl());
+    server = await serve({webpackConfig: getWebpackConfig(entry, webpackConfigPath)});
+    const numFailedTests = await runTests(server.getUrl(), eyes, projectName);
     if (numFailedTests) {
       process.exitCode = 1;
     }

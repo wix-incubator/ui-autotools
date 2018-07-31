@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/eyes",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -28,8 +28,8 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@ui-autotools/registry": "^1.0.2",
-    "@ui-autotools/utils": "^1.0.3",
+    "@ui-autotools/registry": "^1.0.3",
+    "@ui-autotools/utils": "^1.0.4",
     "dotenv": "^6.0.0",
     "eyes.images": "^0.0.52",
     "puppeteer": "^1.5.0",

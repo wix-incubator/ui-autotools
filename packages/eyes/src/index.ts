@@ -85,9 +85,13 @@ async function runTests(url: string) {
   }
 }
 
-function logEyesResult(isError: boolean, {name, status, isNew, appUrls}: any) {
+function logEyesResult(isError: boolean, {name, isNew, appUrls}: any) {
   const url = isError ? `${chalk.cyan('URL')}: ${chalk.underline(appUrls.session)}` : '';
-  consoleLog(`${isError ? chalk.red('👎 FAIL') : isNew ? chalk.yellow('👌  NEW') : chalk.green('👍  OK')} ${chalk.bold(name)}. ${url}`);
+  const status = isError ? chalk.red('👎 FAIL') : 
+               isNew ? chalk.yellow('👌  NEW') :
+               chalk.green('👍  OK');
+
+  consoleLog(`${status} ${chalk.bold(name)}. ${url}`);
 }
 
 async function waitForTestsCompletion(page: puppeteer.Page, url: string):

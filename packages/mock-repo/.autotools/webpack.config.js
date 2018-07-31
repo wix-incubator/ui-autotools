@@ -1,8 +1,4 @@
-const path = require('path');
-const glob = require('glob');
-
 const packagePath = __dirname;
-const metaGlob = 'src/**/*.meta.ts?(x)';
 
 module.exports = {
   context: packagePath,

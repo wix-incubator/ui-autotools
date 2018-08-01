@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {IComponentData} from '../server/client-data';
 import {ComponentList} from './component-list';
 import {ComponentInfo} from './component-info';

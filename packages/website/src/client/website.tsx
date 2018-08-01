@@ -1,5 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import {Website} from '../components/website';
 import {IComponentData} from '../server/client-data';
 

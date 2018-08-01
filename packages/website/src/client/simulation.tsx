@@ -1,7 +1,7 @@
 import Registry, {getCompName} from '@ui-autotools/registry';
 // TODO: make sure we get the project's React here.
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
 const url = new URL(document.location.href);
 const componentName = url.searchParams.get('component');

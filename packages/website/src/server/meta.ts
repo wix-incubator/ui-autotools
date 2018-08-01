@@ -1,5 +1,5 @@
 import 'typescript-support';
-import React from 'react';
+import * as React from 'react';
 import glob from 'glob';
 import Registry from '@ui-autotools/registry';
 import {IComponentMetadata, IMetadata} from '@ui-autotools/registry';

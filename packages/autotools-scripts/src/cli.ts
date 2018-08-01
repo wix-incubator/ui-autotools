@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+require('dotenv').config();
 import {registerRequireHooks} from '@ui-autotools/utils';
 import {Command} from 'commander';
 import ssrTest from './ssr-test/mocha-wrapper';
@@ -14,6 +15,7 @@ registerRequireHooks();
 const program = new Command();
 const projectPath = process.cwd();
 const defaultMetaGlob = 'src/**/*.meta.ts?(x)';
+const webpackConfigPath = path.join(projectPath, '.autotools/webpack.config.js');
 
 program
 .command('sanity')
@@ -48,7 +50,8 @@ program
 .option('-f, --files [pattern]', 'metadata file pattern')
 .action((options) => {
   const entry = glob.sync(path.join(projectPath, options.files ? options.files : defaultMetaGlob));
-  eyesTest(entry);
+
+  eyesTest(entry, projectPath, webpackConfigPath);
 });
 
 program.parse(process.argv);

@@ -6,7 +6,7 @@ describe('schema-extract - generic interface', () => {
     it('should support genric interface definition', async () => {
         const moduleId = 'interface-definition';
         const res = transformTest(`
-        export type MyInterface<T>{
+        export interface MyInterface<T> {
             something:T;
         };
         export let param:MyInterface<string>;
@@ -220,6 +220,58 @@ describe('schema-extract - generic interface', () => {
                 }
             },
             properties: {}
+        };
+        expect(res).to.eql(expected);
+    });
+
+    it('should support extending genric interfaces', async () => {
+        const moduleId = 'interface-definition';
+        const res = transformTest(`
+        export interface TypeA<T> {
+            something:T;
+        };
+        export interface TypeB extends TypeA<string> {
+            somethingElse: number
+        };
+        `, moduleId);
+
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            definitions: {
+                TypeA : {
+                    type: 'object',
+                    genericParams: [{
+                        name: 'T',
+                    }],
+                    properties: {
+                        something: {
+                            $ref: '#TypeA!T',
+                        },
+                    },
+                    required: ['something']
+                },
+                TypeB : {
+                    $allOf: [
+                        {
+                            $ref: '#TypeA'
+                        },
+                        {
+                            type: 'object',
+                            genericArguments: [{
+                                type: 'string'
+                            }],
+                            properties: {
+                                somethingElse: {
+                                    type: 'number'
+                                },
+                            },
+                            required: ['somethingElse']
+                    }]
+                },
+            },
+            properties: {},
         };
         expect(res).to.eql(expected);
     });

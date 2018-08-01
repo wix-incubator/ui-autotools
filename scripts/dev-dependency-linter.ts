@@ -49,8 +49,12 @@ export async function devDependencyLinter(pathToPackageJson: string) {
         return errors;
       }
 
+      const ignoreIf = '@ui-autotools';
       if (devDependencies) {
-        errors.push({type: 'Error', packageName: pathToPkg, message: `Package "${pkg}" cannot have devDependencies: "${Object.keys(devDependencies)}" in its package.json. This devDependency should be placed in the root package.json.`});
+        const badDeps = Object.keys(devDependencies).filter((dep) => !dep.startsWith(ignoreIf));
+        if (badDeps.length > 0) {
+          errors.push({type: 'Error', packageName: pathToPkg, message: `Package "${pkg}" cannot have devDependencies: "${badDeps}" in its package.json. This devDependency should be placed in the root package.json.`});
+        }
       }
     }
   }

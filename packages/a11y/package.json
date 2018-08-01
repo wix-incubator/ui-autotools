@@ -26,8 +26,10 @@
   "repository": "git@github.com:wix/ui-autotools.git",
   "author": "Wix.com",
   "license": "BSD-3-Clause",
+  "devDependencies": {
+    "@ui-autotools/registry": "^1.0.3"
+  },
   "dependencies": {
-    "@ui-autotools/registry": "^1.0.3",
     "@ui-autotools/utils": "^1.0.4",
     "axe-core": "^3.0.3",
     "chalk": "^2.4.1",
@@ -35,7 +37,8 @@
   },
   "peerDependencies": {
     "react": ">=16",
-    "react-dom": ">=16"
+    "react-dom": ">=16",
+    "@ui-autotools/registry": "^1.0.0"
   },
   "publishConfig": {
     "access": "public"

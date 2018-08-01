@@ -6,7 +6,22 @@ import {transform} from './file-transformer';
 import {createHost} from './isomorphc-typescript-host';
 import {SchemaLinker} from './file-linker';
 
-export function* extractSchema(basePath: string, filesGlob: string, linked = false) {
+export function* extractSchema(basePath: string, filesGlob: string) {
+  const files = glob.sync(filesGlob, {cwd: basePath});
+  const host = createHost(new LocalFileSystem(basePath));
+  const program = typescript.createProgram(files, {}, host);
+  const checker = program.getTypeChecker();
+  for (const file of files) {
+    const source = program.getSourceFile(file);
+    const schema = transform(checker, source!, file, '');
+    yield {
+      file: path.join(basePath, file),
+      schema
+    };
+  }
+}
+
+export function* extractLinkedSchema(basePath: string, filesGlob: string, linked = false) {
   const files = glob.sync(filesGlob, {cwd: basePath});
   const host = createHost(new LocalFileSystem(basePath));
   const program = typescript.createProgram(files, {}, host);

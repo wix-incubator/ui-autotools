@@ -1,7 +1,7 @@
 import * as ts from 'typescript';
 import {union} from 'lodash';
 import { transform } from './file-transformer';
-import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId } from './json-schema-types';
+import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId, UnknownId } from './json-schema-types';
 
 export class SchemaLinker {
     private checker: ts.TypeChecker;
@@ -18,7 +18,7 @@ export class SchemaLinker {
     public flatten(file: string, entityName: string): Schema {
         const sourceFile = this.program.getSourceFile(file);
         if (!sourceFile) {
-            return {};
+            return {$ref: UnknownId};
         }
         this.sourceFile = sourceFile;
         const schema = transform(this.checker, sourceFile, file, this.projectPath);
@@ -29,7 +29,7 @@ export class SchemaLinker {
             entity = schema.properties[entityName];
         }
         if (!entity) {
-            return {};
+            return {$ref: UnknownId};
         }
         return this.link(entity, schema);
     }
@@ -64,7 +64,7 @@ export class SchemaLinker {
 
     private link(entity: Schema, schema: ModuleSchema): Schema {
         if (!entity) {
-            return {};
+            return {$ref: UnknownId};
         }
         if (isClassSchema(entity)) {
             return this.linkClass(schema, entity);

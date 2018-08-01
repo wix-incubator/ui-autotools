@@ -15,6 +15,7 @@ registerRequireHooks();
 const program = new Command();
 const projectPath = process.cwd();
 const defaultMetaGlob = 'src/**/*.meta.ts?(x)';
+const webpackConfigPath = path.join(projectPath, '.autotools/webpack.config.js');
 
 program
 .command('sanity')
@@ -49,7 +50,6 @@ program
 .option('-f, --files [pattern]', 'metadata file pattern')
 .action((options) => {
   const entry = glob.sync(path.join(projectPath, options.files ? options.files : defaultMetaGlob));
-  const webpackConfigPath = path.join(projectPath, '.autotools/webpack.config.js');
 
   eyesTest(entry, process.env.EYES_API_KEY!, projectPath, webpackConfigPath);
 });

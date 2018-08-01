@@ -34,11 +34,14 @@
     "glob": "^7.1.2",
     "typescript-support": "^0.4.1"
   },
+  "devDependencies": {
+    "@ui-autotools/registry": "^1.0.3"
+  },
   "peerDependencies": {
     "mocha": ">=5",
     "react": ">=16",
     "react-dom": ">=16",
-    "@ui-autotools/registry": "~1"
+    "@ui-autotools/registry": "^1.0.0"
   },
   "publishConfig": {
     "access": "public"

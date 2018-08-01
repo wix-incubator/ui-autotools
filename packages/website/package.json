@@ -1,6 +1,5 @@
 {
   "name": "@ui-autotools/website",
-  "private": true,
   "version": "1.0.1",
   "main": "cjs/index.js",
   "module": "esm/index.js",

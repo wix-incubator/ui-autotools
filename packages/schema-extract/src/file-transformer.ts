@@ -244,12 +244,19 @@ const describeTypeAlias: TsNodeDescriber<ts.TypeAliasDeclaration> = (decl, check
 
 const describeInterface: TsNodeDescriber<ts.InterfaceDeclaration> = (decl, checker, env) => {
     const localRes = describeTypeLiteral(decl, checker, env);
+    const genericParams = getGenericParams(decl, checker, env);
+    if (genericParams) {
+        localRes.schema.genericParams = genericParams;
+    }
     if (decl.heritageClauses) {
         const res: Schema = {
             $allOf: [],
         };
         decl.heritageClauses.forEach((clauese) => {
             clauese.types.forEach((t) => {
+                if (t.typeArguments) {
+                    localRes.schema.genericArguments = t.typeArguments.map((a) => describeTypeNode(a, checker, env).schema);
+                }
                 res.$allOf = res.$allOf || [];
                 res.$allOf.push(assignmentDescriber(t, checker, env).schema);
             });

@@ -105,26 +105,26 @@ async function waitForTestsCompletion(page: puppeteer.Page, url: string, eyes: a
   return numTestsFailed;
 }
 
-export async function eyesTest(entry: string | string[], apiKey: string, projectPath: string, webpackConfigPath: string) {
+export async function eyesTest(entry: string | string[], projectPath: string, webpackConfigPath: string) {
   let server: IServer | null = null;
   const batchId     = uuid.v4();
   const osName      = process.platform;
-
-  if (!apiKey) {
-    process.exitCode = 1;
-    throw new Error('The environment variable "EYES_API_KEY" needs to be defined.');
-  }
+  const apiKey      = process.env.EYES_API_KEY;
 
   const eyes = new Eyes();
-  eyes.setApiKey(process.env.EYES_API_KEY);
-  eyes.setOs(osName);
 
   try {
     const projectName = require(path.join(projectPath, 'package.json')).name;
     if (!projectName) {
-      process.exitCode = 1;
       throw new Error('The project should have a package.json file with a "name" field.');
     }
+
+    if (!apiKey) {
+      throw new Error('The environment variable "EYES_API_KEY" needs to be defined.');
+    }
+
+    eyes.setApiKey(apiKey);
+    eyes.setOs(osName);
 
     const batchName   = projectName;
     eyes.setBatch(batchName, batchId);

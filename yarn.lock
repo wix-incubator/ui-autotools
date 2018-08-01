@@ -4909,7 +4909,7 @@ koa-is-json@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/koa-is-json/-/koa-is-json-1.0.0.tgz#273c07edcdcb8df6a2c1ab7d59ee76491451ec14"
 
-koa-webpack@^5.0.2:
+koa-webpack@^5.0.2, koa-webpack@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/koa-webpack/-/koa-webpack-5.1.0.tgz#7b9f04ea85c43c4d7ad845d0de01f0ed495eb5c0"
   dependencies:
@@ -4921,7 +4921,7 @@ koa-webpack@^5.0.2:
     webpack-hot-client "^4.1.0"
     webpack-log "^1.1.1"
 
-koa@^2.5.1:
+koa@^2.5.1, koa@^2.5.2:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/koa/-/koa-2.5.2.tgz#f2bda7f3e70be54924e7e5e9789a249f77256fe3"
   dependencies:

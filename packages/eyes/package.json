@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/eyes",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -28,19 +28,19 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "@ui-autotools/registry": "^1.0.3"
+    "@ui-autotools/registry": "^1.0.4"
   },
   "dependencies": {
-    "@ui-autotools/utils": "^1.0.4",
+    "@ui-autotools/utils": "^1.0.5",
     "dotenv": "^6.0.0",
     "eyes.images": "^0.0.52",
     "puppeteer": "^1.5.0",
     "uuid": "^3.2.1"
   },
   "peerDependencies": {
+    "@ui-autotools/registry": "^1.0.0",
     "react": ">=16",
-    "react-dom": ">=16",
-    "@ui-autotools/registry": "^1.0.0"
+    "react-dom": ">=16"
   },
   "publishConfig": {
     "access": "public"

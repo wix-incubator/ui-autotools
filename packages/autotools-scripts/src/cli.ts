@@ -61,8 +61,8 @@ program.command('website')
 .option('-f, --files [pattern]', 'metadata file pattern')
 .option('--output [dir]', 'output folder for the generated website')
 .action((options) => {
-  const outputPath = options.output as string || 'website';
-  const metadataGlob = options.files as string || defaultMetaGlob;
+  const outputPath: string = options.output || 'dist/website';
+  const metadataGlob: string = options.files || defaultMetaGlob;
 
   startWebsite({
     projectPath,

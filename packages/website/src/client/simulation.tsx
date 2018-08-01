@@ -1,4 +1,4 @@
-import Registry from '@ui-autotools/registry';
+import Registry, {getCompName} from '@ui-autotools/registry';
 // TODO: make sure we get the project's React here.
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -8,7 +8,7 @@ const componentName = url.searchParams.get('component');
 const simulationTitle = url.searchParams.get('simulation');
 
 const Comp = Array.from(Registry.metadata.components.keys()).find((c) =>
-  c.displayName === componentName || c.name === componentName
+  getCompName(c) === componentName
 );
 
 const compMeta = Comp && Registry.metadata.components.get(Comp);

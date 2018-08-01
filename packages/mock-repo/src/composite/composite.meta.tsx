@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Registry from '@ui-autotools/registry';
 import {Composite} from './composite';
 

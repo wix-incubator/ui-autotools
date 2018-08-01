@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {IComponentMetadata, ISimulation, IStyleMetadata} from './types';
 import {isValidSimulationTitle} from '../utils';
 

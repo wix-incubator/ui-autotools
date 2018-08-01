@@ -33,8 +33,13 @@
   },
   "dependencies": {
     "@ui-autotools/utils": "^1.0.0",
+    "glob": "^7.1.2",
+    "html-webpack-plugin": "^3.2.0",
+    "koa": "^2.5.2",
+    "koa-webpack": "^5.1.0",
     "stylable": "^5.4.11",
     "stylable-webpack-plugin": "^1.1.7",
+    "typescript-support": "^0.5.1",
     "webpack": "^4.12.1"
   },
   "peerDependencies": {

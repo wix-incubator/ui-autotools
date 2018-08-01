@@ -7,17 +7,17 @@ import { SchemaLinker } from '../src/file-linker';
 export function linkTest(sourceDir: DirectoryContent, entityName: string, fileName: string): Schema {
     const memFs = new MemoryFileSystem();
     const projectName = 'someProject';
-    const testedPath = '/' + projectName + '/src/';
+    const projectPath = `/${projectName}`;
+    const testedPath = projectPath + '/src/';
     const testedFile = testedPath + fileName;
     MemoryFileSystem.addContent(memFs, {
         [projectName]: {
             src: sourceDir,
         },
     });
-
     const prg = ts.createProgram([testedFile], {}, createHost(memFs));
     const chckr = prg.getTypeChecker();
-    const linker = new SchemaLinker(prg, chckr);
+    const linker = new SchemaLinker(prg, chckr, projectPath);
 
-    return linker.flatten(testedFile, entityName, fileName);
+    return linker.flatten(testedFile, entityName);
 }

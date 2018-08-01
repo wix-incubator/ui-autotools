@@ -19,7 +19,6 @@ async function run() {
   const sourcesGlob = commander.files as string;
 
   const fs = new LocalFileSystem(inputDir);
-
   for (const {file, schema} of extractSchema(inputDir, sourcesGlob)) {
     const relativePath = posix.relative(inputDir, file);
     if (outputDir) {

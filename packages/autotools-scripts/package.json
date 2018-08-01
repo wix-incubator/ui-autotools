@@ -46,5 +46,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^4.0.3"
   }
 }

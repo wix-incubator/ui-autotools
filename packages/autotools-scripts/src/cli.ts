@@ -1,16 +1,17 @@
 #!/usr/bin/env node
-require('dotenv').config();
-import {registerRequireHooks} from '@ui-autotools/utils';
+import path from 'path';
+import glob from 'glob';
+import dotenv from 'dotenv';
 import {Command} from 'commander';
-import ssrTest from './ssr-test/mocha-wrapper';
+import {registerRequireHooks} from '@ui-autotools/utils';
 import {hydrationTest} from '@ui-autotools/sanity';
 import {eyesTest} from '@ui-autotools/eyes';
-import importMeta from './import-metadata/import-meta';
 import {a11yTest, impactLevels} from '@ui-autotools/a11y';
 import {startWebsite} from '@ui-autotools/website';
-import glob from 'glob';
-import path from 'path';
+import importMeta from './import-metadata/import-meta';
+import ssrTest from './ssr-test/mocha-wrapper';
 
+dotenv.config();
 registerRequireHooks();
 
 const program = new Command();
@@ -60,14 +61,17 @@ program.command('website')
 .option('-f, --files [pattern]', 'metadata file pattern')
 .option('--output [dir]', 'output folder for the generated website')
 .action((options) => {
+  const outputPath = options.output as string || 'website';
+  const metadataGlob = options.files as string || defaultMetaGlob;
+
   startWebsite({
     projectPath,
-    metadataGlob: options.files ? options.files : defaultMetaGlob,
+    metadataGlob,
     sourceGlob: 'src/**/*.ts?(x)',
-    outputPath: path.join(projectPath, options.output),
+    outputPath: path.join(projectPath, outputPath),
     host: '127.0.0.1',
     port: 8888,
-    webpackConfigPath: path.join(projectPath, 'meta.webpack.config.js')
+    webpackConfigPath
   });
 });
 

@@ -1,5 +1,5 @@
 import * as ts from 'typescript';
-import {ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchemaId, ClassSchemaId, interfaceId } from './json-schema-types';
+import {ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchemaId, ClassSchemaId, interfaceId, InterfaceSchema } from './json-schema-types';
 import * as path from 'path';
 import { generateDataLiteral, isFailedInference } from './data-literal-transformer';
 // console.log(types)
@@ -268,28 +268,19 @@ const describeTypeAlias: TsNodeDescriber<ts.TypeAliasDeclaration> = (decl, check
 const describeInterface: TsNodeDescriber<ts.InterfaceDeclaration> = (decl, checker, env) => {
     const localRes = describeTypeLiteral(decl, checker, env);
     localRes.schema.$ref = interfaceId;
-    delete localRes.schema.type;
     const genericParams = getGenericParams(decl, checker, env);
     if (genericParams) {
         localRes.schema.genericParams = genericParams;
     }
     if (decl.heritageClauses) {
-        const res: Schema = {
-            $allOf: [],
-        };
         decl.heritageClauses.forEach((clauese) => {
             clauese.types.forEach((t) => {
                 if (t.typeArguments) {
                     localRes.schema.genericArguments = t.typeArguments.map((a) => describeTypeNode(a, checker, env).schema);
                 }
-                res.$allOf = res.$allOf || [];
-                res.$allOf.push(assignmentDescriber(t, checker, env).schema);
+                (localRes.schema as InterfaceSchema).extends = assignmentDescriber(t, checker, env).schema;
             });
         });
-        res.$allOf!.push(localRes.schema);
-        return {
-            schema: res
-        };
     }
     return localRes;
 };
@@ -554,9 +545,10 @@ function resolveImportPath(relativeUrl: string, importInternal: string, env: IEn
 }
 
 const describeTypeLiteral: TsNodeDescriber<ts.TypeLiteralNode | ts.InterfaceDeclaration> = (decl, checker, env) => {
-    const res: Schema<'object'> = {
-        type: 'object'
-    };
+    const res: Schema<'object'>  = {};
+    if (!ts.isInterfaceDeclaration(decl)) {
+        res.type = 'object';
+    }
     decl.members.forEach((member) => {
         if (ts.isPropertySignature(member)) {
             res.properties = res.properties || {};

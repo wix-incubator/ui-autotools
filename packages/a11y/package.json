@@ -18,7 +18,8 @@
   },
   "files": [
     "cjs",
-    "esm"
+    "esm",
+    "templates"
   ],
   "engines": {
     "node": ">=8"

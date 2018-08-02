@@ -75,6 +75,18 @@ myComponentMetadata.addSim({
 });
 ```
 
+Simulations also have a flag, `strictMode: boolean`, to disable rendering in Strict Mode (will render in Strict Mode by default). For example, the following simulation will not render in Strict Mode:
+
+```ts
+myComponentMetadata.addSim({
+    title: 'empty',
+    props: {
+        items:[]
+    },
+    strictMode: false
+});
+```
+
 ### Sanity
 
 Runs over every simulation and asserts the following:

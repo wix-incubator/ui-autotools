@@ -32,20 +32,17 @@ describe('schema-extract - interfaces', () => {
                     required: ['title']
                 },
                 Extendz : {
-                    $allOf: [
-                        {
-                            $ref: '#MyInterface',
-                        }, {
-                            $ref: interfaceId,
-                            properties: {
-                                desc: {
-                                    type: 'string',
-                                },
-                            },
-                            required: ['desc']
+                    $ref: interfaceId,
+                    extends: {
+                        $ref: '#MyInterface',
+                    },
+                    properties: {
+                        desc: {
+                            type: 'string',
                         },
-                    ],
-                },
+                    },
+                    required: ['desc']
+                }
             },
             properties: {
                 param: {

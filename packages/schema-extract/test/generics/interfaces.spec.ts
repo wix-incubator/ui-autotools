@@ -253,22 +253,19 @@ describe('schema-extract - generic interface', () => {
                     required: ['something']
                 },
                 TypeB : {
-                    $allOf: [
-                        {
-                            $ref: '#TypeA'
+                    $ref: interfaceId,
+                    genericArguments: [{
+                        type: 'string'
+                    }],
+                    extends: {
+                        $ref: '#TypeA'
+                    },
+                    properties: {
+                        somethingElse: {
+                            type: 'number'
                         },
-                        {
-                            $ref: interfaceId,
-                            genericArguments: [{
-                                type: 'string'
-                            }],
-                            properties: {
-                                somethingElse: {
-                                    type: 'number'
-                                },
-                            },
-                            required: ['somethingElse']
-                    }]
+                    },
+                    required: ['somethingElse']
                 },
             },
             properties: {},

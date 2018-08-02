@@ -28,7 +28,7 @@ program
   importMeta(entry);
   // Run the sanity tests for each loaded metadata
   ssrTest();
-  hydrationTest(entry);
+  hydrationTest(entry, webpackConfigPath);
 });
 
 program
@@ -42,7 +42,7 @@ program
   if (!impactLevels.includes(impact)) {
     throw new Error(`Invalid impact level ${impact}`);
   }
-  a11yTest(entry, impact);
+  a11yTest(entry, impact, webpackConfigPath);
 });
 
 program

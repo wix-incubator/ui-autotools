@@ -7,10 +7,8 @@ import chalk from 'chalk';
 
 const ownPath = path.resolve(__dirname, '..');
 export const impactLevels: axe.ImpactValue[] = ['minor', 'moderate', 'serious', 'critical'];
-const projectPath = process.cwd();
-const webpackConfigPath = path.join(projectPath, 'meta.webpack.config.js');
 
-function getWebpackConfig(entry: string | string[]) {
+function getWebpackConfig(entry: string | string[], webpackConfigPath: string) {
   return WebpackConfigurator
     .load(webpackConfigPath)
     .setEntry('meta', entry)
@@ -44,11 +42,11 @@ function formatResults(results: IResult[], impact: axe.ImpactValue): string {
   return msg.join('\n\n');
 }
 
-export async function a11yTest(entry: string | string[], impact: axe.ImpactValue) {
+export async function a11yTest(entry: string | string[], impact: axe.ImpactValue, webpackConfigPath: string) {
   let server: IServer | null = null;
   let browser: puppeteer.Browser | null = null;
   try {
-    server = await serve({webpackConfig: getWebpackConfig(entry)});
+    server = await serve({webpackConfig: getWebpackConfig(entry, webpackConfigPath)});
     browser = await puppeteer.launch();
     const page = await browser.newPage();
     const getResults = new Promise<any[]>((resolve) =>

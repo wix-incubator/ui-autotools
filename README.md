@@ -28,10 +28,11 @@ Common CLI parameters:
     - nothing was printed to the console
 - `a11y` - accessibility test:
     - checks component render result for accessibility using axe-core
+- `eyes` - tool for generating and testing component snapshots, that:
+    - renders components, takes screenshots, and sends them to Applitools Eyes to run comparisons
 
 ## WIP Tools
 
-- `eyes` - tool for generating and testing component snapshots
 - `website`
     - auto generated static documentation and playgrounds site.
     - dev mode - fast reloading of changed resources
@@ -107,4 +108,14 @@ Asserts that components are compatable with axe-core. Allows for varying levels 
 
 ```shell
 autotools a11y --files ./components/**/*.meta.ts --impact minor
+```
+
+### Eyes
+
+Renders components, takes screenshots, and then sends screenshots to Applitools Eyes to run comparisons. This tool requires that the `process.env.EYES_API_KEY` value is set to your private API key.
+
+#### Usage
+
+```shell
+autotools eyes --files ./components/**/*.meta.ts
 ```

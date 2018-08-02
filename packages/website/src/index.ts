@@ -1,1 +1,1 @@
-export {startWebsite} from './server';
+export {buildWebsite, startWebsite} from './server';

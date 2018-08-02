@@ -3,6 +3,7 @@ import path from 'path';
 import http from 'http';
 import url from 'url';
 import glob from 'glob';
+import chalk from 'chalk';
 import webpack from 'webpack';
 import Koa from 'koa';
 import koaWebpack from 'koa-webpack';
@@ -12,6 +13,24 @@ import {WebpackConfigurator} from '@ui-autotools/utils';
 import {getMetadataAndSchemasInDirectory} from './meta';
 import {formatComponentDataForClient} from './client-data';
 const StylableWebpackPlugin = require('stylable-webpack-plugin');
+
+interface IProjectOptions {
+  projectPath: string;
+  webpackConfigPath: string;
+  metadataGlob: string;
+  sourcesGlob: string;
+}
+
+export interface IStartWebisteOptions {
+  projectOptions: IProjectOptions;
+  host: string;
+  port: number;
+}
+
+export interface IBuildWebisteOptions {
+  projectOptions: IProjectOptions;
+  outputPath: string;
+}
 
 const ownPath = path.resolve(__dirname, '../..');
 
@@ -28,17 +47,20 @@ function getServerUrl(server: http.Server) {
 }
 
 function getWebsiteWebpackConfig(
-  options: {
-    projectPath: string;
+  {
+    outputPath,
+    production,
+    projectOptions
+  }: {
     outputPath: string;
-    metadataGlob: string;
-    sourceGlob: string;
+    production: boolean;
+    projectOptions: IProjectOptions;
   }
 ): webpack.Configuration {
   const metadataAndSchemas = getMetadataAndSchemasInDirectory(
-    options.projectPath,
-    options.metadataGlob,
-    options.sourceGlob
+    projectOptions.projectPath,
+    projectOptions.metadataGlob,
+    projectOptions.sourcesGlob
   );
   const schemas = Array.from(metadataAndSchemas.schemasByComponent.values());
   const componentData = formatComponentDataForClient(metadataAndSchemas);
@@ -50,12 +72,12 @@ function getWebsiteWebpackConfig(
   );
 
   return {
-    mode: 'development',
+    mode: production ? 'production' : 'development',
     context: ownPath,
     entry: [path.resolve(ownPath, 'esm/client/website.js')],
     output: {
       filename: 'website.js',
-      path: options.outputPath
+      path: outputPath
     },
     plugins: [
       new StylableWebpackPlugin(),
@@ -73,26 +95,30 @@ function getWebsiteWebpackConfig(
 }
 
 function getMetadataWebpackConfig(
-  options: {
-    projectPath: string;
-    metadataGlob: string;
+  {
+    outputPath,
+    production,
+    projectOptions
+  }: {
     outputPath: string;
-    webpackConfigPath: string;
+    production: boolean;
+    projectOptions: IProjectOptions;
   }
 ): webpack.Configuration {
-  const metaFiles = glob.sync(options.metadataGlob, {
-    cwd: options.projectPath,
+  const metaFiles = glob.sync(projectOptions.metadataGlob, {
+    cwd: projectOptions.projectPath,
     absolute: true,
   });
 
-  const config = WebpackConfigurator.load(options.webpackConfigPath).getConfig();
-
-  config.mode = 'development';
-  config.context = options.projectPath;
+  const config = WebpackConfigurator
+                 .load(projectOptions.webpackConfigPath)
+                 .getConfig();
+  config.mode = production ? 'production' : 'development';
+  config.context = projectOptions.projectPath;
   config.entry = [...metaFiles, path.join(ownPath, 'esm/client/simulation.js')];
   config.output = {
     filename: 'metadata.js',
-    path: options.outputPath
+    path: outputPath
   };
   if (!config.plugins) {
     config.plugins = [];
@@ -104,31 +130,21 @@ function getMetadataWebpackConfig(
   return config;
 }
 
-export interface IStartWebisteOptions {
-  host: string;
-  port: number;
-  projectPath: string;
-  outputPath: string;
-  webpackConfigPath: string;
-  metadataGlob: string;
-  sourceGlob: string;
-}
-
-export async function startWebsite(options: IStartWebisteOptions) {
+export async function startWebsite(
+  {projectOptions, host, port}: IStartWebisteOptions
+) {
   const koa = new Koa();
 
   const websiteCompiler = webpack(getWebsiteWebpackConfig({
-    projectPath: options.projectPath,
-    outputPath: options.outputPath,
-    metadataGlob: options.metadataGlob,
-    sourceGlob: options.sourceGlob
+    projectOptions,
+    production: false,
+    outputPath: '/dev/null'
   }));
 
   const metadataCompiler = webpack(getMetadataWebpackConfig({
-    projectPath: options.projectPath,
-    outputPath: options.outputPath,
-    webpackConfigPath: options.webpackConfigPath,
-    metadataGlob: options.metadataGlob
+    projectOptions,
+    production: false,
+    outputPath: '/dev/null'
   }));
 
   const devMiddleware: koaWebpack.Options['devMiddleware'] = {
@@ -152,12 +168,59 @@ export async function startWebsite(options: IStartWebisteOptions) {
     hotClient
   }));
 
-  const server = koa.listen({
-    host: options.host,
-    port: options.port
-  });
+  const server = koa.listen({host, port});
 
   server.on('listening', () => {
-    process.stdout.write(`Listening on ${getServerUrl(server)}\n`);
+    const serverUrl = getServerUrl(server);
+    process.stdout.write(`Running on ${chalk.blue(serverUrl)}\n`);
   });
+}
+
+export async function buildWebsite(
+  {projectOptions, outputPath}: IBuildWebisteOptions
+) {
+  try {
+    // Compile the metadata first, because if there are type or syntactic errors
+    // in the project it's easier to let Webpack catch and report them instead
+    // of implementing friendly error reporting in the schema extractor.
+
+    const metadataCompiler = webpack(getMetadataWebpackConfig({
+      projectOptions,
+      production: true,
+      outputPath
+    }));
+
+    await new Promise((resolve, reject) => {
+      metadataCompiler.run((err, stats) => {
+        if (err) {
+          reject(err);
+        } else if (stats.hasErrors()) {
+          reject(stats.toString());
+        } else {
+          resolve();
+        }
+      });
+    });
+
+    const websiteCompiler = webpack(getWebsiteWebpackConfig({
+      projectOptions,
+      production: true,
+      outputPath
+    }));
+
+    await new Promise((resolve, reject) => {
+      websiteCompiler.run((err, stats) => {
+        if (err) {
+          reject(err);
+        } else if (stats.hasErrors()) {
+          reject(stats.toString());
+        } else {
+          resolve();
+        }
+      });
+    });
+  } catch (e) {
+    process.stderr.write(e);
+    process.exit(1);
+  }
 }

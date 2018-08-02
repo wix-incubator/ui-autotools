@@ -14,7 +14,7 @@ function getWebpackConfig(entry: string | string[], webpackConfigPath: string) {
     .setEntry('meta', entry)
     .addEntry('meta', path.join(ownPath, 'esm/browser/run'))
     .addHtml({
-      template: path.join(ownPath, 'src/browser/index.template'),
+      template: path.join(ownPath, '/templates', 'index.template'),
       title: 'Accessibility'
     })
     .suppressReactDevtoolsSuggestion()

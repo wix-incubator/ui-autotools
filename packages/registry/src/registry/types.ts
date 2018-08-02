@@ -2,7 +2,7 @@ import { ComponentType } from 'react';
 
 export interface IRegistry<AssetMap = any> {
   metadata: IMetadata;
-  getComponentMetadata: <Props> (comp: ComponentType<Props>) => IComponentMetadata<Props>;
+  getComponentMetadata: <Props> (comp: ComponentType<Props>, reactStrictModeCompliant?: boolean) => IComponentMetadata<Props>;
   clear: () => void;
 }
 
@@ -13,6 +13,7 @@ export interface IComponentMetadata<Props> {
   addSim: (sim: ISimulation<Props>) => void;
   addStyle: (style: any, description: IStyleMetadata) => void;
   simulationToJSX: (sim: ISimulation<Props>) => JSX.Element;
+  reactStrictModeCompliant: boolean;
 }
 
 export interface IMetadata {
@@ -26,5 +27,4 @@ export interface IStyleMetadata {
 export interface ISimulation<Props> {
   title: string;
   props: Props;
-  strictMode?: boolean;
 }

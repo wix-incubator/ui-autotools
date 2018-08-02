@@ -75,16 +75,11 @@ myComponentMetadata.addSim({
 });
 ```
 
-Simulations also have a flag, `strictMode: boolean`, to disable rendering in Strict Mode (will render in Strict Mode by default). For example, the following simulation will not render in Strict Mode:
+Components are assumed by default to be React Strict Mode compliant (meaning that they follow the guidelines described [here](https://reactjs.org/docs/strict-mode.html)). However, if your component is *not* React Strict Mode compliant, you can add a flag to disable testing in Strict Mode when adding a component to the registry, e.g.:
 
 ```ts
-myComponentMetadata.addSim({
-    title: 'empty',
-    props: {
-        items:[]
-    },
-    strictMode: false
-});
+// Second parameter is reactStrictModeCompliant
+Registry.getComponentMetadata(compWithUnsafeLifecycle, false);
 ```
 
 ### Sanity

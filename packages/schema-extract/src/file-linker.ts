@@ -21,7 +21,6 @@ export class SchemaLinker {
             return {$ref: UnknownId};
         }
         this.sourceFile = sourceFile;
-        debugger;
         const schema = transform(this.checker, sourceFile, file, this.projectPath);
         let entity;
         if (schema.definitions) {

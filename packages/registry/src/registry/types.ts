@@ -2,7 +2,7 @@ import { ComponentType } from 'react';
 
 export interface IRegistry<AssetMap = any> {
   metadata: IMetadata;
-  getComponentMetadata: <Props> (comp: ComponentType<Props>, reactStrictModeCompliant?: boolean) => IComponentMetadata<Props>;
+  getComponentMetadata: <Props> (comp: ComponentType<Props>) => IComponentMetadata<Props>;
   clear: () => void;
 }
 

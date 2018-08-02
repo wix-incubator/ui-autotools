@@ -7,7 +7,7 @@ import {isValidComponentName} from '../utils';
 
 const Registry: IRegistry = {
   metadata: new Metadata(),
-  getComponentMetadata <Props>(comp: ComponentType<Props>, reactStrictModeCompliant: boolean = true): ComponentMetadata<Props> {
+  getComponentMetadata <Props>(comp: ComponentType<Props>): ComponentMetadata<Props> {
     const newCompName = getCompName(comp);
 
     if (!newCompName) {
@@ -25,7 +25,7 @@ const Registry: IRegistry = {
         }
       }
 
-      this.metadata.components.set(comp, new ComponentMetadata<Props>(comp, reactStrictModeCompliant));
+      this.metadata.components.set(comp, new ComponentMetadata<Props>(comp));
     }
 
     return this.metadata.components.get(comp)!;

@@ -75,11 +75,11 @@ myComponentMetadata.addSim({
 });
 ```
 
-Components are assumed by default to be React Strict Mode compliant (meaning that they follow the guidelines described [here](https://reactjs.org/docs/strict-mode.html)). However, if your component is *not* React Strict Mode compliant, you can add a flag to disable testing in Strict Mode when adding a component to the registry, e.g.:
+Components are assumed by default to be React Strict Mode compliant (meaning that they follow the guidelines described [here](https://reactjs.org/docs/strict-mode.html)). However, if your component is *not* React Strict Mode compliant, you can set a flag in metadata to disable rendering in strict mode, e.g.:
 
 ```ts
-// Second parameter is reactStrictModeCompliant
-Registry.getComponentMetadata(compWithUnsafeLifecycle, false);
+const meta = Registry.getComponentMetadata(compWithUnsafeLifecycle);
+meta.reactStrictModeCompliant = false;
 ```
 
 ### Sanity

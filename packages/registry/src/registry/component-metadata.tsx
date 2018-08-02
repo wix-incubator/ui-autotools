@@ -5,8 +5,9 @@ import {isValidSimulationTitle} from '../utils';
 export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
   public simulations: Array<ISimulation<Props>> = []; // Initialize with "empty" simulation
   public styles: Map<any, IStyleMetadata> = new Map<any, IStyleMetadata>();
+  public reactStrictModeCompliant: boolean = true;
 
-  public constructor(public component: React.ComponentType<Props>, public reactStrictModeCompliant: boolean) {}
+  public constructor(public component: React.ComponentType<Props>) {}
 
   public addSim(sim: ISimulation<Props>) {
     if (!this.simulations.every((simulation) => simulation.title !== sim.title)) {

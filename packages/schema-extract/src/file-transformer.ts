@@ -1,5 +1,5 @@
 import * as ts from 'typescript';
-import {ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchemaId, ClassSchemaId} from './json-schema-types';
+import {ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchemaId, ClassSchemaId, interfaceId } from './json-schema-types';
 import * as path from 'path';
 
 // console.log(types)
@@ -244,6 +244,8 @@ const describeTypeAlias: TsNodeDescriber<ts.TypeAliasDeclaration> = (decl, check
 
 const describeInterface: TsNodeDescriber<ts.InterfaceDeclaration> = (decl, checker, env) => {
     const localRes = describeTypeLiteral(decl, checker, env);
+    localRes.schema.$ref = interfaceId;
+    delete localRes.schema.type;
     const genericParams = getGenericParams(decl, checker, env);
     if (genericParams) {
         localRes.schema.genericParams = genericParams;
@@ -528,7 +530,7 @@ function resolveImportPath(relativeUrl: string, importInternal: string, env: IEn
 
 const describeTypeLiteral: TsNodeDescriber<ts.TypeLiteralNode | ts.InterfaceDeclaration> = (decl, checker, env) => {
     const res: Schema<'object'>  = {
-        type: 'object',
+        type: 'object'
     };
     decl.members.forEach((member) => {
         if (ts.isPropertySignature(member)) {

@@ -52,25 +52,10 @@ function getWebsiteWebpackConfig(
   return {
     mode: 'development',
     context: ownPath,
-    entry: [path.resolve(ownPath, 'src/client/website.tsx')],
+    entry: [path.resolve(ownPath, 'esm/client/website.js')],
     output: {
       filename: 'website.js',
       path: options.outputPath
-    },
-    module: {
-      rules: [
-        {
-          test: /\.tsx?$/,
-          use: {
-            loader: 'ts-loader',
-            options: {
-              compilerOptions: {
-                declaration: false
-              }
-            }
-          }
-        }
-      ]
     },
     plugins: [
       new StylableWebpackPlugin(),
@@ -83,10 +68,7 @@ function getWebsiteWebpackConfig(
         filename: 'index.html'
       }),
       ...componentPages
-    ],
-    resolve: {
-      extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
-    }
+    ]
   };
 }
 

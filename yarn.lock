@@ -477,6 +477,19 @@
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@sinonjs/samsam/-/samsam-2.0.0.tgz#9163742ac35c12d3602dece74317643b35db6a80"
 
+"@stylable/cli@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@stylable/cli/-/cli-1.0.0.tgz#a541e9c066028a3e2e1e0cb153d269269b443b03"
+  dependencies:
+    "@stylable/node" "^0.0.2"
+    deindent "^0.1.0"
+    lodash.clonedeep "^4.5.0"
+    react "^16.4.1"
+    react-dom "^16.4.1"
+    stylable "^5.4.11"
+    webpack "^4.12.1"
+    webpack-sources "^1.1.0"
+
 "@stylable/node@^0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@stylable/node/-/node-0.0.2.tgz#48e9042ec81ccc151b2397a4241eac7bfe9fca97"

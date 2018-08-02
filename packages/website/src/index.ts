@@ -1,1 +1,1 @@
-export {startWebsite} from '../src/server';
+export {startWebsite} from './server';

@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/website",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -32,7 +32,7 @@
     "@ui-autotools/registry": "^1.0.6"
   },
   "dependencies": {
-    "@ui-autotools/schema-extract": "^1.0.0",
+    "@ui-autotools/schema-extract": "^1.0.6",
     "@ui-autotools/utils": "^1.0.0",
     "glob": "^7.1.2",
     "html-webpack-plugin": "^3.2.0",

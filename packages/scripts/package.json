@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/scripts",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
   "bin": {
@@ -30,7 +30,7 @@
     "@ui-autotools/eyes": "^1.0.7",
     "@ui-autotools/sanity": "^1.0.9",
     "@ui-autotools/utils": "^1.0.5",
-    "@ui-autotools/website": "^1.0.5",
+    "@ui-autotools/website": "^1.0.6",
     "commander": "^2.15.1",
     "glob": "^7.1.2",
     "typescript-support": "^0.4.1"

@@ -13,6 +13,7 @@ export interface IComponentMetadata<Props> {
   addSim: (sim: ISimulation<Props>) => void;
   addStyle: (style: any, description: IStyleMetadata) => void;
   simulationToJSX: (sim: ISimulation<Props>) => JSX.Element;
+  reactStrictModeCompliant: boolean;
 }
 
 export interface IMetadata {

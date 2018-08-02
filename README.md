@@ -75,6 +75,13 @@ myComponentMetadata.addSim({
 });
 ```
 
+Components are assumed by default to be React Strict Mode compliant (meaning that they follow the guidelines described [here](https://reactjs.org/docs/strict-mode.html)). However, if your component is *not* React Strict Mode compliant, you can set a flag in metadata to disable rendering in strict mode, e.g.:
+
+```ts
+const meta = Registry.getComponentMetadata(compWithUnsafeLifecycle);
+meta.reactStrictModeCompliant = false;
+```
+
 ### Sanity
 
 Runs over every simulation and asserts the following:

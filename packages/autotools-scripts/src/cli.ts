@@ -7,6 +7,7 @@ import {registerRequireHooks} from '@ui-autotools/utils';
 import {hydrationTest} from '@ui-autotools/sanity';
 import {eyesTest} from '@ui-autotools/eyes';
 import {a11yTest, impactLevels} from '@ui-autotools/a11y';
+import {startWebsite} from '@ui-autotools/website';
 import importMeta from './import-metadata/import-meta';
 import ssrTest from './ssr-test/mocha-wrapper';
 
@@ -55,22 +56,22 @@ program
   eyesTest(entry, projectPath, webpackConfigPath);
 });
 
-// program.command('website')
-// .description('create a website that shows component APIs and demos')
-// .option('-f, --files [pattern]', 'metadata file pattern')
-// .option('--output [dir]', 'output folder for the generated website')
-// .action((options) => {
-//   const outputPath: string = options.output || 'dist/website';
-//   const metadataGlob: string = options.files || defaultMetaGlob;
-//   startWebsite({
-//     projectPath,
-//     metadataGlob,
-//     sourceGlob: 'src/**/*.ts?(x)',
-//     outputPath: path.join(projectPath, outputPath),
-//     host: '127.0.0.1',
-//     port: 8888,
-//     webpackConfigPath
-//   });
-// });
+program.command('website')
+.description('create a website that shows component APIs and demos')
+.option('-f, --files [pattern]', 'metadata file pattern')
+.option('--output [dir]', 'output folder for the generated website')
+.action((options) => {
+  const outputPath: string = options.output || 'dist/website';
+  const metadataGlob: string = options.files || defaultMetaGlob;
+  startWebsite({
+    projectPath,
+    metadataGlob,
+    sourceGlob: 'src/**/*.ts?(x)',
+    outputPath: path.join(projectPath, outputPath),
+    host: '127.0.0.1',
+    port: 8888,
+    webpackConfigPath
+  });
+});
 
 program.parse(process.argv);

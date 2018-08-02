@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/a11y",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
   "scripts": {
@@ -27,7 +27,7 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "@ui-autotools/registry": "^1.0.5"
+    "@ui-autotools/registry": "^1.0.6"
   },
   "dependencies": {
     "@ui-autotools/utils": "^1.0.5",

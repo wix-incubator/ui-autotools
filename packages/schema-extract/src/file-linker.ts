@@ -1,7 +1,7 @@
 import * as ts from 'typescript';
 import {union} from 'lodash';
 import { transform } from './file-transformer';
-import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId, UnknownId } from './json-schema-types';
+import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId } from './json-schema-types';
 
 export class SchemaLinker {
     private checker: ts.TypeChecker;
@@ -68,6 +68,9 @@ export class SchemaLinker {
         }
         if (isClassSchema(entity)) {
             return this.linkClass(schema, entity);
+        }
+        if (isInterfaceSchema(entity)) {
+            return this.linkInterface(entity, schema);
         }
         if (isRef(entity)) {
             return this.handleRef(entity, schema);
@@ -180,7 +183,9 @@ export class SchemaLinker {
             res.properties = {};
         }
         if (entity.properties) {
-            res.type = entity.type;
+            if (entity.type) {
+                res.type = entity.type;
+            }
             const properties = entity.properties;
             for (const prop in properties) {
                 if (!res.properties.hasOwnProperty(prop)) {
@@ -197,6 +202,30 @@ export class SchemaLinker {
                 res.required = union(res.required, entity.required);
             }
         }
+    }
+
+    private linkInterface(entity: InterfaceSchema, schema: ModuleSchema): InterfaceSchema {
+        if (!schema.definitions) {
+            return entity;
+        }
+        const res = this.handleObject(entity, schema) as InterfaceSchema;
+        res.$ref = interfaceId;
+        if (entity.extends) {
+            const extendedEntity = entity.extends.$ref!.replace('#', '');
+            const refEntity = schema.definitions[extendedEntity] as InterfaceSchema;
+            if (!refEntity) {
+                return entity;
+            }
+            const pMap = new Map();
+            refEntity.genericParams!.forEach((param, index) => {
+                pMap.set(`#${extendedEntity}!${param.name}`, entity.genericArguments![index]);
+            });
+            const refInterface = this.linkRefObject(refEntity, pMap, schema);
+            if (refInterface) {
+                this.mergeProperties(refInterface, res, schema, pMap);
+            }
+        }
+        return res;
     }
 
     private linkClass(schema: ModuleSchema, entity: ClassSchema): ClassSchema {
@@ -262,7 +291,9 @@ export class SchemaLinker {
 
     private linkRefObject(refEntity: Schema & IObjectFields, paramsMap: Map<string, Schema>, schema: ModuleSchema): Schema {
         const res: typeof refEntity = {};
-        res.type = refEntity.type;
+        if (refEntity.type) {
+            res.type = refEntity.type;
+        }
         const refProperties = refEntity.properties;
         if (!refProperties) {
             return res;
@@ -289,7 +320,6 @@ export class SchemaLinker {
 
     private handleObject(entity: Schema & IObjectFields, schema: ModuleSchema): Schema {
         const res: typeof entity = {};
-        res.type = entity.type;
         this.mergeProperties(entity, res, schema);
         return res;
     }

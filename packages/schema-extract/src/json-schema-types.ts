@@ -107,6 +107,10 @@ export function isRef(schema: Schema): schema is Schema & {$ref: string} {
     return !!schema && !!schema.$ref;
 }
 
-export function isClassSchema(schema: Schema): schema is Schema & ClassSchema {
+export function isClassSchema(schema: Schema): schema is ClassSchema {
     return !!schema && !!schema.$ref && schema.$ref === ClassSchemaId;
+}
+
+export function isInterfaceSchema(schema: Schema): schema is InterfaceSchema {
+    return !!schema && !!schema.$ref && schema.$ref === interfaceId;
 }

@@ -212,17 +212,21 @@ export class SchemaLinker {
         res.$ref = interfaceId;
         if (entity.extends) {
             const extendedEntity = entity.extends.$ref!.replace('#', '');
-            const refEntity = schema.definitions[extendedEntity] as InterfaceSchema;
+            const refEntity = schema.definitions[extendedEntity];
             if (!refEntity) {
                 return entity;
             }
-            const pMap = new Map();
-            refEntity.genericParams!.forEach((param, index) => {
-                pMap.set(`#${extendedEntity}!${param.name}`, entity.genericArguments![index]);
-            });
-            const refInterface = this.linkRefObject(refEntity, pMap, schema);
-            if (refInterface) {
-                this.mergeProperties(refInterface, res, schema, pMap);
+            if (refEntity.genericParams) {
+                const pMap = new Map();
+                refEntity.genericParams!.forEach((param, index) => {
+                    pMap.set(`#${extendedEntity}!${param.name}`, entity.genericArguments![index]);
+                });
+                const refInterface = this.linkRefObject(refEntity, pMap, schema);
+                if (refInterface) {
+                    this.mergeProperties(refInterface, res, schema, pMap);
+                }
+            } else {
+                this.mergeProperties(refEntity, res, schema);
             }
         }
         return res;

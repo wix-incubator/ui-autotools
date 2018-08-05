@@ -11,7 +11,7 @@ commander
   .version('0.1.0')
   .option('-f, --files <s>', 'files to scan')
   .option('-o, --output <s>', 'output dir')
-  .option('-l --linked', 'show linked schema')
+  .option('-l, --linked', 'show linked schema')
   .parse(process.argv);
 
 async function run() {

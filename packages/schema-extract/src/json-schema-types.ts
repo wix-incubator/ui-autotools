@@ -88,7 +88,7 @@ export type FunctionSchema = Schema & {
 export type InterfaceSchema = Schema & {
     $ref: typeof interfaceId;
     extends?: Schema;
-}
+};
 
 export type ClassSchema = Schema & {
     $ref: typeof ClassSchemaId;

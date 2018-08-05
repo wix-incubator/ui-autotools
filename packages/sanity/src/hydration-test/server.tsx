@@ -4,10 +4,8 @@ import {WebpackConfigurator, runTestsInPuppeteer, serve, IServer} from '@ui-auto
 import {renderMetadata} from './render-metadata';
 
 const packageDir = path.resolve(__dirname, '..');
-const projectDir = process.cwd();
-const webpackConfigPath = path.join(projectDir, '.autotools/webpack.config.js');
 
-function getWebpackConfig(ssrComps: string[], metaGlob: string) {
+function getWebpackConfig(ssrComps: string[], metaGlob: string, webpackConfigPath: string) {
   return WebpackConfigurator
     .load(webpackConfigPath)
     .setEntry('meta', glob.sync(metaGlob))
@@ -21,11 +19,11 @@ function getWebpackConfig(ssrComps: string[], metaGlob: string) {
     .getConfig();
 }
 
-export async function hydrationTest(metaGlob: string) {
+export async function hydrationTest(metaGlob: string, webpackConfigPath: string) {
   let server: IServer | null = null;
   try {
     const ssrComps = renderMetadata();
-    server = await serve({webpackConfig: getWebpackConfig(ssrComps, metaGlob)});
+    server = await serve({webpackConfig: getWebpackConfig(ssrComps, metaGlob, webpackConfigPath)});
     const numFailedTests = await runTestsInPuppeteer({testPageUrl: server.getUrl()});
     if (numFailedTests) {
       process.exitCode = 1;

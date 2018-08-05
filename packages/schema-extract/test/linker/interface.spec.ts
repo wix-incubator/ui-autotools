@@ -28,4 +28,24 @@ describe('schema-linker - interfaces', () => {
         };
         expect(res).to.eql(expected);
     });
+
+    it('should return the correct interface if no flattening is needed', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
+        export interface TypeA {
+            something:string;
+        };
+        `}, 'TypeA', fileName);
+
+        const expected: Schema<'object'> = {
+            $ref: interfaceId,
+            properties: {
+                something: {
+                    type: 'string'
+                }
+            },
+            required: ['something']
+        };
+        expect(res).to.eql(expected);
+    });
 });

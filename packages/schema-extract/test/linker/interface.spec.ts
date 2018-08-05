@@ -29,6 +29,35 @@ describe('schema-linker - interfaces', () => {
         expect(res).to.eql(expected);
     });
 
+    it('should flatten interface definitions 2', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
+        export interface TypeA {
+            something:string;
+        };
+        export interface TypeB {
+            somethingElse: TypeA
+        };
+        `}, 'TypeB', fileName);
+
+        const expected: Schema<'object'> = {
+            $ref: interfaceId,
+            properties: {
+                somethingElse: {
+                    $ref: interfaceId,
+                    properties: {
+                        something: {
+                            type: 'string'
+                        }
+                    },
+                    required: ['something']
+                }
+            },
+            required: ['somethingElse']
+        };
+        expect(res).to.eql(expected);
+    });
+
     it('should return the correct interface if no flattening is needed', async () => {
         const fileName = 'index.ts';
         const res = linkTest({[fileName]: `

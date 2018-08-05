@@ -21,13 +21,13 @@ interface IProjectOptions {
   sourcesGlob: string;
 }
 
-export interface IStartWebisteOptions {
+export interface IStartWebsiteOptions {
   projectOptions: IProjectOptions;
   host: string;
   port: number;
 }
 
-export interface IBuildWebisteOptions {
+export interface IBuildWebsiteOptions {
   projectOptions: IProjectOptions;
   outputPath: string;
 }
@@ -131,7 +131,7 @@ function getMetadataWebpackConfig(
 }
 
 export async function startWebsite(
-  {projectOptions, host, port}: IStartWebisteOptions
+  {projectOptions, host, port}: IStartWebsiteOptions
 ) {
   const koa = new Koa();
 
@@ -177,7 +177,7 @@ export async function startWebsite(
 }
 
 export async function buildWebsite(
-  {projectOptions, outputPath}: IBuildWebisteOptions
+  {projectOptions, outputPath}: IBuildWebsiteOptions
 ) {
   try {
     // Compile the metadata first, because if there are type or syntactic errors

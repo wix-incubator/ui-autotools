@@ -29,8 +29,8 @@
     "@ui-autotools/a11y": "^1.0.10",
     "@ui-autotools/eyes": "^1.0.7",
     "@ui-autotools/sanity": "^1.0.9",
+    "@ui-autotools/showcase": "^1.0.6",
     "@ui-autotools/utils": "^1.0.5",
-    "@ui-autotools/website": "^1.0.6",
     "commander": "^2.15.1",
     "glob": "^7.1.2",
     "typescript-support": "^0.4.1"

@@ -105,8 +105,9 @@ export class SchemaLinker {
                 }
             }
         if (!refEntity.genericParams || !entity.genericArguments) {
-                return refEntity;
-            }
+            refEntity.definedAt = '#' + entityType;
+            return refEntity;
+        }
         if (isSchemaOfType('object', refEntity)) {
             const pMap = new Map();
             refEntity.genericParams!.forEach((param, index) => {

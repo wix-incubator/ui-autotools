@@ -47,6 +47,7 @@ describe('schema-linker - imports', () => {
             properties: {
                 id: {
                     type: 'object',
+                    definedAt: '#A',
                     properties: {
                         something: {
                             type: 'string'

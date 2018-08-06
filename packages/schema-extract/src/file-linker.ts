@@ -91,7 +91,7 @@ export class SchemaLinker {
 
     private handleRef(entity: Schema & {$ref: string}, schema: ModuleSchema) {
         const ref = entity.$ref;
-        const poundIndex = entity.$ref.indexOf('#');
+        const poundIndex = ref.indexOf('#');
         const entityType = ref.slice(poundIndex + 1);
         let refEntity = schema.definitions![ref.replace('#', '')];
         if (!refEntity) {
@@ -221,8 +221,13 @@ export class SchemaLinker {
                 refEntity.genericParams!.forEach((param, index) => {
                     pMap.set(`#${extendedEntity}!${param.name}`, entity.genericArguments![index]);
                 });
-                const refInterface = this.linkRefObject(refEntity, pMap, schema);
-                if (refInterface) {
+                const refInterface: IObjectFields = this.linkRefObject(refEntity, pMap, schema);
+                if (refInterface && refInterface.properties) {
+                    for (const p in refInterface.properties) {
+                        if (refInterface.properties.hasOwnProperty(p)) {
+                            (refInterface.properties[p] as any).inheritedFrom = '#' + extendedEntity;
+                        }
+                    }
                     this.mergeProperties(refInterface, res, schema, pMap);
                 }
             } else {

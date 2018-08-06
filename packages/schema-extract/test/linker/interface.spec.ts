@@ -18,6 +18,7 @@ describe('schema-linker - interfaces', () => {
             $ref: interfaceId,
             properties: {
                 something: {
+                    inheritedFrom: '#TypeA',
                     type: 'string'
                 },
                 somethingElse: {

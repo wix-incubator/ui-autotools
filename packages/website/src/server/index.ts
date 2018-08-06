@@ -1,5 +1,6 @@
 import 'typescript-support';
 import path from 'path';
+import {promisify} from 'util';
 import http from 'http';
 import url from 'url';
 import glob from 'glob';
@@ -32,6 +33,12 @@ export interface IBuildWebsiteOptions {
   outputPath: string;
 }
 
+interface IGetWebpackConfigOptions {
+  outputPath: string;
+  production: boolean;
+  projectOptions: IProjectOptions;
+}
+
 const ownPath = path.resolve(__dirname, '../..');
 
 // TODO: import this function from utils.
@@ -47,15 +54,7 @@ function getServerUrl(server: http.Server) {
 }
 
 function getWebsiteWebpackConfig(
-  {
-    outputPath,
-    production,
-    projectOptions
-  }: {
-    outputPath: string;
-    production: boolean;
-    projectOptions: IProjectOptions;
-  }
+  {outputPath, production, projectOptions}: IGetWebpackConfigOptions
 ): webpack.Configuration {
   const metadataAndSchemas = getMetadataAndSchemasInDirectory(
     projectOptions.projectPath,
@@ -74,10 +73,25 @@ function getWebsiteWebpackConfig(
   return {
     mode: production ? 'production' : 'development',
     context: ownPath,
-    entry: [path.resolve(ownPath, 'esm/client/website.js')],
+    entry: [path.resolve(ownPath, 'src/client/website.tsx')],
     output: {
       filename: 'website.js',
       path: outputPath
+    },
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/,
+          use: {
+            loader: 'ts-loader',
+            options: {
+              compilerOptions: {
+                declaration: false
+              }
+            }
+          }
+        }
+      ]
     },
     plugins: [
       new StylableWebpackPlugin(),
@@ -90,20 +104,15 @@ function getWebsiteWebpackConfig(
         filename: 'index.html'
       }),
       ...componentPages
-    ]
+    ],
+    resolve: {
+      extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
+    }
   };
 }
 
 function getMetadataWebpackConfig(
-  {
-    outputPath,
-    production,
-    projectOptions
-  }: {
-    outputPath: string;
-    production: boolean;
-    projectOptions: IProjectOptions;
-  }
+  {outputPath, production, projectOptions}: IGetWebpackConfigOptions
 ): webpack.Configuration {
   const metaFiles = glob.sync(projectOptions.metadataGlob, {
     cwd: projectOptions.projectPath,
@@ -190,17 +199,13 @@ export async function buildWebsite(
       outputPath
     }));
 
-    await new Promise((resolve, reject) => {
-      metadataCompiler.run((err, stats) => {
-        if (err) {
-          reject(err);
-        } else if (stats.hasErrors()) {
-          reject(stats.toString());
-        } else {
-          resolve();
-        }
-      });
-    });
+    const metadataStats = await promisify(
+      metadataCompiler.run.bind(metadataCompiler)
+    )();
+
+    if (metadataStats.hasErrors()) {
+      throw metadataStats.toString();
+    }
 
     const websiteCompiler = webpack(getWebsiteWebpackConfig({
       projectOptions,
@@ -208,17 +213,13 @@ export async function buildWebsite(
       outputPath
     }));
 
-    await new Promise((resolve, reject) => {
-      websiteCompiler.run((err, stats) => {
-        if (err) {
-          reject(err);
-        } else if (stats.hasErrors()) {
-          reject(stats.toString());
-        } else {
-          resolve();
-        }
-      });
-    });
+    const websiteStats = await promisify(
+      websiteCompiler.run.bind(websiteCompiler)
+    )();
+
+    if (websiteStats.hasErrors()) {
+      throw websiteStats.toString();
+    }
   } catch (e) {
     process.stderr.write(e);
     process.exit(1);

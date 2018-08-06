@@ -20,7 +20,8 @@
   },
   "files": [
     "cjs",
-    "esm"
+    "esm",
+    "src"
   ],
   "engines": {
     "node": ">=8"
@@ -41,6 +42,7 @@
     "koa-webpack": "^5.1.0",
     "stylable": "^5.4.11",
     "stylable-webpack-plugin": "^1.1.7",
+    "ts-loader": "^4.4.2",
     "typescript-support": "^0.5.1",
     "webpack": "^4.12.1"
   },

@@ -46,6 +46,7 @@ describe('schema-linker - interfaces', () => {
             properties: {
                 somethingElse: {
                     $ref: interfaceId,
+                    definedAt: '#TypeA',
                     properties: {
                         something: {
                             type: 'string'

@@ -76,6 +76,7 @@ describe('schema-linker - generic types', () => {
                     properties: {
                         a: {
                             type: 'object',
+                            definedAt: '#B',
                             properties: {
                                 bla: {
                                     type: 'string'
@@ -104,6 +105,7 @@ describe('schema-linker - generic types', () => {
 
         const expected: Schema<'object'> = {
             type: 'object',
+            definedAt: '#MyType',
             properties: {
                 something: {
                     type: 'string'

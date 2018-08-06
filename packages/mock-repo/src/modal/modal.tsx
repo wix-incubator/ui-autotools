@@ -10,6 +10,8 @@ interface IModalState {
 }
 
 export class Modal extends React.Component<IModalProps, IModalState> {
+  public static displayName = 'Modal';
+
   public state: IModalState = {
     root: null
   };

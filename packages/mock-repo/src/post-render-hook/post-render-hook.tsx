@@ -5,6 +5,8 @@ export interface IState {
 }
 
 export class PostRenderHook extends React.Component<{}, IState> {
+  public static displayName = 'PostRenderHook';
+
   public state: IState = {
     label: 'Label failed to change'
   };
@@ -14,6 +16,6 @@ export class PostRenderHook extends React.Component<{}, IState> {
   }
 
   public render() {
-  return (<p>{this.state.label}</p>);
+    return (<p>{this.state.label}</p>);
   }
 }

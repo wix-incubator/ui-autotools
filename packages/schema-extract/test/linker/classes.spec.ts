@@ -67,16 +67,14 @@ describe('schema-linker - classes', () => {
                 a: {
                     inheritedFrom: '#A',
                     type: 'number',
-                    default:0
-
+                    default: 0
                 },
                 id2: {
                     type: 'string',
                 },
                 c: {
                     type: 'number',
-                    default:0
-
+                    default: 0
                 },
                 setTitle: {
                     $ref: FunctionSchemaId,

@@ -42,15 +42,15 @@ describe('schema-extract - primitives', () => {
                 },
                 infered_string : {
                     type: 'string',
-                    default:''
+                    default: ''
                 },
                 infered_number: {
                     type: 'number',
-                    default:0
+                    default: 0
                 },
                 infered_boolean: {
                     type: 'boolean',
-                    default:false
+                    default: false
                 }
             },
             // required:["declared_string","declared_number","infered_string","infered_number","infered_boolean"]

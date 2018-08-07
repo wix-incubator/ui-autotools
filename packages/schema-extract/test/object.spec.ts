@@ -64,7 +64,7 @@ describe('schema-extract - objects', () => {
                 },
                 infered_object: {
                     type: 'object',
-                    default:{}
+                    default: {}
                 },
                 infered_object_with_prop: {
                     type: 'object',
@@ -73,8 +73,8 @@ describe('schema-extract - objects', () => {
                             type: 'string',
                         },
                     },
-                    default:{
-                        prop:''
+                    default: {
+                        prop: ''
                     },
                     required: ['prop']
                 },
@@ -228,4 +228,3 @@ describe('schema-extract - objects', () => {
         expect(res).to.eql(expected);
     });
 });
-

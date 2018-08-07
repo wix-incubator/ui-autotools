@@ -8,7 +8,7 @@ describe('schema-extract - generic functions', () => {
         const moduleId = 'functions';
         const functionIntializer = `(str)=>{
             return str
-        }`
+        }`;
         const res = transformTest(`
         export const declaredFunction: <T extends string>(str:T)=>T = ${functionIntializer};
 
@@ -35,7 +35,7 @@ describe('schema-extract - generic functions', () => {
                     returns: {
                         $ref: '#declaredFunction!T',
                     },
-                    initializer:functionIntializer
+                    initializer: functionIntializer
                 },
             },
 
@@ -92,7 +92,7 @@ describe('schema-extract - generic functions', () => {
         const moduleId = 'functions';
         const functionIntializer = `(str)=>{
             return str;
-        }`
+        }`;
         const res = transformTest(`
         export let functionWithRestParams:<T>(str:T, ...rest:T[])=>T = ${functionIntializer};
         `, moduleId);
@@ -124,7 +124,7 @@ describe('schema-extract - generic functions', () => {
                     returns: {
                         $ref: '#functionWithRestParams!T',
                     },
-                    initializer:functionIntializer
+                    initializer: functionIntializer
                 },
             },
         };

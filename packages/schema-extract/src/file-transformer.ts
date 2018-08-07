@@ -1,7 +1,7 @@
 import * as ts from 'typescript';
-import {ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchemaId, ClassSchemaId} from './json-schema-types';
+import { ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchemaId, ClassSchemaId } from './json-schema-types';
 import * as path from 'path';
-import {generateDataLiteral, isFailedInference} from './data-literal-transformer';
+import { generateDataLiteral, isFailedInference } from './data-literal-transformer';
 // console.log(types)
 const posix: typeof path.posix = path.posix ? path.posix : path;
 
@@ -21,7 +21,7 @@ export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, mo
     if (!moduleSymbol) {
         return res;
     }
-    const env: IEnv =  {
+    const env: IEnv = {
         modulePath: moduleId,
         projectPath,
     };
@@ -45,7 +45,7 @@ export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, mo
         } else {
             let exportSchema: Schema = {};
             let isTypeOnly: boolean = false;
-            if ( ts.isVariableDeclaration(node)) {
+            if (ts.isVariableDeclaration(node)) {
                 exportSchema = describeVariableDeclaration(node, checker, env, exportObj).schema;
             } else if (ts.isExportSpecifier(node)) {
                 exportSchema = exportSpecifierDescriber(node, checker, env, exportObj).schema;
@@ -83,7 +83,7 @@ export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, mo
     return res;
 }
 
-export type TsNodeDescriber<N extends ts.Node, S extends Schema = Schema> = (n: N, checker: ts.TypeChecker, env: IEnv, symb?: ts.Symbol) => {schema: S, required?: boolean};
+export type TsNodeDescriber<N extends ts.Node, S extends Schema = Schema> = (n: N, checker: ts.TypeChecker, env: IEnv, symb?: ts.Symbol) => { schema: S, required?: boolean };
 
 function getNode(symb: ts.Symbol): ts.Node | undefined {
     if (!symb) {
@@ -120,7 +120,7 @@ const exportSpecifierDescriber: TsNodeDescriber<ts.ExportSpecifier> = (decl, che
     };
 };
 
-const assignmentDescriber: TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWithTypeArguments > = (decl, checker, env, symb) => {
+const assignmentDescriber: TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWithTypeArguments> = (decl, checker, env, symb) => {
     const expression: ts.Node = decl.expression;
     if (ts.isIdentifier(expression)) {
 
@@ -144,7 +144,7 @@ const assignmentDescriber: TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWi
     // return resolveNode(decl.expression, checker, env);
 };
 
-const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.PropertySignature | ts.ParameterDeclaration | ts.PropertyDeclaration > = (decl, checker, env) => {
+const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.PropertySignature | ts.ParameterDeclaration | ts.PropertyDeclaration> = (decl, checker, env) => {
     let res: Schema | undefined;
     let isRequired = true;
     if (decl.type) {
@@ -152,20 +152,20 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
         res = describeTypeNode(decl.type!, checker, env).schema;
         if (decl.initializer) {
             isRequired = false;
-            const defaultVal = generateDataLiteral(checker,decl.initializer);
-            if(isFailedInference(defaultVal)){
-                res!.initializer =  defaultVal.expression             
-            }else{
-                res!.default = defaultVal
+            const defaultVal = generateDataLiteral(checker, decl.initializer);
+            if (isFailedInference(defaultVal)) {
+                res!.initializer = defaultVal.expression;
+            } else {
+                res!.default = defaultVal;
             }
         }
-    } else  if (decl.initializer) {
+    } else if (decl.initializer) {
         isRequired = false;
         if (ts.isIdentifier(decl.initializer)) {
-            res =  describeIdentifier(decl.initializer, checker, env).schema;
+            res = describeIdentifier(decl.initializer, checker, env).schema;
             res.$ref = res.$ref!.replace('#', '#typeof ');
         } else if (ts.isPropertyAccessExpression(decl.initializer) && ts.isIdentifier(decl.initializer.expression)) {
-            res =  describeIdentifier(decl.initializer.expression, checker, env).schema;
+            res = describeIdentifier(decl.initializer.expression, checker, env).schema;
             let ref = res.$ref!;
             if (ref.includes('#')) {
                 ref = ref!.replace('#', '#typeof ') + '.' + decl.initializer.name.getText();
@@ -175,17 +175,17 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
             res = {
                 $ref: ref,
             };
-        }else{
-            res =  serializeType(checker.getTypeAtLocation(decl), decl, checker, env).schema;
-            const defaultVal = generateDataLiteral(checker,decl.initializer);
-            if(isFailedInference(defaultVal)){
-                res!.initializer =  defaultVal.expression             
-            }else{
-                res!.default = defaultVal
+        } else {
+            res = serializeType(checker.getTypeAtLocation(decl), decl, checker, env).schema;
+            const defaultVal = generateDataLiteral(checker, decl.initializer);
+            if (isFailedInference(defaultVal)) {
+                res!.initializer = defaultVal.expression;
+            } else {
+                res!.default = defaultVal;
             }
         }
     }
-    if (ts.isPropertyDeclaration(decl) ||  ts.isPropertySignature(decl) ||  ts.isParameter(decl)) {
+    if (ts.isPropertyDeclaration(decl) || ts.isPropertySignature(decl) || ts.isParameter(decl)) {
         if (decl.questionToken) {
             isRequired = false;
         }
@@ -193,17 +193,17 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
 
     if (!res) {
         isRequired = false;
-        res =  serializeType(checker.getTypeAtLocation(decl), decl, checker, env).schema;
+        res = serializeType(checker.getTypeAtLocation(decl), decl, checker, env).schema;
         const child = decl.getChildAt(0);
-        if(child && ts.isObjectBindingPattern(child)){
-            const defaultVal = generateDataLiteral(checker,child);
-            if(isFailedInference(defaultVal)){
-                res!.initializer =  defaultVal.expression             
-            }else{
-                res!.default = defaultVal
+        if (child && ts.isObjectBindingPattern(child)) {
+            const defaultVal = generateDataLiteral(checker, child);
+            if (isFailedInference(defaultVal)) {
+                res!.initializer = defaultVal.expression;
+            } else {
+                res!.default = defaultVal;
             }
         }
-        
+
     }
     const jsDocs = extraCommentsHack(decl);
     if (jsDocs) {
@@ -257,7 +257,7 @@ const describeMappedType: TsNodeDescriber<ts.MappedTypeNode> = (decl, checker, e
 };
 
 const describeTypeAlias: TsNodeDescriber<ts.TypeAliasDeclaration> = (decl, checker, env) => {
-    const res =  describeTypeNode(decl.type, checker, env);
+    const res = describeTypeNode(decl.type, checker, env);
     const genericParams = getGenericParams(decl, checker, env);
     if (genericParams) {
         res.schema.genericParams = genericParams;
@@ -311,7 +311,7 @@ const describeFunction: TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunctio
     });
     const res: FunctionSchema = {
         $ref: ts.isConstructorDeclaration(decl) ? ClassConstructorSchemaId : FunctionSchemaId,
-        arguments : funcArguments,
+        arguments: funcArguments,
     };
     if (returns) {
         res.returns = returns.schema;
@@ -338,7 +338,7 @@ const describeFunction: TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunctio
 };
 
 const getReturnSchema: TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction | ts.FunctionTypeNode | ts.ConstructorDeclaration | ts.MethodDeclaration, FunctionSchema> = (decl, checker, env) => {
-    const returnSchema = decl.type ? describeTypeNode(decl.type, checker, env) : serializeType(checker.getTypeAtLocation(decl), decl , checker, env).schema.returns!;
+    const returnSchema = decl.type ? describeTypeNode(decl.type, checker, env) : serializeType(checker.getTypeAtLocation(decl), decl, checker, env).schema.returns!;
     const returnTag = ts.getJSDocReturnTag(decl);
     if (returnTag && returnTag.comment) {
         returnSchema.schema.description = returnTag.comment;
@@ -361,8 +361,8 @@ const describeClass: TsNodeDescriber<ts.ClassDeclaration, ClassSchema> = (decl, 
     }
 
     let constructorSign: FunctionSchema | undefined;
-    const properties: {[key: string]: Schema} = {};
-    const staticProperties: {[key: string]: Schema} = {};
+    const properties: { [key: string]: Schema } = {};
+    const staticProperties: { [key: string]: Schema } = {};
     decl.members.forEach((member) => {
         if (ts.isConstructorDeclaration(member)) {
             const funcSchema = describeFunction(member, checker, env);
@@ -417,7 +417,7 @@ const describeClass: TsNodeDescriber<ts.ClassDeclaration, ClassSchema> = (decl, 
     return {
         schema: classDef
     };
-  };
+};
 
 const describeTypeReference: TsNodeDescriber<ts.TypeReferenceNode> = (decl, checker, env) => {
     const typeName = decl.typeName;
@@ -450,8 +450,8 @@ const describeQualifiedName: TsNodeDescriber<ts.QualifiedName> = (decl, checker,
             schema: {
 
                 $ref: identifierRef.includes('#') ?
-                        identifierRef + '.' + innerRef :
-                        identifierRef + '#' + innerRef,
+                    identifierRef + '.' + innerRef :
+                    identifierRef + '#' + innerRef,
             }
         };
     } else {
@@ -465,9 +465,11 @@ const describeQualifiedName: TsNodeDescriber<ts.QualifiedName> = (decl, checker,
 
 const describeIdentifier: TsNodeDescriber<ts.Identifier> = (decl, checker, env) => {
     if (decl.getText() === 'Array') {
-        return {schema: {
-            type: 'array',
-        }};
+        return {
+            schema: {
+                type: 'array',
+            }
+        };
     }
     if (decl.getText() === 'Object') {
         return {
@@ -478,7 +480,7 @@ const describeIdentifier: TsNodeDescriber<ts.Identifier> = (decl, checker, env) 
     }
     const referencedSymb = checker.getSymbolAtLocation(decl)!;
     const referencedSymbDecl = getNode(referencedSymb);
-    let importPath: string  = '';
+    let importPath: string = '';
     let importInternal: string = '';
     if (referencedSymbDecl) {
         if (ts.isVariableDeclaration(referencedSymbDecl)) {
@@ -534,7 +536,7 @@ const describeIdentifier: TsNodeDescriber<ts.Identifier> = (decl, checker, env) 
 function resolveImportPath(relativeUrl: string, importInternal: string, env: IEnv) {
     if (relativeUrl.startsWith('.') || relativeUrl.startsWith('/')) {
         const currentDir = posix.dirname(env.modulePath);
-        const resolvedPath = posix.join(currentDir , relativeUrl);
+        const resolvedPath = posix.join(currentDir, relativeUrl);
 
         return resolvedPath + importInternal;
     }
@@ -543,7 +545,7 @@ function resolveImportPath(relativeUrl: string, importInternal: string, env: IEn
 }
 
 const describeTypeLiteral: TsNodeDescriber<ts.TypeLiteralNode | ts.InterfaceDeclaration> = (decl, checker, env) => {
-    const res: Schema<'object'>  = {
+    const res: Schema<'object'> = {
         type: 'object',
     };
     decl.members.forEach((member) => {
@@ -567,7 +569,7 @@ const describeTypeLiteral: TsNodeDescriber<ts.TypeLiteralNode | ts.InterfaceDecl
 };
 
 const describeArrayType: TsNodeDescriber<ts.ArrayTypeNode> = (decl, checker, env) => {
-    const res: Schema<'array'>  = {
+    const res: Schema<'array'> = {
         type: 'array',
         items: describeTypeNode(decl.elementType, checker, env).schema,
     };
@@ -624,7 +626,7 @@ const describeUnionType: TsNodeDescriber<ts.UnionTypeNode> = (decl, checker, env
     }
 
     if (groupedSchemas.length > 1) {
-        return{
+        return {
             schema: {
                 $oneOf: groupedSchemas,
             }
@@ -645,7 +647,7 @@ function removeExtension(pathName: string): string {
 }
 
 const supportedPrimitives = ['string', 'number', 'boolean'];
-function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, env: IEnv): {schema: Schema<any>} {
+function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, env: IEnv): { schema: Schema<any> } {
     if (t.aliasSymbol) {
         return {
             schema: {
@@ -775,7 +777,7 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
         res.additionalProperties = serializeType(indexType, rootNode, checker, env).schema;
     }
 
-    return {schema: res};
+    return { schema: res };
 
 }
 
@@ -804,11 +806,11 @@ function extraCommentsHack(node: ts.Node): ts.JSDoc | undefined {
 }
 
 function addJsDocsTagsToSchema(tags: ts.JSDocTag[], schema: Schema) {
-        if (tags.length) {
-            for (const tag of tags) {
-                if (tag.comment) {
-                    (schema as any)[tag.tagName.escapedText as any] = isNaN(parseFloat(tag.comment)) ? tag.comment : parseFloat(tag.comment);
-                }
+    if (tags.length) {
+        for (const tag of tags) {
+            if (tag.comment) {
+                (schema as any)[tag.tagName.escapedText as any] = isNaN(parseFloat(tag.comment)) ? tag.comment : parseFloat(tag.comment);
             }
         }
     }
+}

@@ -39,7 +39,7 @@ describe('schema-extract - functions', () => {
         const moduleId = 'functions';
         const functionInitializer = `(str:string)=>{
             return str+'a'
-        }`
+        }`;
         const res = transformTest(`
 
         export const declaredFunction:(str:string)=>string = ${functionInitializer};
@@ -65,7 +65,7 @@ describe('schema-extract - functions', () => {
                     returns: {
                         type: 'string',
                     },
-                    initializer:functionInitializer
+                    initializer: functionInitializer
                 },
             },
 
@@ -78,7 +78,7 @@ describe('schema-extract - functions', () => {
 
         const functionInitializer = `(str:string)=>{
             return str+'a'
-        }`
+        }`;
         const res = transformTest(`
 
         export const declaredFunction:(str:string,num?:number)=>string = ${functionInitializer};
@@ -108,7 +108,7 @@ describe('schema-extract - functions', () => {
                     returns: {
                         type: 'string',
                     },
-                    initializer:functionInitializer
+                    initializer: functionInitializer
                 },
             },
 
@@ -119,7 +119,7 @@ describe('schema-extract - functions', () => {
         const moduleId = 'functions';
         const functionInitializer = `(str:string)=>{
             return str+'a'
-        }`
+        }`;
         const res = transformTest(`
 
         export const declaredFunction:(str:string,num:number = 5)=>string = ${functionInitializer};
@@ -150,7 +150,7 @@ describe('schema-extract - functions', () => {
                     returns: {
                         type: 'string',
                     },
-                    initializer:functionInitializer
+                    initializer: functionInitializer
                 },
             },
 
@@ -189,9 +189,9 @@ describe('schema-extract - functions', () => {
 
                             },
                             required: ['x', 'y'],
-                            default:{
-                                x:1,
-                                y:'text'
+                            default: {
+                                x: 1,
+                                y: 'text'
                             }
                         },
 
@@ -209,7 +209,7 @@ describe('schema-extract - functions', () => {
         const moduleId = 'functions';
         const functionInitializer = `(str:string)=>{
             return str+'a'
-        }`
+        }`;
         const res = transformTest(`
         export const functionWithRestParams:(str:string, ...rest:number[])=>string = ${functionInitializer};
 
@@ -240,7 +240,7 @@ describe('schema-extract - functions', () => {
                     returns: {
                         type: 'string',
                     },
-                    initializer:functionInitializer
+                    initializer: functionInitializer
                 },
             },
         };

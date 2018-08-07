@@ -8,6 +8,6 @@ export class UnsafeLifecycle extends React.Component {
   }
 
   public render() {
-  return (<p>unsafe-lifecycle</p>);
+    return <div>Unsafe lifecycle</div>;
   }
 }

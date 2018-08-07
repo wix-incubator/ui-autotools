@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IComponentData} from '../server/client-data';
+import {IComponentData} from '../../server/client-data';
 
 interface IComponentInfoProps {
   component: IComponentData;

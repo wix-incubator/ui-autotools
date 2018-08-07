@@ -38,7 +38,7 @@ describe('schema-extract - intersection', () => {
                             type: 'string',
                         },
                     },
-                    required:['a','b','c']
+                    required: ['a', 'b', 'c']
                 },
                 RGB: {
                     type: 'object',
@@ -53,7 +53,7 @@ describe('schema-extract - intersection', () => {
                             type: 'string',
                         },
                     },
-                    required:['r','g','b']
+                    required: ['r', 'g', 'b']
 
                 },
                 Intersection: {

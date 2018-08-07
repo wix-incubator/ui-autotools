@@ -27,7 +27,7 @@ describe('schema-extract - generic interface', () => {
                             $ref: '#MyInterface!T',
                         },
                     },
-                    required:['something']
+                    required: ['something']
                 },
             },
             properties: {
@@ -67,7 +67,7 @@ describe('schema-extract - generic interface', () => {
                             $ref: '#MyInterface!T',
                         },
                     },
-                    required:['something']
+                    required: ['something']
                 },
             },
             properties: {
@@ -121,7 +121,7 @@ describe('schema-extract - generic interface', () => {
                                     $ref: '#MyInterface!T',
                                 },
                             },
-                            required:['deepKey']
+                            required: ['deepKey']
                         },
                         method: {
                             $ref: FunctionSchemaId,
@@ -144,16 +144,16 @@ describe('schema-extract - generic interface', () => {
                                                     $ref: '#MyInterface!T'
                                                 }
                                             ],
-                                            requiredArguments:['item'],
+                                            requiredArguments: ['item'],
                                             returns: {
                                                 type: 'boolean'
                                             }
                                         }
                                     },
-                                    required:['values','filter']
+                                    required: ['values', 'filter']
                                 }
                             ],
-                            requiredArguments:['arg'],
+                            requiredArguments: ['arg'],
                             returns: {
                                 type: 'object',
                                 properties: {
@@ -167,11 +167,11 @@ describe('schema-extract - generic interface', () => {
                                         }
                                     }
                                 },
-                                required:['status','results']
+                                required: ['status', 'results']
                             }
                         }
                     },
-                    required:['something','method']
+                    required: ['something', 'method']
                 }
             },
             properties: {}
@@ -210,13 +210,13 @@ describe('schema-extract - generic interface', () => {
                                     name: 'event'
                                 }
                             ],
-                            requiredArguments:['event'],
+                            requiredArguments: ['event'],
                             returns: {
                                 $ref: 'common/undefined'
                             },
                         }
                     },
-                    required:['func']
+                    required: ['func']
                 }
             },
             properties: {}

@@ -1,6 +1,6 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Registry from 'metadata-tools';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import Registry, {getCompName} from '@ui-autotools/registry';
 import axe from 'axe-core';
 
 interface ITest {
@@ -18,9 +18,9 @@ export interface IResult {
 function createTestsFromSimulations(reactRoot: HTMLElement) {
   const tests: ITest[] = [];
   for (const [Comp, meta] of Registry.metadata.components.entries()) {
-    for (const [simIndex, sim] of meta.simulations.entries()) {
+    for (const sim of meta.simulations) {
       tests.push({
-        title: (Comp.displayName ? Comp.displayName : Comp.name) + ' ' + simIndex,
+        title: getCompName(Comp) + ' ' + sim.title,
         render:  (container: HTMLElement) => ReactDOM.render(<Comp {...sim.props} />, container),
         cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot)
       });

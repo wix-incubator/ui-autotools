@@ -30,7 +30,7 @@ describe('schema-extract - type declarations', () => {
                             $ref: '/src/test-assets#AType',
                         },
                     },
-                    required:['title','imported']
+                    required: ['title', 'imported']
                 },
             },
             properties: {
@@ -87,7 +87,7 @@ describe('schema-extract - type declarations', () => {
                             $ref: '#recurse',
                         },
                     },
-                    required:['prop']
+                    required: ['prop']
                 },
             },
             properties: {
@@ -99,7 +99,6 @@ describe('schema-extract - type declarations', () => {
         expect(res).to.eql(expected);
     });
 
-    
     it('should support types with specific index signature ( mapped-types )', async () => {
         const moduleId = 'index-signatures';
         const res = transformTest(`
@@ -116,34 +115,33 @@ describe('schema-extract - type declarations', () => {
             $schema: 'http://json-schema.org/draft-06/schema#',
             $id: '/src/' + moduleId,
             $ref: 'common/module',
-            definitions:{
-                keys:{
-                    type:'string',
-                    enum:['a','b','c']
+            definitions: {
+                keys: {
+                    type: 'string',
+                    enum: ['a', 'b', 'c']
                 },
                 mappedType: {
                     type: 'object',
                     additionalProperties: {
                         type: 'string',
                     },
-                    propertyNames:{
-                        type:'string',
-                        enum:['a','b']
+                    propertyNames: {
+                        type: 'string',
+                        enum: ['a', 'b']
                     }
                 },
-                
+
                 mappedType2: {
                     type: 'object',
                     additionalProperties: {
                         type: 'string',
                     },
-                    propertyNames:{
-                        $ref:'#keys'
+                    propertyNames: {
+                        $ref: '#keys'
                     }
                 }
             },
             properties: {
-                
             },
         };
         expect(res).to.eql(expected);

@@ -60,7 +60,7 @@ describe('schema-extract - objects', () => {
                             type: 'string',
                         },
                     },
-                    required:['prop']
+                    required: ['prop']
                 },
                 infered_object: {
                     type: 'object',
@@ -76,7 +76,7 @@ describe('schema-extract - objects', () => {
                     default:{
                         prop:''
                     },
-                    required:['prop']
+                    required: ['prop']
                 },
                 declared_with_import: {
                     type: 'object',
@@ -85,7 +85,7 @@ describe('schema-extract - objects', () => {
                             $ref: '/src/test-assets#AType',
                         },
                     },
-                    required:['imported']
+                    required: ['imported']
                 },
             },
         };
@@ -101,7 +101,7 @@ describe('schema-extract - objects', () => {
             prop1?:string
             prop2:number
         };
- 
+
         `, moduleId);
 
         const expected: ModuleSchema<'object'> = {
@@ -109,7 +109,7 @@ describe('schema-extract - objects', () => {
             $id: '/src/' + moduleId,
             $ref: 'common/module',
             properties: {
-                
+
                 declared_object_with_props: {
                     type: 'object',
                     properties: {
@@ -120,9 +120,9 @@ describe('schema-extract - objects', () => {
                             type: 'number',
                         },
                     },
-                    required:["prop2"]
+                    required: ['prop2']
                 },
-                
+
             },
         };
         expect(res).to.eql(expected);
@@ -164,7 +164,7 @@ describe('schema-extract - objects', () => {
                             type: 'string',
                         },
                     },
-                    required:['cnst'],
+                    required: ['cnst'],
                     additionalProperties: {
                         type: 'string',
                     },
@@ -179,7 +179,6 @@ describe('schema-extract - objects', () => {
         };
         expect(res).to.eql(expected);
     });
-
 
     it('should objects with specific index signature', async () => {
         const moduleId = 'index-signatures';
@@ -197,10 +196,10 @@ describe('schema-extract - objects', () => {
             $schema: 'http://json-schema.org/draft-06/schema#',
             $id: '/src/' + moduleId,
             $ref: 'common/module',
-            definitions:{
-                keys:{
-                    type:'string',
-                    enum:['a','b','c']
+            definitions: {
+                keys: {
+                    type: 'string',
+                    enum: ['a', 'b', 'c']
                 },
             },
             properties: {
@@ -209,19 +208,19 @@ describe('schema-extract - objects', () => {
                     additionalProperties: {
                         type: 'string',
                     },
-                    propertyNames:{
-                        type:'string',
-                        enum:['a','b']
+                    propertyNames: {
+                        type: 'string',
+                        enum: ['a', 'b']
                     }
                 },
-                
+
                 declared_object_with_specific_index2: {
                     type: 'object',
                     additionalProperties: {
                         type: 'string',
                     },
-                    propertyNames:{
-                        $ref:'#keys'
+                    propertyNames: {
+                        $ref: '#keys'
                     }
                 }
             },

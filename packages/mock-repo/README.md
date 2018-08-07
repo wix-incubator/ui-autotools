@@ -1,3 +1,3 @@
-# ui-autotools-mock-repo
+# @ui-autotools/mock-repo
 
 A repo for testing ui-autotools.

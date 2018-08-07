@@ -6,12 +6,14 @@ export const UndefinedSchemaId = 'common/undefined';
 export const NullSchemaId = 'common/null';
 export const PromiseId = 'common/promise';
 export const JSXElement = 'common/JSX';
+export const NeverId = 'common/never';
+export const UnknownId = 'common/unknown';
 
 export interface IObjectFields {
     additionalProperties?: Schema;
     properties?: {[name: string]: Schema};
-    required?:string[];
-    propertyNames?:Schema<'string'>
+    required?: string[];
+    propertyNames?: Schema<'string'>;
 }
 
 // tslint:disable-next-line:no-empty-interface
@@ -27,7 +29,7 @@ export interface IBooleanFields {
 }
 
 export interface IArrayFields {
-    items: Schema | Schema[];
+    items?: Schema | Schema[];
 }
 
 export interface IFieldsForType {
@@ -78,7 +80,7 @@ export type FunctionSchema = Schema & {
     $ref: typeof FunctionSchemaId | typeof ClassConstructorSchemaId;
     arguments: Schema[],
     restArgument?: Schema<'array'>,
-    requiredArguments?:string[],
+    requiredArguments?: string[],
     returns?: Schema
 };
 
@@ -93,4 +95,12 @@ export type ClassSchema = Schema & {
 
 export function isSchemaOfType<T extends SchemaTypes>(t: T, s: object): s is Schema<T> {
     return (s as any).type === t;
+}
+
+export function isRef(schema: Schema): schema is Schema & {$ref: string} {
+    return !!schema && !!schema.$ref;
+}
+
+export function isClassSchema(schema: Schema): schema is Schema & ClassSchema {
+    return !!schema && !!schema.$ref && schema.$ref === ClassSchemaId;
 }

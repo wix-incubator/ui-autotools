@@ -1,0 +1,54 @@
+{
+  "name": "@ui-autotools/website",
+  "version": "1.0.6",
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "types": "esm/index.d.ts",
+  "scripts": {
+    "clean": "rimraf ./cjs ./esm",
+    "build": "run-s build:cjs build:esm build:stylable",
+    "build:watch": "run-p build:cjs-watch build:esm-watch",
+    "build:cjs": "tsc --project src --outDir cjs --module commonjs",
+    "build:esm": "tsc --project src --outDir esm --module esnext",
+    "build:cjs-watch": "tsc --watch --project src --outDir cjs --module commonjs",
+    "build:esm-watch": "tsc --watch --project src --outDir esm --module esnext",
+    "build:stylable": "stc --srcDir src --outDir esm --indexFile=\"\"",
+    "lint": "run-p lint:src lint:test",
+    "lint:src": "tslint --project src",
+    "lint:test": "true",
+    "test": "true"
+  },
+  "files": [
+    "cjs",
+    "esm"
+  ],
+  "engines": {
+    "node": ">=8"
+  },
+  "repository": "git@github.com:wix-incubator/ui-autotools.git",
+  "author": "Wix.com",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "@ui-autotools/registry": "^1.0.6"
+  },
+  "dependencies": {
+    "@ui-autotools/schema-extract": "^1.0.6",
+    "@ui-autotools/utils": "^1.0.0",
+    "glob": "^7.1.2",
+    "html-webpack-plugin": "^3.2.0",
+    "koa": "^2.5.2",
+    "koa-webpack": "^5.1.0",
+    "stylable": "^5.4.11",
+    "stylable-webpack-plugin": "^1.1.7",
+    "typescript-support": "^0.5.1",
+    "webpack": "^4.12.1"
+  },
+  "peerDependencies": {
+    "@ui-autotools/registry": "^1.0.4",
+    "react": ">=16",
+    "react-dom": ">=16"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

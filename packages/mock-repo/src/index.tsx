@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import {Composite} from './composite/composite';
 import {Modal} from './modal/modal';
 import {PostRenderHook} from './post-render-hook/post-render-hook';
+import {UnsafeLifecycle} from './unsafe-lifecycle/unsafe-lifecycle';
 
 const App: React.SFC = () => {
   return (
@@ -18,6 +19,7 @@ const App: React.SFC = () => {
       </div>
       <Composite />
       <PostRenderHook />
+      <UnsafeLifecycle />
     </div>
   );
 };

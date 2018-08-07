@@ -1,10 +1,8 @@
 /**
  * @jest-environment node
  */
-
-import * as React from 'react';
 import {renderToString} from 'react-dom/server';
-import Registry from 'metadata-tools';
+import Registry, {getCompName} from '@ui-autotools/registry';
 import {expect} from 'chai';
 
 export const ssrTest = (): void => {
@@ -15,15 +13,11 @@ export const ssrTest = (): void => {
             expect(() => document).to.throw();
         });
 
-        Registry.metadata.components.forEach((metadata, Comp) => {
-            describe(Comp.name, () => {
-                it(`should render ${Comp.name} to string without throwing`, () => {
-                    expect(() => renderToString(<Comp />), 'RenderToString threw an error').not.to.throw();
-                });
-
-                metadata.simulations.forEach(((simulation) => {
-                    it(`should render ${Comp.name} to string with props ${JSON.stringify(simulation)} without throwing`, () => {
-                        expect(() => renderToString(<Comp {...simulation.props} />), 'RenderToString threw an error').not.to.throw();
+        Registry.metadata.components.forEach((componentMetadata, Comp) => {
+            describe(getCompName(Comp), () => {
+                componentMetadata.simulations.forEach(((simulation) => {
+                    it(`should render component: "${getCompName(Comp)}" to string with props of simulation: "${simulation.title}" without throwing`, () => {
+                        expect(() => renderToString(componentMetadata.simulationToJSX(simulation)), 'RenderToString threw an error').not.to.throw();
                     });
                 }));
             });

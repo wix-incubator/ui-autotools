@@ -1,6 +1,6 @@
 {
-  "name": "sanity",
-  "version": "1.0.0",
+  "name": "@ui-autotools/sanity",
+  "version": "1.0.9",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -19,7 +19,8 @@
   },
   "files": [
     "cjs",
-    "esm"
+    "esm",
+    "templates"
   ],
   "engines": {
     "node": ">=8"
@@ -27,12 +28,23 @@
   "repository": "git@github.com:wix-incubator/ui-autotools.git",
   "author": "Wix.com",
   "license": "BSD-3-Clause",
+  "devDependencies": {
+    "@ui-autotools/registry": "^1.0.6"
+  },
   "dependencies": {
-    "metadata-tools": "^1.0.0"
+    "@ui-autotools/utils": "^1.0.5",
+    "chai": "^4.1.2",
+    "puppeteer": "^1.5.0",
+    "sinon": "^6.1.3",
+    "sinon-chai": "^3.2.0",
+    "webpack": "^4.12.1"
   },
   "peerDependencies": {
-    "chai": ">=4",
+    "@ui-autotools/registry": "^1.0.0",
     "react": ">=16",
     "react-dom": ">=16"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

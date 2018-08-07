@@ -89,11 +89,11 @@ export class SchemaLinker {
         return entity;
     }
 
-    private handleRef(entity: Schema & {$ref: string}, schema: ModuleSchema) {
+    private handleRef(entity: Schema & {$ref: string}, schema: ModuleSchema, paramsMap?: Map<string, Schema>) {
         const ref = entity.$ref;
         const poundIndex = ref.indexOf('#');
         const entityType = ref.slice(poundIndex + 1);
-        let refEntity = schema.definitions![ref.replace('#', '')];
+        let refEntity = (paramsMap && paramsMap.has(ref)) ? paramsMap.get(ref) : schema.definitions![ref.replace('#', '')];
         if (!refEntity) {
                 const importSchema = this.getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1));
                 if (importSchema && importSchema.definitions) {
@@ -101,37 +101,27 @@ export class SchemaLinker {
                 }
                 // Ifception
                 if (!refEntity) {
-                    return entity;
+                    return {$ref: UnknownId};
                 }
             }
-        if (!refEntity.genericParams || !entity.genericArguments) {
-            refEntity.definedAt = '#' + entityType;
-            return refEntity;
-        }
-        if (isSchemaOfType('object', refEntity)) {
+        if (refEntity.genericParams && entity.genericArguments && isSchemaOfType('object', refEntity)) {
             const pMap = new Map();
             refEntity.genericParams!.forEach((param, index) => {
                 pMap.set(`#${entityType}!${param.name}`, entity.genericArguments![index]);
             });
             return this.linkRefObject(refEntity, pMap, schema);
-        } else {
-            return refEntity;
         }
+        refEntity.definedAt = '#' + entityType;
+        return refEntity;
     }
 
     private handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
         const res: Schema & IObjectFields = {};
         for (const option of options) {
             if (isRef(option)) {
-                let entity: Schema & IObjectFields;
-                if (paramsMap) {
-                    entity = paramsMap.get(option.$ref)!;
-                    if (!entity) {
-                        return res;
-                    }
-                } else {
-                    const refEntity = option.genericArguments ? option : schema.definitions![option.$ref.replace('#', '')];
-                    entity = this.link(refEntity, schema);
+                const entity = this.handleRef(option, schema, paramsMap);
+                if (!entity) {
+                    return {$ref: UnknownId};
                 }
                 this.mergeProperties(entity, res, schema, paramsMap);
             } else if (isSchemaOfType('object', option) && !option.$oneOf) {

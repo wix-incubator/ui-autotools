@@ -23,7 +23,9 @@ export function* extractSchema(basePath: string, filesGlob: string) {
 
 export function* extractLinkedSchema(basePath: string, filesGlob: string) {
   const files = glob.sync(filesGlob, {cwd: basePath});
-  const program = typescript.createProgram(files, {});
+  // const program = typescript.createProgram(files, {});
+  const host = createHost(new LocalFileSystem(basePath));
+  const program = typescript.createProgram(files, {}, host);
   const checker = program.getTypeChecker();
   for (const file of files) {
     const linkedSchema: any = {};

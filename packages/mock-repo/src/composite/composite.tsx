@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {ChildComp} from './child';
 
-interface IProps {
+export interface IProps {
   text?: React.ReactNode;
 }
 

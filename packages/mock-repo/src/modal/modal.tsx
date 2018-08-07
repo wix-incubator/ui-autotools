@@ -1,11 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-interface IModalProps {
+export interface IModalProps {
   children: React.ReactNode;
 }
 
-interface IModalState {
+export interface IModalState {
   root: HTMLElement | null;
 }
 

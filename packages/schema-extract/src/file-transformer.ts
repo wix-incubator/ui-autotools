@@ -623,7 +623,7 @@ function removeExtension(pathName: string): string {
 }
 
 const supportedPrimitives = ['string', 'number', 'boolean'];
-function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, env: IEnv): {schema: Schema<any>} {
+function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, env: IEnv, circularSet?: Set<string>, memoMap = new Map()): {schema: Schema<any>} {
     if (t.aliasSymbol) {
         return {
             schema: {
@@ -667,7 +667,7 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
     if (isUnionType(t)) {
         return {
             schema: {
-                $oneOf: t.types.map((tt) => serializeType(tt, rootNode, checker, env).schema),
+                $oneOf: t.types.map((tt) => serializeType(tt, rootNode, checker, env, circularSet, memoMap).schema),
             }
         };
 
@@ -719,11 +719,11 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
         // tslint:disable-next-line:no-shadowed-variable
         const res: FunctionSchema = {
             $ref: FunctionSchemaId,
-            returns: serializeType(signature.getReturnType(), rootNode, checker, env),
+            returns: serializeType(signature.getReturnType(), rootNode, checker, env, circularSet, memoMap),
             arguments: signature.getParameters().map((p) => {
                 // tslint:disable-next-line:no-shadowed-variable
                 const t = checker.getTypeOfSymbolAtLocation(p, rootNode);
-                return serializeType(t, rootNode, checker, env);
+                return serializeType(t, rootNode, checker, env, circularSet, memoMap);
             }),
         };
         return {
@@ -740,19 +740,38 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
     if (properties.length) {
         res.properties = {};
         res.required = [];
-        properties.forEach((prop) => {
+        for (const prop of properties) {
             const fieldType = checker.getTypeOfSymbolAtLocation(prop, rootNode);
-
-            res.properties![prop.getName()] = serializeType(fieldType, rootNode, checker, env).schema;
             res.required!.push(prop.getName());
-        });
+            const propName = prop.getName();
+            if (memoMap.has(propName)) {
+                res.properties![propName] = memoMap.get(propName);
+            } else {
+                if (fieldType.symbol) {
+                    if (circularSet && circularSet.has(fieldType.symbol.getName())) {
+                        res.properties![propName] = {$ref: '#' + fieldType.symbol.getName()};
+                        break;
+                    }
+                    const cSet = circularSet ? new Set(circularSet) : new Set();
+                    if (fieldType.symbol) {
+                        cSet.add(fieldType.symbol.getName());
+                    }
+                    memoMap.set(propName, serializeType(fieldType, rootNode, checker, env, cSet, memoMap).schema);
+                    res.properties![propName] = memoMap.get(propName);
+                    // res.properties![propName] = serializeType(fieldType, rootNode, checker, env, cSet).schema;
+                } else {
+                    // res.properties![propName] = serializeType(fieldType, rootNode, checker, env, circularSet).schema;
+                    memoMap.set(propName, serializeType(fieldType, rootNode, checker, env, circularSet, memoMap).schema);
+                    res.properties![propName] = memoMap.get(propName);
+                }
+            }
+        }
     }
 
     const indexType = checker.getIndexTypeOfType(t, ts.IndexKind.String);
     if (indexType) {
-        res.additionalProperties = serializeType(indexType, rootNode, checker, env).schema;
+        res.additionalProperties = serializeType(indexType, rootNode, checker, env, circularSet, memoMap).schema;
     }
-
     return {schema: res};
 
 }

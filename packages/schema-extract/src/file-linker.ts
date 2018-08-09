@@ -203,27 +203,29 @@ export class SchemaLinker {
         res.$ref = interfaceId;
         if (entity.extends) {
             const extendedEntity = entity.extends.$ref!.replace('#', '');
-            const refEntity = schema.definitions[extendedEntity];
+            const refEntity: Schema = schema.definitions[extendedEntity];
             if (!refEntity) {
                 return entity;
             }
+            let refInterface: any;
+            let pMap: Map<string, Schema> | undefined;
             if (refEntity.genericParams) {
-                const pMap = new Map();
+                pMap = new Map();
                 refEntity.genericParams!.forEach((param, index) => {
-                    pMap.set(`#${extendedEntity}!${param.name}`, entity.genericArguments![index]);
+                    pMap!.set(`#${extendedEntity}!${param.name}`, entity.genericArguments![index]);
                 });
-                const refInterface: IObjectFields = this.linkRefObject(refEntity, pMap, schema);
-                if (refInterface && refInterface.properties) {
-                    for (const p in refInterface.properties) {
-                        if (refInterface.properties.hasOwnProperty(p)) {
-                            (refInterface.properties[p] as any).inheritedFrom = '#' + extendedEntity;
-                        }
-                    }
-                    this.mergeProperties(refInterface, res, schema, pMap);
-                }
+                refInterface = this.linkRefObject(refEntity, pMap, schema) as InterfaceSchema;
             } else {
-                this.mergeProperties(refEntity, res, schema);
+                refInterface = this.linkInterface(refEntity as InterfaceSchema, schema);
             }
+            if (refInterface.properties) {
+                for (const p in refInterface.properties) {
+                    if (refInterface.properties.hasOwnProperty(p) && !refInterface.properties[p].inheritedFrom) {
+                        (refInterface.properties[p] as any).inheritedFrom = '#' + extendedEntity;
+                    }
+                }
+            }
+            this.mergeProperties(refInterface, res, schema, pMap);
         }
         return res;
     }

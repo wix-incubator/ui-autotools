@@ -10,6 +10,8 @@ export interface IEnv {
     projectPath: string;
 }
 
+let set: Set<any>;
+
 export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, moduleId: string, projectPath: string) {
     const moduleSymbol = (sourceFile as any).symbol;
     const res: ModuleSchema = {
@@ -31,6 +33,7 @@ export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, mo
     ts.isAccessor;
 
     exports.forEach((exportObj) => {
+        set = new Set();
         const node = getNode(exportObj)!;
         if (ts.isFunctionDeclaration(node) || ts.isArrowFunction(node)) {
             res.properties![exportObj.getName()] = describeFunction(node, checker, env, exportObj).schema;
@@ -223,6 +226,13 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
 };
 
 const describeTypeNode: TsNodeDescriber<ts.TypeNode> = (decl, checker, env) => {
+    if (set) {
+        if (set.has(decl) && !ts.isToken(decl)) {
+            return {schema: {$ref: '#' + decl.getText()}};
+        } else {
+            set.add(decl);
+        }
+    }
     if (ts.isTypeReferenceNode(decl)) {
         return describeTypeReference(decl, checker, env);
     } else if (ts.isTypeLiteralNode(decl)) {
@@ -766,6 +776,7 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
         res.properties = {};
         res.required = [];
         for (const prop of properties) {
+
             const fieldType = checker.getTypeOfSymbolAtLocation(prop, rootNode);
             res.required!.push(prop.getName());
             const propName = prop.getName();
@@ -773,19 +784,18 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
                 res.properties![propName] = memoMap.get(propName);
             } else {
                 if (fieldType.symbol) {
-                    if (circularSet && circularSet.has(fieldType.symbol.getName())) {
-                        res.properties![propName] = {$ref: '#' + fieldType.symbol.getName()};
+                    const tyepName = checker.getFullyQualifiedName(fieldType.symbol);
+                    if (circularSet && circularSet.has(tyepName)) {
+                        res.properties![propName] = {$ref: '#' + tyepName};
                         break;
                     }
                     const cSet = circularSet ? new Set(circularSet) : new Set();
                     if (fieldType.symbol) {
-                        cSet.add(fieldType.symbol.getName());
+                        cSet.add(tyepName);
                     }
                     memoMap.set(propName, serializeType(fieldType, rootNode, checker, env, cSet, memoMap).schema);
                     res.properties![propName] = memoMap.get(propName);
-                    // res.properties![propName] = serializeType(fieldType, rootNode, checker, env, cSet).schema;
                 } else {
-                    // res.properties![propName] = serializeType(fieldType, rootNode, checker, env, circularSet).schema;
                     memoMap.set(propName, serializeType(fieldType, rootNode, checker, env, circularSet, memoMap).schema);
                     res.properties![propName] = memoMap.get(propName);
                 }

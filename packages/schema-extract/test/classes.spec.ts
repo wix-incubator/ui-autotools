@@ -82,6 +82,7 @@ describe('schema-extract - classes', () => {
                 },
             },
         };
+        debugger;
         expect(res).to.eql(expected);
     });
 });

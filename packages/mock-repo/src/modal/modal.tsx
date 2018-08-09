@@ -1,15 +1,17 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-interface IModalProps {
+export interface IModalProps {
   children: React.ReactNode;
 }
 
-interface IModalState {
+export interface IModalState {
   root: HTMLElement | null;
 }
 
 export class Modal extends React.Component<IModalProps, IModalState> {
+  public static displayName = 'Modal';
+
   public state: IModalState = {
     root: null
   };

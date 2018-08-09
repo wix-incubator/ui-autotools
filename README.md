@@ -30,12 +30,7 @@ Common CLI parameters:
     - checks component render result for accessibility using axe-core
 - `eyes` - tool for generating and testing component snapshots, that:
     - renders components, takes screenshots, and sends them to Applitools Eyes to run comparisons
-
-## WIP Tools
-
-- `website`
-    - auto generated static documentation and playgrounds site.
-    - dev mode - fast reloading of changed resources
+- `showcase` - generates a static website with component documentation, APIs and demos
 
 We encourge anyone to add tools to this repo that utilize metadata. Please open pull requests for any tools and issues with half baked dreams :) .
 
@@ -118,4 +113,18 @@ Renders components, takes screenshots, and then sends screenshots to Applitools 
 
 ```shell
 autotools eyes --files ./components/**/*.meta.ts
+```
+
+### Showcase
+
+Creates a static website with documentation, API and demos for all components described in the meta files.
+
+#### Usage
+To start the development server:
+```shell
+autotools showcase --files src/**/*.meta.ts
+```
+To build a static website:
+```shell
+autotools showcase --files src/**/*.meta.ts --output build/website
 ```

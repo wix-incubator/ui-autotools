@@ -1,0 +1,31 @@
+.root {}
+
+.header {
+  color: #7A92A5;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 18px;
+  padding: 32px 24px 4px 24px;
+  text-transform: uppercase;
+}
+
+.link {
+  -st-states: selected;
+  color: #32536a;
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 28px;
+  min-height: 28px;
+  padding: 0 24px;
+  text-decoration: none;
+}
+
+.link:hover {
+  background-color: #dfe5eb;
+}
+
+.link:selected {
+  background-color: #7a92a5;
+  color: white;
+}

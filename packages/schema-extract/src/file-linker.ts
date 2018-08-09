@@ -101,7 +101,7 @@ export class SchemaLinker {
                 }
                 // Ifception
                 if (!refEntity) {
-                    return {$ref: UnknownId};
+                    return entity;
                 }
             }
         if (refEntity.genericParams && entity.genericArguments && isSchemaOfType('object', refEntity)) {
@@ -207,21 +207,31 @@ export class SchemaLinker {
             if (!refEntity) {
                 return entity;
             }
-            let refInterface: any;
+            let refInterface: InterfaceSchema;
             let pMap: Map<string, Schema> | undefined;
             if (refEntity.genericParams) {
                 pMap = new Map();
                 refEntity.genericParams!.forEach((param, index) => {
                     pMap!.set(`#${extendedEntity}!${param.name}`, entity.genericArguments![index]);
                 });
-                refInterface = this.linkRefObject(refEntity, pMap, schema) as InterfaceSchema;
+                refInterface = this.linkInterface(refEntity as InterfaceSchema, schema);
+                if (refInterface.properties) {
+                    const properties = refInterface.properties;
+                    for (const prop in properties) {
+                        if (properties.hasOwnProperty(prop)) {
+                            const tempInheritedFrom = properties[prop].inheritedFrom ? properties[prop].inheritedFrom : '#' + extendedEntity;
+                            properties[prop] = pMap.has(properties[prop].$ref!) ? pMap.get(properties[prop].$ref!)! : properties[prop];
+                            properties[prop].inheritedFrom = tempInheritedFrom;
+                        }
+                    }
+                }
             } else {
                 refInterface = this.linkInterface(refEntity as InterfaceSchema, schema);
-            }
-            if (refInterface.properties) {
-                for (const p in refInterface.properties) {
-                    if (refInterface.properties.hasOwnProperty(p) && !refInterface.properties[p].inheritedFrom) {
-                        (refInterface.properties[p] as any).inheritedFrom = '#' + extendedEntity;
+                if (refInterface.properties) {
+                    for (const p in refInterface.properties) {
+                        if (refInterface.properties.hasOwnProperty(p) && !refInterface.properties[p].inheritedFrom) {
+                            refInterface.properties[p].inheritedFrom = '#' + extendedEntity;
+                        }
                     }
                 }
             }

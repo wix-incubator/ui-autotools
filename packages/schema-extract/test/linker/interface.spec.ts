@@ -120,7 +120,6 @@ describe('schema-linker - interfaces', () => {
             },
             required: ['somethingNew', 'somethingElse', 'something']
         };
-        debugger;
         expect(res).to.eql(expected);
     });
 

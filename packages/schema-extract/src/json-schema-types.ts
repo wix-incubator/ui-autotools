@@ -64,6 +64,7 @@ export interface ISchemaBase<T extends  SchemaTypes = SchemaTypes> {
     $allOf?: Schema[];
     genericParams?: Schema[];
     genericArguments?: Schema[];
+    inheritedFrom?: string;
     definedAt?: string;
     default?: ITypeMap[T];
     initializer?: string;
@@ -88,6 +89,7 @@ export type FunctionSchema = Schema & {
 
 export type InterfaceSchema = Schema & {
     $ref: typeof interfaceId;
+    properties?: {[name: string]: Schema};
     extends?: Schema;
 };
 

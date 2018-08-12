@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import { Schema } from '../../src/json-schema-types';
+import { Schema, interfaceId } from '../../src/json-schema-types';
 import {linkTest} from '../../test-kit/run-linker';
 
 describe('schema-linker - imports', () => {
@@ -23,6 +23,36 @@ describe('schema-linker - imports', () => {
                 }
             },
             required: ['something']
+        };
+        expect(res).to.eql(expected);
+    });
+
+    it('should link imported interfaces', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({
+            [fileName]: `
+                import {MyInterface} from './import';
+                export interface A extends MyInterface<string> {
+                    someone: number;
+                };`,
+            ['import.ts']: `
+                export interface MyInterface<T> {
+                    something:T;
+                };`
+        }, 'A', fileName);
+
+        const expected: Schema<'object'> = {
+            $ref: interfaceId,
+            properties: {
+                something: {
+                    inheritedFrom: '#MyInterface',
+                    type: 'string'
+                },
+                someone: {
+                    type: 'number'
+                }
+            },
+            required: ['someone', 'something']
         };
         expect(res).to.eql(expected);
     });

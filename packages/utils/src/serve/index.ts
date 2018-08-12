@@ -1,9 +1,8 @@
-import http from 'http';
-import url from 'url';
 import webpack from 'webpack';
 import Koa from 'koa';
 import koaWebpack from 'koa-webpack';
 import {Log} from './log';
+import {getServerUrl} from '../http';
 
 export interface IServeOptions {
   webpackConfig: webpack.Configuration;
@@ -33,17 +32,6 @@ interface ICompilerOptions {
 interface IMiddlewareOptions {
   compiler: webpack.Compiler;
   watch: boolean;
-}
-
-function getServerUrl(server: http.Server) {
-  const address = server.address();
-  return typeof address === 'string' ?
-    address :
-    url.format({
-      protocol: 'http',
-      hostname: address.address,
-      port: address.port
-    });
 }
 
 function createCompiler({webpackConfig, log, watch}: ICompilerOptions) {

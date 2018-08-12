@@ -269,15 +269,15 @@ export class SchemaLinker {
         } else if (refEntity.hasOwnProperty('constructor')) {
             res.constructor = Object.assign({}, refEntity.constructor);
         }
-        res.properties = this.extractClassData(entity, refEntity, extendedEntity, 'properties');
-        res.staticProperties = this.extractClassData(entity, refEntity, extendedEntity, 'staticProperties');
+        res.properties = this.extractClassData(entity, refEntity, extendedEntity, 'properties', schema);
+        res.staticProperties = this.extractClassData(entity, refEntity, extendedEntity, 'staticProperties', schema);
         if (entity.genericParams) {
             res.genericParams = entity.genericParams;
         }
         return res;
     }
 
-    private extractClassData(entity: ClassSchema, refEntity: ClassSchema, extendedEntity: string, prop: 'properties' | 'staticProperties'): {[name: string]: Schema} {
+    private extractClassData(entity: ClassSchema, refEntity: ClassSchema, extendedEntity: string, prop: 'properties' | 'staticProperties', schema: ModuleSchema): {[name: string]: Schema} {
         const res: {[name: string]: Schema & {inheritedFrom?: string}} = {};
         const paramsMap = new Map();
         if (refEntity.genericParams && entity.extends!.genericArguments) {
@@ -295,12 +295,12 @@ export class SchemaLinker {
         for (const p in refProperties) {
             if (refProperties.hasOwnProperty(p)) {
                 if (!properties.hasOwnProperty(p)) {
-                    const property = refProperties[p];
+                    const property = this.link(refProperties[p], schema);
                     if (isRef(property)) {
                         const refType = property.$ref.startsWith(`#${extendedEntity}`) ? property.$ref : `#${extendedEntity}!${property.$ref.replace('#', '')}`;
                         res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, paramsMap.get(refType));
                     } else {
-                        res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, refProperties[p]);
+                        res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, property);
                     }
                 } else {
                     res[p].inheritedFrom = `#${extendedEntity}`;

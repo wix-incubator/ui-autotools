@@ -14,7 +14,7 @@ import {
 } from '@ui-autotools/utils';
 import {getMetadataAndSchemasInDirectory} from './meta';
 import {formatComponentDataForClient} from './client-data';
-const StylableWebpackPlugin = require('stylable-webpack-plugin');
+const StylableWebpackPlugin = require('@stylable/webpack-plugin');
 
 interface IProjectOptions {
   projectPath: string;

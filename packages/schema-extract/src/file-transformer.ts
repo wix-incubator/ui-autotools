@@ -228,9 +228,10 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
 };
 
 const describeTypeNode: TsNodeDescriber<ts.TypeNode> = (decl, checker, env) => {
-    if (set) {
-        if (set.has(decl) && !ts.isToken(decl)) {
-            return map.has(decl.getText()) ? map.get(decl.getText()) : {schema: {$ref: '#' + decl.getText()}};
+    const name = (decl as any).name ? (decl as any).name.getText() : ((decl.parent as any).name ? (decl.parent as any).name.getText() : decl.getText());
+    if (set && !ts.isToken(decl)) {
+        if (set.has(decl)) {
+            return map.has(name) ? map.get(name) : {schema: {$ref: '#' + name}};
         } else {
             set.add(decl);
         }
@@ -256,7 +257,7 @@ const describeTypeNode: TsNodeDescriber<ts.TypeNode> = (decl, checker, env) => {
         const t = checker.getTypeAtLocation(decl);
         res = serializeType(t, decl, checker, env);
     }
-    map.set(decl.getText(), res);
+    map.set(name, res);
     return res;
 };
 

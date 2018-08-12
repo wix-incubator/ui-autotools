@@ -1,7 +1,8 @@
 import 'typescript-support';
 import * as React from 'react';
+import path from 'path';
 import glob from 'glob';
-import Registry from '@ui-autotools/registry';
+import Registry, {getCompName} from '@ui-autotools/registry';
 import {IComponentMetadata, IMetadata} from '@ui-autotools/registry';
 // TODO: extract-schema should be exported from the index
 import {extractSchema} from '@ui-autotools/schema-extract/cjs/extract-schema';
@@ -44,27 +45,11 @@ function getSchemaForExport(
   }
 
   const property = schema.properties[exportName];
-  const ref = property.$ref!;
+  const ref = property.$ref;
 
-  return ref.startsWith('#typeof') ?
+  return ref && ref.startsWith('#typeof') ?
     schema.definitions![ref.replace('#typeof ', '')] :
     property;
-}
-
-function isExportProbablyAComponent(
-  schemas: ModuleSchemasByFilename,
-  file: string,
-  exportName: string
-) {
-  const exportSchema = getSchemaForExport(schemas, file, exportName);
-
-  // TODO: we could check that it extends react#Component, but that would
-  // require traversing the inheritance chain. Maybe the linker will give us
-  // this?
-  return (
-    exportSchema.$ref === 'react#SFC' ||
-    exportSchema.$ref === 'common/class'
-  );
 }
 
 function findComponentSchemas(
@@ -72,44 +57,54 @@ function findComponentSchemas(
   schemas: ModuleSchemasByFilename
 ) {
   const matches: Map<React.ComponentType, IExportSourceAndSchema> = new Map();
+  const sourceFilenames = Array.from(schemas.keys());
 
-  for (const {file, schema} of schemas.values()) {
-    if (!schema.properties) {
+  // TODO: we make too many assumptions here. That the meta file name is the
+  // same as the component's displayName, that the meta file and the
+  // component file sit side by side in the same folder, and that they have the
+  // same basename.
+  // Since creating schema for a module is expensive, ideally the information
+  // about the component's filename and the export name should be contained in
+  // its metadata.
+  const normalize = (string: string) => string.toLowerCase().replace(/-/g, '');
+  for (const Comp of componentsMetadata.keys()) {
+    const name = getCompName(Comp);
+    const metaFile = sourceFilenames.find((file) =>
+      normalize(path.basename(file)) === normalize(name + '.meta.ts') ||
+      normalize(path.basename(file)) === normalize(name + '.meta.tsx')
+    );
+    if (!metaFile) {
       continue;
     }
-
-    for (const exportName in schema.properties) {
-      if (!isExportProbablyAComponent(schemas, file, exportName)) {
-        continue;
-      }
-      const Comp = require(file)[exportName];
-      // TODO: if the same component is exported from multiple files we want the
-      // one it's defined in. OTOH, we probably don't care that much about the
-      // file path, we just want to be sure we can resolve the schema and aren't
-      // doing the same work twice.
-      if (componentsMetadata.has(Comp)) {
-        const exportSchema = getSchemaForExport(schemas, file, exportName);
-        matches.set(Comp, {file, name: exportName, schema: exportSchema});
-      }
+    const componentFile = sourceFilenames.find((file) => (
+      file.replace(/\.tsx?$/, '') === metaFile.replace(/\.meta\.tsx?$/, '')
+    ));
+    if (!componentFile) {
+      continue;
     }
+    const exportSchema = getSchemaForExport(schemas, componentFile, name);
+    if (!exportSchema) {
+      continue;
+    }
+    matches.set(Comp, {file: componentFile, name, schema: exportSchema});
   }
 
   return matches;
 }
 
 export function getMetadataAndSchemasInDirectory(
-  path: string,
+  basePath: string,
   metadataGlob: string,
   sourceGlob: string
 ): IMetadataAndSchemas {
   const metadataFiles = glob.sync(metadataGlob, {
-    cwd: path,
+    cwd: basePath,
     absolute: true
   });
   metadataFiles.forEach(require);
   const metadata = Registry.metadata;
 
-  const schemas = Array.from(extractSchema(path, sourceGlob));
+  const schemas = Array.from(extractSchema(basePath, sourceGlob));
   const schemasByFilename: ModuleSchemasByFilename = new Map();
   for (const item of schemas) {
     schemasByFilename.set(item.file, item);

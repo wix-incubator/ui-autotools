@@ -280,7 +280,7 @@ export class SchemaLinker {
     private extractClassData(entity: ClassSchema, refEntity: ClassSchema, extendedEntity: string, prop: 'properties' | 'staticProperties'): {[name: string]: Schema} {
         const res: {[name: string]: Schema & {inheritedFrom?: string}} = {};
         const paramsMap = new Map();
-        if (refEntity.genericParams) {
+        if (refEntity.genericParams && entity.extends!.genericArguments) {
             refEntity.genericParams.forEach((param, index) => {
                 paramsMap.set(`#${extendedEntity}!${param.name}`, entity.extends!.genericArguments![index]);
             });

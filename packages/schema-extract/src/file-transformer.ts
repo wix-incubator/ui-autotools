@@ -11,6 +11,7 @@ export interface IEnv {
 }
 
 let set: Set<any>;
+let map: Map<any, any>;
 
 export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, moduleId: string, projectPath: string) {
     const moduleSymbol = (sourceFile as any).symbol;
@@ -34,6 +35,7 @@ export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, mo
 
     exports.forEach((exportObj) => {
         set = new Set();
+        map = new Map();
         const node = getNode(exportObj)!;
         if (ts.isFunctionDeclaration(node) || ts.isArrowFunction(node)) {
             res.properties![exportObj.getName()] = describeFunction(node, checker, env, exportObj).schema;
@@ -228,31 +230,34 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
 const describeTypeNode: TsNodeDescriber<ts.TypeNode> = (decl, checker, env) => {
     if (set) {
         if (set.has(decl) && !ts.isToken(decl)) {
-            return {schema: {$ref: '#' + decl.getText()}};
+            return map.has(decl.getText()) ? map.get(decl.getText()) : {schema: {$ref: '#' + decl.getText()}};
         } else {
             set.add(decl);
         }
     }
+    let res;
     if (ts.isTypeReferenceNode(decl)) {
-        return describeTypeReference(decl, checker, env);
+        res = describeTypeReference(decl, checker, env);
     } else if (ts.isTypeLiteralNode(decl)) {
-        return describeTypeLiteral(decl, checker, env);
+        res = describeTypeLiteral(decl, checker, env);
     } else if (ts.isArrayTypeNode(decl)) {
-        return describeArrayType(decl, checker, env);
+        res = describeArrayType(decl, checker, env);
     } else if (ts.isUnionTypeNode(decl)) {
-        return describeUnionType(decl, checker, env);
+        res = describeUnionType(decl, checker, env);
     } else if (ts.isIntersectionTypeNode(decl)) {
-        return describeIntersectionType(decl, checker, env);
+        res = describeIntersectionType(decl, checker, env);
     } else if (ts.isFunctionTypeNode(decl)) {
-        return describeFunction(decl, checker, env);
+        res = describeFunction(decl, checker, env);
     } else if (ts.isMappedTypeNode(decl)) {
-        return describeMappedType(decl, checker, env);
+        res = describeMappedType(decl, checker, env);
     } else if (ts.isParenthesizedTypeNode(decl)) {
-        return describeTypeNode(decl.type, checker, env);
+        res = describeTypeNode(decl.type, checker, env);
+    } else {
+        const t = checker.getTypeAtLocation(decl);
+        res = serializeType(t, decl, checker, env);
     }
-
-    const t = checker.getTypeAtLocation(decl);
-    return serializeType(t, decl, checker, env);
+    map.set(decl.getText(), res);
+    return res;
 };
 
 const describeMappedType: TsNodeDescriber<ts.MappedTypeNode> = (decl, checker, env) => {

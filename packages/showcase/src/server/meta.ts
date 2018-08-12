@@ -4,10 +4,12 @@ import path from 'path';
 import glob from 'glob';
 import Registry, {getCompName} from '@ui-autotools/registry';
 import {IComponentMetadata, IMetadata} from '@ui-autotools/registry';
-// TODO: extract-schema should be exported from the index
-import {extractSchema} from '@ui-autotools/schema-extract/cjs/extract-schema';
-// TODO: json-schema-types should be exported from the index
-import {ModuleSchema as PartialModuleSchema, IObjectFields, Schema} from '@ui-autotools/schema-extract/cjs/json-schema-types';
+import {
+  extractSchema,
+  ModuleSchema as PartialModuleSchema,
+  IObjectFields,
+  Schema
+} from '@ui-autotools/schema-extract';
 
 export type ModuleSchema = PartialModuleSchema & IObjectFields;
 

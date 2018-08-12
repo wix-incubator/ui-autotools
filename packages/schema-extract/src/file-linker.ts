@@ -34,6 +34,22 @@ export class SchemaLinker {
         return this.link(entity, schema);
     }
 
+    private getRefEntity(ref: string, schema: ModuleSchema, paramsMap?: Map<string, Schema>) {
+        if (!schema.definitions) {
+            return null;
+        }
+        let refEntity = (paramsMap && paramsMap.has(ref)) ? paramsMap.get(ref) : schema.definitions![ref.replace('#', '')];
+        if (!refEntity) {
+            const poundIndex = ref.indexOf('#');
+            const entityType = ref.slice(poundIndex + 1);
+            const importSchema = this.getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1));
+            if (importSchema && importSchema.definitions) {
+                refEntity = importSchema.definitions![entityType];
+            }
+        }
+        return refEntity ? refEntity : null;
+    }
+
     private getSchemaFromImport(path: string, ref: string): ModuleSchema | null {
         const extensions = ['.js', '.d.ts', '.ts', '.tsx'];
         let importSourceFile;
@@ -89,48 +105,31 @@ export class SchemaLinker {
         return entity;
     }
 
-    private handleRef(entity: Schema & {$ref: string}, schema: ModuleSchema) {
+    private handleRef(entity: Schema & {$ref: string}, schema: ModuleSchema, paramsMap?: Map<string, Schema>) {
         const ref = entity.$ref;
-        const poundIndex = entity.$ref.indexOf('#');
-        const entityType = ref.slice(poundIndex + 1);
-        let refEntity = schema.definitions![ref.replace('#', '')];
+        const entityType = ref.slice(ref.indexOf('#') + 1);
+        const refEntity = this.getRefEntity(ref, schema, paramsMap);
         if (!refEntity) {
-                const importSchema = this.getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1));
-                if (importSchema && importSchema.definitions) {
-                    refEntity = importSchema.definitions![entityType];
-                }
-                // Ifception
-                if (!refEntity) {
-                    return entity;
-                }
-            }
-        if (!refEntity.genericParams || !entity.genericArguments) {
-                return refEntity;
-            }
-        if (isSchemaOfType('object', refEntity)) {
+            return entity;
+        }
+        if (refEntity.genericParams && entity.genericArguments && isSchemaOfType('object', refEntity)) {
             const pMap = new Map();
             refEntity.genericParams!.forEach((param, index) => {
                 pMap.set(`#${entityType}!${param.name}`, entity.genericArguments![index]);
             });
             return this.linkRefObject(refEntity, pMap, schema);
-        } else {
-            return refEntity;
         }
+        refEntity.definedAt = '#' + entityType;
+        return refEntity;
     }
 
     private handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
         const res: Schema & IObjectFields = {};
         for (const option of options) {
             if (isRef(option)) {
-                let entity: Schema & IObjectFields;
-                if (paramsMap) {
-                    entity = paramsMap.get(option.$ref)!;
-                    if (!entity) {
-                        return res;
-                    }
-                } else {
-                    const refEntity = option.genericArguments ? option : schema.definitions![option.$ref.replace('#', '')];
-                    entity = this.link(refEntity, schema);
+                const entity = this.handleRef(option, schema, paramsMap);
+                if (!entity) {
+                    return {$ref: UnknownId};
                 }
                 this.mergeProperties(entity, res, schema, paramsMap);
             } else if (isSchemaOfType('object', option) && !option.$oneOf) {
@@ -211,23 +210,41 @@ export class SchemaLinker {
         const res = this.handleObject(entity, schema) as InterfaceSchema;
         res.$ref = interfaceId;
         if (entity.extends) {
-            const extendedEntity = entity.extends.$ref!.replace('#', '');
-            const refEntity = schema.definitions[extendedEntity];
+            const ref = entity.extends.$ref!;
+            const extendedEntity = ref.slice(ref.indexOf('#') + 1);
+            const refEntity = this.getRefEntity(ref, schema);
             if (!refEntity) {
                 return entity;
             }
+            let refInterface: InterfaceSchema;
+            let pMap: Map<string, Schema> | undefined;
             if (refEntity.genericParams) {
-                const pMap = new Map();
-                refEntity.genericParams!.forEach((param, index) => {
-                    pMap.set(`#${extendedEntity}!${param.name}`, entity.genericArguments![index]);
+                pMap = new Map();
+                refEntity.genericParams.forEach((param, index) => {
+                    pMap!.set(`#${extendedEntity}!${param.name}`, entity.genericArguments![index]);
                 });
-                const refInterface = this.linkRefObject(refEntity, pMap, schema);
-                if (refInterface) {
-                    this.mergeProperties(refInterface, res, schema, pMap);
+                refInterface = this.linkInterface(refEntity as InterfaceSchema, schema);
+                if (refInterface.properties) {
+                    const properties = refInterface.properties;
+                    for (const prop in properties) {
+                        if (properties.hasOwnProperty(prop)) {
+                            const tempInheritedFrom = properties[prop].inheritedFrom ? properties[prop].inheritedFrom : '#' + extendedEntity;
+                            properties[prop] = pMap.has(properties[prop].$ref!) ? pMap.get(properties[prop].$ref!)! : properties[prop];
+                            properties[prop].inheritedFrom = tempInheritedFrom;
+                        }
+                    }
                 }
             } else {
-                this.mergeProperties(refEntity, res, schema);
+                refInterface = this.linkInterface(refEntity as InterfaceSchema, schema);
+                if (refInterface.properties) {
+                    for (const p in refInterface.properties) {
+                        if (refInterface.properties.hasOwnProperty(p) && !refInterface.properties[p].inheritedFrom) {
+                            refInterface.properties[p].inheritedFrom = '#' + extendedEntity;
+                        }
+                    }
+                }
             }
+            this.mergeProperties(refInterface, res, schema, pMap);
         }
         return res;
     }
@@ -237,7 +254,7 @@ export class SchemaLinker {
             return entity;
         }
         const extendedEntity = entity.extends.$ref!.replace('#', '');
-        const refEntity = schema.definitions[extendedEntity] as ClassSchema;
+        const refEntity = this.getRefEntity(entity.extends.$ref!, schema) as ClassSchema;
         if (!refEntity) {
             return entity;
         }

@@ -14,6 +14,7 @@ import {IComponentData} from '../server/client-data';
   );
 
   const root = document.createElement('div');
+  root.id = 'react-root';
   document.body.appendChild(root);
   ReactDOM.render(<Website components={components} path={path} />, root);
 })();

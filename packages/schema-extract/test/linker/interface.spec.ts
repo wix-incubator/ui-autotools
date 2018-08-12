@@ -18,6 +18,7 @@ describe('schema-linker - interfaces', () => {
             $ref: interfaceId,
             properties: {
                 something: {
+                    inheritedFrom: '#TypeA',
                     type: 'string'
                 },
                 somethingElse: {
@@ -45,6 +46,7 @@ describe('schema-linker - interfaces', () => {
             properties: {
                 somethingElse: {
                     $ref: interfaceId,
+                    definedAt: '#TypeA',
                     properties: {
                         something: {
                             type: 'string'
@@ -82,6 +84,76 @@ describe('schema-linker - interfaces', () => {
                 }
             },
             required: ['something', 'somethingElse']
+        };
+        expect(res).to.eql(expected);
+    });
+
+    it('should flatten interfaces that extend an already extended interface', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
+        export interface TypeA {
+            something:string;
+        };
+        export interface TypeB extends TypeA {
+            somethingElse: number;
+        };
+
+        export interface TypeC extends TypeB {
+            somethingNew: boolean;
+        }
+        `}, 'TypeC', fileName);
+
+        const expected: Schema<'object'> = {
+            $ref: interfaceId,
+            properties: {
+                somethingElse: {
+                    inheritedFrom: '#TypeB',
+                    type: 'number'
+                },
+                something: {
+                    inheritedFrom: '#TypeA',
+                    type: 'string'
+                },
+                somethingNew: {
+                    type: 'boolean'
+                }
+            },
+            required: ['somethingNew', 'somethingElse', 'something']
+        };
+        expect(res).to.eql(expected);
+    });
+
+    it('should flatten interfaces that extend an already extended interface 2', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
+        export interface TypeA<T> {
+            something:T;
+        };
+        export interface TypeB<T, W> extends TypeA<T> {
+            somethingElse: W;
+        };
+
+        export interface TypeC extends TypeB<string, number> {
+            somethingNew: boolean;
+        }
+        `}, 'TypeC', fileName);
+
+        const expected: Schema<'object'> = {
+            $ref: interfaceId,
+            properties: {
+                somethingElse: {
+                    inheritedFrom: '#TypeB',
+                    type: 'number'
+                },
+                something: {
+                    inheritedFrom: '#TypeA',
+                    type: 'string'
+                },
+                somethingNew: {
+                    type: 'boolean'
+                }
+            },
+            required: ['somethingNew', 'somethingElse', 'something']
         };
         expect(res).to.eql(expected);
     });

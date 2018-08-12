@@ -50,6 +50,7 @@ describe('schema-linker - intersections', () => {
             $oneOf: [
                 {
                     type: 'object',
+                    definedAt: '#A',
                     properties: {
                         something: {
                             type: 'number'

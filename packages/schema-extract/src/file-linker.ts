@@ -34,6 +34,22 @@ export class SchemaLinker {
         return this.link(entity, schema);
     }
 
+    private getRefEntity(ref: string, schema: ModuleSchema, paramsMap?: Map<string, Schema>) {
+        if (!schema.definitions) {
+            return null;
+        }
+        let refEntity = (paramsMap && paramsMap.has(ref)) ? paramsMap.get(ref) : schema.definitions![ref.replace('#', '')];
+        if (!refEntity) {
+            const poundIndex = ref.indexOf('#');
+            const entityType = ref.slice(poundIndex + 1);
+            const importSchema = this.getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1));
+            if (importSchema && importSchema.definitions) {
+                refEntity = importSchema.definitions![entityType];
+            }
+        }
+        return refEntity ? refEntity : null;
+    }
+
     private getSchemaFromImport(path: string, ref: string): ModuleSchema | null {
         const extensions = ['.js', '.d.ts', '.ts', '.tsx'];
         let importSourceFile;
@@ -91,19 +107,11 @@ export class SchemaLinker {
 
     private handleRef(entity: Schema & {$ref: string}, schema: ModuleSchema, paramsMap?: Map<string, Schema>) {
         const ref = entity.$ref;
-        const poundIndex = ref.indexOf('#');
-        const entityType = ref.slice(poundIndex + 1);
-        let refEntity = (paramsMap && paramsMap.has(ref)) ? paramsMap.get(ref) : schema.definitions![ref.replace('#', '')];
+        const entityType = ref.slice(ref.indexOf('#') + 1);
+        const refEntity = this.getRefEntity(ref, schema, paramsMap);
         if (!refEntity) {
-                const importSchema = this.getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1));
-                if (importSchema && importSchema.definitions) {
-                    refEntity = importSchema.definitions![entityType];
-                }
-                // Ifception
-                if (!refEntity) {
-                    return entity;
-                }
-            }
+            return entity;
+        }
         if (refEntity.genericParams && entity.genericArguments && isSchemaOfType('object', refEntity)) {
             const pMap = new Map();
             refEntity.genericParams!.forEach((param, index) => {
@@ -202,8 +210,9 @@ export class SchemaLinker {
         const res = this.handleObject(entity, schema) as InterfaceSchema;
         res.$ref = interfaceId;
         if (entity.extends) {
-            const extendedEntity = entity.extends.$ref!.replace('#', '');
-            const refEntity: Schema = schema.definitions[extendedEntity];
+            const ref = entity.extends.$ref!;
+            const extendedEntity = ref.slice(ref.indexOf('#') + 1);
+            const refEntity = this.getRefEntity(ref, schema);
             if (!refEntity) {
                 return entity;
             }
@@ -245,7 +254,7 @@ export class SchemaLinker {
             return entity;
         }
         const extendedEntity = entity.extends.$ref!.replace('#', '');
-        const refEntity = schema.definitions[extendedEntity] as ClassSchema;
+        const refEntity = this.getRefEntity(entity.extends.$ref!, schema) as ClassSchema;
         if (!refEntity) {
             return entity;
         }

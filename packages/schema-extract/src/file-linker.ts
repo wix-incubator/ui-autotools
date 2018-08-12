@@ -220,7 +220,7 @@ export class SchemaLinker {
             let pMap: Map<string, Schema> | undefined;
             if (refEntity.genericParams) {
                 pMap = new Map();
-                refEntity.genericParams!.forEach((param, index) => {
+                refEntity.genericParams.forEach((param, index) => {
                     pMap!.set(`#${extendedEntity}!${param.name}`, entity.genericArguments![index]);
                 });
                 refInterface = this.linkInterface(refEntity as InterfaceSchema, schema);

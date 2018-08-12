@@ -205,6 +205,11 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
 };
 
 const describeTypeNode: TsNodeDescriber<ts.TypeNode> = (decl, checker, env) => {
+    // not a good idea I guess...
+    if ((decl as any).typeName && (decl as any).typeName.getText() === 'Readonly') {
+        decl = (decl as any).typeArguments[0];
+    }
+
     const name = (decl as any).name ? (decl as any).name.getText() : ((decl.parent as any).name ? (decl.parent as any).name.getText() : decl.getText());
     if (set && !ts.isToken(decl)) {
         if (set.has(decl)) {
@@ -575,7 +580,7 @@ const describeIntersectionType: TsNodeDescriber<ts.IntersectionTypeNode> = (decl
     const schemas: Schema[] = decl.types.map((t) => {
         return describeTypeNode(t, checker, env).schema;
     });
-
+    // debugger;
     const res: Schema = {
         $allOf: schemas,
     };

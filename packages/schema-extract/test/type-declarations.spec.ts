@@ -142,7 +142,6 @@ describe('schema-extract - type declarations', () => {
                 }
             },
             properties: {
-
             },
         };
         expect(res).to.eql(expected);

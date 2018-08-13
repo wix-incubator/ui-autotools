@@ -11,7 +11,7 @@ describe('schema-extract - interfaces', () => {
         export interface MyInterface{
             title:string;
         };
-        export let param:MyInterface = {} as any;
+        export let param:MyInterface;
         export interface Extendz extends MyInterface {
             desc: string;
         }
@@ -64,8 +64,8 @@ describe('schema-extract - interfaces', () => {
         export interface MyInterface2{
             b:MyInterface;
         };
-        export let param:MyInterface = {} as any;
-        export let param2:MyInterface2 = {} as any;
+        export let param:MyInterface;
+        export let param2:MyInterface2;
 
         `, moduleId);
 

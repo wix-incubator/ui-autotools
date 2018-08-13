@@ -1,7 +1,7 @@
 import * as ts from 'typescript';
 import {ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchemaId, ClassSchemaId, interfaceId, InterfaceSchema } from './json-schema-types';
 import * as path from 'path';
-
+import { generateDataLiteral, isFailedInference } from './data-literal-transformer';
 // console.log(types)
 const posix: typeof path.posix = path.posix ? path.posix : path;
 
@@ -21,7 +21,7 @@ export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, mo
     if (!moduleSymbol) {
         return res;
     }
-    const env: IEnv =  {
+    const env: IEnv = {
         modulePath: moduleId,
         projectPath,
     };
@@ -156,10 +156,15 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
         res = describeTypeNode(decl.type!, checker, env, set).schema;
         if (decl.initializer) {
             isRequired = false;
+            const defaultVal = generateDataLiteral(checker, decl.initializer);
+            if (isFailedInference(defaultVal)) {
+                res!.initializer = defaultVal.expression;
+            } else {
+                res!.default = defaultVal;
+            }
         }
-    } else  if (decl.initializer) {
+    } else if (decl.initializer) {
         isRequired = false;
-
         if (ts.isIdentifier(decl.initializer)) {
             res =  describeIdentifier(decl.initializer, checker, env, set).schema;
             res.$ref = res.$ref!.replace('#', '#typeof ');
@@ -174,9 +179,17 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
             res = {
                 $ref: ref,
             };
+        } else {
+            res = serializeType(checker.getTypeAtLocation(decl), decl, checker, env).schema;
+            const defaultVal = generateDataLiteral(checker, decl.initializer);
+            if (isFailedInference(defaultVal)) {
+                res!.initializer = defaultVal.expression;
+            } else {
+                res!.default = defaultVal;
+            }
         }
     }
-    if (ts.isPropertyDeclaration(decl) ||  ts.isPropertySignature(decl) ||  ts.isParameter(decl)) {
+    if (ts.isPropertyDeclaration(decl) || ts.isPropertySignature(decl) || ts.isParameter(decl)) {
         if (decl.questionToken) {
             isRequired = false;
         }
@@ -184,7 +197,17 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
 
     if (!res) {
         isRequired = false;
-        res =  serializeType(checker.getTypeAtLocation(decl), decl, checker, env).schema;
+        res = serializeType(checker.getTypeAtLocation(decl), decl, checker, env).schema;
+        const child = decl.getChildAt(0);
+        if (child && ts.isObjectBindingPattern(child)) {
+            const defaultVal = generateDataLiteral(checker, child);
+            if (isFailedInference(defaultVal)) {
+                res!.initializer = defaultVal.expression;
+            } else {
+                res!.default = defaultVal;
+            }
+        }
+
     }
     const jsDocs = extraCommentsHack(decl);
     if (jsDocs) {
@@ -249,7 +272,7 @@ const describeMappedType: TsNodeDescriber<ts.MappedTypeNode> = (decl, checker, e
 };
 
 const describeTypeAlias: TsNodeDescriber<ts.TypeAliasDeclaration> = (decl, checker, env) => {
-    const res =  describeTypeNode(decl.type, checker, env);
+    const res = describeTypeNode(decl.type, checker, env);
     const genericParams = getGenericParams(decl, checker, env);
     if (genericParams) {
         res.schema.genericParams = genericParams;
@@ -304,7 +327,7 @@ const describeFunction: TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunctio
     });
     const res: FunctionSchema = {
         $ref: ts.isConstructorDeclaration(decl) ? ClassConstructorSchemaId : FunctionSchemaId,
-        arguments : funcArguments,
+        arguments: funcArguments,
     };
     if (returns) {
         res.returns = returns.schema;
@@ -354,8 +377,8 @@ const describeClass: TsNodeDescriber<ts.ClassDeclaration, ClassSchema> = (decl, 
     }
 
     let constructorSign: FunctionSchema | undefined;
-    const properties: {[key: string]: Schema} = {};
-    const staticProperties: {[key: string]: Schema} = {};
+    const properties: { [key: string]: Schema } = {};
+    const staticProperties: { [key: string]: Schema } = {};
     decl.members.forEach((member) => {
         if (ts.isConstructorDeclaration(member)) {
             const funcSchema = describeFunction(member, checker, env);
@@ -410,7 +433,7 @@ const describeClass: TsNodeDescriber<ts.ClassDeclaration, ClassSchema> = (decl, 
     return {
         schema: classDef
     };
-  };
+};
 
 const describeTypeReference: TsNodeDescriber<ts.TypeReferenceNode> = (decl, checker, env, tSet) => {
     const typeName = decl.typeName;
@@ -443,8 +466,8 @@ const describeQualifiedName: TsNodeDescriber<ts.QualifiedName> = (decl, checker,
             schema: {
 
                 $ref: identifierRef.includes('#') ?
-                        identifierRef + '.' + innerRef :
-                        identifierRef + '#' + innerRef,
+                    identifierRef + '.' + innerRef :
+                    identifierRef + '#' + innerRef,
             }
         };
     } else {
@@ -458,9 +481,11 @@ const describeQualifiedName: TsNodeDescriber<ts.QualifiedName> = (decl, checker,
 
 const describeIdentifier: TsNodeDescriber<ts.Identifier> = (decl, checker, env, tSet) => {
     if (decl.getText() === 'Array') {
-        return {schema: {
-            type: 'array',
-        }};
+        return {
+            schema: {
+                type: 'array',
+            }
+        };
     }
     if (decl.getText() === 'Object') {
         return {
@@ -471,7 +496,7 @@ const describeIdentifier: TsNodeDescriber<ts.Identifier> = (decl, checker, env, 
     }
     const referencedSymb = checker.getSymbolAtLocation(decl)!;
     const referencedSymbDecl = getNode(referencedSymb);
-    let importPath: string  = '';
+    let importPath: string = '';
     let importInternal: string = '';
     if (referencedSymbDecl) {
         if (ts.isVariableDeclaration(referencedSymbDecl)) {
@@ -527,7 +552,7 @@ const describeIdentifier: TsNodeDescriber<ts.Identifier> = (decl, checker, env, 
 function resolveImportPath(relativeUrl: string, importInternal: string, env: IEnv) {
     if (relativeUrl.startsWith('.') || relativeUrl.startsWith('/')) {
         const currentDir = posix.dirname(env.modulePath);
-        const resolvedPath = posix.join(currentDir , relativeUrl);
+        const resolvedPath = posix.join(currentDir, relativeUrl);
 
         return resolvedPath + importInternal;
     }
@@ -618,7 +643,7 @@ const describeUnionType: TsNodeDescriber<ts.UnionTypeNode> = (decl, checker, env
     }
 
     if (groupedSchemas.length > 1) {
-        return{
+        return {
             schema: {
                 $oneOf: groupedSchemas,
             }

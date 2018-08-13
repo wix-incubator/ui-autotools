@@ -1,6 +1,6 @@
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import WebpackRawAssetPlugin from './webpack-raw-asset-plugin';
+import {RawAssetWebpackPlugin} from './raw-asset-webpack-plugin';
 
 export class WebpackConfigurator {
   public static load(path: string): WebpackConfigurator {
@@ -56,7 +56,7 @@ export class WebpackConfigurator {
   }
 
   public addJson(options: {filename: string, data: any}): this {
-    this.addPlugin(new WebpackRawAssetPlugin({
+    this.addPlugin(new RawAssetWebpackPlugin({
       filename: options.filename,
       data: JSON.stringify(options.data)
     }));

@@ -37,11 +37,12 @@ describe('schema-extract - functions', () => {
     });
     it('should support declared functions return values', async () => {
         const moduleId = 'functions';
+        const functionInitializer = `(str:string)=>{
+            return str+'a'
+        }`;
         const res = transformTest(`
 
-        export const declaredFunction:(str:string)=>string = (str:string)=>{
-            return str+'a'
-        };
+        export const declaredFunction:(str:string)=>string = ${functionInitializer};
 
 
         `, moduleId);
@@ -64,6 +65,7 @@ describe('schema-extract - functions', () => {
                     returns: {
                         type: 'string',
                     },
+                    initializer: functionInitializer
                 },
             },
 
@@ -73,11 +75,13 @@ describe('schema-extract - functions', () => {
 
     it('should support declared functions with optional params', async () => {
         const moduleId = 'functions';
+
+        const functionInitializer = `(str:string)=>{
+            return str+'a'
+        }`;
         const res = transformTest(`
 
-        export const declaredFunction:(str:string,num?:number)=>string = (str:string)=>{
-            return str+'a'
-        };
+        export const declaredFunction:(str:string,num?:number)=>string = ${functionInitializer};
 
 
         `, moduleId);
@@ -104,6 +108,7 @@ describe('schema-extract - functions', () => {
                     returns: {
                         type: 'string',
                     },
+                    initializer: functionInitializer
                 },
             },
 
@@ -112,11 +117,12 @@ describe('schema-extract - functions', () => {
     });
     it('should support declared functions with optional params (default value)', async () => {
         const moduleId = 'functions';
+        const functionInitializer = `(str:string)=>{
+            return str+'a'
+        }`;
         const res = transformTest(`
 
-        export const declaredFunction:(str:string,num:number = 5)=>string = (str:string)=>{
-            return str+'a'
-        };
+        export const declaredFunction:(str:string,num:number = 5)=>string = ${functionInitializer};
 
 
         `, moduleId);
@@ -137,12 +143,14 @@ describe('schema-extract - functions', () => {
                         {
                             type: 'number',
                             name: 'num',
+                            default: 5
                         },
                     ],
                     requiredArguments: ['str'],
                     returns: {
                         type: 'string',
                     },
+                    initializer: functionInitializer
                 },
             },
 
@@ -180,7 +188,11 @@ describe('schema-extract - functions', () => {
                                 },
 
                             },
-                            required: ['x', 'y']
+                            required: ['x', 'y'],
+                            default: {
+                                x: 1,
+                                y: 'text'
+                            }
                         },
 
                     ],
@@ -195,10 +207,11 @@ describe('schema-extract - functions', () => {
     });
     it('should support functions with rest params', async () => {
         const moduleId = 'functions';
-        const res = transformTest(`
-        export const functionWithRestParams:(str:string, ...rest:number[])=>string = (str:string)=>{
+        const functionInitializer = `(str:string)=>{
             return str+'a'
-        };
+        }`;
+        const res = transformTest(`
+        export const functionWithRestParams:(str:string, ...rest:number[])=>string = ${functionInitializer};
 
         `, moduleId);
 
@@ -227,6 +240,7 @@ describe('schema-extract - functions', () => {
                     returns: {
                         type: 'string',
                     },
+                    initializer: functionInitializer
                 },
             },
         };

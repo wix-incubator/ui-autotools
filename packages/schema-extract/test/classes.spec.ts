@@ -54,6 +54,7 @@ describe('schema-extract - classes', () => {
                         },
                         a: {
                             type: 'number',
+                            default: 0
                         },
                         setTitle: {
                             $ref: FunctionSchemaId,
@@ -81,7 +82,6 @@ describe('schema-extract - classes', () => {
                 },
             },
         };
-        debugger;
         expect(res).to.eql(expected);
     });
 });

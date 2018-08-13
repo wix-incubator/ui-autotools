@@ -57,7 +57,7 @@ describe('schema-linker - imports', () => {
         expect(res).to.eql(expected);
     });
 
-    xit('should handle import loops', async () => {
+    it('should handle import loops', async () => {
         const fileName = 'index.ts';
         const res = linkTest({
             [fileName]: `
@@ -77,9 +77,10 @@ describe('schema-linker - imports', () => {
             properties: {
                 a: {
                     $ref: interfaceId,
+                    definedAt: '#InterfaceA',
                     properties: {
                         b: {
-                            $ref: '#InterfaceB'
+                            $ref: '/someProject/src/index#InterfaceB'
                         }
                     },
                     required: ['b']

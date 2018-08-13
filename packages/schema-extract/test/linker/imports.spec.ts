@@ -57,6 +57,40 @@ describe('schema-linker - imports', () => {
         expect(res).to.eql(expected);
     });
 
+    it('should handle import loops', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({
+            [fileName]: `
+                import {InterfaceA} from './import';
+                export interface InterfaceB {
+                    a: InterfaceA;
+                };`,
+            ['import.ts']: `
+                import {InterfaceB} from './index';
+                export interface InterfaceA {
+                    b:InterfaceB;
+                };`
+        }, 'InterfaceB', fileName);
+
+        const expected: Schema<'object'> = {
+            $ref: interfaceId,
+            properties: {
+                a: {
+                    $ref: interfaceId,
+                    definedAt: '#InterfaceA',
+                    properties: {
+                        b: {
+                            $ref: '/someProject/src/index#InterfaceB'
+                        }
+                    },
+                    required: ['b']
+                },
+            },
+            required: ['a']
+        };
+        expect(res).to.eql(expected);
+    });
+
     it('should link imported type from an outside package', async () => {
         const fileName = 'index.ts';
         const res = linkTest({

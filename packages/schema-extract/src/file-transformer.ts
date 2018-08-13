@@ -144,7 +144,7 @@ const assignmentDescriber: TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWi
     // return resolveNode(decl.expression, checker, env);
 };
 
-const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.PropertySignature | ts.ParameterDeclaration | ts.PropertyDeclaration > = (decl, checker, env, tSet) => {
+const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.PropertySignature | ts.ParameterDeclaration | ts.PropertyDeclaration> = (decl, checker, env, tSet) => {
     const {result, set} = checkCircularType(tSet, decl);
     if (result) {
         return result;
@@ -166,10 +166,10 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
     } else if (decl.initializer) {
         isRequired = false;
         if (ts.isIdentifier(decl.initializer)) {
-            res =  describeIdentifier(decl.initializer, checker, env, set).schema;
+            res = describeIdentifier(decl.initializer, checker, env, set).schema;
             res.$ref = res.$ref!.replace('#', '#typeof ');
         } else if (ts.isPropertyAccessExpression(decl.initializer) && ts.isIdentifier(decl.initializer.expression)) {
-            res =  describeIdentifier(decl.initializer.expression, checker, env, set).schema;
+            res = describeIdentifier(decl.initializer.expression, checker, env, set).schema;
             let ref = res.$ref!;
             if (ref.includes('#')) {
                 ref = ref!.replace('#', '#typeof ') + '.' + decl.initializer.name.getText();
@@ -354,7 +354,7 @@ const describeFunction: TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunctio
 };
 
 const getReturnSchema: TsNodeDescriber<ts.FunctionDeclaration | ts.ArrowFunction | ts.FunctionTypeNode | ts.ConstructorDeclaration | ts.MethodDeclaration, FunctionSchema> = (decl, checker, env, tSet) => {
-    const returnSchema = decl.type ? describeTypeNode(decl.type, checker, env, tSet) : serializeType(checker.getTypeAtLocation(decl), decl , checker, env).schema.returns!;
+    const returnSchema = decl.type ? describeTypeNode(decl.type, checker, env, tSet) : serializeType(checker.getTypeAtLocation(decl), decl, checker, env).schema.returns!;
     const returnTag = ts.getJSDocReturnTag(decl);
     if (returnTag && returnTag.comment) {
         returnSchema.schema.description = returnTag.comment;
@@ -586,7 +586,7 @@ const describeTypeLiteral: TsNodeDescriber<ts.TypeLiteralNode | ts.InterfaceDecl
 };
 
 const describeArrayType: TsNodeDescriber<ts.ArrayTypeNode> = (decl, checker, env, tSet) => {
-    const res: Schema<'array'>  = {
+    const res: Schema<'array'> = {
         type: 'array',
         items: describeTypeNode(decl.elementType, checker, env, tSet).schema,
     };
@@ -600,7 +600,6 @@ const describeIntersectionType: TsNodeDescriber<ts.IntersectionTypeNode> = (decl
     const schemas: Schema[] = decl.types.map((t) => {
         return describeTypeNode(t, checker, env, tSet).schema;
     });
-    // debugger;
     const res: Schema = {
         $allOf: schemas,
     };

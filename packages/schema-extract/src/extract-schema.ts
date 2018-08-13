@@ -21,6 +21,13 @@ export function* extractSchema(basePath: string, filesGlob: string) {
   }
 }
 
+export function getSchema(filePath: string, exportName: string) {
+  const program = typescript.createProgram([filePath], {});
+  const checker = program.getTypeChecker();
+  const linker = new SchemaLinker(program, checker, filePath);
+  return linker.flatten(filePath, exportName);
+}
+
 export function* extractLinkedSchema(basePath: string, filesGlob: string) {
   const files = glob.sync(filesGlob, {cwd: basePath});
   const program = typescript.createProgram(files, {});

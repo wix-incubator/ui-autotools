@@ -40,7 +40,7 @@ async function runTests(url: string, eyes: any, projectName: string) {
 
     numFailedTests = await Promise.race([
       waitForPageError(page),
-      waitForTestsCompletion(page, eyes, projectName, url)
+      waitForTestsCompletion(page, url, eyes, projectName)
     ]);
 
     await browser.close();

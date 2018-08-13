@@ -131,6 +131,7 @@ describe('schema-extract - parentheses types', () => {
                             type: 'number',
                         },
                     ],
+                    initializer: 'Math.random()>0.5 ? 5 : "gaga"'
                 },
                 specific_union: {
                     $ref: '#Specific_union',

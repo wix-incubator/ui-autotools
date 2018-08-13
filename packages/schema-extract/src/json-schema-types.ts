@@ -64,6 +64,7 @@ export interface ISchemaBase<T extends  SchemaTypes = SchemaTypes> {
     genericParams?: Schema[];
     genericArguments?: Schema[];
     default?: ITypeMap[T];
+    initializer?: string;
 }
 
 export type Schema<T extends  SchemaTypes = SchemaTypes> = ISchemaBase & IFieldsForType[T];

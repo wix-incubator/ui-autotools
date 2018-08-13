@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import { Schema } from '../../src/json-schema-types';
+import { Schema, interfaceId } from '../../src/json-schema-types';
 import {linkTest} from '../../test-kit/run-linker';
 
 describe('schema-linker - imports', () => {
@@ -27,6 +27,70 @@ describe('schema-linker - imports', () => {
         expect(res).to.eql(expected);
     });
 
+    it('should link imported interfaces', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({
+            [fileName]: `
+                import {MyInterface} from './import';
+                export interface A extends MyInterface<string> {
+                    someone: number;
+                };`,
+            ['import.ts']: `
+                export interface MyInterface<T> {
+                    something:T;
+                };`
+        }, 'A', fileName);
+
+        const expected: Schema<'object'> = {
+            $ref: interfaceId,
+            properties: {
+                something: {
+                    inheritedFrom: '#MyInterface',
+                    type: 'string'
+                },
+                someone: {
+                    type: 'number'
+                }
+            },
+            required: ['someone', 'something']
+        };
+        expect(res).to.eql(expected);
+    });
+
+    it('should handle import loops', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({
+            [fileName]: `
+                import {InterfaceA} from './import';
+                export interface InterfaceB {
+                    a: InterfaceA;
+                };`,
+            ['import.ts']: `
+                import {InterfaceB} from './index';
+                export interface InterfaceA {
+                    b:InterfaceB;
+                };`
+        }, 'InterfaceB', fileName);
+
+        const expected: Schema<'object'> = {
+            $ref: interfaceId,
+            properties: {
+                a: {
+                    $ref: interfaceId,
+                    definedAt: '#InterfaceA',
+                    properties: {
+                        b: {
+                            $ref: '/someProject/src/index#InterfaceB'
+                        }
+                    },
+                    required: ['b']
+                },
+            },
+            required: ['a']
+        };
+        expect(res).to.eql(expected);
+    });
+
     it('should link imported type from an outside package', async () => {
         const fileName = 'index.ts';
         const res = linkTest({
@@ -47,6 +111,7 @@ describe('schema-linker - imports', () => {
             properties: {
                 id: {
                     type: 'object',
+                    definedAt: '#A',
                     properties: {
                         something: {
                             type: 'string'

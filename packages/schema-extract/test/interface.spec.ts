@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import { ModuleSchema } from '../src/json-schema-types';
+import { ModuleSchema, interfaceId } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform';
 
 describe('schema-extract - interfaces', () => {
@@ -23,7 +23,7 @@ describe('schema-extract - interfaces', () => {
             $ref: 'common/module',
             definitions: {
                 MyInterface : {
-                    type: 'object',
+                    $ref: interfaceId,
                     properties: {
                         title: {
                             type: 'string',
@@ -32,20 +32,17 @@ describe('schema-extract - interfaces', () => {
                     required: ['title']
                 },
                 Extendz : {
-                    $allOf: [
-                        {
-                            $ref: '#MyInterface',
-                        }, {
-                            type: 'object',
-                            properties: {
-                                desc: {
-                                    type: 'string',
-                                },
-                            },
-                            required: ['desc']
+                    $ref: interfaceId,
+                    extends: {
+                        $ref: '#MyInterface',
+                    },
+                    properties: {
+                        desc: {
+                            type: 'string',
                         },
-                    ],
-                },
+                    },
+                    required: ['desc']
+                }
             },
             properties: {
                 param: {
@@ -78,7 +75,7 @@ describe('schema-extract - interfaces', () => {
             $ref: 'common/module',
             definitions: {
                 MyInterface : {
-                    type: 'object',
+                    $ref: interfaceId,
                     properties: {
                         a: {
                             $ref: '#MyInterface2',
@@ -87,7 +84,7 @@ describe('schema-extract - interfaces', () => {
                     required: ['a']
                 },
                 MyInterface2 : {
-                    type: 'object',
+                    $ref: interfaceId,
                     properties: {
                         b: {
                             $ref: '#MyInterface',

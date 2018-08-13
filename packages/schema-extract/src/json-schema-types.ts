@@ -8,6 +8,7 @@ export const PromiseId = 'common/promise';
 export const JSXElement = 'common/JSX';
 export const NeverId = 'common/never';
 export const UnknownId = 'common/unknown';
+export const interfaceId = 'common/interface';
 
 export interface IObjectFields {
     additionalProperties?: Schema;
@@ -63,6 +64,8 @@ export interface ISchemaBase<T extends  SchemaTypes = SchemaTypes> {
     $allOf?: Schema[];
     genericParams?: Schema[];
     genericArguments?: Schema[];
+    inheritedFrom?: string;
+    definedAt?: string;
     default?: ITypeMap[T];
     initializer?: string;
 }
@@ -84,6 +87,12 @@ export type FunctionSchema = Schema & {
     returns?: Schema
 };
 
+export type InterfaceSchema = Schema & {
+    $ref: typeof interfaceId;
+    properties?: {[name: string]: Schema};
+    extends?: Schema;
+};
+
 export type ClassSchema = Schema & {
     $ref: typeof ClassSchemaId;
     constructor?: FunctionSchema;
@@ -101,6 +110,10 @@ export function isRef(schema: Schema): schema is Schema & {$ref: string} {
     return !!schema && !!schema.$ref;
 }
 
-export function isClassSchema(schema: Schema): schema is Schema & ClassSchema {
+export function isClassSchema(schema: Schema): schema is ClassSchema {
     return !!schema && !!schema.$ref && schema.$ref === ClassSchemaId;
+}
+
+export function isInterfaceSchema(schema: Schema): schema is InterfaceSchema {
+    return !!schema && !!schema.$ref && schema.$ref === interfaceId;
 }

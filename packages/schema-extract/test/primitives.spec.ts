@@ -15,7 +15,6 @@ describe('schema-extract - primitives', () => {
         export let infered_string = "";
         export let infered_number = 0;
         export let infered_boolean = false;
-        export let infered_boolean = false;
 
         `, moduleId);
 
@@ -43,12 +42,15 @@ describe('schema-extract - primitives', () => {
                 },
                 infered_string : {
                     type: 'string',
+                    default: ''
                 },
                 infered_number: {
                     type: 'number',
+                    default: 0
                 },
                 infered_boolean: {
                     type: 'boolean',
+                    default: false
                 }
             },
             // required:["declared_string","declared_number","infered_string","infered_number","infered_boolean"]

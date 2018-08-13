@@ -1,19 +1,20 @@
 import 'typescript-support';
 import path from 'path';
 import {promisify} from 'util';
-import http from 'http';
-import url from 'url';
 import glob from 'glob';
 import chalk from 'chalk';
 import webpack from 'webpack';
 import Koa from 'koa';
 import koaWebpack from 'koa-webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import RawAssetWebpackPlugin from '@ui-autotools/utils/cjs/webpack-raw-asset-plugin';
-import {WebpackConfigurator} from '@ui-autotools/utils';
+import {
+  WebpackConfigurator,
+  RawAssetWebpackPlugin,
+  getServerUrl
+} from '@ui-autotools/utils';
 import {getMetadataAndSchemasInDirectory} from './meta';
 import {formatComponentDataForClient} from './client-data';
-const StylableWebpackPlugin = require('stylable-webpack-plugin');
+const StylableWebpackPlugin = require('@stylable/webpack-plugin');
 
 interface IProjectOptions {
   projectPath: string;
@@ -40,18 +41,6 @@ interface IGetWebpackConfigOptions {
 }
 
 const ownPath = path.resolve(__dirname, '../..');
-
-// TODO: import this function from utils.
-function getServerUrl(server: http.Server) {
-  const address = server.address();
-  return typeof address === 'string' ?
-    address :
-    url.format({
-      protocol: 'http',
-      hostname: address.address,
-      port: address.port
-    });
-}
 
 function getWebsiteWebpackConfig(
   {outputPath, production, projectOptions}: IGetWebpackConfigOptions

@@ -54,6 +54,7 @@ describe('schema-extract - classes', () => {
                         },
                         a: {
                             type: 'number',
+                            default: 0
                         },
                         setTitle: {
                             $ref: FunctionSchemaId,

@@ -67,6 +67,7 @@ export interface ISchemaBase<T extends  SchemaTypes = SchemaTypes> {
     inheritedFrom?: string;
     definedAt?: string;
     default?: ITypeMap[T];
+    initializer?: string;
 }
 
 export type Schema<T extends  SchemaTypes = SchemaTypes> = ISchemaBase & IFieldsForType[T];

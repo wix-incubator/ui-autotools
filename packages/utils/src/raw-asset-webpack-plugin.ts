@@ -1,6 +1,6 @@
 import webpack from 'webpack';
 
-export default class WebpackRawAssetPlugin {
+export class RawAssetWebpackPlugin {
   private filename: string;
   private data: string;
 

@@ -45,7 +45,7 @@ export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, mo
         } else {
             let exportSchema: Schema = {};
             let isTypeOnly: boolean = false;
-            if ( ts.isVariableDeclaration(node)) {
+            if (ts.isVariableDeclaration(node)) {
                 exportSchema = describeVariableDeclaration(node, checker, env).schema;
             } else if (ts.isExportSpecifier(node)) {
                 exportSchema = exportSpecifierDescriber(node, checker, env, undefined, exportObj).schema;
@@ -120,7 +120,7 @@ const exportSpecifierDescriber: TsNodeDescriber<ts.ExportSpecifier> = (decl, che
     };
 };
 
-const assignmentDescriber: TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWithTypeArguments > = (decl, checker, env) => {
+const assignmentDescriber: TsNodeDescriber<ts.ExportAssignment | ts.ExpressionWithTypeArguments> = (decl, checker, env) => {
     const expression: ts.Node = decl.expression;
     if (ts.isIdentifier(expression)) {
 
@@ -227,7 +227,7 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
 };
 
 const describeTypeNode: TsNodeDescriber<ts.TypeNode> = (decl, checker, env, tSet) => {
-    // hack for handling Readonly, not a good idea I guess...
+    // temporary hack for handling Readonly, we need to find a better solution but this will work for now
     if ((decl as any).typeName && (decl as any).typeName.getText() === 'Readonly') {
         decl = (decl as any).typeArguments[0];
     }

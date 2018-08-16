@@ -93,7 +93,6 @@ export class SchemaLinker {
         }
         if (entity.$allOf) {
             const res = this.handleIntersection(entity.$allOf, schema);
-            res.type = 'object';
             return res;
         }
         if (entity.$oneOf) {

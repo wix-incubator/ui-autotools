@@ -752,6 +752,15 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
         };
     }
 
+    if (typeString === 'true' || typeString === 'false') {
+        return {
+            schema: {
+                type: 'boolean',
+                enum: [typeString]
+            }
+        };
+    }
+
     // currently we support only one call signature
     const signatures = t.getCallSignatures();
     if (signatures.length) {

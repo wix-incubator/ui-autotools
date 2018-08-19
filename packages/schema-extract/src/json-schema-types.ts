@@ -89,7 +89,8 @@ export type FunctionSchema = Schema & {
 
 export type InterfaceSchema = Schema & {
     $ref: typeof interfaceId;
-    properties?: {[name: string]: Schema};
+    properties: {[name: string]: Schema};
+    required?: string[];
     extends?: Schema;
 };
 

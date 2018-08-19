@@ -46,7 +46,6 @@ describe('schema-linker - intersections', () => {
         `}, 'D', fileName);
 
         const expected: Schema<'object'> = {
-            type: 'object',
             $oneOf: [
                 {
                     type: 'object',
@@ -75,7 +74,7 @@ describe('schema-linker - intersections', () => {
         expect(res).to.eql(expected);
     });
 
-    xit('should flatten intersection types with unions', async () => {
+    it('should flatten intersection types with unions', async () => {
         const fileName = 'index.ts';
         const res = linkTest({[fileName]: `
         export type A = {
@@ -91,23 +90,95 @@ describe('schema-linker - intersections', () => {
         `}, 'D', fileName);
 
         const expected: Schema<'object'> = {
-            type: 'object',
-            properties: {
-                something: {
-                    type: 'number'
-                },
-                somethingElse: {
-                    $oneOf: [
-                        {
-                            type: 'string'
+            $oneOf: [
+                {
+                    type: 'object',
+                    properties: {
+                        something: {
+                            type: 'number'
                         },
-                        {
+                        somethingElse: {
+                            type: 'string'
+                        }
+                    },
+                    required: ['somethingElse', 'something']
+                },
+                {
+                    type: 'object',
+                    properties: {
+                        something: {
+                            type: 'number'
+                        },
+                        somethingElse: {
                             type: 'number'
                         }
+                    },
+                    required: ['somethingElse', 'something']
+                },
+            ]
+        };
+        expect(res).to.eql(expected);
+    });
+    it('should flatten intersection types with unions 2', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
+        export type A = {
+            something:number;
+        };
+        export type B = {
+            somethingElse:string;
+        };
+        export type C = {
+            somethingElse:number;
+        };
+        export type D = (A | B)  &  ( A | C );
+        `}, 'D', fileName);
 
-                    ]
-                }
-            }
+        const expected: Schema<'object'> = {
+            $oneOf: [
+                {
+                    type: 'object',
+                    properties: {
+                        something: {
+                            type: 'number'
+                        },
+                    },
+                    required: ['something']
+                },
+                {
+                    type: 'object',
+                    properties: {
+                        something: {
+                            type: 'number'
+                        },
+                        somethingElse: {
+                            type: 'number'
+                        }
+                    },
+                    required: ['somethingElse', 'something']
+                },
+                {
+                    type: 'object',
+                    properties: {
+                        something: {
+                            type: 'number'
+                        },
+                        somethingElse: {
+                            type: 'string'
+                        }
+                    },
+                    required: ['something', 'somethingElse']
+                },
+                {
+                    type: 'object',
+                    properties: {
+                        somethingElse: {
+                            $ref: NeverId
+                        }
+                    },
+                    required: ['somethingElse']
+                },
+            ]
         };
         expect(res).to.eql(expected);
     });
@@ -298,7 +369,7 @@ describe('schema-linker - intersections', () => {
         };
         expect(res).to.eql(expected);
     });
-    xit('should properly handle an intersection between a type and interface', async () => {
+    it('should properly handle an intersection between a type and interface', async () => {
         const fileName = 'index.ts';
         const res = linkTest({[fileName]: `
         export interface A {
@@ -316,7 +387,7 @@ describe('schema-linker - intersections', () => {
             $ref: interfaceId,
             properties: {
                 something: {
-                    definedAt: '#A',
+                    inheritedFrom: '#A',
                     type: 'string'
                 },
                 someone: {

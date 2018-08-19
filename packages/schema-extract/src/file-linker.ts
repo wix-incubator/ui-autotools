@@ -147,10 +147,7 @@ export class SchemaLinker {
                 const linkedOption = this.link(option, schema, paramsMap);
                 const newRes: Schema = {$oneOf: []};
                 if (Object.keys(res).length === 0) {
-                    const [_, ...rest] = options;
-                    if (_) {
-                        console.log(1);
-                    }
+                    const rest = options.slice(1);
                     for (const x of linkedOption.$oneOf!) {
                         const bla = this.handleIntersection([x, ...rest], schema, paramsMap);
                         if (bla.$oneOf) {

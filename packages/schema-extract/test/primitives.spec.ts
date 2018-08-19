@@ -89,12 +89,6 @@ describe('schema-extract - primitives', () => {
     });
 
     it('should support all primitive types', async () => {
-        // const fileName = 'index.ts';
-        // const res = linkTest({[fileName]: `
-        //     export interface InterfaceA {
-        //     foobar?: 5 | 'hello' | false | true | undefined | null | any;
-        //     }
-        // `}, 'InterfaceA', fileName);
         const moduleId = 'primitives';
         const res = transformTest(`
              export interface InterfaceA {
@@ -105,7 +99,6 @@ describe('schema-extract - primitives', () => {
             $schema: 'http://json-schema.org/draft-06/schema#',
             $id: '/src/' + moduleId,
             $ref: 'common/module',
-            // $ref: interfaceId,
             definitions: {
                 InterfaceA: {
                     $ref: interfaceId,

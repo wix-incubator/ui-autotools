@@ -1,7 +1,7 @@
 import * as ts from 'typescript';
 import {union} from 'lodash';
 import { transform } from './file-transformer';
-import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId } from './json-schema-types';
+import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isNeverSchema } from './json-schema-types';
 
 export class SchemaLinker {
     private checker: ts.TypeChecker;
@@ -165,7 +165,12 @@ export class SchemaLinker {
                     return newRes;
                 } else {
                     for (const t of linkedOption.$oneOf!) {
-                        newRes.$oneOf!.push(this.handleIntersection([res, t], schema, paramsMap));
+                        const r = this.handleIntersection([res, t], schema, paramsMap);
+                        if (isNeverSchema(r)) {
+                            continue;
+                        } else {
+                            newRes.$oneOf!.push(r);
+                        }
                     }
                     if (res.$oneOf) {
                         res.$oneOf = union(res.$oneOf, newRes.$oneOf);
@@ -236,7 +241,17 @@ export class SchemaLinker {
                 if (!res.properties.hasOwnProperty(prop)) {
                     res.properties[prop] = this.link(properties[prop], schema, paramsMap);
                 } else {
-                    res.properties[prop] = this.handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
+                    const r = this.handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
+                    if (isNeverSchema(r)) {
+                        res.$ref = NeverId;
+                        delete res.properties;
+                        delete res.required;
+                        delete res.type;
+                        return;
+                    } else {
+                        res.properties[prop] = r;
+                    }
+                    // res.properties[prop] = this.handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
                 }
             }
         }

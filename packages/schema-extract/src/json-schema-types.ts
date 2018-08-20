@@ -118,3 +118,7 @@ export function isClassSchema(schema: Schema): schema is ClassSchema {
 export function isInterfaceSchema(schema: Schema): schema is InterfaceSchema {
     return !!schema && !!schema.$ref && schema.$ref === interfaceId;
 }
+
+export function isNeverSchema(schema: Schema): boolean {
+    return !!schema && !!schema.$ref && schema.$ref === NeverId;
+}

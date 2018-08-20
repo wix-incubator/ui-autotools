@@ -168,16 +168,7 @@ describe('schema-linker - intersections', () => {
                         }
                     },
                     required: ['somethingElse', 'something']
-                },
-                {
-                    type: 'object',
-                    properties: {
-                        somethingElse: {
-                            $ref: NeverId
-                        }
-                    },
-                    required: ['somethingElse']
-                },
+                }
             ]
         };
         expect(res).to.eql(expected);
@@ -359,13 +350,7 @@ describe('schema-linker - intersections', () => {
         `}, 'c', fileName);
 
         const expected: Schema<'object'> = {
-            type: 'object',
-            properties: {
-                something: {
-                    $ref: NeverId
-                }
-            },
-            required: ['something']
+            $ref: NeverId
         };
         expect(res).to.eql(expected);
     });

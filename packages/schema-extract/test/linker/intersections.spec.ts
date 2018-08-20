@@ -101,7 +101,7 @@ describe('schema-linker - intersections', () => {
                             type: 'string'
                         }
                     },
-                    required: ['somethingElse', 'something']
+                    required: ['something', 'somethingElse']
                 },
                 {
                     type: 'object',
@@ -113,7 +113,7 @@ describe('schema-linker - intersections', () => {
                             type: 'number'
                         }
                     },
-                    required: ['somethingElse', 'something']
+                    required: ['something', 'somethingElse']
                 },
             ]
         };
@@ -155,7 +155,7 @@ describe('schema-linker - intersections', () => {
                             type: 'number'
                         }
                     },
-                    required: ['somethingElse', 'something']
+                    required: ['something', 'somethingElse']
                 },
                 {
                     type: 'object',
@@ -167,7 +167,7 @@ describe('schema-linker - intersections', () => {
                             type: 'string'
                         }
                     },
-                    required: ['something', 'somethingElse']
+                    required: ['somethingElse', 'something']
                 },
                 {
                     type: 'object',

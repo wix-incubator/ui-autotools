@@ -37,6 +37,9 @@ export class SchemaLinker {
     }
 
     private getRefEntity(ref: string, schema: ModuleSchema, paramsMap?: Map<string, Schema>): {refEntity: Schema | null, refEntityType: string} {
+        if (!ref) {
+            return {refEntity: null, refEntityType: ref};
+        }
         const poundIndex = ref.indexOf('#');
         const cleanRef = ref.slice(poundIndex + 1);
         if (!schema.definitions) {
@@ -148,25 +151,24 @@ export class SchemaLinker {
                 const newRes: Schema = {$oneOf: []};
                 if (Object.keys(res).length === 0) {
                     const rest = options.slice(1);
-                    for (const x of linkedOption.$oneOf!) {
-                        const bla = this.handleIntersection([x, ...rest], schema, paramsMap);
-                        if (bla.$oneOf) {
-                            newRes.$oneOf = union(newRes.$oneOf, bla.$oneOf);
+                    for (const t of linkedOption.$oneOf!) {
+                        const r = this.handleIntersection([t, ...rest], schema, paramsMap);
+                        if (r.$oneOf) {
+                            newRes.$oneOf = union(newRes.$oneOf, r.$oneOf);
                         } else {
-                            newRes.$oneOf!.push(bla);
+                            newRes.$oneOf!.push(r);
                         }
                     }
                     return newRes;
-                } else if (res.$oneOf) {
-                    for (const x of linkedOption.$oneOf!) {
-                        newRes.$oneOf!.push(this.handleIntersection([res, x], schema, paramsMap));
-                    }
-                    res.$oneOf = union(res.$oneOf, newRes.$oneOf);
                 } else {
-                    for (const x of linkedOption.$oneOf!) {
-                        newRes.$oneOf!.push(this.handleIntersection([x, res], schema, paramsMap));
+                    for (const t of linkedOption.$oneOf!) {
+                        newRes.$oneOf!.push(this.handleIntersection([res, t], schema, paramsMap));
                     }
-                    res = newRes;
+                    if (res.$oneOf) {
+                        res.$oneOf = union(res.$oneOf, newRes.$oneOf);
+                    } else {
+                        res = newRes;
+                    }
                 }
             } else {
                 if (!res.type && option.type) {
@@ -175,7 +177,9 @@ export class SchemaLinker {
                         res.enum = option.enum;
                     }
                 } else {
-                    if (option.type === res.type) {
+                    if (Object.keys(res).length === 0) {
+                        res = option;
+                    } else if (option.type && option.type === res.type) {
                         if (option.enum) {
                             if (!res.enum) {
                                 res.enum = option.enum;

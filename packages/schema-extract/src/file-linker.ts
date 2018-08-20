@@ -64,6 +64,9 @@ export class SchemaLinker {
         if (refEntity && isRef(refEntity)) {
             return this.getRefEntity(refEntity.$ref, schema, paramsMap);
         }
+        if (ref.slice(0, poundIndex) === 'react') {
+            return {refEntity: this.handleReact(refEntity!, cleanRef), refEntityType: cleanRef};
+        }
         return refEntity ? {refEntity, refEntityType: cleanRef} : {refEntity: null, refEntityType: cleanRef};
     }
 
@@ -329,7 +332,7 @@ export class SchemaLinker {
         const properties = entity[prop];
         for (const p in properties) {
             if (properties.hasOwnProperty(p)) {
-                res[p] = Object.assign({}, properties[p]);
+                res[p] = this.link(properties[p], schema, paramsMap);
             }
         }
         for (const p in refProperties) {
@@ -383,5 +386,21 @@ export class SchemaLinker {
         const res: typeof entity = {};
         this.mergeProperties(entity, res, schema);
         return res;
+    }
+
+    private handleReact(entity: Schema, ref: string): Schema {
+        const newEntity: any = Object.assign({}, entity);
+        if (ref === 'Component') {
+            newEntity.properties = {props: newEntity.properties.props, state: newEntity.properties.state};
+            const props = newEntity.properties.props;
+            if (props.$allOf) {
+                if (props.$allOf.length === 2) {
+                    newEntity.properties.props = props.$allOf[1];
+                } else {
+                    newEntity.properties.props.$allOf = props.$allOf.slice(1);
+                }
+            }
+        }
+        return newEntity;
     }
 }

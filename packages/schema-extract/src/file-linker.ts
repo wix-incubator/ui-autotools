@@ -413,7 +413,8 @@ export class SchemaLinker {
                     newEntity.properties.props.$allOf = props.$allOf.slice(1);
                 }
             }
+            return newEntity;
         }
-        return newEntity;
+        return {$ref: 'react#' + ref};
     }
 }

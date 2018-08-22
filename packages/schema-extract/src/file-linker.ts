@@ -67,7 +67,11 @@ export class SchemaLinker {
         if (ref.slice(0, poundIndex) === 'react') {
             return {refEntity: this.handleReact(refEntity!, cleanRef), refEntityType: cleanRef};
         }
-        return refEntity ? {refEntity, refEntityType: cleanRef} : {refEntity: null, refEntityType: cleanRef};
+        if (refEntity) {
+            refEntity.definedAt = '#' + cleanRef;
+            return {refEntity, refEntityType: cleanRef};
+        }
+        return {refEntity: null, refEntityType: cleanRef};
     }
 
     private getSchemaFromImport(path: string, ref: string): ModuleSchema | null {
@@ -135,7 +139,6 @@ export class SchemaLinker {
             });
             return this.linkRefObject(refEntity, pMap, schema);
         }
-        refEntity.definedAt = '#' + refEntityType;
         return refEntity;
     }
 

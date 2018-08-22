@@ -360,8 +360,6 @@ export class SchemaLinker {
                     } else {
                         res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, property);
                     }
-                } else {
-                    res[p].inheritedFrom = `#${extendedEntity}`;
                 }
             }
         }

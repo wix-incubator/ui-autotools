@@ -1,7 +1,7 @@
 import * as ts from 'typescript';
 import {union} from 'lodash';
 import { transform } from './file-transformer';
-import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isNeverSchema } from './json-schema-types';
+import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isNeverSchema, isFunctionSchema, FunctionSchema } from './json-schema-types';
 
 export class SchemaLinker {
     private checker: ts.TypeChecker;
@@ -27,7 +27,8 @@ export class SchemaLinker {
         let entity;
         if (schema.definitions) {
             entity = schema.definitions[entityName];
-        } else if (schema.properties) {
+        }
+        if (!entity && schema.properties) {
             entity = schema.properties[entityName];
         }
         if (!entity) {
@@ -111,6 +112,9 @@ export class SchemaLinker {
         }
         if (isInterfaceSchema(entity)) {
             return this.linkInterface(entity, schema);
+        }
+        if (isFunctionSchema(entity)) {
+            return this.linkFunction(entity, schema);
         }
         if (isRef(entity)) {
             return this.handleRef(entity, schema, paramsMap);
@@ -401,6 +405,18 @@ export class SchemaLinker {
     private handleObject(entity: Schema & IObjectFields, schema: ModuleSchema): Schema {
         const res: typeof entity = {};
         this.mergeProperties(entity, res, schema);
+        return res;
+    }
+
+    private linkFunction(entity: FunctionSchema, schema: ModuleSchema): Schema {
+        const res = Object.assign({}, entity);
+        const args = [];
+        for (const arg of entity.arguments) {
+            const newArg = this.link(arg, schema);
+            newArg.name = arg.name;
+            args.push(newArg);
+        }
+        res.arguments = args;
         return res;
     }
 

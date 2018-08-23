@@ -119,6 +119,10 @@ export function isInterfaceSchema(schema: Schema): schema is InterfaceSchema {
     return !!schema && !!schema.$ref && schema.$ref === interfaceId;
 }
 
+export function isFunctionSchema(schema: Schema): schema is FunctionSchema {
+    return !!schema && !!schema.$ref && schema.$ref === FunctionSchemaId;
+}
+
 export function isNeverSchema(schema: Schema): boolean {
     return !!schema && !!schema.$ref && schema.$ref === NeverId;
 }

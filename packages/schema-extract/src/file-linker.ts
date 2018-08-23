@@ -1,7 +1,7 @@
 import * as ts from 'typescript';
 import {union} from 'lodash';
 import { transform } from './file-transformer';
-import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isNeverSchema, isFunctionSchema, FunctionSchema } from './json-schema-types';
+import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isNeverSchema, FunctionSchemaId, isFunctionSchema, FunctionSchema } from './json-schema-types';
 
 export class SchemaLinker {
     private checker: ts.TypeChecker;
@@ -62,11 +62,11 @@ export class SchemaLinker {
                 refEntity = this.importSchema.definitions![cleanRef];
             }
         }
-        if (refEntity && isRef(refEntity)) {
-            return this.getRefEntity(refEntity.$ref, schema, paramsMap);
-        }
         if (ref.slice(0, poundIndex) === 'react') {
             return {refEntity: this.handleReact(refEntity!, cleanRef), refEntityType: cleanRef};
+        }
+        if (refEntity && isRef(refEntity)) {
+            return this.getRefEntity(refEntity.$ref, schema, paramsMap);
         }
         if (refEntity) {
             refEntity.definedAt = '#' + cleanRef;
@@ -114,7 +114,7 @@ export class SchemaLinker {
             return this.linkInterface(entity, schema);
         }
         if (isFunctionSchema(entity)) {
-            return this.linkFunction(entity, schema);
+            return this.linkFunction(entity, schema, paramsMap);
         }
         if (isRef(entity)) {
             return this.handleRef(entity, schema, paramsMap);
@@ -136,12 +136,15 @@ export class SchemaLinker {
         if (!refEntity) {
             return entity;
         }
-        if (refEntity.genericParams && entity.genericArguments && isSchemaOfType('object', refEntity)) {
+        if (refEntity.genericParams && entity.genericArguments)  {
             const pMap = new Map();
             refEntity.genericParams!.forEach((param, index) => {
-                pMap.set(`#${refEntityType}!${param.name}`, entity.genericArguments![index]);
+                pMap.set(`#${refEntityType}!${param.name}`, this.link(entity.genericArguments![index], schema));
             });
-            return this.linkRefObject(refEntity, pMap, schema);
+            if (isSchemaOfType('object', refEntity)) {
+                return this.linkRefObject(refEntity, pMap, schema);
+            }
+            return this.link(refEntity, schema, pMap);
         }
         return refEntity;
     }
@@ -408,13 +411,26 @@ export class SchemaLinker {
         return res;
     }
 
-    private linkFunction(entity: FunctionSchema, schema: ModuleSchema): Schema {
+    private linkFunction(entity: FunctionSchema, schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
         const res = Object.assign({}, entity);
         const args = [];
         for (const arg of entity.arguments) {
-            const newArg = this.link(arg, schema);
+            let newArg;
+            if (arg.$ref && paramsMap) {
+                newArg = Object.assign({}, paramsMap.get(arg.$ref));
+            }
+            if (!newArg) {
+                newArg = this.link(arg, schema, paramsMap);
+            }
             newArg.name = arg.name;
             args.push(newArg);
+        }
+        if (res.genericParams) {
+            delete res.genericParams;
+        }
+        if (res.returns && isRef(res.returns)) {
+            const ret = this.handleRef(res.returns, schema, paramsMap);
+            res.returns = ret ? {type: ret.type} : res.returns;
         }
         res.arguments = args;
         return res;
@@ -433,6 +449,41 @@ export class SchemaLinker {
                 }
             }
             return newEntity;
+        }
+        if (ref === 'SFC') {
+            // $ref: 'common/function',
+            //         arguments: [
+            //             {
+            //                 type: 'string',
+            //                 name: 'str',
+            //             },
+            //         ],
+            //         requiredArguments: ['str'],
+            //         returns: {
+            //             type: 'string',
+            //         },
+            //         initializer: functionInitializer
+            // debugger;
+            const res = {
+                $ref: FunctionSchemaId,
+                arguments: [{
+                    name: 'props',
+                    type: {
+                        $ref: entity.genericArguments![0]
+                    }
+                }],
+                returns: {
+                    $ref: 'bla'
+                },
+                genericParams: entity.genericParams
+            };
+            debugger;
+            // let properties = {};
+            // if (entity.genericArguments) {
+            //     properties = {props: entity.genericArguments[0]};
+            // }
+            return res;
+            // return {type: 'object', genericParams: entity.genericParams, properties};
         }
         return {$ref: 'react#' + ref};
     }

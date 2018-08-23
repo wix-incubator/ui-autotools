@@ -122,6 +122,7 @@ describe('schema-linker - imports', () => {
             },
             required: ['id']
         };
+        debugger;
         expect(res).to.eql(expected);
     });
 });

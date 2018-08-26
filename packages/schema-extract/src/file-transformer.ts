@@ -756,7 +756,7 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
         return {
             schema: {
                 type: 'boolean',
-                enum: [typeString]
+                enum: [typeString === 'true']
             }
         };
     }

@@ -383,4 +383,33 @@ describe('schema-linker - intersections', () => {
         };
         expect(res).to.eql(expected);
     });
+    xit('should properly handle an intersection between a type and interface', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
+        export interface A {
+            something:string
+        }
+        export interface B extends A {
+        }
+        export type b = {
+            someone: number
+        }
+        export type c = B & b;
+        `}, 'c', fileName);
+
+        const expected: Schema<'object'> = {
+            $ref: interfaceId,
+            properties: {
+                something: {
+                    definedAt: '#A',
+                    type: 'string'
+                },
+                someone: {
+                    type: 'number'
+                }
+            },
+            required: ['something', 'someone']
+        };
+        expect(res).to.eql(expected);
+    });
 });

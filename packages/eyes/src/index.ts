@@ -12,9 +12,9 @@ function getWebpackConfig(entry: string | string[], webpackConfigPath: string) {
   return WebpackConfigurator
     .load(webpackConfigPath)
     .setEntry('meta', entry)
-    .addEntry('meta', path.join(packagePath, 'src/browser/run'))
+    .addEntry('meta', path.join(packagePath, 'esm/browser/run'))
     .addHtml({
-      template: path.join(packagePath, 'src/browser/index.html'),
+      template: path.join(packagePath, '/templates', 'index.template'),
       title: 'Eyes'
     })
     .suppressReactDevtoolsSuggestion()
@@ -40,7 +40,7 @@ async function runTests(url: string, eyes: any, projectName: string) {
 
     numFailedTests = await Promise.race([
       waitForPageError(page),
-      waitForTestsCompletion(page, eyes, projectName, url)
+      waitForTestsCompletion(page, url, eyes, projectName)
     ]);
 
     await browser.close();

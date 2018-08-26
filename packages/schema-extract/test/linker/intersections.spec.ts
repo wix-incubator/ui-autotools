@@ -46,7 +46,6 @@ describe('schema-linker - intersections', () => {
         `}, 'D', fileName);
 
         const expected: Schema<'object'> = {
-            type: 'object',
             $oneOf: [
                 {
                     type: 'object',

@@ -96,8 +96,7 @@ export class SchemaLinker {
             return this.handleRef(entity, schema);
         }
         if (entity.$allOf) {
-            const res = this.handleIntersection(entity.$allOf, schema, paramsMap);
-            res.type = 'object';
+            const res = this.handleIntersection(entity.$allOf, schema);
             return res;
         }
         if (entity.$oneOf) {
@@ -172,7 +171,7 @@ export class SchemaLinker {
     }
 
     private handleUnion(types: Schema[], schema: ModuleSchema) {
-        const res: Schema = {type: 'object', $oneOf: []};
+        const res: Schema = { $oneOf: []};
         for (const type of types) {
             res.$oneOf!.push(this.link(type, schema));
         }

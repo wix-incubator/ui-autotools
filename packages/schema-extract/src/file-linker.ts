@@ -1,7 +1,7 @@
 import * as ts from 'typescript';
 import {union} from 'lodash';
 import { transform } from './file-transformer';
-import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isNeverSchema, FunctionSchemaId, isFunctionSchema, FunctionSchema } from './json-schema-types';
+import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isNeverSchema, FunctionSchemaId, isFunctionSchema, FunctionSchema, NullSchemaId } from './json-schema-types';
 
 export class SchemaLinker {
     private checker: ts.TypeChecker;
@@ -418,15 +418,15 @@ export class SchemaLinker {
             let newArg;
             if (arg.$ref && paramsMap) {
                 newArg = Object.assign({}, paramsMap.get(arg.$ref));
+                if (res.genericParams) {
+                    delete res.genericParams;
+                }
             }
             if (!newArg) {
                 newArg = this.link(arg, schema, paramsMap);
             }
             newArg.name = arg.name;
             args.push(newArg);
-        }
-        if (res.genericParams) {
-            delete res.genericParams;
         }
         if (res.returns && isRef(res.returns)) {
             const ret = this.handleRef(res.returns, schema, paramsMap);
@@ -451,39 +451,26 @@ export class SchemaLinker {
             return newEntity;
         }
         if (ref === 'SFC') {
-            // $ref: 'common/function',
-            //         arguments: [
-            //             {
-            //                 type: 'string',
-            //                 name: 'str',
-            //             },
-            //         ],
-            //         requiredArguments: ['str'],
-            //         returns: {
-            //             type: 'string',
-            //         },
-            //         initializer: functionInitializer
-            // debugger;
             const res = {
                 $ref: FunctionSchemaId,
                 arguments: [{
                     name: 'props',
-                    type: {
-                        $ref: entity.genericArguments![0]
-                    }
+                    $ref: entity.genericArguments![0].$ref
                 }],
+                requiredArguments: ['props'],
                 returns: {
-                    $ref: 'bla'
+                    $oneOf: [
+                        {
+                            $ref: 'react#ReactElement'
+                        },
+                        {
+                            $ref: NullSchemaId
+                        }
+                    ]
                 },
                 genericParams: entity.genericParams
             };
-            debugger;
-            // let properties = {};
-            // if (entity.genericArguments) {
-            //     properties = {props: entity.genericArguments[0]};
-            // }
             return res;
-            // return {type: 'object', genericParams: entity.genericParams, properties};
         }
         return {$ref: 'react#' + ref};
     }

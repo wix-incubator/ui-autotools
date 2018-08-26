@@ -48,8 +48,8 @@ export class SchemaLinker {
         }
         let refEntity = (paramsMap && paramsMap.has(ref)) ?
                         paramsMap.get(ref) :
-                        schema.definitions![cleanRef] ?
-                        schema.definitions![cleanRef] :
+                        schema.definitions[cleanRef] ?
+                        schema.definitions[cleanRef] :
                         this.importSchema && this.importSchema.definitions ?
                         this.importSchema.definitions[cleanRef] :
                         null;
@@ -59,7 +59,7 @@ export class SchemaLinker {
                 this.importSchema = importSchema;
             }
             if (this.importSchema && this.importSchema.definitions) {
-                refEntity = this.importSchema.definitions![cleanRef];
+                refEntity = this.importSchema.definitions[cleanRef];
             }
         }
         if (ref.slice(0, poundIndex) === 'react') {

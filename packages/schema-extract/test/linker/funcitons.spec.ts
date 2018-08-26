@@ -59,7 +59,6 @@ describe('schema-linker - functions', () => {
                 type: 'object'
             }
         };
-        debugger;
         expect(res).to.eql(expected);
     });
 

@@ -34,11 +34,12 @@ export class SchemaLinker {
         return this.link(entity, schema);
     }
 
-    private getRefEntity(ref: string, schema: ModuleSchema, paramsMap?: Map<string, Schema>) {
+    private getRefEntity(ref: string, schema: ModuleSchema, paramsMap?: Map<string, Schema>): {refEntity: Schema | null, refEntityType: string} {
+        const cleanRef = ref.slice(ref.indexOf('#') + 1);
         if (!schema.definitions) {
-            return null;
+            return {refEntity: null, refEntityType: cleanRef};
         }
-        let refEntity = (paramsMap && paramsMap.has(ref)) ? paramsMap.get(ref) : schema.definitions![ref.replace('#', '')];
+        let refEntity = (paramsMap && paramsMap.has(ref)) ? paramsMap.get(ref) : schema.definitions![cleanRef];
         if (!refEntity) {
             const poundIndex = ref.indexOf('#');
             const entityType = ref.slice(poundIndex + 1);
@@ -47,7 +48,10 @@ export class SchemaLinker {
                 refEntity = importSchema.definitions![entityType];
             }
         }
-        return refEntity ? refEntity : null;
+        if (refEntity && isRef(refEntity)) {
+            return this.getRefEntity(refEntity.$ref, schema, paramsMap);
+        }
+        return refEntity ? {refEntity, refEntityType: cleanRef} : {refEntity: null, refEntityType: cleanRef};
     }
 
     private getSchemaFromImport(path: string, ref: string): ModuleSchema | null {
@@ -78,7 +82,7 @@ export class SchemaLinker {
         return transform(this.checker, importSourceFile , path + ref, path);
     }
 
-    private link(entity: Schema, schema: ModuleSchema): Schema {
+    private link(entity: Schema, schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
         if (!entity) {
             return {$ref: UnknownId};
         }
@@ -105,20 +109,18 @@ export class SchemaLinker {
     }
 
     private handleRef(entity: Schema & {$ref: string}, schema: ModuleSchema, paramsMap?: Map<string, Schema>) {
-        const ref = entity.$ref;
-        const entityType = ref.slice(ref.indexOf('#') + 1);
-        const refEntity = this.getRefEntity(ref, schema, paramsMap);
+        const {refEntity, refEntityType} = this.getRefEntity(entity.$ref, schema, paramsMap);
         if (!refEntity) {
             return entity;
         }
         if (refEntity.genericParams && entity.genericArguments && isSchemaOfType('object', refEntity)) {
             const pMap = new Map();
             refEntity.genericParams!.forEach((param, index) => {
-                pMap.set(`#${entityType}!${param.name}`, entity.genericArguments![index]);
+                pMap.set(`#${refEntityType}!${param.name}`, entity.genericArguments![index]);
             });
             return this.linkRefObject(refEntity, pMap, schema);
         }
-        refEntity.definedAt = '#' + entityType;
+        refEntity.definedAt = '#' + refEntityType;
         return refEntity;
     }
 
@@ -209,9 +211,7 @@ export class SchemaLinker {
         const res = this.handleObject(entity, schema) as InterfaceSchema;
         res.$ref = interfaceId;
         if (entity.extends) {
-            const ref = entity.extends.$ref!;
-            const extendedEntity = ref.slice(ref.indexOf('#') + 1);
-            const refEntity = this.getRefEntity(ref, schema);
+            const {refEntity, refEntityType} = this.getRefEntity(entity.extends.$ref!, schema);
             if (!refEntity) {
                 return entity;
             }
@@ -220,14 +220,14 @@ export class SchemaLinker {
             if (refEntity.genericParams) {
                 pMap = new Map();
                 refEntity.genericParams.forEach((param, index) => {
-                    pMap!.set(`#${extendedEntity}!${param.name}`, entity.genericArguments![index]);
+                    pMap!.set(`#${refEntityType}!${param.name}`, entity.genericArguments![index]);
                 });
                 refInterface = this.linkInterface(refEntity as InterfaceSchema, schema);
                 if (refInterface.properties) {
                     const properties = refInterface.properties;
                     for (const prop in properties) {
                         if (properties.hasOwnProperty(prop)) {
-                            const tempInheritedFrom = properties[prop].inheritedFrom ? properties[prop].inheritedFrom : '#' + extendedEntity;
+                            const tempInheritedFrom = properties[prop].inheritedFrom ? properties[prop].inheritedFrom : '#' + refEntityType;
                             properties[prop] = pMap.has(properties[prop].$ref!) ? pMap.get(properties[prop].$ref!)! : properties[prop];
                             properties[prop].inheritedFrom = tempInheritedFrom;
                         }
@@ -238,7 +238,7 @@ export class SchemaLinker {
                 if (refInterface.properties) {
                     for (const p in refInterface.properties) {
                         if (refInterface.properties.hasOwnProperty(p) && !refInterface.properties[p].inheritedFrom) {
-                            refInterface.properties[p].inheritedFrom = '#' + extendedEntity;
+                            refInterface.properties[p].inheritedFrom = '#' + refEntityType;
                         }
                     }
                 }
@@ -252,8 +252,7 @@ export class SchemaLinker {
         if (!schema.definitions || !entity.extends) {
             return entity;
         }
-        const extendedEntity = entity.extends.$ref!.replace('#', '');
-        const refEntity = this.getRefEntity(entity.extends.$ref!, schema) as ClassSchema;
+        const {refEntity, refEntityType} = this.getRefEntity(entity.extends.$ref!, schema);
         if (!refEntity) {
             return entity;
         }
@@ -266,20 +265,20 @@ export class SchemaLinker {
         if (entity.hasOwnProperty('constructor')) {
             res.constructor = Object.assign({}, entity.constructor);
         } else if (refEntity.hasOwnProperty('constructor')) {
-            res.constructor = Object.assign({}, refEntity.constructor);
+            res.constructor = Object.assign({}, (refEntity as ClassSchema).constructor);
         }
-        res.properties = this.extractClassData(entity, refEntity, extendedEntity, 'properties');
-        res.staticProperties = this.extractClassData(entity, refEntity, extendedEntity, 'staticProperties');
+        res.properties = this.extractClassData(entity, (refEntity as ClassSchema), refEntityType, 'properties', schema);
+        res.staticProperties = this.extractClassData(entity, (refEntity as ClassSchema), refEntityType, 'staticProperties', schema);
         if (entity.genericParams) {
             res.genericParams = entity.genericParams;
         }
         return res;
     }
 
-    private extractClassData(entity: ClassSchema, refEntity: ClassSchema, extendedEntity: string, prop: 'properties' | 'staticProperties'): {[name: string]: Schema} {
+    private extractClassData(entity: ClassSchema, refEntity: ClassSchema, extendedEntity: string, prop: 'properties' | 'staticProperties', schema: ModuleSchema): {[name: string]: Schema} {
         const res: {[name: string]: Schema & {inheritedFrom?: string}} = {};
         const paramsMap = new Map();
-        if (refEntity.genericParams) {
+        if (refEntity.genericParams && entity.extends!.genericArguments) {
             refEntity.genericParams.forEach((param, index) => {
                 paramsMap.set(`#${extendedEntity}!${param.name}`, entity.extends!.genericArguments![index]);
             });
@@ -294,12 +293,12 @@ export class SchemaLinker {
         for (const p in refProperties) {
             if (refProperties.hasOwnProperty(p)) {
                 if (!properties.hasOwnProperty(p)) {
-                    const property = refProperties[p];
+                    const property = this.link(refProperties[p], schema, paramsMap);
                     if (isRef(property)) {
                         const refType = property.$ref.startsWith(`#${extendedEntity}`) ? property.$ref : `#${extendedEntity}!${property.$ref.replace('#', '')}`;
                         res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, paramsMap.get(refType));
                     } else {
-                        res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, refProperties[p]);
+                        res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, property);
                     }
                 } else {
                     res[p].inheritedFrom = `#${extendedEntity}`;

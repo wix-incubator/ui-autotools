@@ -21,24 +21,30 @@ export function* extractSchema(basePath: string, filesGlob: string) {
   }
 }
 
-export function* extractLinkedSchema(basePath: string, filesGlob: string, linked = false) {
+export function getSchema(filePath: string, exportName: string) {
+  const program = typescript.createProgram([filePath], {});
+  const checker = program.getTypeChecker();
+  const linker = new SchemaLinker(program, checker, filePath);
+  return linker.flatten(filePath, exportName);
+}
+
+export function* extractLinkedSchema(basePath: string, filesGlob: string) {
   const files = glob.sync(filesGlob, {cwd: basePath});
-  const host = createHost(new LocalFileSystem(basePath));
-  const program = typescript.createProgram(files, {}, host);
+  const program = typescript.createProgram(files, {});
   const checker = program.getTypeChecker();
   for (const file of files) {
-    let linkedSchema;
+    const linkedSchema: any = {};
+    const linker = new SchemaLinker(program, checker, path.join(basePath, file));
     const source = program.getSourceFile(file);
     const schema = transform(checker, source!, file, '');
-    if (linked && schema.definitions) {
-      const linkedSchemas = [];
+    if (schema.definitions) {
+      linkedSchema.properties = schema.properties;
+      linkedSchema.definitions = schema.definitions;
       for (const definition in schema.definitions ) {
         if (schema.definitions.hasOwnProperty(definition)) {
-          const linker = new SchemaLinker(program, checker, path.join(basePath, file));
-          linkedSchemas.push(JSON.stringify(linker.flatten(file, definition), null, 4));
+          linkedSchema.definitions[definition] = linker.flatten(file, definition);
         }
       }
-      linkedSchema = linkedSchemas.join('\n\n');
     }
     yield {
       file: path.join(basePath, file),

@@ -62,17 +62,17 @@ export class SchemaLinker {
                 refEntity = this.importSchema.definitions[cleanRef];
             }
         }
-        if (ref.slice(0, poundIndex) === 'react') {
-            return {refEntity: this.handleReact(refEntity!, cleanRef), refEntityType: cleanRef};
+        if (!refEntity) {
+            return {refEntity: null, refEntityType: cleanRef};
         }
-        if (refEntity && isRef(refEntity)) {
+        if (ref.slice(0, poundIndex) === 'react') {
+            return {refEntity: this.handleReact(refEntity, cleanRef), refEntityType: cleanRef};
+        }
+        if (isRef(refEntity)) {
             return this.getRefEntity(refEntity.$ref, schema, paramsMap);
         }
-        if (refEntity) {
-            refEntity.definedAt = '#' + cleanRef;
-            return {refEntity, refEntityType: cleanRef};
-        }
-        return {refEntity: null, refEntityType: cleanRef};
+        refEntity.definedAt = '#' + cleanRef;
+        return {refEntity, refEntityType: cleanRef};
     }
 
     private getSchemaFromImport(path: string, ref: string): ModuleSchema | null {
@@ -253,6 +253,7 @@ export class SchemaLinker {
                 } else {
                     const r = this.handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
                     if (isNeverSchema(r)) {
+                        // Maybe there is a better way than this
                         res.$ref = NeverId;
                         delete res.properties;
                         delete res.required;
@@ -261,7 +262,6 @@ export class SchemaLinker {
                     } else {
                         res.properties[prop] = r;
                     }
-                    // res.properties[prop] = this.handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
                 }
             }
         }
@@ -417,6 +417,7 @@ export class SchemaLinker {
         for (const arg of entity.arguments) {
             let newArg;
             if (arg.$ref && paramsMap) {
+                // Maybe needs link here?
                 newArg = Object.assign({}, paramsMap.get(arg.$ref));
                 if (res.genericParams) {
                     delete res.genericParams;

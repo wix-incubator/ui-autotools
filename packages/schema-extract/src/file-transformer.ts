@@ -228,7 +228,7 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
 
 const describeTypeNode: TsNodeDescriber<ts.TypeNode> = (decl, checker, env, tSet) => {
     // temporary hack for handling Readonly, we need to find a better solution but this will work for now
-    if ((decl as any).typeName && (decl as any).typeName.getText() === 'Readonly') {
+    if ((decl as any).typeName && ((decl as any).typeName.getText() === 'Readonly' || (decl as any).typeName.getText() === 'Partial')) {
         decl = (decl as any).typeArguments[0];
     }
 
@@ -748,6 +748,15 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
                 type: 'number',
                 enum: [parseFloat(typeString)],
 
+            }
+        };
+    }
+
+    if (typeString === 'true' || typeString === 'false') {
+        return {
+            schema: {
+                type: 'boolean',
+                enum: [typeString === 'true']
             }
         };
     }

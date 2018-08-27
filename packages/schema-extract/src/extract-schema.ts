@@ -45,6 +45,13 @@ export function* extractLinkedSchema(basePath: string, filesGlob: string) {
           linkedSchema.definitions[definition] = linker.flatten(file, definition);
         }
       }
+      if (schema.properties) {
+        for (const property in schema.properties ) {
+          if (schema.properties.hasOwnProperty(property)) {
+            linkedSchema.properties[property] = linker.flatten(file, property);
+          }
+        }
+      }
     }
     yield {
       file: path.join(basePath, file),

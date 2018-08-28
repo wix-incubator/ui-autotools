@@ -52,7 +52,7 @@ function findComponentSchemas(
   // about the component's filename and the export name should be contained in
   // its metadata.
   const normalize = (string: string) => string.toLowerCase().replace(/-/g, '');
-  createLinkerProgram(sourceFilenames);
+  const program = createLinkerProgram(sourceFilenames);
   for (const Comp of componentsMetadata.keys()) {
     const name = getCompName(Comp);
     const metaFile = sourceFilenames.find((file) =>
@@ -68,7 +68,7 @@ function findComponentSchemas(
     if (!componentFile) {
       continue;
     }
-    const exportSchema = getSchema(componentFile, name);
+    const exportSchema = getSchema(componentFile, name, program);
     if (!exportSchema) {
       continue;
     }

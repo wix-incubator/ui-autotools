@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {IComponentData} from '../../server/client-data';
+import {PropsTable} from '../props-table';
 
 interface IComponentInfoProps {
   component: IComponentData;
@@ -13,8 +14,13 @@ export class ComponentInfo extends React.Component<IComponentInfoProps> {
       <div>
         <h1>{name}</h1>
 
+        <h2>Props</h2>
+        <PropsTable componentSchema={schema.schema} />
+
         <h2>Schema</h2>
-        <pre>{JSON.stringify(schema.schema, null, 4)}</pre>
+        <pre style={{font: '11px/1.2 Menlo, Consolas, sans-serif'}}>
+          {JSON.stringify(schema.schema, null, 4)}
+        </pre>
 
         <h2>Simulations</h2>
         {simulationTitles.map((sim) => {

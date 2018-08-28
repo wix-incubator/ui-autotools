@@ -1,0 +1,35 @@
+.root {
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.header, .propName, .propType, .propDefaultValue, .propDescription {
+  text-align: left;
+  vertical-align: middle;
+  padding: 10px 16px 10px 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.header {
+  color: #777;
+  font-weight: 500;
+}
+
+.propName, .propType, .propDefaultValue {
+  font: 13px/1.5 Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.propType {
+  color: #932981;
+}
+
+.propDescription {
+  white-space: pre-wrap;
+}
+
+.typeError {
+  padding: 2px 4px;
+  background: #FCE4EC;
+  border-radius: 2px;
+}

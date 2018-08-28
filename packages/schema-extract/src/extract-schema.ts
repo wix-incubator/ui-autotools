@@ -25,7 +25,7 @@ export function createLinkerProgram(files: string[]): typescript.Program {
   return typescript.createProgram(files, {});
 }
 
-export function getSchema(filePath: string, exportName: string, program = typescript.createProgram([filePath], {})) {
+export function getSchema(filePath: string, exportName: string, program = createLinkerProgram([filePath])) {
   const checker = program.getTypeChecker();
   const linker = new SchemaLinker(program, checker, filePath);
   return linker.flatten(filePath, exportName);

@@ -1371,7 +1371,7 @@ aws4@^1.2.1, aws4@^1.6.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.7.0.tgz#d4d0e9b9dbfca77bf08eeb0a8a471550fe39e289"
 
-axe-core@^3.0.3:
+axe-core@3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-3.0.3.tgz#ce016fd01476e23f4f3199d48a3f07125450b5db"
 

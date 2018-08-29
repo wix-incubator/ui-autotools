@@ -3,16 +3,14 @@ import path from 'path';
 import glob from 'glob';
 import dotenv from 'dotenv';
 import {Command} from 'commander';
-import {registerRequireHooks} from '@ui-autotools/utils';
 import {hydrationTest} from '@ui-autotools/sanity';
 import {eyesTest} from '@ui-autotools/eyes';
 import {a11yTest, impactLevels} from '@ui-autotools/a11y';
 import {buildWebsite, startWebsite} from '@ui-autotools/showcase';
-import importMeta from './import-metadata/import-meta';
 import ssrTest from './ssr-test/mocha-wrapper';
+import {importMeta} from '@ui-autotools/registry';
 
 dotenv.config();
-registerRequireHooks();
 
 const program = new Command();
 const projectPath = process.cwd();
@@ -50,10 +48,8 @@ program
 .command('eyes')
 .description('compare components to the expected appearance using Eyes')
 .option('-f, --files [pattern]', 'metadata file pattern')
-.action((options) => {
-  const entry = glob.sync(path.join(projectPath, options.files ? options.files : defaultMetaGlob));
-
-  eyesTest(entry, projectPath, webpackConfigPath);
+.action(() => {
+  eyesTest(projectPath);
 });
 
 program.command('showcase')

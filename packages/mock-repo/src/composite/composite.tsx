@@ -1,11 +1,13 @@
 import * as React from 'react';
 import {ChildComp} from './child';
+import style from './child.st.css';
 
 export interface IProps {
   text?: React.ReactNode;
+  className?: string;
 }
 
 export const Composite: React.SFC<IProps> = (props) =>
-  <div><ChildComp text={props.text} /></div>;
+  <div  {...style('root', {}, props)} className={props.className}><ChildComp text={props.text} /></div>;
 
 Composite.displayName = 'Composite';

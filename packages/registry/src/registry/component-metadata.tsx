@@ -1,11 +1,12 @@
 import * as React from 'react';
-import {IComponentMetadata, ISimulation, IStyleMetadata} from './types';
+import {IComponentMetadata, ISimulation, IStyleMetadata, ICompInfo} from './types';
 import {isValidSimulationTitle} from '../utils';
 
 export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
   public simulations: Array<ISimulation<Props>> = []; // Initialize with "empty" simulation
   public styles: Map<any, IStyleMetadata> = new Map<any, IStyleMetadata>();
   public reactStrictModeCompliant: boolean = true;
+  public compInfo: ICompInfo = {path: '', importName: '', baseStylePath: '', displayName: ''};
 
   public constructor(public component: React.ComponentType<Props>) {}
 
@@ -28,5 +29,9 @@ export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
   public simulationToJSX(simulation: ISimulation<Props>) {
     const Comp = this.component;
     return <Comp {...simulation.props} />;
+  }
+
+  public exportedFrom(compInfo: ICompInfo) {
+    this.compInfo = compInfo;
   }
 }

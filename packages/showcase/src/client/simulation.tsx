@@ -1,6 +1,5 @@
 import Registry, {getCompName} from '@ui-autotools/registry';
 // TODO: make sure we get the project's React here.
-import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 const url = new URL(document.location.href);
@@ -19,5 +18,5 @@ const sim = compMeta && compMeta.simulations.find(({title}) =>
 if (Comp && sim) {
   const root = document.createElement('div');
   document.body.appendChild(root);
-  ReactDOM.render(<Comp {...sim.props} />, root);
+  ReactDOM.render(compMeta!.simulationToJSX(sim), root);
 }

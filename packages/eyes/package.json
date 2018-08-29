@@ -29,13 +29,18 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "devDependencies": {
+    "@types/tmp": "^0.0.33",
     "@ui-autotools/registry": "^1.0.7"
   },
   "dependencies": {
+    "@applitools/eyes.sdk.core": "^1.8.0",
+    "@applitools/visual-grid-client": "^4.2.1",
+    "@stylable/webpack-extensions": "^0.1.10",
+    "@stylable/webpack-plugin": "^0.1.7",
     "@ui-autotools/utils": "^1.0.6",
     "dotenv": "^6.0.0",
-    "eyes.images": "^0.0.52",
     "puppeteer": "^1.5.0",
+    "tmp": "^0.0.33",
     "uuid": "^3.2.1"
   },
   "peerDependencies": {

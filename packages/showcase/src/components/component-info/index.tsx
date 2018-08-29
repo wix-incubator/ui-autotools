@@ -23,16 +23,59 @@ export class ComponentInfo extends React.Component<IComponentInfoProps> {
         </pre>
 
         <h2>Simulations</h2>
-        {simulationTitles.map((sim) => {
-          const src = `/simulation.html?component=${name}&simulation=${sim}`;
-          return (
-            <div key={sim}>
-              <h3>{sim}</h3>
-              <iframe width={400} height={200} src={src} />
-            </div>
-          );
-        })}
+        <Simulations componentName={name} simulationTitles={simulationTitles} />
       </div>
     );
+  }
+}
+
+interface ISimulationsProps {
+  componentName: string;
+  simulationTitles: string[];
+}
+
+interface ISimulationsState {
+  selectedSimulation?: string;
+}
+
+class Simulations extends React.Component<ISimulationsProps, ISimulationsState> {
+  public state = {
+    selectedSimulation: this.props.simulationTitles[0]
+  };
+
+  public render() {
+    const {componentName, simulationTitles} = this.props;
+    if (!simulationTitles.length) {
+      return null;
+    }
+
+    const {selectedSimulation} = this.state;
+    const src = (
+      `/simulation.html?` +
+      `component=${componentName}&` +
+      `simulation=${selectedSimulation}`
+    );
+
+    return (
+      <div>
+        <div>
+          <select onChange={this.handleChange}>
+            {simulationTitles.map((title) =>
+              <option key={title} selected={title === selectedSimulation}>
+                {title}
+              </option>
+            )}
+          </select>
+        </div>
+        <br />
+        <div>
+          <iframe width={400} height={200} src={src} />
+        </div>
+      </div>
+    );
+  }
+
+  private handleChange: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
+    this.setState({selectedSimulation: event.target.value});
   }
 }

@@ -8,9 +8,14 @@ export interface IPropsTableProps {
 
 export class PropsTable extends React.Component<IPropsTableProps> {
   public render() {
-    const propsInterface = this.props.componentSchema.properties.props;
-    const required = new Set(propsInterface.required);
-    const properties = Array.from(Object.entries(propsInterface.properties));
+    const {componentSchema} = this.props;
+    const propsInterface = (
+      componentSchema.$ref === 'common/function' ?
+        componentSchema.arguments[0] :
+        componentSchema.properties.props
+    );
+    const required = new Set(propsInterface.required || []);
+    const properties = Array.from(Object.entries(propsInterface.properties || {}));
 
     return (
       <table {...style('root', {}, this.props)}>

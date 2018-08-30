@@ -1,20 +1,20 @@
-const path = require('path');
-const fs = require('fs');
 const {makeVisualGridClient, initConfig} = require('@applitools/visual-grid-client');
 const domNodesToCdt = require('@applitools/visual-grid-client/src/browser-util/domNodesToCdt');
-const {JSDOM} = require('jsdom');
+import * as path from 'path';
+import * as fs from 'fs';
+import {JSDOM} from 'jsdom';
 
-describe('visual-grid-client test', function() {
-  let visualGridClient;
-  const closePromises = [];
+describe('visual-grid-client test', () => {
+  let visualGridClient: any;
+  const closePromises: any = [];
 
   before(() => {
     visualGridClient = makeVisualGridClient(initConfig());
   });
 
-  // after(async () => await visualGridClient.waitForTestResults(closePromises));
+  let checkWindow: any;
+  let close: any;
 
-  let checkWindow, close;
   beforeEach(async () => {
     ({checkWindow, close} = await visualGridClient.openEyes({
       appName: 'visual grid client with a cat',

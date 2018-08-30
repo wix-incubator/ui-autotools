@@ -21,6 +21,12 @@ export function* extractSchema(basePath: string, filesGlob: string) {
   }
 }
 
+export function createLinker(files: string[], projectPath: string): SchemaLinker {
+  const program = typescript.createProgram(files, {});
+  const checker = program.getTypeChecker();
+  return new SchemaLinker(program, checker, projectPath);
+}
+
 export function createLinkerProgram(files: string[]): typescript.Program {
   return typescript.createProgram(files, {});
 }

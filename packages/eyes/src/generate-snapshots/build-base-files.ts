@@ -2,26 +2,7 @@ import Registry, {importMeta} from '@ui-autotools/registry';
 import {consoleLog} from '@ui-autotools/utils';
 import * as fs from 'fs';
 import * as path from 'path';
-
-function generateFile(
-  componentName: string,
-  componentPath: string,
-  componentDisplayName: string,
-  simName: string,
-  simIndex: number,
-  styleName?: string,
-  stylePath?: string,
-  styleIndex?: number) {
-  const styleImport = stylePath ? `import style from '${stylePath}';\n` : '';
-  const styleExport = stylePath ? ', style' : '';
-  const variantString = styleIndex ? `@variant${styleIndex}@${styleName}` : '';
-
-  const data = `${styleImport}import {${componentName}} from '${componentPath}';
-export default {comp: ${componentName}, name: '${componentDisplayName}'${styleExport}};
-`;
-
-  fs.writeFileSync(`./.autotools/${componentDisplayName}@sim${simIndex}@${simName}${variantString}.ts`, data);
-}
+import {generateFilename, generateData} from './filename-utils';
 
 export const buildBaseFiles = () => {
   consoleLog('Building base files...');
@@ -53,11 +34,15 @@ export const buildBaseFiles = () => {
           let styleIndex = 1;
           styles.forEach((style) => {
             const stylePath = stylePathPrefix + style.path;
-            generateFile(compName, compPath, compDisplayName!, simulationName, i, style.name, stylePath, styleIndex);
+            const filename = generateFilename(compDisplayName!, simulationName, i, style.name, styleIndex);
+            const data = generateData(compName, compPath, compDisplayName!, stylePath);
+            fs.writeFileSync(filename, data);
             styleIndex++;
           });
         } else {
-          generateFile(compName, compPath, compDisplayName, simulationName, i);
+          const filename = generateFilename(compDisplayName, simulationName, i);
+          const data = generateData(compName, compPath, compDisplayName);
+          fs.writeFileSync(filename, data);
         }
       }
     }

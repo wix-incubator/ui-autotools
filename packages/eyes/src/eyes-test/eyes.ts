@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const {TestFailedError, TestResults} = require('@applitools/eyes.sdk.core');
 const {makeVisualGridClient, initConfig} = require('@applitools/visual-grid-client');
 const domNodesToCdt = require('@applitools/visual-grid-client/src/browser-util/domNodesToCdt');
@@ -9,15 +7,12 @@ import glob from 'glob';
 import chalk from 'chalk';
 import {JSDOM} from 'jsdom';
 import {consoleLog} from '@ui-autotools/utils';
-
-const fileNameRegex = /([a-zA-Z]+)(?:@sim)([\d]+)(?:@)([a-zA-Z0-9]+)(?:@variant)([\d]+)(?:@)([a-zA-Z0-9]+)/;
+import {parseFilename} from '../generate-snapshots/filename-utils';
 
 interface IResult {
   name: string;
-  isNew: boolean;
-  isModified: boolean;
+  status: 'error' | 'new' | 'modified' | 'unmodified';
   url: string;
-  isError?: boolean;
   error?: any;
 }
 
@@ -53,7 +48,7 @@ interface IResource {
   value: Buffer;
 }
 
-function getStaticResources(cssFilenames: string[], resourceDir: string) {
+function getStaticResources(cssFilenames: string[], resourceDir: string): {[url: string]: IResource} {
   const resources: {[url: string]: IResource} = {};
   for (const cssFilename of cssFilenames) {
     const url: string = '/' + cssFilename;
@@ -66,18 +61,19 @@ function getStaticResources(cssFilenames: string[], resourceDir: string) {
   return resources;
 }
 
-function logEyesResult({name, isNew, isModified, url, isError, error}: IResult) {
-  const fileSections = name.match(fileNameRegex);
-  const componentName = fileSections![1];
-  const simName = fileSections![3];
-  const variantName = fileSections![5];
+function logEyesResult({name, status, url, error}: IResult) {
+  const {compName, simName, styleName} = parseFilename(name, '.snapshot.html');
+
+  const isModified = status === 'modified';
+  const isNew = status === 'new';
+  const isError = status === 'error';
 
   const formattedUrl = isModified ? `${chalk.cyan('URL')}: ${chalk.underline(url)}` : '';
-  const status = isModified ? chalk.red('👎  FAIL') :
-               isNew ? chalk.green('👌  NEW') :
-               isError ? chalk.bgRedBright('⚠️  ERROR') :
-               chalk.green('👍  OK');
-  consoleLog(`${status} status for component "${chalk.bold(componentName)}", simulation "${simName}", and variant "${variantName}".  ${formattedUrl}`);
+  const statusMessage = isModified ? chalk.red('MODIFIED') :
+               isNew ? chalk.green('NEW') :
+               isError ? chalk.bgRedBright('ERROR') :
+               chalk.green('UNMODIFIED');
+  consoleLog(`${statusMessage} ${chalk.bold(compName)}: ${simName}. Style: ${styleName}. ${formattedUrl}`);
 
   if (isError) {
     consoleLog(error);
@@ -99,17 +95,17 @@ function getTestResult(testResultPromise: any): Promise<IResult> {
 
       if (res instanceof TestResults) {
         if (res.getIsDifferent()) {
-          return {name, isNew: false, isModified: true, url};
+          return {name, status: 'modified', url};
         }
         if (res.getIsNew()) {
-          return {name, isNew: true, isModified: false, url};
+          return {name, status: 'new', url};
         }
         if (res.isPassed()) {
-          return {name, isNew: false, isModified: false, url};
+          return {name, status: 'unmodified', url};
         }
       }
 
-      return {name, isNew: false, isModified: false, url, isError: true, error: res};
+      return {name, status: 'error', url, error: res};
     })
   );
 }
@@ -155,7 +151,7 @@ export async function runEyes(projectPath: string, directory: string) {
     ));
 
     result.then((res: IResult) => {
-      if (res.isError || res.isModified) {
+      if (res.status === 'error' || res.status === 'modified') {
         process.exitCode = 1;
         logEyesResult(res);
       } else {

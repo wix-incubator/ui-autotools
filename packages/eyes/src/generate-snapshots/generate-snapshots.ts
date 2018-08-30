@@ -11,13 +11,13 @@ import {generateMapping} from './generate-mapping';
 import Registry, {importMeta, getCompName, IComponentMetadata} from '@ui-autotools/registry';
 import {consoleLog} from '@ui-autotools/utils';
 import {dedent} from './dedent';
+import {parseFilename} from './filename-utils';
 
 importMeta();
 
 const mapping = generateMapping(Registry);
 const filteringLogic = generateFilteringLogic(mapping);
 
-const simMatchingRegex = /(?:@sim)([\d]+)/; // Match the prefix "sim", and then match the numbers following it
 const fileNameRegex = /(?:.\/.autotools\/)(.+)/; // Match the file name
 
 async function buildSingleFile(file: string, directory: string) {
@@ -61,7 +61,7 @@ async function buildSingleFile(file: string, directory: string) {
             throw new Error(`Could not find component metadata for ${compiledFile.default.name}`);
           }
 
-          const simIndex = parseInt(simMatchingRegex.exec(sourceFile.id)![1], 10);
+          const {simIndex} = parseFilename(sourceFile.id, '.ts');
           const props = compMetadata.simulations[simIndex - 1].props;
           const link = `<link rel="stylesheet" type="text/css" href="${entryName}.css">`;
           const component = renderToStaticMarkup(createElement(compiledFile.default.comp, {className: compiledFile.default.style.root, ...props}));

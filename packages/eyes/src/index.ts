@@ -4,8 +4,8 @@ import {runEyes} from './eyes-test/eyes';
 import * as tmp from 'tmp';
 
 export async function eyesTest(projectPath: string) {
-  const dir = tmp.dirSync({unsafeCleanup: false});
-  // console.log('dir', dir);
+  const dir = tmp.dirSync({unsafeCleanup: true});
+
   try {
     buildBaseFiles();
     await generateSnapshots(dir.name);

@@ -10,6 +10,7 @@ import {generateFilteringLogic} from './filter-logic';
 import {generateMapping} from './generate-mapping';
 import Registry, {importMeta, getCompName, IComponentMetadata} from '@ui-autotools/registry';
 import {consoleLog} from '@ui-autotools/utils';
+import {dedent} from './dedent';
 
 importMeta();
 
@@ -63,7 +64,21 @@ async function buildSingleFile(file: string, directory: string) {
           const simIndex = parseInt(simMatchingRegex.exec(sourceFile.id)![1], 10);
           const props = compMetadata.simulations[simIndex - 1].props;
           const link = `<link rel="stylesheet" type="text/css" href="${entryName}.css">`;
-          return link + renderToStaticMarkup(createElement(compiledFile.default.comp, {className: compiledFile.default.style.root, ...props}));
+          const component = renderToStaticMarkup(createElement(compiledFile.default.comp, {className: compiledFile.default.style.root, ...props}));
+          const template = `<!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta http-equiv="X-UA-Compatible" content="ie=edge">
+            <title>${compMetadata.compInfo.importName}</title>
+            ${link}
+          </head>
+          <body>
+            ${component}
+          </body>
+          </html>`;
+          return dedent(template);
         },
         getLogicModule: filteringLogic
     })

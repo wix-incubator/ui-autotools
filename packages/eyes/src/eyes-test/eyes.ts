@@ -67,7 +67,7 @@ function getStaticResources(cssFilenames: string[], resourceDir: string) {
 }
 
 function logEyesResult({name, isNew, isModified, url, isError, error}: IResult) {
-  const fileSections = fileNameRegex.exec(name);
+  const fileSections = name.match(fileNameRegex);
   const componentName = fileSections![1];
   const simName = fileSections![3];
   const variantName = fileSections![5];
@@ -94,19 +94,22 @@ function getTestResult(testResultPromise: any): Promise<IResult> {
     .then((res: any) => res instanceof TestFailedError ? res.getTestResults() : res)
     .then((res: any) => Array.isArray(res) && res[0] instanceof TestResults ? res[0] : res)
     .then((res: any) => {
+      const name = res.getName();
+      const url = res.getUrl();
+
       if (res instanceof TestResults) {
         if (res.getIsDifferent()) {
-          return {name: res.getName(), isNew: false, isModified: true, url: res.getUrl()};
+          return {name, isNew: false, isModified: true, url};
         }
         if (res.getIsNew()) {
-          return {name: res._name, isNew: true, isModified: false, url: res.getUrl()};
+          return {name, isNew: true, isModified: false, url};
         }
         if (res.isPassed()) {
-          return {name: res._name, isNew: false, isModified: false, url: res.getUrl()};
+          return {name, isNew: false, isModified: false, url};
         }
       }
 
-      return {name: res._name, isNew: false, isModified: false, url: res.getUrl(), isError: true, error: res};
+      return {name, isNew: false, isModified: false, url, isError: true, error: res};
     })
   );
 }

@@ -14,10 +14,7 @@
     "run-browser": "webpack-dev-server --progress"
   },
   "devDependencies": {
-    "@applitools/visual-grid-client": "^4.0.10",
     "@stylable/cli": "^1.0.7",
-    "@stylable/webpack-extensions": "^0.1.9",
-    "@stylable/webpack-plugin": "^0.1.7",
     "@types/autobahn": "^0.9.39",
     "@types/chai": "^4.1.4",
     "@types/chai-dom": "^0.0.6",

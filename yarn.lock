@@ -34,21 +34,6 @@
   dependencies:
     debug "^3.1.0"
 
-"@applitools/visual-grid-client@^4.0.10":
-  version "4.0.10"
-  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-4.0.10.tgz#ee7121ffff48000a64d3fed8c22487d09ea02475"
-  dependencies:
-    "@applitools/eyes.sdk.core" "^1.8.0"
-    "@applitools/functional-commons" "^1.0.18"
-    cssom "git+https://github.com/amitzur/CSSOM.git#925260ff2c8f8387cf76df4d5776a06044a644c8"
-    he "^1.1.1"
-    lodash.mapkeys "^4.6.0"
-    lodash.mapvalues "^4.6.0"
-    mime-types "^2.1.19"
-    mkdirp "^0.5.1"
-    node-fetch "^2.2.0"
-    throat "^4.1.0"
-
 "@applitools/visual-grid-client@^4.2.1":
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-4.2.1.tgz#8e8585b29697b74ae0ba6425db2e1a297a10ea53"
@@ -541,17 +526,12 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/samsam/-/samsam-2.0.0.tgz#9163742ac35c12d3602dece74317643b35db6a80"
 
 "@stylable/cli@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@stylable/cli/-/cli-1.0.7.tgz#6879eb141459ab2071f4f37ee8c5423e9fbf4dd7"
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@stylable/cli/-/cli-1.0.10.tgz#08eeddeee2bc684e331457c3bc2abdcd24f08491"
   dependencies:
-    "@stylable/core" "^0.1.7"
-    "@stylable/node" "^0.1.7"
-    deindent "^0.1.0"
-    lodash.clonedeep "^4.5.0"
-    react "^16.4.1"
-    react-dom "^16.4.1"
-    webpack "^4.12.1"
-    webpack-sources "^1.1.0"
+    "@stylable/core" "^0.1.9"
+    "@stylable/node" "^0.1.10"
+    yargs "^12.0.1"
 
 "@stylable/core@^0.1.7":
   version "0.1.7"
@@ -591,6 +571,25 @@
     postcss-value-parser "^3.3.0"
     url-regex "^4.1.1"
 
+"@stylable/core@^0.1.9":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@stylable/core/-/core-0.1.9.tgz#ae57cd48b4e39f5902bddf82cf06335af9baf304"
+  dependencies:
+    clean-css "^4.2.1"
+    css-selector-tokenizer "^0.7.0"
+    deindent "^0.1.0"
+    enhanced-resolve "^4.1.0"
+    is-vendor-prefixed "^1.0.0"
+    lodash.clonedeep "^4.5.0"
+    murmurhash "^0.0.2"
+    postcss "^7.0.2"
+    postcss-js "^2.0.0"
+    postcss-nested "^3.0.0"
+    postcss-safe-parser "^4.0.1"
+    postcss-selector-matches "^3.0.1"
+    postcss-value-parser "^3.3.0"
+    url-regex "^4.1.1"
+
 "@stylable/node@^0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@stylable/node/-/node-0.0.2.tgz#48e9042ec81ccc151b2397a4241eac7bfe9fca97"
@@ -598,12 +597,11 @@
     stylable "^5.4.11"
     stylable-runtime "^1.0.7"
 
-"@stylable/node@^0.1.7":
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/@stylable/node/-/node-0.1.8.tgz#91427974acd35fe507e5a6af0a3d89732cf73c33"
+"@stylable/node@^0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@stylable/node/-/node-0.1.10.tgz#c7e95b4ef9d7df6407cbdbb638027ed7fb2308a4"
   dependencies:
-    "@stylable/core" "^0.1.7"
-    "@stylable/runtime" "^0.1.7"
+    "@stylable/core" "^0.1.9"
 
 "@stylable/runtime@^0.1.7":
   version "0.1.7"
@@ -618,17 +616,6 @@
     react "^16.4.2"
     react-dom "^16.4.2"
     webpack "^4.17.1"
-    webpack-sources "^1.1.0"
-
-"@stylable/webpack-extensions@^0.1.9":
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/@stylable/webpack-extensions/-/webpack-extensions-0.1.9.tgz#8d2b365def0f8c732ca470894edb02ad01066d41"
-  dependencies:
-    "@stylable/core" "^0.1.7"
-    lodash.clonedeep "^4.5.0"
-    react "^16.4.1"
-    react-dom "^16.4.1"
-    webpack "^4.12.1"
     webpack-sources "^1.1.0"
 
 "@stylable/webpack-plugin@^0.1.7":

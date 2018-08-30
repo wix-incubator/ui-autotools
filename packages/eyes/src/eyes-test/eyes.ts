@@ -74,7 +74,7 @@ function logEyesResult({name, isNew, isModified, url, isError, error}: IResult) 
 
   const formattedUrl = isModified ? `${chalk.cyan('URL')}: ${chalk.underline(url)}` : '';
   const status = isModified ? chalk.red('👎  FAIL') :
-               isNew ? chalk.yellow('👌  NEW') :
+               isNew ? chalk.green('👌  NEW') :
                isError ? chalk.bgRedBright('⚠️  ERROR') :
                chalk.green('👍  OK');
   consoleLog(`${status} status for component "${chalk.bold(componentName)}", simulation "${simName}", and variant "${variantName}".  ${formattedUrl}`);

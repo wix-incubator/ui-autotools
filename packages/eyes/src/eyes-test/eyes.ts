@@ -47,10 +47,16 @@ function getGridClientConfig(projectPath: string) {
   };
 }
 
+interface IResource {
+  url: string;
+  type: string;
+  value: Buffer;
+}
+
 function getStaticResources(cssFilenames: string[], resourceDir: string) {
-  const resources: any = {};
+  const resources: {[url: string]: IResource} = {};
   for (const cssFilename of cssFilenames) {
-    const url = '/' + cssFilename;
+    const url: string = '/' + cssFilename;
     resources[url] = {
       url,
       type: 'text/css',
@@ -81,7 +87,7 @@ function logEyesResult({name, isNew, isModified, url, isError, error}: IResult) 
 // We cannot allow any of the result promises to reject, because we're going to
 // await on a bunch of them in parallel using Promise.all, and a single rejected
 // promise would reject the entire batch.
-function getTestResult(testResultPromise: any) {
+function getTestResult(testResultPromise: any): Promise<IResult> {
   return (
     testResultPromise
     .catch((err: any) => err)
@@ -105,7 +111,7 @@ function getTestResult(testResultPromise: any) {
   );
 }
 
-async function runTest(gridClient: any, gridClientConfig: any, testName: string, html: any, resources: any) {
+async function runTest(gridClient: any, gridClientConfig: any, testName: string, html: string, resources: {[url: string]: IResource}) {
   const dom = new JSDOM(html).window.document;
 
   const {checkWindow, close} = await gridClient.openEyes({

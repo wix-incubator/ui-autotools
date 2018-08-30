@@ -29,7 +29,6 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "@types/tmp": "^0.0.33",
     "@ui-autotools/registry": "^1.0.7"
   },
   "dependencies": {
@@ -38,7 +37,10 @@
     "@stylable/webpack-extensions": "^0.1.10",
     "@stylable/webpack-plugin": "^0.1.7",
     "@ui-autotools/utils": "^1.0.6",
+    "chalk": "^2.4.1",
     "dotenv": "^6.0.0",
+    "glob": "^7.1.2",
+    "jsdom": "^11.11.0",
     "puppeteer": "^1.5.0",
     "tmp": "^0.0.33",
     "uuid": "^3.2.1"

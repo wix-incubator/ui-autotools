@@ -83,29 +83,28 @@ function logEyesResult({name, status, url, error}: IResult) {
 // We cannot allow any of the result promises to reject, because we're going to
 // await on a bunch of them in parallel using Promise.all, and a single rejected
 // promise would reject the entire batch.
-function getTestResult(testResultPromise: any): Promise<IResult> {
+function getTestResult({testName, testResult}: {testName: string, testResult: any}): Promise<IResult> {
   return (
-    testResultPromise
+    testResult
     .catch((err: any) => err)
     .then((res: any) => res instanceof TestFailedError ? res.getTestResults() : res)
     .then((res: any) => Array.isArray(res) && res[0] instanceof TestResults ? res[0] : res)
-    .then((res: any) => {
-      const name = res.getName();
+    .then((res: any): IResult => {
       const url = res.getUrl();
 
       if (res instanceof TestResults) {
         if (res.getIsDifferent()) {
-          return {name, status: 'modified', url};
+          return {name: testName, status: 'modified', url};
         }
         if (res.getIsNew()) {
-          return {name, status: 'new', url};
+          return {name: testName, status: 'new', url};
         }
         if (res.isPassed()) {
-          return {name, status: 'unmodified', url};
+          return {name: testName, status: 'unmodified', url};
         }
       }
 
-      return {name, status: 'error', url, error: res};
+      return {name: testName, status: 'error', url, error: res};
     })
   );
 }
@@ -125,7 +124,7 @@ async function runTest(gridClient: any, gridClientConfig: any, testName: string,
     resourceContents: resources
   });
 
-  return close();
+  return {testName, testResult: close()};
 }
 
 export async function runEyes(projectPath: string, directory: string) {

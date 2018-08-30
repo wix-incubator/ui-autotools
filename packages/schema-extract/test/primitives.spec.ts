@@ -110,7 +110,7 @@ describe('schema-extract - primitives', () => {
                                 {},
                                 {type: 'string', enum: ['hello']},
                                 {type: 'number', enum: [5]},
-                                {type: 'boolean', enum: [false, true]},
+                                {type: 'boolean'},
                             ]
                         }
                     }

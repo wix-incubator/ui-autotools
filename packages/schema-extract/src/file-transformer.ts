@@ -649,7 +649,11 @@ const describeUnionType: TsNodeDescriber<ts.UnionTypeNode> = (decl, checker, env
     }
 
     if (specificBool) {
-        groupedSchemas.push(specificBool);
+        if (specificBool.enum!.length > 1) {
+            groupedSchemas.push({type: 'boolean'});
+        } else {
+            groupedSchemas.push(specificBool);
+        }
     }
 
     if (groupedSchemas.length > 1) {

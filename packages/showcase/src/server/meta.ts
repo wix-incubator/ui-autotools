@@ -5,8 +5,7 @@ import glob from 'glob';
 import Registry, {getCompName} from '@ui-autotools/registry';
 import {IComponentMetadata, IMetadata} from '@ui-autotools/registry';
 import {
-  getSchema,
-  createLinkerProgram,
+  createLinker,
   ModuleSchema as PartialModuleSchema,
   IObjectFields,
   Schema
@@ -52,7 +51,7 @@ function findComponentSchemas(
   // about the component's filename and the export name should be contained in
   // its metadata.
   const normalize = (string: string) => string.toLowerCase().replace(/-/g, '');
-  const program = createLinkerProgram(sourceFilenames);
+  const linker = createLinker(sourceFilenames, basePath);
   for (const Comp of componentsMetadata.keys()) {
     const name = getCompName(Comp);
     const metaFile = sourceFilenames.find((file) =>
@@ -68,7 +67,7 @@ function findComponentSchemas(
     if (!componentFile) {
       continue;
     }
-    const exportSchema = getSchema(componentFile, name, program);
+    const exportSchema = linker.flatten(componentFile, name);
     if (!exportSchema) {
       continue;
     }
@@ -89,12 +88,10 @@ export function getMetadataAndSchemasInDirectory(
   });
   metadataFiles.forEach(require);
   const metadata = Registry.metadata;
-
   const schemasByComponent = findComponentSchemas(
     metadata.components,
     basePath,
     sourceGlob
   );
-
   return {metadata, schemasByComponent};
 }

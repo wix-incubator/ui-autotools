@@ -8,16 +8,16 @@ export class SchemaLinker {
     private program: ts.Program;
     private projectPath: string;
     private sourceFile: ts.SourceFile | undefined;
-    private importSchema: ModuleSchema | null | undefined;
+    private importMap: Map<string, ModuleSchema>;
 
     constructor(program: ts.Program, checker: ts.TypeChecker, projectPath: string) {
+        this.importMap = new Map();
         this.checker = checker;
         this.program = program;
         this.projectPath = projectPath;
     }
 
     public flatten(file: string, entityName: string): Schema {
-        this.importSchema = null;
         const sourceFile = this.program.getSourceFile(file);
         if (!sourceFile) {
             return {$ref: UnknownId};
@@ -50,16 +50,11 @@ export class SchemaLinker {
                         paramsMap.get(ref) :
                         schema.definitions[cleanRef] ?
                         schema.definitions[cleanRef] :
-                        this.importSchema && this.importSchema.definitions ?
-                        this.importSchema.definitions[cleanRef] :
                         null;
         if (!refEntity) {
             const importSchema = this.getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1));
-            if (importSchema) {
-                this.importSchema = importSchema;
-            }
-            if (this.importSchema && this.importSchema.definitions) {
-                refEntity = this.importSchema.definitions[cleanRef];
+            if (importSchema && importSchema.definitions) {
+                refEntity = importSchema.definitions[cleanRef];
             }
         }
         if (!refEntity) {
@@ -76,8 +71,12 @@ export class SchemaLinker {
     }
 
     private getSchemaFromImport(path: string, ref: string): ModuleSchema | null {
+        if (this.importMap.has(path)) {
+            return this.importMap.get(path)!;
+        }
         const extensions = ['.js', '.d.ts', '.ts', '.tsx'];
         let importSourceFile;
+        let importSchema;
         if (this.sourceFile) {
             /* resolvedModules is an internal ts property that exists on a sourcefile and maps the imports to the path of the imported file
             * This can change in future versions without us knowing but there is no public way of getting this information right now.
@@ -87,7 +86,11 @@ export class SchemaLinker {
                 const newRef = module.resolvedFileName;
                 importSourceFile = this.program.getSourceFile(newRef);
                 if (importSourceFile) {
-                    return transform(this.checker, importSourceFile , path + ref, path);
+                    importSchema = transform(this.checker, importSourceFile , path + ref, path);
+                    if (importSchema) {
+                        this.importMap.set(path, importSchema);
+                    }
+                    return importSchema;
                 }
             }
         }
@@ -100,7 +103,11 @@ export class SchemaLinker {
         if (!importSourceFile) {
             return null;
         }
-        return transform(this.checker, importSourceFile , path + ref, path);
+        importSchema = transform(this.checker, importSourceFile , path + ref, path);
+        if (importSchema) {
+            this.importMap.set(path, importSchema);
+        }
+        return importSchema;
     }
 
     private link(entity: Schema, schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {

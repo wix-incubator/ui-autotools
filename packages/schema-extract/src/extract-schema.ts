@@ -27,16 +27,6 @@ export function createLinker(files: string[], projectPath: string): SchemaLinker
   return new SchemaLinker(program, checker, projectPath);
 }
 
-export function createLinkerProgram(files: string[]): typescript.Program {
-  return typescript.createProgram(files, {});
-}
-
-export function getSchema(filePath: string, exportName: string, program = createLinkerProgram([filePath])) {
-  const checker = program.getTypeChecker();
-  const linker = new SchemaLinker(program, checker, filePath);
-  return linker.flatten(filePath, exportName);
-}
-
 export function* extractLinkedSchema(basePath: string, filesGlob: string) {
   const files = glob.sync(filesGlob, {cwd: basePath});
   const program = typescript.createProgram(files, {});

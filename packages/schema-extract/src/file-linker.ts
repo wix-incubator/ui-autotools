@@ -3,7 +3,6 @@ import {union} from 'lodash';
 import { transform } from './file-transformer';
 import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isNeverSchema, FunctionSchemaId, isFunctionSchema, FunctionSchema, NullSchemaId } from './json-schema-types';
 
-// const importMap: Map<string, ModuleSchema> = new Map();
 export class SchemaLinker {
     private checker: ts.TypeChecker;
     private program: ts.Program;

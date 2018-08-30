@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import { ModuleSchema } from '../src/json-schema-types';
+import { ModuleSchema, UndefinedSchemaId, NullSchemaId, interfaceId } from '../src/json-schema-types';
 import {transformTest} from '../test-kit/run-transform';
 
 describe('schema-extract - primitives', () => {
@@ -88,4 +88,37 @@ describe('schema-extract - primitives', () => {
         expect(res).to.eql(expected);
     });
 
+    it('should support all primitive types', async () => {
+        const moduleId = 'primitives';
+        const res = transformTest(`
+             export interface InterfaceA {
+             foobar?: 5 | 'hello' | false | true | undefined | null | any;
+             }
+        `, moduleId);
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: 'common/module',
+            definitions: {
+                InterfaceA: {
+                    $ref: interfaceId,
+                    properties: {
+                            foobar: {
+                            $oneOf: [
+                                {type: 'boolean', enum: [false]},
+                                {type: 'boolean', enum: [true]},
+                                {$ref: UndefinedSchemaId},
+                                {$ref: NullSchemaId},
+                                {},
+                                {type: 'string', enum: ['hello']},
+                                {type: 'number', enum: [5]}
+                            ]
+                        }
+                    }
+                }
+            },
+            properties: {}
+        };
+        expect(res).to.eql(expected);
+    });
 });

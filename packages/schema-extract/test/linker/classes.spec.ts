@@ -78,7 +78,6 @@ describe('schema-linker - classes', () => {
                 },
                 setTitle: {
                     $ref: FunctionSchemaId,
-                    inheritedFrom: '#A',
                     description: 'property description',
                     arguments: [
                         {type: 'string', name: 'newtitle'},

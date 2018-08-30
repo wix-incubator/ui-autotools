@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import { Schema, NeverId } from '../../src/json-schema-types';
+import { Schema, NeverId, interfaceId } from '../../src/json-schema-types';
 import {linkTest} from '../../test-kit/run-linker';
 
 describe('schema-linker - intersections', () => {
@@ -46,7 +46,6 @@ describe('schema-linker - intersections', () => {
         `}, 'D', fileName);
 
         const expected: Schema<'object'> = {
-            type: 'object',
             $oneOf: [
                 {
                     type: 'object',
@@ -75,7 +74,7 @@ describe('schema-linker - intersections', () => {
         expect(res).to.eql(expected);
     });
 
-    xit('should flatten intersection types with unions', async () => {
+    it('should flatten intersection types with unions', async () => {
         const fileName = 'index.ts';
         const res = linkTest({[fileName]: `
         export type A = {
@@ -91,23 +90,86 @@ describe('schema-linker - intersections', () => {
         `}, 'D', fileName);
 
         const expected: Schema<'object'> = {
-            type: 'object',
-            properties: {
-                something: {
-                    type: 'number'
-                },
-                somethingElse: {
-                    $oneOf: [
-                        {
-                            type: 'string'
+            $oneOf: [
+                {
+                    type: 'object',
+                    properties: {
+                        something: {
+                            type: 'number'
                         },
-                        {
+                        somethingElse: {
+                            type: 'string'
+                        }
+                    },
+                    required: ['something', 'somethingElse']
+                },
+                {
+                    type: 'object',
+                    properties: {
+                        something: {
+                            type: 'number'
+                        },
+                        somethingElse: {
                             type: 'number'
                         }
+                    },
+                    required: ['something', 'somethingElse']
+                },
+            ]
+        };
+        expect(res).to.eql(expected);
+    });
+    it('should flatten intersection types with unions 2', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
+        export type A = {
+            something:number;
+        };
+        export type B = {
+            somethingElse:string;
+        };
+        export type C = {
+            somethingElse:number;
+        };
+        export type D = (A | B)  &  ( A | C );
+        `}, 'D', fileName);
 
-                    ]
+        const expected: Schema<'object'> = {
+            $oneOf: [
+                {
+                    type: 'object',
+                    properties: {
+                        something: {
+                            type: 'number'
+                        },
+                    },
+                    required: ['something']
+                },
+                {
+                    type: 'object',
+                    properties: {
+                        something: {
+                            type: 'number'
+                        },
+                        somethingElse: {
+                            type: 'number'
+                        }
+                    },
+                    required: ['something', 'somethingElse']
+                },
+                {
+                    type: 'object',
+                    properties: {
+                        something: {
+                            type: 'number'
+                        },
+                        somethingElse: {
+                            type: 'string'
+                        }
+                    },
+                    required: ['somethingElse', 'something']
                 }
-            }
+            ]
         };
         expect(res).to.eql(expected);
     });
@@ -288,13 +350,65 @@ describe('schema-linker - intersections', () => {
         `}, 'c', fileName);
 
         const expected: Schema<'object'> = {
-            type: 'object',
+            $ref: NeverId
+        };
+        expect(res).to.eql(expected);
+    });
+    it('should properly handle an intersection between a type and interface', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
+        export interface A {
+            something:string
+        }
+        export interface B extends A {
+        }
+        export type b = {
+            someone: number
+        }
+        export type c = B & b;
+        `}, 'c', fileName);
+
+        const expected: Schema<'object'> = {
+            $ref: interfaceId,
             properties: {
                 something: {
-                    $ref: NeverId
+                    inheritedFrom: '#A',
+                    type: 'string'
+                },
+                someone: {
+                    type: 'number'
                 }
             },
-            required: ['something']
+            required: ['something', 'someone']
+        };
+        expect(res).to.eql(expected);
+    });
+    xit('should properly handle an intersection between a type and interface', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
+        export interface A {
+            something:string
+        }
+        export interface B extends A {
+        }
+        export type b = {
+            someone: number
+        }
+        export type c = B & b;
+        `}, 'c', fileName);
+
+        const expected: Schema<'object'> = {
+            $ref: interfaceId,
+            properties: {
+                something: {
+                    definedAt: '#A',
+                    type: 'string'
+                },
+                someone: {
+                    type: 'number'
+                }
+            },
+            required: ['something', 'someone']
         };
         expect(res).to.eql(expected);
     });

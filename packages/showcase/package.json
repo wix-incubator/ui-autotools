@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/showcase",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -35,7 +35,7 @@
   "dependencies": {
     "@stylable/core": "^0.1.7",
     "@stylable/webpack-plugin": "^0.1.7",
-    "@ui-autotools/schema-extract": "^1.0.7",
+    "@ui-autotools/schema-extract": "^1.0.8",
     "@ui-autotools/utils": "^1.0.6",
     "chalk": "^2.4.1",
     "glob": "^7.1.2",

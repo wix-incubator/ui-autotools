@@ -21,7 +21,8 @@ const testStyle = {
 };
 
 const testStyleMetadata = {
-  name: 'testStyle'
+  name: 'testStyle',
+  path: 'blah/blah'
 };
 
 describe('Component Metadata', () => {

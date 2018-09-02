@@ -7,12 +7,12 @@ import glob from 'glob';
 import chalk from 'chalk';
 import {JSDOM} from 'jsdom';
 import {consoleLog} from '@ui-autotools/utils';
-import {parseFilename} from '../generate-snapshots/filename-utils';
+import {parseSnapshotFilename} from '../generate-snapshots/filename-utils';
 
 interface IResult {
   name: string;
   status: 'error' | 'new' | 'modified' | 'unmodified';
-  url: string;
+  url?: string;
   error?: any;
 }
 
@@ -61,19 +61,23 @@ function getStaticResources(cssFilenames: string[], resourceDir: string): {[url:
   return resources;
 }
 
-function logEyesResult({name, status, url, error}: IResult) {
-  const {compName, simName, styleName} = parseFilename(name, '.snapshot.html');
+function formatName(filename: string) {
+  const {compName, simName, styleName} = parseSnapshotFilename(filename, '.snapshot.html');
 
+  return `${compName}: ${simName}. Style: ${styleName}.`;
+}
+
+function logEyesResult({name, status, url, error}: IResult) {
   const isModified = status === 'modified';
   const isNew = status === 'new';
   const isError = status === 'error';
 
-  const formattedUrl = isModified ? `${chalk.cyan('URL')}: ${chalk.underline(url)}` : '';
+  const formattedUrl = url && isModified ? `${chalk.cyan('URL')}: ${chalk.underline(url)}` : '';
   const statusMessage = isModified ? chalk.red('MODIFIED') :
                isNew ? chalk.green('NEW') :
                isError ? chalk.bgRedBright('ERROR') :
                chalk.green('UNMODIFIED');
-  consoleLog(`${statusMessage} ${chalk.bold(compName)}: ${simName}. Style: ${styleName}. ${formattedUrl}`);
+  consoleLog(`${statusMessage} ${name} ${formattedUrl}`);
 
   if (isError) {
     consoleLog(error);
@@ -90,9 +94,8 @@ function getTestResult(testName: string, testResult: Promise<any>): Promise<IRes
     .then((res: any) => res instanceof TestFailedError ? res.getTestResults() : res)
     .then((res: any) => Array.isArray(res) && res[0] instanceof TestResults ? res[0] : res)
     .then((res: any): IResult => {
-      const url = res.getUrl();
-
       if (res instanceof TestResults) {
+        const url = res.getUrl();
         if (res.getIsDifferent()) {
           return {name: testName, status: 'modified', url};
         }
@@ -104,7 +107,7 @@ function getTestResult(testName: string, testResult: Promise<any>): Promise<IRes
         }
       }
 
-      return {name: testName, status: 'error', url, error: res};
+      return {name: testName, status: 'error', error: res};
     })
   );
 }
@@ -124,7 +127,7 @@ async function runTest(gridClient: any, gridClientConfig: any, testName: string,
     resourceContents: resources
   });
 
-  return {testName, testResult: close()};
+  return close();
 }
 
 export async function runEyes(projectPath: string, directory: string) {
@@ -140,15 +143,15 @@ export async function runEyes(projectPath: string, directory: string) {
 
   for (const htmlFilename of htmlFilenames) {
     const html = fs.readFileSync(path.join(directory, htmlFilename), 'utf-8');
-    const {testName, testResult} = await runTest(
+    const testName = formatName(htmlFilename);
+
+    const result = getTestResult(testName, runTest(
       gridClient,
       config,
-      htmlFilename,
+      testName,
       html,
       resources
-    );
-
-    const result = getTestResult(testName, testResult);
+    ));
 
     result.then((res: IResult) => {
       if (res.status === 'error' || res.status === 'modified') {

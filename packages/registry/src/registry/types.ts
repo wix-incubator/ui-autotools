@@ -20,9 +20,8 @@ export interface IComponentMetadata<Props> {
 
 export interface ICompInfo {
   path: string; // TODO: add path verification
-  importName: string;
+  exportName: string;
   baseStylePath: string; // TODO: add path verification
-  displayName: string;
 }
 
 export interface IMetadata {

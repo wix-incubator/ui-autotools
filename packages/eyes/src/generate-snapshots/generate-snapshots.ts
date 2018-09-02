@@ -11,7 +11,7 @@ import {generateMapping} from './generate-mapping';
 import Registry, {importMeta, getCompName, IComponentMetadata} from '@ui-autotools/registry';
 import {consoleLog} from '@ui-autotools/utils';
 import {dedent} from './dedent';
-import {parseFilename} from './filename-utils';
+import {parseSnapshotFilename} from './filename-utils';
 
 importMeta();
 
@@ -61,7 +61,7 @@ async function buildSingleFile(file: string, directory: string) {
             throw new Error(`Could not find component metadata for ${compiledFile.default.name}`);
           }
 
-          const {simIndex} = parseFilename(sourceFile.id, '.ts');
+          const {simIndex} = parseSnapshotFilename(sourceFile.id, '.ts');
           const props = compMetadata.simulations[simIndex - 1].props;
           const link = `<link rel="stylesheet" type="text/css" href="${entryName}.css">`;
           const component = renderToStaticMarkup(createElement(compiledFile.default.comp, {className: compiledFile.default.style.root, ...props}));
@@ -71,7 +71,7 @@ async function buildSingleFile(file: string, directory: string) {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <meta http-equiv="X-UA-Compatible" content="ie=edge">
-            <title>${compMetadata.compInfo.importName}</title>
+            <title>${compMetadata.compInfo.exportName}</title>
             ${link}
           </head>
           <body>

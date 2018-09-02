@@ -8,9 +8,8 @@ const metadata = Registry.getComponentMetadata(Composite);
 
 metadata.exportedFrom({
   path: 'src/composite/composite',
-  importName: 'Composite',
-  baseStylePath: 'src/composite/child.st.css',
-  displayName: 'Composite'
+  exportName: 'Composite',
+  baseStylePath: 'src/composite/child.st.css'
 });
 
 metadata.addSim({

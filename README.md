@@ -75,9 +75,8 @@ myComponentMetadata.addSim({
 // tool relies on Stylable
 myComponentMetadata.exportedFrom({
   path: 'src/my-comp/my-comp',                          // the path to your component, relative to the root, and without file extension
-  importName: 'MyComp',                                 // the name under which you export your component
-  baseStylePath: 'src/my-comp/my-comp/my-comp.st.css',  // the path to the base stylesheet for the component (as opposed to themes)
-  displayName: 'Composite'                              // the name you want to refer to the component with. Does not need to match importName
+  exportName: 'MyComp',                                 // the name under which you export your component
+  baseStylePath: 'src/my-comp/my-comp.st.css',  // the path to the base stylesheet for the component (as opposed to themes)
 });
 
 // Themes can be registered like so:

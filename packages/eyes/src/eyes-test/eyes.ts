@@ -1,16 +1,15 @@
 const {TestFailedError, TestResults} = require('@applitools/eyes.sdk.core');
 const {makeVisualGridClient, initConfig} = require('@applitools/visual-grid-client');
 const domNodesToCdt = require('@applitools/visual-grid-client/src/browser-util/domNodesToCdt');
-import * as path from 'path';
-import * as fs from 'fs';
+import path from 'path';
+import fs from 'fs';
 import glob from 'glob';
 import chalk from 'chalk';
 import {JSDOM} from 'jsdom';
 import {consoleLog} from '@ui-autotools/utils';
 import {parseSnapshotFilename} from '../generate-snapshots/filename-utils';
 
-interface IResult {
-  name: string;
+interface ITestResult {
   status: 'error' | 'new' | 'modified' | 'unmodified';
   url?: string;
   error?: any;
@@ -66,7 +65,7 @@ function formatName(filename: string) {
   return `${compName}: ${simName}. Style: ${styleName}.`;
 }
 
-function logEyesResult({name, status, url, error}: IResult) {
+function logEyesResult(name: string, {status, url, error}: ITestResult) {
   const isModified = status === 'modified';
   const isNew = status === 'new';
   const isError = status === 'error';
@@ -86,27 +85,27 @@ function logEyesResult({name, status, url, error}: IResult) {
 // We cannot allow any of the result promises to reject, because we're going to
 // await on a bunch of them in parallel using Promise.all, and a single rejected
 // promise would reject the entire batch.
-function getTestResult(testName: string, testResult: Promise<any>): Promise<IResult> {
+function getTestResult(testResult: Promise<any>): Promise<ITestResult> {
   return (
     testResult
     .catch((err: any) => err)
     .then((res: any) => res instanceof TestFailedError ? res.getTestResults() : res)
     .then((res: any) => Array.isArray(res) && res[0] instanceof TestResults ? res[0] : res)
-    .then((res: any): IResult => {
+    .then((res: any): ITestResult => {
       if (res instanceof TestResults) {
         const url = res.getUrl();
         if (res.getIsDifferent()) {
-          return {name: testName, status: 'modified', url};
+          return {status: 'modified', url};
         }
         if (res.getIsNew()) {
-          return {name: testName, status: 'new', url};
+          return {status: 'new', url};
         }
         if (res.isPassed()) {
-          return {name: testName, status: 'unmodified', url};
+          return {status: 'unmodified', url};
         }
       }
 
-      return {name: testName, status: 'error', error: res};
+      return {status: 'error', error: res};
     })
   );
 }
@@ -144,7 +143,7 @@ export async function runEyes(projectPath: string, directory: string) {
     const html = fs.readFileSync(path.join(directory, htmlFilename), 'utf-8');
     const testName = formatName(htmlFilename);
 
-    const result = getTestResult(testName, runTest(
+    const result = getTestResult(runTest(
       gridClient,
       config,
       testName,
@@ -152,12 +151,12 @@ export async function runEyes(projectPath: string, directory: string) {
       resources
     ));
 
-    result.then((res: IResult) => {
+    result.then((res: ITestResult) => {
       if (res.status === 'error' || res.status === 'modified') {
         process.exitCode = 1;
-        logEyesResult(res);
+        logEyesResult(testName, res);
       } else {
-        logEyesResult(res);
+        logEyesResult(testName, res);
       }
     });
 

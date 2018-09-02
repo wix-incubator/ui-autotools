@@ -1,5 +1,6 @@
-import {IMetadataAndSchemas, IExportSourceAndSchema} from './meta';
 import {getCompName} from '@ui-autotools/registry';
+import {getProjectName} from '@ui-autotools/utils';
+import {IMetadataAndSchemas, IExportSourceAndSchema} from './meta';
 
 export interface IComponentData {
   name: string;
@@ -7,7 +8,12 @@ export interface IComponentData {
   simulationTitles: string[];
 }
 
-export function formatComponentDataForClient(
+export interface IClientData {
+  projectName: string;
+  components: IComponentData[];
+}
+
+function formatComponentDataForClient(
   {metadata, schemasByComponent}: IMetadataAndSchemas
 ) {
   const result: IComponentData[] = [];
@@ -20,4 +26,14 @@ export function formatComponentDataForClient(
     });
   }
   return result;
+}
+
+export function getClientData(
+  projectPath: string,
+  metadataAndSchemas: IMetadataAndSchemas
+): IClientData {
+  return {
+    projectName: getProjectName(projectPath),
+    components: formatComponentDataForClient(metadataAndSchemas)
+  };
 }

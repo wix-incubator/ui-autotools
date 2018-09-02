@@ -95,3 +95,8 @@ export function getMetadataAndSchemasInDirectory(
   );
   return {metadata, schemasByComponent};
 }
+
+export function getComponentNamesFromMetadata(metadata: IMetadata): string[] {
+  return Array.from(metadata.components.values())
+         .map(({component}) => getCompName(component));
+}

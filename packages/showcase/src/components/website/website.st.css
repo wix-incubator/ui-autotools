@@ -13,3 +13,13 @@
   flex: 1;
   padding: 48px;
 }
+
+.projectName {
+  color: #7A92A5;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 18px;
+  padding: 32px 24px 0 24px;
+  text-transform: uppercase;
+  font-weight: bold;
+}

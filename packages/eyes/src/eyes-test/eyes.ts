@@ -83,7 +83,7 @@ function logEyesResult({name, status, url, error}: IResult) {
 // We cannot allow any of the result promises to reject, because we're going to
 // await on a bunch of them in parallel using Promise.all, and a single rejected
 // promise would reject the entire batch.
-function getTestResult({testName, testResult}: {testName: string, testResult: any}): Promise<IResult> {
+function getTestResult(testName: string, testResult: Promise<any>): Promise<IResult> {
   return (
     testResult
     .catch((err: any) => err)
@@ -140,14 +140,15 @@ export async function runEyes(projectPath: string, directory: string) {
 
   for (const htmlFilename of htmlFilenames) {
     const html = fs.readFileSync(path.join(directory, htmlFilename), 'utf-8');
-
-    const result = getTestResult(runTest(
+    const {testName, testResult} = await runTest(
       gridClient,
       config,
       htmlFilename,
       html,
       resources
-    ));
+    );
+
+    const result = getTestResult(testName, testResult);
 
     result.then((res: IResult) => {
       if (res.status === 'error' || res.status === 'modified') {

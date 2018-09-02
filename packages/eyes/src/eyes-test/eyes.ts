@@ -51,9 +51,8 @@ interface IResource {
 function getStaticResources(cssFilenames: string[], resourceDir: string): {[url: string]: IResource} {
   const resources: {[url: string]: IResource} = {};
   for (const cssFilename of cssFilenames) {
-    const url: string = '/' + cssFilename;
-    resources[url] = {
-      url,
+    resources[cssFilename] = {
+      url: cssFilename,
       type: 'text/css',
       value: fs.readFileSync(path.join(resourceDir, cssFilename))
     };

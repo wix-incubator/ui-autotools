@@ -6,16 +6,17 @@ import './global.st.css';
 import style from './website.st.css';
 
 interface IWebsiteProps {
-  path: string;
+  route: string;
+  projectName: string;
   components: IComponentData[];
 }
 
 export class Website extends React.Component<IWebsiteProps> {
   public render() {
-    const {components, path} = this.props;
+    const {projectName, components, route} = this.props;
 
     const componentNames = components.map((comp) => comp.name);
-    const match = path.match(/\/components\/(\w+)/);
+    const match = route.match(/\/components\/(\w+)/);
     const currentComponentName = match ? match[1] : undefined;
     const currentComponent =
       components.find((comp) => comp.name === currentComponentName);
@@ -23,6 +24,9 @@ export class Website extends React.Component<IWebsiteProps> {
     return (
       <div {...style('root', {}, this.props)}>
         <nav className={style.sidebar}>
+          <div className={style.projectName}>
+            {projectName}
+          </div>
           <ComponentList
             components={componentNames}
             currentComponent={currentComponentName}

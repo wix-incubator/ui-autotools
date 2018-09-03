@@ -160,12 +160,13 @@ export class SchemaLinker {
         let res: Schema & IObjectFields = {};
         for (const option of options) {
             let entity;
+            debugger;
             if (isRef(option)) {
                 entity = this.link(this.handleRef(option, schema, paramsMap), schema, paramsMap);
-                this.mergeProperties(entity, res, schema, paramsMap);
+                this.mergeProperties(entity, res, schema, paramsMap, option.$ref);
             } else if (isSchemaOfType('object', option)) {
                 entity = this.link(option, schema, paramsMap);
-                this.mergeProperties(entity, res, schema, paramsMap);
+                this.mergeProperties(entity, res, schema, paramsMap, option.definedAt);
             } else if (option.$oneOf) {
                 const linkedOption = this.link(option, schema, paramsMap);
                 const newRes: Schema = {$oneOf: []};
@@ -201,6 +202,9 @@ export class SchemaLinker {
                     if (option.enum) {
                         res.enum = option.enum;
                     }
+                    if (option.definedAt) {
+                        res.definedAt = option.definedAt;
+                    }
                 } else {
                     if (Object.keys(res).length === 0) {
                         res = option;
@@ -208,6 +212,9 @@ export class SchemaLinker {
                         if (option.enum) {
                             if (!res.enum) {
                                 res.enum = option.enum;
+                                if (option.definedAt) {
+                                    res.definedAt = option.definedAt;
+                                }
                             } else {
                                 const enums = [];
                                 for (let i = 0; i < option.enum.length; i++) {
@@ -221,6 +228,9 @@ export class SchemaLinker {
                                     res.enum = enums;
                                 }
                             }
+                        }
+                        if (option.definedAt) {
+                            res.definedAt = option.definedAt;
                         }
                     } else {
                         return {$ref: NeverId};
@@ -239,7 +249,7 @@ export class SchemaLinker {
         return res;
     }
 
-    private mergeProperties(entity: Schema & (IObjectFields | InterfaceSchema), res: Schema & (IObjectFields | InterfaceSchema), schema: ModuleSchema, paramsMap?: Map<string, Schema>) {
+    private mergeProperties(entity: Schema & (IObjectFields | InterfaceSchema), res: Schema & (IObjectFields | InterfaceSchema), schema: ModuleSchema, paramsMap?: Map<string, Schema>, ref?: string) {
         if (isInterfaceSchema(entity)) {
             res.$ref = interfaceId;
             if (res.type) {
@@ -257,7 +267,13 @@ export class SchemaLinker {
             for (const prop in properties) {
                 if (!res.properties.hasOwnProperty(prop)) {
                     res.properties[prop] = this.link(properties[prop], schema, paramsMap);
+                    if (ref) {
+                        res.properties[prop].definedAt = ref;
+                    }
                 } else {
+                    if (ref) {
+                        properties[prop].definedAt = ref;
+                    }
                     const r = this.handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
                     if (isNeverSchema(r)) {
                         // Maybe there is a better way than this

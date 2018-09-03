@@ -19,9 +19,11 @@ describe('schema-linker - intersections', () => {
             type: 'object',
             properties: {
                 something: {
+                    definedAt: '#A',
                     type: 'number'
                 },
                 somethingElse: {
+                    definedAt: '#B',
                     type: 'string'
                 }
             },
@@ -61,9 +63,11 @@ describe('schema-linker - intersections', () => {
                     type: 'object',
                     properties: {
                         somethingElse: {
+                            definedAt: '#B',
                             type: 'string'
                         },
                         somethingNew: {
+                            definedAt: '#C',
                             type: 'number'
                         }
                     },
@@ -95,9 +99,11 @@ describe('schema-linker - intersections', () => {
                     type: 'object',
                     properties: {
                         something: {
+                            definedAt: '#A',
                             type: 'number'
                         },
                         somethingElse: {
+                            definedAt: '#B',
                             type: 'string'
                         }
                     },
@@ -107,9 +113,11 @@ describe('schema-linker - intersections', () => {
                     type: 'object',
                     properties: {
                         something: {
+                            definedAt: '#A',
                             type: 'number'
                         },
                         somethingElse: {
+                            definedAt: '#C',
                             type: 'number'
                         }
                     },
@@ -140,6 +148,7 @@ describe('schema-linker - intersections', () => {
                     type: 'object',
                     properties: {
                         something: {
+                            definedAt: '#A',
                             type: 'number'
                         },
                     },
@@ -149,9 +158,11 @@ describe('schema-linker - intersections', () => {
                     type: 'object',
                     properties: {
                         something: {
+                            definedAt: '#A',
                             type: 'number'
                         },
                         somethingElse: {
+                            definedAt: '#C',
                             type: 'number'
                         }
                     },
@@ -161,9 +172,11 @@ describe('schema-linker - intersections', () => {
                     type: 'object',
                     properties: {
                         something: {
+                            definedAt: '#A',
                             type: 'number'
                         },
                         somethingElse: {
+                            definedAt: '#B',
                             type: 'string'
                         }
                     },
@@ -188,6 +201,7 @@ describe('schema-linker - intersections', () => {
             type: 'object',
             properties: {
                 something: {
+                    definedAt: '#MyType',
                     type: 'object',
                     properties: {
                         a: {
@@ -281,6 +295,7 @@ describe('schema-linker - intersections', () => {
             type: 'object',
             properties: {
                 something: {
+                    definedAt: '#b',
                     type: 'string',
                     enum: ['gaga'],
                 }
@@ -376,6 +391,7 @@ describe('schema-linker - intersections', () => {
                     type: 'string'
                 },
                 someone: {
+                    definedAt: '#b',
                     type: 'number'
                 }
             },

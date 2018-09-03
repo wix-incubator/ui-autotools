@@ -37,6 +37,34 @@ export class SchemaLinker {
         return this.link(entity, schema);
     }
 
+    private link(entity: Schema, schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
+        if (!entity) {
+            return {$ref: UnknownId};
+        }
+        if (isClassSchema(entity)) {
+            return this.linkClass(schema, entity);
+        }
+        if (isInterfaceSchema(entity)) {
+            return this.linkInterface(entity, schema);
+        }
+        if (isFunctionSchema(entity)) {
+            return this.linkFunction(entity, schema, paramsMap);
+        }
+        if (isRef(entity)) {
+            return this.handleRef(entity, schema, paramsMap);
+        }
+        if (entity.$allOf) {
+            return this.handleIntersection(entity.$allOf, schema, paramsMap);
+        }
+        if (entity.$oneOf) {
+            return this.handleUnion(entity.$oneOf, schema);
+        }
+        if (isSchemaOfType('object', entity)) {
+            return this.handleObject(entity, schema);
+        }
+        return entity;
+    }
+
     private getRefEntity(ref: string, schema: ModuleSchema, paramsMap?: Map<string, Schema>): {refEntity: Schema | null, refEntityType: string} {
         if (!ref) {
             return {refEntity: null, refEntityType: ref};
@@ -66,7 +94,9 @@ export class SchemaLinker {
         if (isRef(refEntity)) {
             return this.getRefEntity(refEntity.$ref, schema, paramsMap);
         }
-        refEntity.definedAt = '#' + cleanRef;
+        if (!refEntity.definedAt) {
+            refEntity.definedAt = '#' + cleanRef;
+        }
         return {refEntity, refEntityType: cleanRef};
     }
 
@@ -108,34 +138,6 @@ export class SchemaLinker {
             this.importMap.set(path, importSchema);
         }
         return importSchema;
-    }
-
-    private link(entity: Schema, schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
-        if (!entity) {
-            return {$ref: UnknownId};
-        }
-        if (isClassSchema(entity)) {
-            return this.linkClass(schema, entity);
-        }
-        if (isInterfaceSchema(entity)) {
-            return this.linkInterface(entity, schema);
-        }
-        if (isFunctionSchema(entity)) {
-            return this.linkFunction(entity, schema, paramsMap);
-        }
-        if (isRef(entity)) {
-            return this.handleRef(entity, schema, paramsMap);
-        }
-        if (entity.$allOf) {
-            return this.handleIntersection(entity.$allOf, schema, paramsMap);
-        }
-        if (entity.$oneOf) {
-            return this.handleUnion(entity.$oneOf, schema);
-        }
-        if (isSchemaOfType('object', entity)) {
-            return this.handleObject(entity, schema);
-        }
-        return entity;
     }
 
     private handleRef(entity: Schema & {$ref: string}, schema: ModuleSchema, paramsMap?: Map<string, Schema>) {
@@ -267,11 +269,11 @@ export class SchemaLinker {
             for (const prop in properties) {
                 if (!res.properties.hasOwnProperty(prop)) {
                     res.properties[prop] = this.link(properties[prop], schema, paramsMap);
-                    if (ref && !isInterfaceSchema(entity)) {
+                    if (ref && !res.properties[prop].definedAt && !isInterfaceSchema(entity)) {
                         res.properties[prop].definedAt = ref;
                     }
                 } else {
-                    if (ref && !isInterfaceSchema(entity)) {
+                    if (ref && !properties[prop].definedAt && !isInterfaceSchema(entity)) {
                         properties[prop].definedAt = ref;
                     }
                     const r = this.handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
@@ -430,7 +432,7 @@ export class SchemaLinker {
 
     private handleObject(entity: Schema & IObjectFields, schema: ModuleSchema): Schema {
         const res: typeof entity = {};
-        this.mergeProperties(entity, res, schema);
+        this.mergeProperties(entity, res, schema, undefined, entity.definedAt);
         return res;
     }
 

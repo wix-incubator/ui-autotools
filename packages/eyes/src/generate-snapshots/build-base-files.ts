@@ -33,9 +33,7 @@ export const buildBaseFiles = (projectPath: string) => {
           styles.forEach((style) => {
             const stylePath = stylePathPrefix + style.path;
             const filename = generateFilename(compName, simulationName, i, style.name, styleIndex);
-            console.log(filename);
             const data = generateData(compName, compPath, stylePath);
-            console.log(data);
             fs.writeFileSync(filename, data);
             styleIndex++;
           });

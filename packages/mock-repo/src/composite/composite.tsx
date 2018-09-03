@@ -8,6 +8,6 @@ export interface IProps {
 }
 
 export const Composite: React.SFC<IProps> = (props) =>
-  <div  {...style('root', {}, props)}><ChildComp text={props.text} /></div>;
+  <div {...style('root', {}, props)}><ChildComp text={props.text} /></div>;
 
 Composite.displayName = 'Composite';

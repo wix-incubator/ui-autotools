@@ -160,7 +160,6 @@ export class SchemaLinker {
         let res: Schema & IObjectFields = {};
         for (const option of options) {
             let entity;
-            debugger;
             if (isRef(option)) {
                 entity = this.link(this.handleRef(option, schema, paramsMap), schema, paramsMap);
                 this.mergeProperties(entity, res, schema, paramsMap, option.$ref);
@@ -197,6 +196,7 @@ export class SchemaLinker {
                     }
                 }
             } else {
+                debugger;
                 if (!res.type && option.type) {
                     res.type = option.type;
                     if (option.enum) {

@@ -320,6 +320,7 @@ describe('schema-linker - intersections', () => {
             type: 'object',
             properties: {
                 something: {
+                    definedAt: '#b',
                     type: 'string',
                     enum: ['gaga'],
                 }
@@ -344,6 +345,7 @@ describe('schema-linker - intersections', () => {
             type: 'object',
             properties: {
                 something: {
+                    definedAt: '#b',
                     type: 'string',
                     enum: ['gaga'],
                 }

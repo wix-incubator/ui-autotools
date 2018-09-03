@@ -12,7 +12,7 @@ import {consoleLog} from '@ui-autotools/utils';
 import {dedent} from './dedent';
 import {parseSnapshotFilename} from './filename-utils';
 
-const fileNameRegex = /(?:.\/.autotools\/)(.+)/; // Match the file name
+const fileNameRegex = /(?:.\/.autotools\/tmp\/)(.+)/; // Match the file name
 
 async function buildSingleFile(file: string, directory: string, filteringLogic: (stylableModule: any) => any, config: any) {
   const entryName = file.match(fileNameRegex)![1];
@@ -98,7 +98,7 @@ export const generateSnapshots = async (processDir: string, directory: string) =
   const config = require(path.join(processDir, './.autotools/webpack.config.js'));
   const mapping = mapSylesToComponents(Registry, processDir);
   const filteringLogic = generateFilteringLogic(mapping);
-  const files = glob.sync('./.autotools/**.ts', {cwd: processDir}); // Tool must be run in the root
+  const files = glob.sync('./.autotools/tmp/**.ts', {cwd: processDir}); // Tool must be run in the root
 
   consoleLog('Generating snapshots...');
   for (const file of files) {

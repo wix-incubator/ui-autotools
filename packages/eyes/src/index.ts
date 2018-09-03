@@ -4,7 +4,7 @@ import {runEyes} from './eyes-test/eyes';
 import tmp from 'tmp';
 
 export async function eyesTest(projectPath: string) {
-  const dir = tmp.dirSync({unsafeCleanup: true});
+  const dir = tmp.dirSync({unsafeCleanup: false});
 
   try {
     buildBaseFiles(projectPath);

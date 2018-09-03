@@ -10,7 +10,7 @@ export interface IFileParts {
 
 export function generateFilename(componentName: string, simName: string, simIndex: number, styleName?: string, styleIndex?: number): string {
   const variantString = styleIndex ? `@${styleIndex}@${styleName}` : '';
-  return `./.autotools/${componentName}@${simIndex}@${simName}${variantString}.ts`;
+  return `${componentName}@${simIndex}@${simName}${variantString}.ts`;
 }
 
 export function generateData(componentName: string, componentPath: string, stylePath?: string): string {

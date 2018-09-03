@@ -9,14 +9,14 @@ export const buildBaseFiles = (projectPath: string) => {
   consoleLog('Importing Metafiles...');
   importMeta();
 
-  const autotoolsFolder = path.join(projectPath, '.autotools');
+  const autotoolsFolder = path.join(projectPath, '.autotools', 'tmp');
 
   if (!fs.existsSync(autotoolsFolder)) {
     fs.mkdirSync(autotoolsFolder);
   }
 
-  const stylePathPrefix = '../';
-  const compPathPrefix = '../';
+  const stylePathPrefix = '../../'; // We're two folders deep in .autotools
+  const compPathPrefix = '../../';
 
   Registry.metadata.components.forEach((componentMetadata) => {
     const numberOfSims = componentMetadata.simulations.length;
@@ -33,13 +33,13 @@ export const buildBaseFiles = (projectPath: string) => {
             const stylePath = stylePathPrefix + style.path;
             const filename = generateFilename(compName, simulationName, i, style.name, styleIndex);
             const data = generateData(compName, compPath, stylePath);
-            fs.writeFileSync(filename, data);
+            fs.writeFileSync(path.join(autotoolsFolder, filename), data);
             styleIndex++;
           });
         } else {
           const filename = generateFilename(compName, simulationName, i);
           const data = generateData(compName, compPath);
-          fs.writeFileSync(filename, data);
+          fs.writeFileSync(path.join(autotoolsFolder, filename), data);
         }
       }
     }

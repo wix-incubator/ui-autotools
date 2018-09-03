@@ -247,7 +247,6 @@ describe('schema-linker - intersections', () => {
             },
             required: ['something']
         };
-        debugger;
         expect(res).to.eql(expected);
     });
     it('should deep flatten generic type definition with intersections 3', async () => {
@@ -256,7 +255,8 @@ describe('schema-linker - intersections', () => {
         export type MyType<T extends object> = {
             something: T & {id:string};
         };
-        export type B = MyType<{ title: string}> &  MyType<{ price: number}>;
+        export type A = { title: string};
+        export type B = MyType<A> &  MyType<{ price: number}>;
         `}, 'B', fileName);
 
         const expected: Schema<'object'> = {
@@ -266,12 +266,15 @@ describe('schema-linker - intersections', () => {
                     type: 'object',
                     properties: {
                         title: {
+                            definedAt: '#A',
                             type: 'string'
                         },
                         id: {
+                            definedAt: '#MyType',
                             type: 'string'
                         },
                         price: {
+                            definedAt: '#MyType!T',
                             type: 'number'
                         }
                     },

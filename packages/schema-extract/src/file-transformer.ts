@@ -616,6 +616,7 @@ const describeUnionType: TsNodeDescriber<ts.UnionTypeNode> = (decl, checker, env
     const groupedSchemas: Schema[] = [];
     let specificString: Schema | undefined;
     let specificNumber: Schema | undefined;
+    let specificBool: Schema | undefined;
     schemas.forEach((s) => {
         if (s.type === 'string' && s.enum) {
             specificString = specificString || {
@@ -629,6 +630,12 @@ const describeUnionType: TsNodeDescriber<ts.UnionTypeNode> = (decl, checker, env
                 enum: [],
             };
             specificNumber.enum = specificNumber.enum!.concat(s.enum);
+        } else if (s.type === 'boolean' && s.enum) {
+            specificBool = specificBool || {
+                type: 'boolean',
+                enum: [],
+            };
+            specificBool.enum = specificBool.enum!.concat(s.enum);
         } else {
             groupedSchemas.push(s);
         }
@@ -639,6 +646,14 @@ const describeUnionType: TsNodeDescriber<ts.UnionTypeNode> = (decl, checker, env
 
     if (specificNumber) {
         groupedSchemas.push(specificNumber);
+    }
+
+    if (specificBool) {
+        if (specificBool.enum!.length > 1) {
+            groupedSchemas.push({type: 'boolean'});
+        } else {
+            groupedSchemas.push(specificBool);
+        }
     }
 
     if (groupedSchemas.length > 1) {

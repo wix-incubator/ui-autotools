@@ -160,6 +160,7 @@ export class SchemaLinker {
         let res: Schema & IObjectFields = {};
         for (const option of options) {
             let entity;
+            debugger;
             if (isRef(option)) {
                 entity = this.link(this.handleRef(option, schema, paramsMap), schema, paramsMap);
                 this.mergeProperties(entity, res, schema, paramsMap, option.$ref);
@@ -196,7 +197,6 @@ export class SchemaLinker {
                     }
                 }
             } else {
-                debugger;
                 if (!res.type && option.type) {
                     res.type = option.type;
                     if (option.enum) {
@@ -249,7 +249,7 @@ export class SchemaLinker {
         return res;
     }
 
-    private mergeProperties(entity: Schema & (IObjectFields | InterfaceSchema), res: Schema & (IObjectFields | InterfaceSchema), schema: ModuleSchema, paramsMap?: Map<string, Schema>, ref?: string) {
+    private mergeProperties(entity: Schema & (IObjectFields | InterfaceSchema), res: (Schema & IObjectFields) | InterfaceSchema, schema: ModuleSchema, paramsMap?: Map<string, Schema>, ref?: string) {
         if (isInterfaceSchema(entity)) {
             res.$ref = interfaceId;
             if (res.type) {
@@ -267,11 +267,11 @@ export class SchemaLinker {
             for (const prop in properties) {
                 if (!res.properties.hasOwnProperty(prop)) {
                     res.properties[prop] = this.link(properties[prop], schema, paramsMap);
-                    if (ref) {
+                    if (ref && !isInterfaceSchema(entity)) {
                         res.properties[prop].definedAt = ref;
                     }
                 } else {
-                    if (ref) {
+                    if (ref && !isInterfaceSchema(entity)) {
                         properties[prop].definedAt = ref;
                     }
                     const r = this.handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);

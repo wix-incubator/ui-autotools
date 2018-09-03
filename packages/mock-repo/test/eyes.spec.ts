@@ -1,7 +1,7 @@
 const {makeVisualGridClient, initConfig} = require('@applitools/visual-grid-client');
 const domNodesToCdt = require('@applitools/visual-grid-client/src/browser-util/domNodesToCdt');
-import * as path from 'path';
-import * as fs from 'fs';
+import path from 'path';
+import fs from 'fs';
 import {JSDOM} from 'jsdom';
 
 describe('visual-grid-client test', () => {

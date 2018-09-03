@@ -1,3 +1,5 @@
+import {basename} from 'path';
+
 export interface IFileParts {
   compName: string;
   simIndex: number;
@@ -26,8 +28,4 @@ export function parseSnapshotFilename(file: string, suffix: string): IFileParts 
   const [compName, simIndex, simName, styleIndex, styleName] = basename(file, suffix).split('@');
 
   return {compName, simIndex: parseInt(simIndex, 10), simName, styleIndex: parseInt(styleIndex, 10), styleName};
-}
-
-function basename(file: string, suffix: string) {
-  return file.substring(0, file.indexOf(suffix));
 }

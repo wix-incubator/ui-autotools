@@ -1,4 +1,9 @@
-export function generateFilteringLogic(mapping: any): (stylableModule: any) => any {
+/**
+ * This function exports a function, which is done to give the inner function (filterLogicModule) access
+ * to the mapping of component styles to their logic files. This is done because the HTMLSnapshotPlugin,
+ * which filterLogicModule is passed to, expects a method
+ */
+export function generateFilteringLogic(mapping: {[stylePath: string]: string}): (stylableModule: any) => any {
     const filterLogicModule = (stylableModule: any) => {
         const baseCompFile = mapping[stylableModule.resource] + '.tsx';
 
@@ -22,7 +27,7 @@ export function generateFilteringLogic(mapping: any): (stylableModule: any) => a
             throw new Error(
                 `Stylable Component Conflict:\n ${
                     stylableModule.resource
-                } has multiple components entries [${Array.from(set).map((m) => m)}] `
+                } has multiple components entries [${Array.from(set)}] `
             );
         }
         return views[0];

@@ -8,8 +8,8 @@ export interface IRegistry<AssetMap = any> {
 
 export interface IComponentMetadata<Props> {
   component: ComponentType<Props>;
-  exportedFrom: (compInfo: ICompInfo) => void;
-  compInfo: ICompInfo;
+  exportedFrom: (compInfo: IExportInfo) => void;
+  compInfo: IExportInfo;
   simulations: Array<ISimulation<Props>>;
   styles: Map<any, IStyleMetadata>;
   addSim: (sim: ISimulation<Props>) => void;
@@ -18,7 +18,7 @@ export interface IComponentMetadata<Props> {
   reactStrictModeCompliant: boolean;
 }
 
-export interface ICompInfo {
+export interface IExportInfo {
   path: string; // TODO: add path verification
   exportName: string;
   baseStylePath: string; // TODO: add path verification

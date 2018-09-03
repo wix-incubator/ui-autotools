@@ -1,7 +1,7 @@
 import Registry, {importMeta} from '@ui-autotools/registry';
 import {consoleLog} from '@ui-autotools/utils';
-import * as fs from 'fs';
-import * as path from 'path';
+import fs from 'fs';
+import path from 'path';
 import {generateFilename, generateData} from './filename-utils';
 
 export const buildBaseFiles = () => {
@@ -26,8 +26,8 @@ export const buildBaseFiles = () => {
     compName = componentMetadata.compInfo.exportName;
 
     if (compName) {
-      for (let i = 1; i <= numberOfSims; i++) {
-        const simulationName = componentMetadata.simulations[i - 1].title;
+      for (let i = 0; i < numberOfSims; i++) {
+        const simulationName = componentMetadata.simulations[i].title;
         if (styles.size) {
           let styleIndex = 1;
           styles.forEach((style) => {

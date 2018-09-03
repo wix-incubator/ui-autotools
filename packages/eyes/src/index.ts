@@ -7,7 +7,7 @@ export async function eyesTest(projectPath: string) {
   const dir = tmp.dirSync({unsafeCleanup: true});
 
   try {
-    buildBaseFiles();
+    buildBaseFiles(projectPath);
     await generateSnapshots(projectPath, dir.name);
     await runEyes(projectPath, dir.name);
   } catch (error) {

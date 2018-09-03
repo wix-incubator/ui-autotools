@@ -9,7 +9,9 @@ export interface IRegistry<AssetMap = any> {
 export interface IComponentMetadata<Props> {
   component: ComponentType<Props>;
   exportedFrom: (compInfo: IExportInfo) => void;
-  compInfo: IExportInfo;
+  path: string; // TODO: add path verification
+  exportName: string;
+  baseStylePath: string; // TODO: add path verification
   simulations: Array<ISimulation<Props>>;
   styles: Map<any, IStyleMetadata>;
   addSim: (sim: ISimulation<Props>) => void;

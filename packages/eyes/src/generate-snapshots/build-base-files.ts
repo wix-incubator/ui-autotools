@@ -4,15 +4,15 @@ import fs from 'fs';
 import path from 'path';
 import {generateFilename, generateData} from './filename-utils';
 
-export const buildBaseFiles = () => {
+export const buildBaseFiles = (projectPath: string) => {
   consoleLog('Building base files...');
   consoleLog('Importing Metafiles...');
   importMeta();
 
-  const generatedDir = path.join(process.cwd(), '.autotools');
+  const autotoolsFolder = path.join(projectPath, '.autotools');
 
-  if (!fs.existsSync(generatedDir)) {
-    fs.mkdirSync(generatedDir);
+  if (!fs.existsSync(autotoolsFolder)) {
+    fs.mkdirSync(autotoolsFolder);
   }
 
   const stylePathPrefix = '../';
@@ -22,8 +22,8 @@ export const buildBaseFiles = () => {
   Registry.metadata.components.forEach((componentMetadata) => {
     const numberOfSims = componentMetadata.simulations.length;
     const styles = componentMetadata.styles;
-    const compPath = compPathPrefix + componentMetadata.compInfo.path;
-    compName = componentMetadata.compInfo.exportName;
+    const compPath = compPathPrefix + componentMetadata.path;
+    compName = componentMetadata.exportName;
 
     if (compName) {
       for (let i = 0; i < numberOfSims; i++) {
@@ -33,7 +33,9 @@ export const buildBaseFiles = () => {
           styles.forEach((style) => {
             const stylePath = stylePathPrefix + style.path;
             const filename = generateFilename(compName, simulationName, i, style.name, styleIndex);
+            console.log(filename);
             const data = generateData(compName, compPath, stylePath);
+            console.log(data);
             fs.writeFileSync(filename, data);
             styleIndex++;
           });

@@ -6,7 +6,9 @@ export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
   public simulations: Array<ISimulation<Props>> = []; // Initialize with "empty" simulation
   public styles: Map<any, IStyleMetadata> = new Map<any, IStyleMetadata>();
   public reactStrictModeCompliant: boolean = true;
-  public compInfo: IExportInfo = {path: '', exportName: '', baseStylePath: ''};
+  public path: string = '';
+  public exportName: string = '';
+  public baseStylePath: string = '';
 
   public constructor(public component: React.ComponentType<Props>) {}
 
@@ -32,6 +34,9 @@ export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
   }
 
   public exportedFrom(compInfo: IExportInfo) {
-    this.compInfo = compInfo;
+    const {path, exportName, baseStylePath} = compInfo;
+    this.path = path;
+    this.exportName = exportName;
+    this.baseStylePath = baseStylePath;
   }
 }

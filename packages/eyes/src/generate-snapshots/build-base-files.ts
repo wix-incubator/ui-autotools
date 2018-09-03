@@ -17,13 +17,12 @@ export const buildBaseFiles = (projectPath: string) => {
 
   const stylePathPrefix = '../';
   const compPathPrefix = '../';
-  let compName: string;
 
   Registry.metadata.components.forEach((componentMetadata) => {
     const numberOfSims = componentMetadata.simulations.length;
     const styles = componentMetadata.styles;
     const compPath = compPathPrefix + componentMetadata.path;
-    compName = componentMetadata.exportName;
+    const compName = componentMetadata.exportName;
 
     if (compName) {
       for (let i = 0; i < numberOfSims; i++) {

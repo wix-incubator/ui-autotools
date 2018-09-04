@@ -4,7 +4,7 @@ import glob from 'glob';
 import dotenv from 'dotenv';
 import {Command} from 'commander';
 import {hydrationTest} from '@ui-autotools/sanity';
-import {eyesTest} from '@ui-autotools/eyes';
+import {eyesTest} from '@ui-autotools/snap';
 import {a11yTest, impactLevels} from '@ui-autotools/a11y';
 import {buildWebsite, startWebsite} from '@ui-autotools/showcase';
 import ssrTest from './ssr-test/mocha-wrapper';

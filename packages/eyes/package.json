@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/eyes",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -29,14 +29,14 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "@ui-autotools/registry": "^1.0.7"
+    "@ui-autotools/registry": "^1.0.8"
   },
   "dependencies": {
     "@applitools/eyes.sdk.core": "^1.8.0",
     "@applitools/visual-grid-client": "^4.2.1",
     "@stylable/webpack-extensions": "^0.1.10",
     "@stylable/webpack-plugin": "^0.1.7",
-    "@ui-autotools/utils": "^1.0.6",
+    "@ui-autotools/utils": "^1.0.7",
     "chalk": "^2.4.1",
     "dotenv": "^6.0.0",
     "glob": "^7.1.2",

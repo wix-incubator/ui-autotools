@@ -5,11 +5,11 @@ import {registerRequireHooks} from '@ui-autotools/utils';
 registerRequireHooks();
 
 const importMeta = (filePattern?: string, basepath?: string) => {
-  const options = {
+  const options: glob.IOptions = {
     nosort: true,
     matchBase: true,
     absolute: true,
-    basepath
+    cwd: basepath
   };
   const defaultPattern = './**/*.meta.ts[x?]';
 

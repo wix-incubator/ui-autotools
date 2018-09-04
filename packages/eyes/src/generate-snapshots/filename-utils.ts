@@ -9,7 +9,7 @@ export interface IFileParts {
   styleName?: string;
 }
 
-export function generateFilename(componentName: string, simName: string, simIndex: number, styleName?: string): string {
+export function generateSnapshotFilename(componentName: string, simName: string, simIndex: number, styleName?: string): string {
   const variantString = styleName ? `@${styleName}` : '';
   return `${componentName}@${simIndex}@${simName}${variantString}@.snapshot.ts`;
 }

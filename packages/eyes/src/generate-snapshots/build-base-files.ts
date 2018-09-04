@@ -1,12 +1,11 @@
 import {consoleLog} from '@ui-autotools/utils';
 import fs from 'fs';
 import path from 'path';
-import {generateFilename, generateData} from './filename-utils';
+import {generateSnapshotFilename, generateData} from './filename-utils';
 import { IRegistry } from '@ui-autotools/registry';
 
 export const buildBaseFiles = (projectPath: string, Registry: IRegistry) => {
   consoleLog('Building base files...');
-  consoleLog('Importing Metafiles...');
 
   const autotoolsFolder = path.join(projectPath, '.autotools', 'tmp');
 
@@ -29,13 +28,13 @@ export const buildBaseFiles = (projectPath: string, Registry: IRegistry) => {
         if (styles.size) {
           styles.forEach((style) => {
             const stylePath = path.join(stylePathPrefix, style.path);
-            const filename = generateFilename(compName, simulationName, i, style.name);
+            const filename = generateSnapshotFilename(compName, simulationName, i, style.name);
             const data = generateData(compName, compPath, stylePath);
             fs.writeFileSync(path.join(autotoolsFolder, filename), data);
           });
         } else {
           // We only want to render the base style if there are no other style variants
-          const filename = generateFilename(compName, simulationName, i);
+          const filename = generateSnapshotFilename(compName, simulationName, i);
           const data = generateData(compName, compPath);
           fs.writeFileSync(path.join(autotoolsFolder, filename), data);
         }

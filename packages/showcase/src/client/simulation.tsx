@@ -15,8 +15,8 @@ const sim = compMeta && compMeta.simulations.find(({title}) =>
   title === simulationTitle
 );
 
-if (Comp && sim) {
+if (compMeta && sim) {
   const root = document.createElement('div');
   document.body.appendChild(root);
-  ReactDOM.render(compMeta!.simulationToJSX(sim), root);
+  ReactDOM.render(compMeta.simulationToJSX(sim), root);
 }

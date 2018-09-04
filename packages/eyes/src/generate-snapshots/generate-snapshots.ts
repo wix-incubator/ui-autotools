@@ -5,7 +5,6 @@ import glob from 'glob';
 import {HTMLSnapshotPlugin} from '@stylable/webpack-extensions';
 import {createElement} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
-import {generateFilteringLogic} from './filter-logic';
 import {mapSylesToComponents} from './map-styles-to-components';
 import {getCompName, IComponentMetadata, IRegistry} from '@ui-autotools/registry';
 import {consoleLog} from '@ui-autotools/utils';
@@ -18,41 +17,76 @@ function findComponentByName(name: string, Registry: IRegistry): IComponentMetad
     // process, the component definition returned by webpack has been modified from the original, so we can't
     // get the metadata with it
   for (const component of Registry.metadata.components) {
-      const metadata = component[1];
-      if (getCompName(metadata.component) === name) {
-        return metadata;
-      }
+    const metadata = component[1];
+    if (getCompName(metadata.component) === name) {
+      return metadata;
     }
+  }
 }
 
-async function buildSingleFile(fileName: string, filePath: string, directory: string, filteringLogic: (stylableModule: any) => any, config: any, Registry: IRegistry) {
-  function render(compiledFile: any, sourceFile: any) {
-    const compMetadata = findComponentByName(compiledFile.default.name, Registry);
+function render(fileName: string, Registry: IRegistry, compiledFile: any, sourceFile: any) {
+  const compMetadata = findComponentByName(compiledFile.default.name, Registry);
 
-    if (!compMetadata) {
-      throw new Error(`Could not find component metadata for ${compiledFile.default.name}`);
-    }
-
-    const {simIndex} = parseSnapshotFilename(sourceFile.id, '.snapshot.ts');
-    const props = compMetadata.simulations[simIndex].props;
-    const cssLink = `<link rel="stylesheet" type="text/css" href="${fileName}.css">`;
-    const componentString = renderToStaticMarkup(createElement(compiledFile.default.comp, {className: compiledFile.default.style.root, ...props}));
-    const template = `<!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta http-equiv="X-UA-Compatible" content="ie=edge">
-      <title>${compMetadata.exportName}</title>
-      ${cssLink}
-    </head>
-    <body>
-      ${componentString}
-    </body>
-    </html>`;
-    return dedent(template);
+  if (!compMetadata) {
+    throw new Error(`Could not find component metadata for ${compiledFile.default.name}`);
   }
 
+  const {simIndex} = parseSnapshotFilename(sourceFile.id, '.snapshot.ts');
+  const props = compMetadata.simulations[simIndex].props;
+  const cssLink = `<link rel="stylesheet" type="text/css" href="${fileName}.css">`;
+  const componentString = renderToStaticMarkup(createElement(compiledFile.default.comp, {className: compiledFile.default.style.root, ...props}));
+  const template = `<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>${compMetadata.exportName}</title>
+    ${cssLink}
+  </head>
+  <body>
+    ${componentString}
+  </body>
+  </html>`;
+  return dedent(template);
+}
+
+/**
+ * This method is used by the HTMLSnapshotPlugin to determine which component logic file to link to a specific style
+ * sheet. In this case, we don't want to build the component.tsx file associated with a certain style - we want to
+ * build the auto-generated files in the .autotools/tmp folder. By default, the HTMLSnapshotPlugin will only
+ * build files that have the same name as the associated stylesheet, hence the custom logic.
+ */
+function filterLogicModule(mapping: {[stylePath: string]: string}, stylableModule: any) {
+  const baseCompFile = mapping[stylableModule.resource] + '.tsx';
+
+  const views = stylableModule.reasons
+    .filter(({ module: _module }: {module: any}) => {
+        const isProperModule = _module &&
+        _module.type !== 'stylable' &&
+        _module.resource &&
+        _module.resource !== baseCompFile;
+        // We don't want to return the base component logic, we want to return the generated file which
+        // imports the original comp and its style variant
+
+        return isProperModule;
+    })
+    .map(({module}: {module: any}) => {
+        return module;
+    });
+
+  const set = new Set(views);
+  if (set.size > 1) {
+      throw new Error(
+          `Stylable Component Conflict:\n ${
+              stylableModule.resource
+          } has multiple components entries [${Array.from(set)}] `
+      );
+  }
+  return views[0];
+}
+
+async function buildSingleFile(fileName: string, filePath: string, directory: string, mapping: {[stylePath: string]: string}, config: any, Registry: IRegistry) {
   const snapshotConfig = {
     entry: {
       [fileName]: filePath
@@ -70,8 +104,8 @@ async function buildSingleFile(fileName: string, filePath: string, directory: st
         filename: '[name].css'
       }),
       new HTMLSnapshotPlugin({
-        render,
-        getLogicModule: filteringLogic
+        render: render.bind(null, fileName, Registry),
+        getLogicModule: filterLogicModule.bind(null, mapping)
     })
     ]
   };
@@ -91,17 +125,16 @@ async function buildSingleFile(fileName: string, filePath: string, directory: st
   });
 }
 
-export const generateSnapshots = async (processDir: string, tempDirectory: string, Registry: IRegistry) => {
-  const webpackConfig = require(path.join(processDir, '.autotools/webpack.config.js'));
-  const mapping = mapSylesToComponents(Registry, processDir);
-  const filteringLogic = generateFilteringLogic(mapping);
+export const generateSnapshots = async (projectDir: string, tempDirectory: string, Registry: IRegistry) => {
+  const webpackConfig = require(path.join(projectDir, '.autotools/webpack.config.js'));
+  const mapping = mapSylesToComponents(Registry, projectDir);
 
   // Grab the autogenerated files
-  const files = glob.sync('*.snapshot.ts', {cwd: path.join(processDir, '.autotools/tmp'), absolute: true});
+  const files = glob.sync('*.snapshot.ts', {cwd: path.join(projectDir, '.autotools/tmp'), absolute: true});
 
   consoleLog('Generating snapshots...');
   for (const file of files) {
     const {base} = parseSnapshotFilename(file, '.snapshot.ts');
-    await buildSingleFile(base, file, tempDirectory, filteringLogic, webpackConfig, Registry);
+    await buildSingleFile(base, file, tempDirectory, mapping, webpackConfig, Registry);
   }
 };

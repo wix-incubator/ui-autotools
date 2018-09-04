@@ -230,6 +230,7 @@ describe('schema-linker - intersections', () => {
 
         const expected: Schema<'object'> = {
             type: 'object',
+            definedAt: '#MyType',
             properties: {
                 something: {
                     type: 'object',

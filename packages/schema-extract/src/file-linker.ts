@@ -164,10 +164,10 @@ export class SchemaLinker {
             let entity;
             if (isRef(option)) {
                 entity = this.link(this.handleRef(option, schema, paramsMap), schema, paramsMap);
-                this.mergeProperties(entity, res, schema, paramsMap, option.$ref);
+                this.mergeProperties(entity, res, schema, paramsMap, entity.definedAt ? entity.definedAt : option.definedAt);
             } else if (isSchemaOfType('object', option)) {
                 entity = this.link(option, schema, paramsMap);
-                this.mergeProperties(entity, res, schema, paramsMap, option.definedAt);
+                this.mergeProperties(entity, res, schema, paramsMap, entity.definedAt ? entity.definedAt : option.definedAt);
             } else if (option.$oneOf) {
                 const linkedOption = this.link(option, schema, paramsMap);
                 const newRes: Schema = {$oneOf: []};
@@ -267,7 +267,7 @@ export class SchemaLinker {
             }
             for (const prop in properties) {
                 if (!res.properties.hasOwnProperty(prop)) {
-                    res.properties[prop] = this.link(properties[prop], schema, paramsMap);
+                    res.properties[prop] = properties[prop];
                     if (ref && !res.properties[prop].definedAt && !isInterfaceSchema(entity)) {
                         res.properties[prop].definedAt = ref;
                     }
@@ -405,6 +405,9 @@ export class SchemaLinker {
         if (refEntity.type) {
             res.type = refEntity.type;
         }
+        if (refEntity.definedAt) {
+            res.definedAt = refEntity.definedAt;
+        }
         const refProperties = refEntity.properties;
         if (!refProperties) {
             return res;
@@ -431,7 +434,26 @@ export class SchemaLinker {
 
     private handleObject(entity: Schema & IObjectFields, schema: ModuleSchema): Schema {
         const res: typeof entity = {};
-        this.mergeProperties(entity, res, schema, undefined, entity.definedAt);
+        if (isInterfaceSchema(entity)) {
+            res.$ref = interfaceId;
+        } else {
+            res.type = 'object';
+        }
+        if (entity.properties) {
+            const properties = entity.properties;
+            res.properties = {};
+            for (const prop in properties) {
+                if (properties.hasOwnProperty(prop)) {
+                    res.properties[prop] = this.link(properties[prop], schema);
+                }
+            }
+        }
+        if (entity.definedAt) {
+            res.definedAt = entity.definedAt;
+        }
+        if (entity.required) {
+            res.required = entity.required;
+        }
         return res;
     }
 

@@ -16,6 +16,7 @@ describe('schema-linker - imports', () => {
         }, 'B', fileName);
 
         const expected: Schema<'object'> = {
+            definedAt: '#MyType',
             type: 'object',
             properties: {
                 something: {

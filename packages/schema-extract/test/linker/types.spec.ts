@@ -15,6 +15,7 @@ describe('schema-linker - generic types', () => {
 
         const expected: Schema<'object'> = {
             type: 'object',
+            definedAt: '#MyType',
             properties: {
                 something: {
                     type: 'number'
@@ -41,6 +42,7 @@ describe('schema-linker - generic types', () => {
 
         const expected: Schema<'object'> = {
             type: 'object',
+            definedAt: '#MyType',
             properties: {
                 something: {
                     type: 'object',

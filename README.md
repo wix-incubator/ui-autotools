@@ -43,6 +43,7 @@ Registering metadata is done by requiring the Registry and creating a component 
 ```ts
 import Registry from 'ui-autotools';
 import MyComp from './my-comp.tsx';
+import theme1 from './theme1.st.css';
 
 // If the component hasn't been described before, this method adds a metadata entry for the component,
 // and returns the newly created metadata
@@ -69,6 +70,21 @@ myComponentMetadata.addSim({
         items:['🧒 ', '👶 ', '🐊 ']
     }
 });
+
+// If you want to use the "snap" tool, this method must be called. Currently, the snap
+// tool relies on Stylable
+myComponentMetadata.exportedFrom({
+  path: 'src/my-comp/my-comp',                          // the path to your component, relative to the root, and without file extension
+  exportName: 'MyComp',                                 // the name under which you export your component
+  baseStylePath: 'src/my-comp/my-comp.st.css',  // the path to the base stylesheet for the component (as opposed to themes)
+});
+
+// Themes can be registered like so:
+myComponentMetadata.addStyle(theme1, {
+    name: 'theme1',
+    path: 'src/composite/theme1.st.css'                 // path is relative to the root of the project
+});
+
 ```
 
 Components are assumed by default to be React Strict Mode compliant (meaning that they follow the guidelines described [here](https://reactjs.org/docs/strict-mode.html)). However, if your component is *not* React Strict Mode compliant, you can set a flag in metadata to disable rendering in strict mode, e.g.:

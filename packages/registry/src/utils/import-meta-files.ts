@@ -1,10 +1,15 @@
+import 'typescript-support';
 import * as glob from 'glob';
+import {registerRequireHooks} from '@ui-autotools/utils';
 
-const importMeta = (filePattern: string) => {
-  const options = {
+registerRequireHooks();
+
+const importMeta = (filePattern?: string, basepath?: string) => {
+  const options: glob.IOptions = {
     nosort: true,
     matchBase: true,
     absolute: true,
+    cwd: basepath
   };
   const defaultPattern = './**/*.meta.ts[x?]';
 
@@ -15,4 +20,4 @@ const importMeta = (filePattern: string) => {
   });
 };
 
-export default importMeta;
+export {importMeta};

@@ -45,8 +45,8 @@ program
 });
 
 program
-.command('eyes')
-.description('compare components to the expected appearance using Eyes')
+.command('snap')
+.description('compare components to the expected appearance using Applitools Eyes')
 .option('-f, --files [pattern]', 'metadata file pattern')
 .action(() => {
   eyesTest(projectPath);

@@ -2,13 +2,14 @@ import {buildBaseFiles} from './generate-snapshots/build-base-files';
 import {generateSnapshots} from './generate-snapshots/generate-snapshots';
 import {runEyes} from './eyes-test/eyes';
 import tmp from 'tmp';
+import Registry, {importMeta} from '@ui-autotools/registry';
 
 export async function eyesTest(projectPath: string) {
   const dir = tmp.dirSync({unsafeCleanup: false});
-
+  importMeta();
   try {
-    buildBaseFiles(projectPath);
-    await generateSnapshots(projectPath, dir.name);
+    buildBaseFiles(projectPath, Registry);
+    await generateSnapshots(projectPath, dir.name, Registry);
     await runEyes(projectPath, dir.name);
   } catch (error) {
     process.exitCode = 1;

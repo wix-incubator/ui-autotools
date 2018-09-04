@@ -1,13 +1,12 @@
-import Registry, {importMeta} from '@ui-autotools/registry';
 import {consoleLog} from '@ui-autotools/utils';
 import fs from 'fs';
 import path from 'path';
 import {generateFilename, generateData} from './filename-utils';
+import { IRegistry } from '@ui-autotools/registry';
 
-export const buildBaseFiles = (projectPath: string) => {
+export const buildBaseFiles = (projectPath: string, Registry: IRegistry) => {
   consoleLog('Building base files...');
   consoleLog('Importing Metafiles...');
-  importMeta();
 
   const autotoolsFolder = path.join(projectPath, '.autotools', 'tmp');
 
@@ -19,24 +18,23 @@ export const buildBaseFiles = (projectPath: string) => {
   const compPathPrefix = '../../';
 
   Registry.metadata.components.forEach((componentMetadata) => {
-    const numberOfSims = componentMetadata.simulations.length;
+    const simIndex = componentMetadata.simulations.length;
     const styles = componentMetadata.styles;
-    const compPath = compPathPrefix + componentMetadata.path;
+    const compPath =  path.join(compPathPrefix, componentMetadata.path);
     const compName = componentMetadata.exportName;
 
     if (compName) {
-      for (let i = 0; i < numberOfSims; i++) {
+      for (let i = 0; i < simIndex; i++) {
         const simulationName = componentMetadata.simulations[i].title;
         if (styles.size) {
-          let styleIndex = 1;
           styles.forEach((style) => {
-            const stylePath = stylePathPrefix + style.path;
-            const filename = generateFilename(compName, simulationName, i, style.name, styleIndex);
+            const stylePath = path.join(stylePathPrefix, style.path);
+            const filename = generateFilename(compName, simulationName, i, style.name);
             const data = generateData(compName, compPath, stylePath);
             fs.writeFileSync(path.join(autotoolsFolder, filename), data);
-            styleIndex++;
           });
         } else {
+          // We only want to render the base style if there are no other style variants
           const filename = generateFilename(compName, simulationName, i);
           const data = generateData(compName, compPath);
           fs.writeFileSync(path.join(autotoolsFolder, filename), data);

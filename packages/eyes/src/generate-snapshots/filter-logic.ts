@@ -1,7 +1,8 @@
 /**
- * This function exports a function, which is done to give the inner function (filterLogicModule) access
- * to the mapping of component styles to their logic files. This is done because the HTMLSnapshotPlugin,
- * which filterLogicModule is passed to, expects a method
+ * This method is used by the HTMLSnapshotPlugin to determine which component logic file to link to a specific style
+ * sheet. In this case, we don't want to build the component.tsx file associated with a certain style - we want to
+ * build the auto-generated files in the .autotools/tmp folder. By default, the HTMLSnapshotPlugin will only
+ * build files that have the same name as the associated stylesheet, hence the custom logic.
  */
 export function generateFilteringLogic(mapping: {[stylePath: string]: string}): (stylableModule: any) => any {
     const filterLogicModule = (stylableModule: any) => {

@@ -1,6 +1,7 @@
 import {basename} from 'path';
 
 export interface IFileParts {
+  base: string;
   compName: string;
   simIndex: number;
   simName: string;
@@ -8,9 +9,9 @@ export interface IFileParts {
   styleName?: string;
 }
 
-export function generateFilename(componentName: string, simName: string, simIndex: number, styleName?: string, styleIndex?: number): string {
-  const variantString = styleIndex ? `@${styleIndex}@${styleName}` : '';
-  return `${componentName}@${simIndex}@${simName}${variantString}.ts`;
+export function generateFilename(componentName: string, simName: string, simIndex: number, styleName?: string): string {
+  const variantString = styleName ? `@${styleName}` : '';
+  return `${componentName}@${simIndex}@${simName}${variantString}.snapshot.ts`;
 }
 
 export function generateData(componentName: string, componentPath: string, stylePath?: string): string {
@@ -25,7 +26,8 @@ export default {comp: ${componentName}, name: '${componentName}'${styleExport}};
 }
 
 export function parseSnapshotFilename(file: string, suffix: string): IFileParts {
-  const [compName, simIndex, simName, styleIndex, styleName] = basename(file, suffix).split('@');
+  const base = basename(file, suffix);
+  const [compName, simIndex, simName, styleName] = base.split('@');
 
-  return {compName, simIndex: parseInt(simIndex, 10), simName, styleIndex: parseInt(styleIndex, 10), styleName};
+  return {base, compName, simIndex: parseInt(simIndex, 10), simName, styleName};
 }

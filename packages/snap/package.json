@@ -1,5 +1,5 @@
 {
-  "name": "@ui-autotools/eyes",
+  "name": "@ui-autotools/snap",
   "version": "1.0.10",
   "main": "cjs/index.js",
   "module": "esm/index.js",

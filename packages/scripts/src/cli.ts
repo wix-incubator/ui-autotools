@@ -4,7 +4,7 @@ import glob from 'glob';
 import dotenv from 'dotenv';
 import {Command} from 'commander';
 import {hydrationTest} from '@ui-autotools/sanity';
-import {snapTest} from '@ui-autotools/snap';
+import {eyesTest} from '@ui-autotools/eyes';
 import {a11yTest, impactLevels} from '@ui-autotools/a11y';
 import {buildWebsite, startWebsite} from '@ui-autotools/showcase';
 import ssrTest from './ssr-test/mocha-wrapper';
@@ -46,10 +46,10 @@ program
 
 program
 .command('snap')
-.description('compare components to the expected appearance using Eyes')
+.description('compare components to the expected appearance using Applitools Eyes')
 .option('-f, --files [pattern]', 'metadata file pattern')
 .action(() => {
-  snapTest(projectPath);
+  eyesTest(projectPath);
 });
 
 program.command('showcase')

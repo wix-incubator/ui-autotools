@@ -27,7 +27,7 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "@ui-autotools/a11y": "^1.0.13",
-    "@ui-autotools/snap": "^1.0.10",
+    "@ui-autotools/eyes": "^1.0.10",
     "@ui-autotools/sanity": "^1.0.11",
     "@ui-autotools/showcase": "^1.0.10",
     "@ui-autotools/utils": "^1.0.7",

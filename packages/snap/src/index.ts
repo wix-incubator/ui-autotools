@@ -4,7 +4,7 @@ import {runEyes} from './snap-test/snap';
 import tmp from 'tmp';
 import Registry, {importMeta} from '@ui-autotools/registry';
 
-export async function snapTest(projectPath: string) {
+export async function eyesTest(projectPath: string) {
   const dir = tmp.dirSync({unsafeCleanup: true});
   importMeta();
   try {

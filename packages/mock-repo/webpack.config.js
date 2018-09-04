@@ -14,6 +14,7 @@ module.exports = {
         options: {
           compilerOptions: {
             declaration: false,
+            declarationMap: false
           },
         },
       },

@@ -919,23 +919,6 @@
   version "2.4.31"
   resolved "https://registry.yarnpkg.com/@types/when/-/when-2.4.31.tgz#7a4dbf009957c48fcd7ac469cadb82758ac970bf"
 
-"@ui-autotools/eyes@^1.0.10":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@ui-autotools/eyes/-/eyes-1.0.10.tgz#f1766db695f0812669967f055c0cf1ca23f44e79"
-  dependencies:
-    "@applitools/eyes.sdk.core" "^1.8.0"
-    "@applitools/visual-grid-client" "^4.2.1"
-    "@stylable/webpack-extensions" "^0.1.10"
-    "@stylable/webpack-plugin" "^0.1.7"
-    "@ui-autotools/utils" "^1.0.7"
-    chalk "^2.4.1"
-    dotenv "^6.0.0"
-    glob "^7.1.2"
-    jsdom "^11.11.0"
-    puppeteer "^1.5.0"
-    tmp "^0.0.33"
-    uuid "^3.2.1"
-
 "@webassemblyjs/ast@1.5.13":
   version "1.5.13"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.5.13.tgz#81155a570bd5803a30ec31436bc2c9c0ede38f25"

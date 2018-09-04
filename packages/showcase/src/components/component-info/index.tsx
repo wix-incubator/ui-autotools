@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {IComponentData} from '../../server/client-data';
 import {PropsTable} from '../props-table';
+import {MethodTable} from '../method-table';
 
 interface IComponentInfoProps {
   component: IComponentData;
@@ -16,6 +17,9 @@ export class ComponentInfo extends React.Component<IComponentInfoProps> {
 
         <h2>Props</h2>
         <PropsTable componentSchema={schema.schema} />
+
+        <h2>Methods</h2>
+        <MethodTable componentSchema={schema.schema} />
 
         <h2>Schema</h2>
         <pre style={{font: '11px/1.2 Menlo, Consolas, sans-serif'}}>

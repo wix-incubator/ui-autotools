@@ -1,5 +1,5 @@
 import * as React from 'react';
-import style from './props-table.st.css';
+import style from './type-definition.st.css';
 
 // The idea is for the child nodes to be able to tell to their parents how much
 // space they occupy when formatted as an inline element or as a block, e.g.:
@@ -104,7 +104,7 @@ const renderFunction: TypeRenderer = (schema, state, settings) => {
   const returns = (
     schema.returns.$ref === 'common/undefined' ?
       'void' :
-      getInlineOrBlockContent(renderType(schema.return, state, settings))
+      getInlineOrBlockContent(renderType(schema.returns, state, settings))
   );
 
   const args = schema.arguments.map((arg: any) =>
@@ -180,12 +180,16 @@ const renderType: TypeRenderer = (schema, state, settings) => {
   return renderUnknown(schema, state, settings);
 };
 
-export const renderTypeWithinSpace = (
-  schema: any,
-  maxLineLength: number,
-  tabSize: number
-): React.ReactNode => {
-  const {inline, block} = renderType(
+export interface ITypeDefinitionProps {
+  schema: any;
+  maxLineLength: number;
+  tabSize: number;
+}
+
+export const TypeDefinition: React.SFC<ITypeDefinitionProps> = ({
+  schema, maxLineLength, tabSize
+}) => {
+  const renderedType = renderType(
     schema, {
       availableInlineSpace: maxLineLength,
       availableBlockSpace: maxLineLength
@@ -194,17 +198,13 @@ export const renderTypeWithinSpace = (
     }
   );
 
-  if (inline && block) {
-    return inline.length < maxLineLength ? inline.content : block.content;
-  }
+  const children =
+    renderedType.inline && renderedType.block ?
+      renderedType.inline.length < maxLineLength ?
+        renderedType.inline.content :
+        renderedType.block.content
+      :
+      getInlineOrBlockContent(renderedType);
 
-  if (inline) {
-    return inline.content;
-  }
-
-  if (block) {
-    return block.content;
-  }
-
-  throw new Error('Type renderer should return either inline or block content');
+  return <div>{children}</div>;
 };

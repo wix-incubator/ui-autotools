@@ -1,6 +1,6 @@
 import * as React from 'react';
 import style from './props-table.st.css';
-import {renderTypeWithinSpace} from './render-type';
+import {TypeDefinition} from '../type-definition';
 
 export interface IPropsTableProps {
   componentSchema: any;
@@ -8,14 +8,7 @@ export interface IPropsTableProps {
 
 export class PropsTable extends React.Component<IPropsTableProps> {
   public render() {
-    const {componentSchema} = this.props;
-    const propsInterface = (
-      componentSchema.$ref === 'common/function' ?
-        componentSchema.arguments[0] :
-        componentSchema.properties.props
-    );
-    const required = new Set(propsInterface.required || []);
-    const properties = Array.from(Object.entries(propsInterface.properties || {}));
+    const properties = getPropTypes(this.props.componentSchema);
 
     return (
       <table {...style('root', {}, this.props)}>
@@ -26,17 +19,17 @@ export class PropsTable extends React.Component<IPropsTableProps> {
             <th className={style.header}>Default</th>
             <th className={style.header}>Description</th>
           </tr>
-          {properties.map(([name, type]: [string, any]) =>
+          {properties.map(({name, description, schema, isRequired}) =>
             <tr key={name}>
               <td className={style.propName}>{name}</td>
               <td className={style.propType}>
-                {renderTypeWithinSpace(type, 40, 2)}
+                <TypeDefinition schema={schema} maxLineLength={40} tabSize={2} />
               </td>
               <td className={style.propDefaultValue}>
-                {required.has(name) ? 'Required' : ''}
+                {isRequired ? 'Required' : ''}
               </td>
               <td className={style.propDescription}>
-                {type.description ? type.description.trim() : ''}
+                {description}
               </td>
             </tr>
           )}
@@ -44,4 +37,28 @@ export class PropsTable extends React.Component<IPropsTableProps> {
       </table>
     );
   }
+}
+
+interface IProp {
+  name: string;
+  description: string;
+  schema: any;
+  isRequired: boolean;
+}
+
+function getPropTypes(componentSchema: any): IProp[] {
+  const propsInterface = (
+    componentSchema.$ref === 'common/function' ?
+      componentSchema.arguments[0] :
+      componentSchema.properties.props
+  );
+
+  const required = new Set(propsInterface.required || []);
+  const props = Object.entries(propsInterface.properties || {});
+  return Array.from(props).map(([name, schema]: [string, any]) => ({
+      schema,
+      name,
+      description: schema.description ? schema.description.trim() : '',
+      isRequired: required.has(name)
+  }));
 }

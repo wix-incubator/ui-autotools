@@ -1,0 +1,7 @@
+.root {}
+
+.typeError {
+  padding: 2px 4px;
+  background: #FCE4EC;
+  border-radius: 2px;
+}

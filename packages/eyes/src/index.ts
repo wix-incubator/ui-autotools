@@ -5,7 +5,7 @@ import tmp from 'tmp';
 import Registry, {importMeta} from '@ui-autotools/registry';
 
 export async function eyesTest(projectPath: string) {
-  const dir = tmp.dirSync({unsafeCleanup: false});
+  const dir = tmp.dirSync({unsafeCleanup: true});
   importMeta();
   try {
     buildBaseFiles(projectPath, Registry);

@@ -11,7 +11,7 @@ export interface IFileParts {
 
 export function generateFilename(componentName: string, simName: string, simIndex: number, styleName?: string): string {
   const variantString = styleName ? `@${styleName}` : '';
-  return `${componentName}@${simIndex}@${simName}${variantString}.snapshot.ts`;
+  return `${componentName}@${simIndex}@${simName}${variantString}@.snapshot.ts`;
 }
 
 export function generateData(componentName: string, componentPath: string, stylePath?: string): string {

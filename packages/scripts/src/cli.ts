@@ -27,6 +27,7 @@ program
   importMeta(entry);
   // Run the sanity tests for each loaded metadata
   ssrTest();
+  console.log('here');
   hydrationTest(entry, webpackConfigPath);
 });
 

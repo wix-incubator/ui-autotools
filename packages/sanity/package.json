@@ -40,7 +40,7 @@
     "webpack": "^4.12.1"
   },
   "peerDependencies": {
-    "@ui-autotools/registry": "^1.0.0",
+    "@ui-autotools/registry": "^2.0.0",
     "react": ">=16",
     "react-dom": ">=16"
   },

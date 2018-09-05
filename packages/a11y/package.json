@@ -32,9 +32,9 @@
   },
   "dependencies": {
     "@ui-autotools/utils": "^1.0.8",
-    "axe-core": "3.0.3",
+    "axe-core": "3.1.1",
     "chalk": "^2.4.1",
-    "puppeteer": "^1.5.0"
+    "puppeteer": "^1.7.0"
   },
   "peerDependencies": {
     "@ui-autotools/registry": "^2.0.0",

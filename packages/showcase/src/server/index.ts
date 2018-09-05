@@ -85,7 +85,8 @@ function getWebsiteWebpackConfig(
             loader: 'ts-loader',
             options: {
               compilerOptions: {
-                declaration: false
+                declaration: false,
+                declarationMap: false
               }
             }
           }

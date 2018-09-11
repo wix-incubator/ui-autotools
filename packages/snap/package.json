@@ -32,8 +32,8 @@
     "@ui-autotools/registry": "^2.0.0"
   },
   "dependencies": {
-    "@applitools/eyes.sdk.core": "^1.8.0",
-    "@applitools/visual-grid-client": "^4.2.6",
+    "@applitools/eyes.sdk.core": "^1.9.0",
+    "@applitools/visual-grid-client": "^4.3.3",
     "@stylable/webpack-extensions": "^0.1.12",
     "@stylable/webpack-plugin": "^0.1.10",
     "@ui-autotools/utils": "^1.0.8",
@@ -41,7 +41,7 @@
     "dotenv": "^6.0.0",
     "glob": "^7.1.3",
     "jsdom": "^12.0.0",
-    "puppeteer": "^1.7.0",
+    "puppeteer": "^1.8.0",
     "tmp": "^0.0.33",
     "uuid": "^3.3.2"
   },

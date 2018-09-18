@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@applitools/eyes.sdk.core@^1.9.0":
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes.sdk.core/-/eyes.sdk.core-1.9.0.tgz#240055352de17d63694ff4830e13128d16e0aad2"
+"@applitools/eyes.sdk.core@^1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes.sdk.core/-/eyes.sdk.core-1.10.0.tgz#a2fca3e87fe4005cac814cfc12bcde4fc62b491b"
   dependencies:
     axios "^0.18.0"
     dateformat "^3.0.3"
@@ -34,11 +34,11 @@
   dependencies:
     debug "^3.1.0"
 
-"@applitools/visual-grid-client@^4.3.3":
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-4.3.3.tgz#8756669e9899d4d69d82e42a925b67ff2bc20303"
+"@applitools/visual-grid-client@^4.3.8":
+  version "4.3.8"
+  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-4.3.8.tgz#dca81742efe053181803275d63f2ad983ec2ab99"
   dependencies:
-    "@applitools/eyes.sdk.core" "^1.9.0"
+    "@applitools/eyes.sdk.core" "^1.10.0"
     "@applitools/functional-commons" "^1.0.18"
     "@applitools/http-commons" "^1.1.1"
     cssom "git+https://github.com/amitzur/CSSOM.git#925260ff2c8f8387cf76df4d5776a06044a644c8"
@@ -425,9 +425,9 @@
     inquirer "^6.2.0"
     npmlog "^4.1.2"
 
-"@lerna/publish@^3.3.2":
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/@lerna/publish/-/publish-3.3.2.tgz#bfd54183dbbc3d8d3fdfcb8860af5dd1d7906689"
+"@lerna/publish@^3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@lerna/publish/-/publish-3.4.0.tgz#d2665f7b16eb3b2b8962c47fcf31fe901ff9a288"
   dependencies:
     "@lerna/batch-packages" "^3.1.2"
     "@lerna/check-working-tree" "^3.3.0"
@@ -436,6 +436,7 @@
     "@lerna/command" "^3.3.0"
     "@lerna/describe-ref" "^3.3.0"
     "@lerna/get-npm-exec-opts" "^3.0.0"
+    "@lerna/npm-conf" "^3.0.0"
     "@lerna/npm-dist-tag" "^3.3.0"
     "@lerna/npm-publish" "^3.3.1"
     "@lerna/output" "^3.0.0"
@@ -445,7 +446,9 @@
     "@lerna/validation-error" "^3.0.0"
     "@lerna/version" "^3.3.2"
     fs-extra "^7.0.0"
+    libnpmaccess "^3.0.0"
     npm-package-arg "^6.0.0"
+    npm-registry-fetch "^3.8.0"
     npmlog "^4.1.2"
     p-finally "^1.0.0"
     p-map "^1.2.0"
@@ -576,29 +579,35 @@
   dependencies:
     type-detect "4.0.8"
 
-"@sinonjs/formatio@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@sinonjs/formatio/-/formatio-2.0.0.tgz#84db7e9eb5531df18a8c5e0bfb6e449e55e654b2"
+"@sinonjs/formatio@3.0.0", "@sinonjs/formatio@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@sinonjs/formatio/-/formatio-3.0.0.tgz#9d282d81030a03a03fa0c5ce31fd8786a4da311a"
   dependencies:
-    samsam "1.3.0"
+    "@sinonjs/samsam" "2.1.0"
 
-"@sinonjs/samsam@^2.0.0":
+"@sinonjs/samsam@2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@sinonjs/samsam/-/samsam-2.1.0.tgz#b8b8f5b819605bd63601a6ede459156880f38ea3"
   dependencies:
     array-from "^2.1.1"
 
-"@stylable/cli@^1.0.11":
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/@stylable/cli/-/cli-1.0.11.tgz#50fad61321c803713a62cfcfaa376c673de7b7b1"
+"@sinonjs/samsam@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@sinonjs/samsam/-/samsam-2.1.1.tgz#f352621c24c9e9ab2ed293a7655e8d46bfd64c16"
   dependencies:
-    "@stylable/core" "^0.1.9"
-    "@stylable/node" "^0.1.11"
-    yargs "^12.0.1"
+    array-from "^2.1.1"
 
-"@stylable/core@^0.1.9":
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/@stylable/core/-/core-0.1.9.tgz#ae57cd48b4e39f5902bddf82cf06335af9baf304"
+"@stylable/cli@^1.0.12":
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/@stylable/cli/-/cli-1.0.12.tgz#ef3581e57f15646efba140cdfe2881ff9523082e"
+  dependencies:
+    "@stylable/core" "^0.1.10"
+    "@stylable/node" "^0.1.12"
+    yargs "^12.0.2"
+
+"@stylable/core@^0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@stylable/core/-/core-0.1.10.tgz#5bbf9c6017e838a335d781848349f4c649bc7a72"
   dependencies:
     clean-css "^4.2.1"
     css-selector-tokenizer "^0.7.0"
@@ -609,36 +618,36 @@
     murmurhash "^0.0.2"
     postcss "^7.0.2"
     postcss-js "^2.0.0"
-    postcss-nested "^3.0.0"
+    postcss-nested "^4.1.0"
     postcss-safe-parser "^4.0.1"
     postcss-selector-matches "^3.0.1"
     postcss-value-parser "^3.3.0"
     url-regex "^4.1.1"
 
-"@stylable/node@^0.1.11":
-  version "0.1.11"
-  resolved "https://registry.yarnpkg.com/@stylable/node/-/node-0.1.11.tgz#490d8f0c89d1549c51dbde51fc3ccb098cbaa4b1"
+"@stylable/node@^0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@stylable/node/-/node-0.1.12.tgz#ff723d50fbb9e34dc92d774d86da67e40e78486f"
   dependencies:
-    "@stylable/core" "^0.1.9"
+    "@stylable/core" "^0.1.10"
 
 "@stylable/runtime@^0.1.8":
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/@stylable/runtime/-/runtime-0.1.8.tgz#cf48e3db4d862a291bcd4a9839f3fad79da469f3"
 
-"@stylable/webpack-extensions@^0.1.12":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@stylable/webpack-extensions/-/webpack-extensions-0.1.12.tgz#83a6a22ce1809a558adf9714105b6b38b8047a11"
+"@stylable/webpack-extensions@^0.1.13":
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/@stylable/webpack-extensions/-/webpack-extensions-0.1.13.tgz#536bbd1b59f90b64e98e6869ecbc7c2efdc9ccc0"
   dependencies:
-    "@stylable/core" "^0.1.9"
+    "@stylable/core" "^0.1.10"
     lodash.clonedeep "^4.5.0"
-    react "^16.4.2"
-    react-dom "^16.4.2"
-    webpack "^4.17.2"
+    react "^16.5.1"
+    react-dom "^16.5.1"
+    webpack "^4.19.0"
     webpack-sources "^1.2.0"
 
-"@stylable/webpack-plugin@^0.1.10":
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/@stylable/webpack-plugin/-/webpack-plugin-0.1.10.tgz#14844aef33828558a43cbe38b2db5afa0d4d0c91"
+"@stylable/webpack-plugin@^0.1.11":
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/@stylable/webpack-plugin/-/webpack-plugin-0.1.11.tgz#359e390cb330a9316dae0ce3047856da56c9a109"
   dependencies:
     "@stylable/runtime" "^0.1.8"
     find-config "^1.0.0"
@@ -752,9 +761,9 @@
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@types/http-assert/-/http-assert-1.3.0.tgz#5e932606153da28e1d04f9043f4912cf61fd55dd"
 
-"@types/jsdom@^11.0.6":
-  version "11.0.6"
-  resolved "https://registry.yarnpkg.com/@types/jsdom/-/jsdom-11.0.6.tgz#20d6e8c83f15fef0b40c39b3faebe8bc7587d86e"
+"@types/jsdom@^11.12.0":
+  version "11.12.0"
+  resolved "https://registry.yarnpkg.com/@types/jsdom/-/jsdom-11.12.0.tgz#00ddc6f0a1b04c2f5ff6fb23eb59360ca65f12ae"
   dependencies:
     "@types/events" "*"
     "@types/node" "*"
@@ -817,8 +826,8 @@
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-5.2.5.tgz#8a4accfc403c124a0bafe8a9fc61a05ec1032073"
 
 "@types/node@*":
-  version "10.9.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.9.4.tgz#0f4cb2dc7c1de6096055357f70179043c33e9897"
+  version "10.10.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.10.1.tgz#d5c96ca246a418404914d180b7fdd625ad18eca6"
 
 "@types/node@8":
   version "8.10.29"
@@ -830,9 +839,9 @@
   dependencies:
     "@types/react" "*"
 
-"@types/puppeteer@^1.6.3":
-  version "1.6.3"
-  resolved "https://registry.yarnpkg.com/@types/puppeteer/-/puppeteer-1.6.3.tgz#13b4a70ae9997b7f6b6c9d6771d2aa34c710b809"
+"@types/puppeteer@^1.6.4":
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/@types/puppeteer/-/puppeteer-1.6.4.tgz#c3b27b72241c782053f21e3996edad561e31db9a"
   dependencies:
     "@types/events" "*"
     "@types/node" "*"
@@ -1123,14 +1132,23 @@ acorn-dynamic-import@^3.0.0:
     acorn "^5.0.0"
 
 acorn-globals@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/acorn-globals/-/acorn-globals-4.1.0.tgz#ab716025dbe17c54d3ef81d32ece2b2d99fe2538"
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/acorn-globals/-/acorn-globals-4.3.0.tgz#e3b6f8da3c1552a95ae627571f7dd6923bb54103"
   dependencies:
-    acorn "^5.0.0"
+    acorn "^6.0.1"
+    acorn-walk "^6.0.1"
+
+acorn-walk@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/acorn-walk/-/acorn-walk-6.0.1.tgz#c7827bdbb8e21aa97b609adfa225400d9ae348ba"
 
 acorn@^5.0.0, acorn@^5.6.2, acorn@^5.7.1:
   version "5.7.3"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.3.tgz#67aa231bf8812974b85235a96771eb6bd07ea279"
+
+acorn@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.0.1.tgz#66e6147e1027704479dc6d9b20d884c572db3cc1"
 
 agent-base@4, agent-base@^4.1.0, agent-base@~4.2.0:
   version "4.2.1"
@@ -1218,6 +1236,10 @@ app-root-path@^2.0.1:
 aproba@^1.0.3, aproba@^1.1.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/aproba/-/aproba-1.2.0.tgz#6802e6264efd18c790a1b0d517f0f2627bf2c94a"
+
+aproba@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/aproba/-/aproba-2.0.0.tgz#52520b8ae5b569215b354efc0caa3fe1e45a8adc"
 
 are-we-there-yet@~1.1.2:
   version "1.1.5"
@@ -1387,9 +1409,9 @@ aws4@^1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.8.0.tgz#f0e003d9ca9e7f59c7a508945d7b2ef9a04a542f"
 
-axe-core@3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-3.1.1.tgz#c00515481b2abc47a87a3cbcd6ba2ae2d78d027f"
+axe-core@3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-3.1.2.tgz#ca0aff897ebefca7552f97859dc1217c06c4f9e6"
 
 axios@^0.18.0:
   version "0.18.0"
@@ -1449,8 +1471,8 @@ bignumber.js@^7.2.1:
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-7.2.1.tgz#80c048759d826800807c4bfd521e50edbba57a5f"
 
 binary-extensions@^1.0.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.11.0.tgz#46aa1751fb6a2f93ee5e689bb1087d4b14c6c205"
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.12.0.tgz#c2d780f53d45bba8317a8902d4ceeaf3a6385b14"
 
 bindings@~1.2.1:
   version "1.2.1"
@@ -1713,10 +1735,6 @@ camel-case@3.0.x:
     no-case "^2.2.0"
     upper-case "^1.1.1"
 
-camelcase-css@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/camelcase-css/-/camelcase-css-1.0.1.tgz#157c4238265f5cf94a1dffde86446552cbf3f705"
-
 camelcase-css@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/camelcase-css/-/camelcase-css-2.0.1.tgz#ee978f6947914cc30c6b44741b6ed1df7f043fd5"
@@ -1828,8 +1846,8 @@ chokidar@^2.0.0, chokidar@^2.0.2:
     fsevents "^1.2.2"
 
 chownr@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/chownr/-/chownr-1.0.1.tgz#e2a75042a9551908bebd25b8523d5f9769d79181"
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/chownr/-/chownr-1.1.1.tgz#54726b8b8fff4df053c42187e801fb4412df1494"
 
 chrome-trace-event@^1.0.0:
   version "1.0.0"
@@ -1857,7 +1875,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-clean-css@4.2.x, clean-css@^4.1.11, clean-css@^4.2.1:
+clean-css@4.2.x, clean-css@^4.2.1:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/clean-css/-/clean-css-4.2.1.tgz#2d411ef76b8569b6d0c84068dabe85b0aa5e5c17"
   dependencies:
@@ -1962,10 +1980,10 @@ component-emitter@^1.2.1:
   resolved "https://registry.yarnpkg.com/component-emitter/-/component-emitter-1.2.1.tgz#137918d6d78283f7df7a6b7c5a63e140e69425e6"
 
 compressible@~2.0.14:
-  version "2.0.14"
-  resolved "https://registry.yarnpkg.com/compressible/-/compressible-2.0.14.tgz#326c5f507fbb055f54116782b969a81b67a29da7"
+  version "2.0.15"
+  resolved "https://registry.yarnpkg.com/compressible/-/compressible-2.0.15.tgz#857a9ab0a7e5a07d8d837ed43fe2defff64fe212"
   dependencies:
-    mime-db ">= 1.34.0 < 2"
+    mime-db ">= 1.36.0 < 2"
 
 compression@^1.5.2:
   version "1.7.3"
@@ -4253,9 +4271,9 @@ lcid@^2.0.0:
   dependencies:
     invert-kv "^2.0.0"
 
-lerna@^3.3.2:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/lerna/-/lerna-3.3.2.tgz#c5df2744007a0c8b8b0efb60dc45368db86a5fac"
+lerna@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/lerna/-/lerna-3.4.0.tgz#c1403852b4b3fa986072de11d7f549604fd41775"
   dependencies:
     "@lerna/add" "^3.3.2"
     "@lerna/bootstrap" "^3.3.2"
@@ -4269,7 +4287,7 @@ lerna@^3.3.2:
     "@lerna/init" "^3.3.0"
     "@lerna/link" "^3.3.0"
     "@lerna/list" "^3.3.2"
-    "@lerna/publish" "^3.3.2"
+    "@lerna/publish" "^3.4.0"
     "@lerna/run" "^3.3.2"
     "@lerna/version" "^3.3.2"
     import-local "^1.0.0"
@@ -4282,9 +4300,18 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+libnpmaccess@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/libnpmaccess/-/libnpmaccess-3.0.0.tgz#33cc9c8a5cb53e87d06bf2e547c2eba974f619af"
+  dependencies:
+    aproba "^2.0.0"
+    get-stream "^4.0.0"
+    npm-package-arg "^6.1.0"
+    npm-registry-fetch "^3.8.0"
+
 load-json-file@^1.0.0:
   version "1.1.0"
-  resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
+  resolved "http://registry.npmjs.org/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
   dependencies:
     graceful-fs "^4.1.2"
     parse-json "^2.2.0"
@@ -4590,7 +4617,7 @@ miller-rabin@^4.0.0:
     bn.js "^4.0.0"
     brorand "^1.0.1"
 
-"mime-db@>= 1.34.0 < 2", mime-db@~1.36.0:
+"mime-db@>= 1.36.0 < 2", mime-db@~1.36.0:
   version "1.36.0"
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.36.0.tgz#5020478db3c7fe93aad7bbcc4dcf869c43363397"
 
@@ -4834,11 +4861,11 @@ nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
 
-nise@^1.4.4:
-  version "1.4.4"
-  resolved "https://registry.yarnpkg.com/nise/-/nise-1.4.4.tgz#b8d9dd35334c99e514b75e46fcc38e358caecdd0"
+nise@^1.4.5:
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/nise/-/nise-1.4.5.tgz#979a97a19c48d627bb53703726ae8d53ce8d4b3e"
   dependencies:
-    "@sinonjs/formatio" "^2.0.0"
+    "@sinonjs/formatio" "3.0.0"
     just-extend "^3.0.0"
     lolex "^2.3.2"
     path-to-regexp "^1.7.0"
@@ -4930,9 +4957,9 @@ node-pre-gyp@^0.10.0:
     semver "^5.3.0"
     tar "^4"
 
-node-typescript-service@^0.4.4:
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/node-typescript-service/-/node-typescript-service-0.4.4.tgz#bced583e0ea7ed6836058943adfad74a6b4515aa"
+node-typescript-service@^0.4.5:
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/node-typescript-service/-/node-typescript-service-0.4.5.tgz#c0960ac0724fff0d7572339efe72e3b4cfff369a"
 
 nofilter@^0.0.3:
   version "0.0.3"
@@ -5006,7 +5033,7 @@ npm-pick-manifest@^2.1.0:
     npm-package-arg "^6.0.0"
     semver "^5.4.1"
 
-npm-registry-fetch@^3.0.0:
+npm-registry-fetch@^3.0.0, npm-registry-fetch@^3.8.0:
   version "3.8.0"
   resolved "https://registry.yarnpkg.com/npm-registry-fetch/-/npm-registry-fetch-3.8.0.tgz#aa7d9a7c92aff94f48dba0984bdef4bd131c88cc"
   dependencies:
@@ -5492,13 +5519,6 @@ posix-character-classes@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
 
-postcss-js@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/postcss-js/-/postcss-js-1.0.1.tgz#ffaf29226e399ea74b5dce02cab1729d7addbc7b"
-  dependencies:
-    camelcase-css "^1.0.1"
-    postcss "^6.0.11"
-
 postcss-js@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/postcss-js/-/postcss-js-2.0.0.tgz#f75b70470009eb37f998ee9bb516a2899c19ef8d"
@@ -5533,18 +5553,12 @@ postcss-modules-values@^1.3.0:
     icss-replace-symbols "^1.1.0"
     postcss "^6.0.1"
 
-postcss-nested@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/postcss-nested/-/postcss-nested-3.0.0.tgz#cde40bd07a078565f3df72e2dc2665871c724852"
+postcss-nested@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/postcss-nested/-/postcss-nested-4.1.0.tgz#271da8a047f2ee378139410ae2400b1c67d0bf30"
   dependencies:
-    postcss "^6.0.14"
+    postcss "^7.0.2"
     postcss-selector-parser "^3.1.1"
-
-postcss-safe-parser@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/postcss-safe-parser/-/postcss-safe-parser-3.0.1.tgz#b753eff6c7c0aea5e8375fbe4cde8bf9063ff142"
-  dependencies:
-    postcss "^6.0.6"
 
 postcss-safe-parser@^4.0.1:
   version "4.0.1"
@@ -5571,7 +5585,7 @@ postcss-value-parser@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/postcss-value-parser/-/postcss-value-parser-3.3.0.tgz#87f38f9f18f774a4ab4c8a232f5c5ce8872a9d15"
 
-postcss@^6.0.1, postcss@^6.0.11, postcss@^6.0.14, postcss@^6.0.23, postcss@^6.0.6:
+postcss@^6.0.1, postcss@^6.0.23:
   version "6.0.23"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-6.0.23.tgz#61c82cc328ac60e677645f979054eb98bc0e3324"
   dependencies:
@@ -5801,7 +5815,7 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-dom@^16.4.2, react-dom@^16.5.1:
+react-dom@^16.5.1:
   version "16.5.1"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.5.1.tgz#29d0c5a01ed3b6b4c14309aa91af6ec4eb4f292c"
   dependencies:
@@ -5810,7 +5824,7 @@ react-dom@^16.4.2, react-dom@^16.5.1:
     prop-types "^15.6.2"
     schedule "^0.4.0"
 
-react@^16.4.2, react@^16.5.1:
+react@^16.5.1:
   version "16.5.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.5.1.tgz#8cb8e9f8cdcb4bde41c9a138bfbf907e66132372"
   dependencies:
@@ -6134,10 +6148,6 @@ safe-regex@^1.1.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
 
-samsam@1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/samsam/-/samsam-1.3.0.tgz#8d1d9350e25622da30de3e44ba692b5221ab7c50"
-
 sax@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
@@ -6298,17 +6308,17 @@ sinon-chai@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/sinon-chai/-/sinon-chai-3.2.0.tgz#ed995e13a8a3cfccec18f218d9b767edc47e0715"
 
-sinon@^6.3.2:
-  version "6.3.2"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-6.3.2.tgz#9d5f39689638285683e6625d0f68c4b670d13b36"
+sinon@^6.3.4:
+  version "6.3.4"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-6.3.4.tgz#6f076d7ddcf381af6c16468ac83d30333a756ec8"
   dependencies:
     "@sinonjs/commons" "^1.0.2"
-    "@sinonjs/formatio" "^2.0.0"
-    "@sinonjs/samsam" "^2.0.0"
+    "@sinonjs/formatio" "^3.0.0"
+    "@sinonjs/samsam" "^2.1.1"
     diff "^3.5.0"
     lodash.get "^4.4.2"
     lolex "^2.7.4"
-    nise "^1.4.4"
+    nise "^1.4.5"
     supports-color "^5.5.0"
     type-detect "^4.0.8"
 
@@ -6656,25 +6666,6 @@ strong-log-transformer@^2.0.0:
     minimist "^1.2.0"
     through "^2.3.4"
 
-stylable@^5.4.11:
-  version "5.4.11"
-  resolved "https://registry.yarnpkg.com/stylable/-/stylable-5.4.11.tgz#a54fbd0cad902b5f98f3d01227b63527a6a9a4d7"
-  dependencies:
-    clean-css "^4.1.11"
-    css-selector-tokenizer "^0.7.0"
-    deindent "^0.1.0"
-    enhanced-resolve "^4.0.0"
-    is-vendor-prefixed "^1.0.0"
-    lodash.clonedeep "^4.5.0"
-    murmurhash "^0.0.2"
-    postcss "^6.0.23"
-    postcss-js "^1.0.1"
-    postcss-nested "^3.0.0"
-    postcss-safe-parser "^3.0.1"
-    postcss-selector-matches "^3.0.1"
-    postcss-value-parser "^3.3.0"
-    url-regex "^4.1.1"
-
 style-loader@^0.22.1:
   version "0.22.1"
   resolved "https://registry.yarnpkg.com/style-loader/-/style-loader-0.22.1.tgz#901ea28aac78fcc00c5075585ac07d7ef3f87a52"
@@ -6847,9 +6838,9 @@ trim-off-newlines@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/trim-off-newlines/-/trim-off-newlines-1.0.1.tgz#9f9ba9d9efa8764c387698bcbfeb2c848f11adb3"
 
-ts-loader@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-5.1.0.tgz#ac13facb9360af4a4b072c851a120d17cbcaf1fa"
+ts-loader@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-5.1.1.tgz#361eeae3cc3c6f63d2e9f421dba90c4b14659aa6"
   dependencies:
     chalk "^2.3.0"
     enhanced-resolve "^4.0.0"
@@ -6961,11 +6952,11 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript-support@^0.5.4:
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/typescript-support/-/typescript-support-0.5.4.tgz#b4569a2895a3f6dd167ab04aad8079b8dff97e0b"
+typescript-support@^0.5.5:
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/typescript-support/-/typescript-support-0.5.5.tgz#0793aa52bca186e3401aca487808e72dd19b038b"
   dependencies:
-    node-typescript-service "^0.4.4"
+    node-typescript-service "^0.4.5"
     source-map-support "^0.5.9"
 
 typescript@~3.0.3:
@@ -7344,9 +7335,9 @@ webpack-sources@^1.1.0, webpack-sources@^1.2.0:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
 
-webpack@^4.17.2, webpack@^4.18.1:
-  version "4.18.1"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.18.1.tgz#029042c815443fce23424de1548d9317cfca148a"
+webpack@^4.19.0, webpack@^4.19.1:
+  version "4.19.1"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.19.1.tgz#096674bc3b573f8756c762754366e5b333d6576f"
   dependencies:
     "@webassemblyjs/ast" "1.7.6"
     "@webassemblyjs/helper-module-context" "1.7.6"
@@ -7391,8 +7382,8 @@ whatwg-encoding@^1.0.1, whatwg-encoding@^1.0.4:
     iconv-lite "0.4.23"
 
 whatwg-mimetype@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/whatwg-mimetype/-/whatwg-mimetype-2.1.0.tgz#f0f21d76cbba72362eb609dbed2a30cd17fcc7d4"
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/whatwg-mimetype/-/whatwg-mimetype-2.2.0.tgz#a3d58ef10b76009b042d03e25591ece89b88d171"
 
 whatwg-url@^7.0.0:
   version "7.0.0"
@@ -7522,7 +7513,7 @@ yargs-parser@^10.1.0:
   dependencies:
     camelcase "^4.1.0"
 
-yargs@12.0.2, yargs@^12.0.1:
+yargs@12.0.2, yargs@^12.0.1, yargs@^12.0.2:
   version "12.0.2"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-12.0.2.tgz#fe58234369392af33ecbef53819171eff0f5aadc"
   dependencies:

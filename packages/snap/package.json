@@ -32,10 +32,10 @@
     "@ui-autotools/registry": "^2.0.0"
   },
   "dependencies": {
-    "@applitools/eyes.sdk.core": "^1.9.0",
-    "@applitools/visual-grid-client": "^4.3.3",
-    "@stylable/webpack-extensions": "^0.1.12",
-    "@stylable/webpack-plugin": "^0.1.10",
+    "@applitools/eyes.sdk.core": "^1.10.0",
+    "@applitools/visual-grid-client": "^4.3.8",
+    "@stylable/webpack-extensions": "^0.1.13",
+    "@stylable/webpack-plugin": "^0.1.11",
     "@ui-autotools/utils": "^1.0.8",
     "chalk": "^2.4.1",
     "dotenv": "^6.0.0",

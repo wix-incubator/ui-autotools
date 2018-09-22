@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@applitools/eyes.sdk.core": "^1.10.0",
-    "@applitools/visual-grid-client": "^4.3.8",
+    "@applitools/visual-grid-client": "^4.3.9",
     "@stylable/webpack-extensions": "^0.1.13",
     "@stylable/webpack-plugin": "^0.1.11",
     "@ui-autotools/utils": "^1.0.8",

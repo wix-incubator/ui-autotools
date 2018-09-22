@@ -1,4 +1,4 @@
-import 'typescript-support';
+import '@ts-tools/node';
 import path from 'path';
 import {promisify} from 'util';
 import glob from 'glob';

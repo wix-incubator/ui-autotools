@@ -438,7 +438,8 @@ export class SchemaLinker {
         }
         if (res.returns && isRef(res.returns)) {
             const ret = this.handleRef(res.returns, schema, paramsMap);
-            res.returns = ret ? {type: ret.type} : res.returns;
+            // problem is also here
+            res.returns = ret ? ret.definedAt ? {$ref: ret.definedAt} : {type: ret.type} : res.returns;
         }
         res.arguments = args;
         return res;

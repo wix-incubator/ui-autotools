@@ -694,7 +694,11 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
             const currentFileName = rootNode.getSourceFile().fileName;
             if (fileName !== currentFileName) {
                 const fileNameNoExt = removeExtension(fileName);
-                const pathInProj = fileNameNoExt.slice(env.projectPath.length);
+                // Problem is here, this doesn't work if the file is from node_modules
+                // if (fileNameNoExt.includes('node_modules')) {
+                //     debugger;
+                // }
+                const pathInProj = fileNameNoExt.includes('node_modules') ? fileNameNoExt : fileNameNoExt.slice(env.projectPath.length);
                 return {
                     schema: {
                         $ref: pathInProj + '#' + t.symbol.name,

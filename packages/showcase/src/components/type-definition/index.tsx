@@ -1,6 +1,9 @@
 import * as React from 'react';
 import style from './type-definition.st.css';
 
+// TODO: we should instead use the Schema type from schema-extract, but
+// it's currently not complete and many valid combinations of properties don't
+// typecheck.
 export type Schema = any;
 
 type TypeRenderer = (schema: Schema) => React.ReactNode;

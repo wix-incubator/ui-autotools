@@ -23,7 +23,7 @@ export class PropsTable extends React.Component<IPropsTableProps> {
             <tr key={name}>
               <td className={style.propName}>{name}</td>
               <td className={style.propType}>
-                <TypeDefinition schema={schema} maxLineLength={40} tabSize={2} />
+                <TypeDefinition schema={schema} />
               </td>
               <td className={style.propDefaultValue}>
                 {isRequired ? 'Required' : ''}

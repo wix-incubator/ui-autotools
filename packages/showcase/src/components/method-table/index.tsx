@@ -22,7 +22,7 @@ export class MethodTable extends React.Component<IMethodTableProps> {
             <tr key={name}>
               <td className={style.methodName}>{name}</td>
               <td className={style.methodType}>
-                <TypeDefinition schema={schema} maxLineLength={40} tabSize={2} />
+                <TypeDefinition schema={schema} />
               </td>
               <td className={style.methodDescription}>
                 {description}

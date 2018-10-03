@@ -52,8 +52,8 @@ const StyledSimulation: React.SFC<IStyledSimulationProps> = (props) => {
 
   return <Comp {...sim.props} className={className} />;
 };
-
-const url = new URL(document.location.href);
+const {location} = document;
+const url = new URL(location ? location.href : '');
 const root = document.createElement('div');
 document.body.appendChild(root);
 

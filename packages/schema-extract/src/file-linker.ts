@@ -206,9 +206,6 @@ export class SchemaLinker {
                     if (option.enum) {
                         res.enum = option.enum;
                     }
-                    if (option.definedAt) {
-                        res.definedAt = option.definedAt;
-                    }
                 } else {
                     if (Object.keys(res).length === 0) {
                         res = option;
@@ -216,9 +213,6 @@ export class SchemaLinker {
                         if (option.enum) {
                             if (!res.enum) {
                                 res.enum = option.enum;
-                                if (option.definedAt) {
-                                    res.definedAt = option.definedAt;
-                                }
                             } else {
                                 const enums = [];
                                 for (let i = 0; i < option.enum.length; i++) {
@@ -232,9 +226,6 @@ export class SchemaLinker {
                                     res.enum = enums;
                                 }
                             }
-                        }
-                        if (option.definedAt) {
-                            res.definedAt = option.definedAt;
                         }
                     } else {
                         return {$ref: NeverId};

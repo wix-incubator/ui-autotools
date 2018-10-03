@@ -4,7 +4,7 @@
   line-height: 1.5;
 }
 
-.header, .propName, .propType, .propDefaultValue, .propDescription {
+.header, .methodName, .methodType, .methodDescription {
   text-align: left;
   vertical-align: middle;
   padding: 10px 16px 10px 10px;
@@ -16,15 +16,14 @@
   font-weight: 500;
 }
 
-.propName, .propType, .propDefaultValue {
+.methodName, .methodType {
   font: 13px/1.5 Consolas, "Liberation Mono", Menlo, monospace;
 }
 
-.propType {
+.methodType {
   color: #932981;
 }
 
-.propDescription {
+.methodDescription {
   white-space: pre-wrap;
 }
-

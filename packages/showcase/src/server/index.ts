@@ -1,4 +1,4 @@
-import 'typescript-support';
+import '@ts-tools/node';
 import path from 'path';
 import {promisify} from 'util';
 import glob from 'glob';
@@ -85,7 +85,8 @@ function getWebsiteWebpackConfig(
             loader: 'ts-loader',
             options: {
               compilerOptions: {
-                declaration: false
+                declaration: false,
+                declarationMap: false
               }
             }
           }

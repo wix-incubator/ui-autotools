@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/registry",
-  "version": "1.0.7",
+  "version": "2.0.0",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -15,7 +15,7 @@
     "lint": "run-p lint:src lint:test",
     "lint:src": "tslint --project src",
     "lint:test": "tslint --project test",
-    "test": "mocha -r typescript-support \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
+    "test": "mocha -r @ts-tools/node \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
   },
   "files": [
     "cjs",
@@ -31,6 +31,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@ui-autotools/utils": "^1.0.6"
+    "@ui-autotools/utils": "^1.0.8"
   }
 }

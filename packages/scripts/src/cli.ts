@@ -3,13 +3,13 @@ import path from 'path';
 import glob from 'glob';
 import dotenv from 'dotenv';
 import {Command} from 'commander';
-import {registerRequireHooks} from '@ui-autotools/utils';
 import {hydrationTest} from '@ui-autotools/sanity';
-import {eyesTest} from '@ui-autotools/eyes';
+import {eyesTest} from '@ui-autotools/snap';
 import {a11yTest, impactLevels} from '@ui-autotools/a11y';
 import {buildWebsite, startWebsite} from '@ui-autotools/showcase';
-import importMeta from './import-metadata/import-meta';
 import ssrTest from './ssr-test/mocha-wrapper';
+import {importMetaFiles} from './import-meta-files';
+import {registerRequireHooks} from '@ui-autotools/utils';
 
 dotenv.config();
 registerRequireHooks();
@@ -24,12 +24,10 @@ program
 .description('run sanity checks on all components with a metadata description')
 .option('-f, --files [pattern]', 'Grep file')
 .action((options) => {
-  const entry = path.join(projectPath, options.files ? options.files : defaultMetaGlob);
-  // Load metadata for each component that should be sanity tested
-  importMeta(entry);
-  // Run the sanity tests for each loaded metadata
+  const metaGlob: string = options.files || defaultMetaGlob;
+  importMetaFiles(projectPath, metaGlob);
   ssrTest();
-  hydrationTest(entry, webpackConfigPath);
+  hydrationTest(projectPath, metaGlob, webpackConfigPath);
 });
 
 program
@@ -47,13 +45,13 @@ program
 });
 
 program
-.command('eyes')
-.description('compare components to the expected appearance using Eyes')
+.command('snap')
+.description('compare components to the expected appearance using Applitools Eyes')
 .option('-f, --files [pattern]', 'metadata file pattern')
 .action((options) => {
-  const entry = glob.sync(path.join(projectPath, options.files ? options.files : defaultMetaGlob));
-
-  eyesTest(entry, projectPath, webpackConfigPath);
+  const metaGlob: string = options.files || defaultMetaGlob;
+  importMetaFiles(projectPath, metaGlob);
+  eyesTest(projectPath);
 });
 
 program.command('showcase')

@@ -70,7 +70,7 @@ export class SchemaLinker {
             return {refEntity: null, refEntityType: ref};
         }
         const poundIndex = ref.indexOf('#');
-        const cleanRef = ref.slice(poundIndex + 1);
+        const cleanRef = ref.slice(poundIndex + 1).replace('typeof ', '');
         if (!schema.definitions) {
             return {refEntity: null, refEntityType: cleanRef};
         }
@@ -81,8 +81,12 @@ export class SchemaLinker {
                         null;
         if (!refEntity) {
             const importSchema = this.getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1));
-            if (importSchema && importSchema.definitions) {
-                refEntity = importSchema.definitions[cleanRef];
+            if (importSchema) {
+                if (importSchema.definitions) {
+                    refEntity = importSchema.definitions[cleanRef];
+                } else if (importSchema.properties) {
+                    refEntity = importSchema.properties[cleanRef];
+                }
             }
         }
         if (!refEntity) {
@@ -94,9 +98,8 @@ export class SchemaLinker {
         if (isRef(refEntity)) {
             return this.getRefEntity(refEntity.$ref, schema, paramsMap);
         }
-        if (!refEntity.definedAt) {
-            refEntity.definedAt = '#' + cleanRef;
-        }
+        refEntity.definedAt = refEntity.definedAt || '#' + cleanRef;
+
         return {refEntity, refEntityType: cleanRef};
     }
 
@@ -237,6 +240,9 @@ export class SchemaLinker {
                         return {$ref: NeverId};
                     }
                 }
+                if (option.definedAt) {
+                    res.definedAt = option.definedAt;
+                }
             }
         }
         return res;
@@ -267,7 +273,7 @@ export class SchemaLinker {
             }
             for (const prop in properties) {
                 if (!res.properties.hasOwnProperty(prop)) {
-                    res.properties[prop] = properties[prop];
+                    res.properties[prop] = this.link(properties[prop], schema, paramsMap);
                     if (ref && !res.properties[prop].definedAt && !isInterfaceSchema(entity)) {
                         res.properties[prop].definedAt = ref;
                     }
@@ -477,7 +483,7 @@ export class SchemaLinker {
         }
         if (res.returns && isRef(res.returns)) {
             const ret = this.handleRef(res.returns, schema, paramsMap);
-            res.returns = ret ? {type: ret.type} : res.returns;
+            res.returns = ret ? (ret.definedAt && !ret.type) ? {$ref: ret.definedAt} : {type: ret.type} : res.returns;
         }
         res.arguments = args;
         return res;

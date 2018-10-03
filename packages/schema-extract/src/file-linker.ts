@@ -98,9 +98,8 @@ export class SchemaLinker {
         if (isRef(refEntity)) {
             return this.getRefEntity(refEntity.$ref, schema, paramsMap);
         }
-        if (!refEntity.definedAt) {
-            refEntity.definedAt = '#' + cleanRef;
-        }
+        refEntity.definedAt = refEntity.definedAt || '#' + cleanRef;
+
         return {refEntity, refEntityType: cleanRef};
     }
 
@@ -270,9 +269,6 @@ export class SchemaLinker {
                         res.properties[prop].definedAt = ref;
                     }
                 } else {
-                    if (ref && !properties[prop].definedAt && !isInterfaceSchema(entity)) {
-                        properties[prop].definedAt = ref;
-                    }
                     const r = this.handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
                     if (isNeverSchema(r)) {
                         // Maybe there is a better way than this

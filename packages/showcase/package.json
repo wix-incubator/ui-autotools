@@ -8,15 +8,12 @@
     "clean": "rimraf ./cjs ./esm",
     "build": "run-s build:cjs build:esm build:stylable",
     "build:watch": "run-p build:cjs-watch build:esm-watch",
-    "build:cjs": "tsc --project src --outDir cjs --module commonjs",
-    "build:esm": "tsc --project src --outDir esm --module esnext",
-    "build:cjs-watch": "tsc --watch --project src --outDir cjs --module commonjs",
-    "build:esm-watch": "tsc --watch --project src --outDir esm --module esnext",
+    "build:cjs": "tsc -p src --outDir cjs --module commonjs",
+    "build:esm": "tsc -p src --outDir esm --module esnext",
+    "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
+    "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext",
     "build:stylable": "stc --srcDir src --outDir esm",
-    "lint": "run-p lint:src lint:test",
-    "lint:src": "tslint --project src",
-    "lint:test": "true",
-    "test": "true"
+    "lint": "tslint -p src"
   },
   "files": [
     "cjs",

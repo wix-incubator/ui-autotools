@@ -27,6 +27,32 @@ describe('schema-linker - imports', () => {
         expect(res).to.eql(expected);
     });
 
+    it('should link imported type definition from an import chain', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({
+            [fileName]: `
+                import {MyType} from './import1';
+                export type B = MyType<string>;`,
+            ['import1.ts']: `
+                export {MyType} from './import2'`,
+            ['import2.ts']: `
+                export type MyType<T> = {
+                    something:T;
+                };`
+        }, 'B', fileName);
+
+        const expected: Schema<'object'> = {
+            type: 'object',
+            properties: {
+                something: {
+                    type: 'string'
+                }
+            },
+            required: ['something']
+        };
+        expect(res).to.eql(expected);
+    });
+
     it('should link imported interfaces', async () => {
         const fileName = 'index.ts';
         const res = linkTest({

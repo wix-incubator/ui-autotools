@@ -77,6 +77,7 @@ export type ModuleSchema<T extends  SchemaTypes = SchemaTypes> = Schema<T> & {
     '$id': string,
     '$ref': typeof ModuleSchemaId,
     'definitions'?: {[name: string]: Schema},
+    'properties'?: {[name: string]: Schema},
 };
 
 export type FunctionSchema = Schema & {

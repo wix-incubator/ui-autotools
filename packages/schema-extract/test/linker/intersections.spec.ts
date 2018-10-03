@@ -19,9 +19,11 @@ describe('schema-linker - intersections', () => {
             type: 'object',
             properties: {
                 something: {
+                    definedAt: '#A',
                     type: 'number'
                 },
                 somethingElse: {
+                    definedAt: '#B',
                     type: 'string'
                 }
             },
@@ -61,9 +63,11 @@ describe('schema-linker - intersections', () => {
                     type: 'object',
                     properties: {
                         somethingElse: {
+                            definedAt: '#B',
                             type: 'string'
                         },
                         somethingNew: {
+                            definedAt: '#C',
                             type: 'number'
                         }
                     },
@@ -95,9 +99,11 @@ describe('schema-linker - intersections', () => {
                     type: 'object',
                     properties: {
                         something: {
+                            definedAt: '#A',
                             type: 'number'
                         },
                         somethingElse: {
+                            definedAt: '#B',
                             type: 'string'
                         }
                     },
@@ -107,9 +113,11 @@ describe('schema-linker - intersections', () => {
                     type: 'object',
                     properties: {
                         something: {
+                            definedAt: '#A',
                             type: 'number'
                         },
                         somethingElse: {
+                            definedAt: '#C',
                             type: 'number'
                         }
                     },
@@ -140,6 +148,7 @@ describe('schema-linker - intersections', () => {
                     type: 'object',
                     properties: {
                         something: {
+                            definedAt: '#A',
                             type: 'number'
                         },
                     },
@@ -149,9 +158,11 @@ describe('schema-linker - intersections', () => {
                     type: 'object',
                     properties: {
                         something: {
+                            definedAt: '#A',
                             type: 'number'
                         },
                         somethingElse: {
+                            definedAt: '#C',
                             type: 'number'
                         }
                     },
@@ -161,9 +172,11 @@ describe('schema-linker - intersections', () => {
                     type: 'object',
                     properties: {
                         something: {
+                            definedAt: '#A',
                             type: 'number'
                         },
                         somethingElse: {
+                            definedAt: '#B',
                             type: 'string'
                         }
                     },
@@ -173,7 +186,7 @@ describe('schema-linker - intersections', () => {
         };
         expect(res).to.eql(expected);
     });
-    it('should deep flatten genric type definition with intersections', async () => {
+    it('should deep flatten generic type definition with intersections', async () => {
         const fileName = 'index.ts';
         const res = linkTest({[fileName]: `
         export type MyType<T> = {
@@ -188,6 +201,7 @@ describe('schema-linker - intersections', () => {
             type: 'object',
             properties: {
                 something: {
+                    definedAt: '#MyType',
                     type: 'object',
                     properties: {
                         a: {
@@ -204,13 +218,14 @@ describe('schema-linker - intersections', () => {
         };
         expect(res).to.eql(expected);
     });
-    it('should deep flatten genric type definition with intersections 2', async () => {
+    it('should deep flatten generic type definition with intersections 2', async () => {
         const fileName = 'index.ts';
         const res = linkTest({[fileName]: `
         export type MyType<T extends object> = {
             something: T & {id:string};
         };
-        export type B = MyType<{ title: string}>;
+        export type A = { title: string};
+        export type B = MyType<A>;
         `}, 'B', fileName);
 
         const expected: Schema<'object'> = {
@@ -220,6 +235,7 @@ describe('schema-linker - intersections', () => {
                     type: 'object',
                     properties: {
                         title: {
+                            definedAt: '#A',
                             type: 'string'
                         },
                         id: {
@@ -233,13 +249,14 @@ describe('schema-linker - intersections', () => {
         };
         expect(res).to.eql(expected);
     });
-    it('should deep flatten genric type definition with intersections 3', async () => {
+    it('should deep flatten generic type definition with intersections 3', async () => {
         const fileName = 'index.ts';
         const res = linkTest({[fileName]: `
         export type MyType<T extends object> = {
             something: T & {id:string};
         };
-        export type B = MyType<{ title: string}> &  MyType<{ price: number}>;
+        export type A = { title: string};
+        export type B = MyType<A> &  MyType<{ price: number}>;
         `}, 'B', fileName);
 
         const expected: Schema<'object'> = {
@@ -249,12 +266,15 @@ describe('schema-linker - intersections', () => {
                     type: 'object',
                     properties: {
                         title: {
+                            definedAt: '#A',
                             type: 'string'
                         },
                         id: {
+                            definedAt: '#MyType',
                             type: 'string'
                         },
                         price: {
+                            definedAt: '#MyType!T',
                             type: 'number'
                         }
                     },
@@ -281,6 +301,7 @@ describe('schema-linker - intersections', () => {
             type: 'object',
             properties: {
                 something: {
+                    definedAt: '#b',
                     type: 'string',
                     enum: ['gaga'],
                 }
@@ -305,6 +326,7 @@ describe('schema-linker - intersections', () => {
             type: 'object',
             properties: {
                 something: {
+                    definedAt: '#b',
                     type: 'string',
                     enum: ['gaga'],
                 }
@@ -329,6 +351,7 @@ describe('schema-linker - intersections', () => {
             type: 'object',
             properties: {
                 something: {
+                    definedAt: '#b',
                     type: 'string',
                     enum: ['gaga'],
                 }
@@ -376,6 +399,7 @@ describe('schema-linker - intersections', () => {
                     type: 'string'
                 },
                 someone: {
+                    definedAt: '#b',
                     type: 'number'
                 }
             },

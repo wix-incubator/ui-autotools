@@ -6,6 +6,7 @@ export interface IComponentData {
   name: string;
   schema: IExportSourceAndSchema;
   simulationTitles: string[];
+  styleTitles: string[];
 }
 
 export interface IClientData {
@@ -22,7 +23,8 @@ function formatComponentDataForClient(
     result.push({
       name: getCompName(Comp),
       schema: schemasByComponent.get(Comp)!,
-      simulationTitles: compMeta.simulations.map((sim) => sim.title)
+      simulationTitles: compMeta.simulations.map((sim) => sim.title),
+      styleTitles: Array.from(compMeta.styles.values()).map(({name}) => name)
     });
   }
   return result;

@@ -5,10 +5,15 @@ import {renderMetadata} from './render-metadata';
 
 const packageDir = path.resolve(__dirname, '..');
 
-function getWebpackConfig(ssrComps: string[], metaGlob: string, webpackConfigPath: string) {
+function getWebpackConfig(
+  projectPath: string,
+  metaGlob: string,
+  webpackConfigPath: string,
+  ssrComps: string[]
+) {
   return WebpackConfigurator
     .load(webpackConfigPath)
-    .setEntry('meta', glob.sync(metaGlob))
+    .setEntry('meta', glob.sync(metaGlob, {absolute: true, cwd: projectPath}))
     .addEntry('meta', path.join(packageDir, 'hydration-test', 'test-page.js'))
     .addEntry('meta', path.join(packageDir, 'hydration-test', 'index.js'))
     .addHtml({
@@ -19,12 +24,25 @@ function getWebpackConfig(ssrComps: string[], metaGlob: string, webpackConfigPat
     .getConfig();
 }
 
-export async function hydrationTest(metaGlob: string, webpackConfigPath: string) {
+export async function hydrationTest(
+  projectPath: string,
+  metaGlob: string,
+  webpackConfigPath: string
+) {
   let server: IServer | null = null;
   try {
     const ssrComps = renderMetadata();
-    server = await serve({webpackConfig: getWebpackConfig(ssrComps, metaGlob, webpackConfigPath)});
-    const numFailedTests = await runTestsInPuppeteer({testPageUrl: server.getUrl()});
+    server = await serve({
+      webpackConfig: getWebpackConfig(
+        projectPath,
+        metaGlob,
+        webpackConfigPath,
+        ssrComps
+      )
+    });
+    const numFailedTests = await runTestsInPuppeteer({
+      testPageUrl: server.getUrl()
+    });
     if (numFailedTests) {
       process.exitCode = 1;
     }

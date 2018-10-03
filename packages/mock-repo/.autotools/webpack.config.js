@@ -1,4 +1,6 @@
-const packagePath = __dirname;
+const path = require('path');
+const packagePath = path.resolve(__dirname, '..');
+const StylableWebpackPlugin = require('@stylable/webpack-plugin');
 
 module.exports = {
   context: packagePath,
@@ -12,7 +14,8 @@ module.exports = {
           loader: 'ts-loader',
           options: {
             compilerOptions: {
-              declaration: false
+              declaration: false,
+              declarationMap: false
             }
           }
         }
@@ -26,5 +29,8 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
-  }
+  },
+  plugins: [
+    new StylableWebpackPlugin()
+  ]
 };

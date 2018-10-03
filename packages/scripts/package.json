@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/scripts",
-  "version": "1.0.19",
+  "version": "2.0.0",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
   "bin": {
@@ -13,7 +13,7 @@
     "lint": "run-p lint:src lint:test",
     "lint:src": "tslint --project src",
     "lint:test": "tslint --project test",
-    "test": "mocha -r typescript-support \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
+    "test": "mocha -r @ts-tools/node \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
   },
   "files": [
     "cjs",
@@ -26,20 +26,20 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@ui-autotools/a11y": "^1.0.12",
-    "@ui-autotools/eyes": "^1.0.9",
-    "@ui-autotools/sanity": "^1.0.10",
-    "@ui-autotools/showcase": "^1.0.9",
-    "@ui-autotools/utils": "^1.0.6",
-    "commander": "^2.15.1",
-    "glob": "^7.1.2",
-    "typescript-support": "^0.4.1"
+    "@ts-tools/node": "^0.6.2",
+    "@ui-autotools/a11y": "^1.0.14",
+    "@ui-autotools/sanity": "^1.0.12",
+    "@ui-autotools/showcase": "^1.0.11",
+    "@ui-autotools/snap": "^1.0.2",
+    "@ui-autotools/utils": "^1.0.8",
+    "commander": "^2.18.0",
+    "glob": "^7.1.3"
   },
   "devDependencies": {
-    "@ui-autotools/registry": "^1.0.7"
+    "@ui-autotools/registry": "^2.0.0"
   },
   "peerDependencies": {
-    "@ui-autotools/registry": "^1.0.0",
+    "@ui-autotools/registry": "^2.0.0",
     "mocha": ">=5",
     "react": ">=16",
     "react-dom": ">=16"

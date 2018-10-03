@@ -105,13 +105,12 @@ describe('schema-extract - primitives', () => {
                     properties: {
                             foobar: {
                             $oneOf: [
-                                {type: 'boolean', enum: [false]},
-                                {type: 'boolean', enum: [true]},
                                 {$ref: UndefinedSchemaId},
                                 {$ref: NullSchemaId},
                                 {},
                                 {type: 'string', enum: ['hello']},
-                                {type: 'number', enum: [5]}
+                                {type: 'number', enum: [5]},
+                                {type: 'boolean'},
                             ]
                         }
                     }

@@ -70,7 +70,7 @@ export class SchemaLinker {
             return {refEntity: null, refEntityType: ref};
         }
         const poundIndex = ref.indexOf('#');
-        const cleanRef = ref.slice(poundIndex + 1);
+        const cleanRef = ref.slice(poundIndex + 1).replace('typeof ', '');
         if (!schema.definitions) {
             return {refEntity: null, refEntityType: cleanRef};
         }
@@ -81,8 +81,12 @@ export class SchemaLinker {
                         null;
         if (!refEntity) {
             const importSchema = this.getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1));
-            if (importSchema && importSchema.definitions) {
-                refEntity = importSchema.definitions[cleanRef];
+            if (importSchema) {
+                if (importSchema.definitions) {
+                    refEntity = importSchema.definitions[cleanRef];
+                } else if (importSchema.properties) {
+                    refEntity = importSchema.properties[cleanRef];
+                }
             }
         }
         if (!refEntity) {
@@ -455,7 +459,7 @@ export class SchemaLinker {
         }
         if (res.returns && isRef(res.returns)) {
             const ret = this.handleRef(res.returns, schema, paramsMap);
-            res.returns = ret ? {type: ret.type} : res.returns;
+            res.returns = ret ? (ret.definedAt && !ret.type) ? {$ref: ret.definedAt} : {type: ret.type} : res.returns;
         }
         res.arguments = args;
         return res;

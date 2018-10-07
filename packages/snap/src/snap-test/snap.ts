@@ -6,7 +6,7 @@ import fs from 'fs';
 import glob from 'glob';
 import chalk from 'chalk';
 import {JSDOM} from 'jsdom';
-import {consoleLog} from '@ui-autotools/utils';
+import {consoleLog, consoleError} from '@ui-autotools/utils';
 import {parseSnapshotFilename} from '../generate-snapshots/filename-utils';
 
 interface ITestResult {
@@ -26,7 +26,7 @@ function getGridClientConfig(projectPath: string) {
   }
 
   if (!process.env.APPLITOOLS_API_KEY) {
-    consoleLog('Falling back to using process.env.EYES_API_KEY.');
+    consoleError('Warning: falling back to using process.env.EYES_API_KEY, please set process.env.APPLITOOLS_API_KEY instead.');
   }
 
   const branchName = projectName + '/master';
@@ -35,7 +35,7 @@ function getGridClientConfig(projectPath: string) {
 
   return {
     appName: projectName,
-    apiKey: process.env.APPLITOOLS_API_KEY || process.env.EYES_API_KEY,
+    // apiKey: process.env.APPLITOOLS_API_KEY || process.env.EYES_API_KEY,
     branchName,
     batchName: projectName,
     browser: {

@@ -8,7 +8,6 @@ export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
   public reactStrictModeCompliant: boolean = true;
   public path: string = '';
   public exportName: string = '';
-  public baseStylePath: string = '';
 
   public constructor(public component: React.ComponentType<Props>) {}
 
@@ -34,9 +33,8 @@ export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
   }
 
   public exportedFrom(compInfo: IExportInfo) {
-    const {path, exportName, baseStylePath} = compInfo;
+    const {path, exportName} = compInfo;
     this.path = path;
     this.exportName = exportName;
-    this.baseStylePath = baseStylePath;
   }
 }

@@ -11,7 +11,6 @@ export interface IComponentMetadata<Props> {
   exportedFrom: (compInfo: IExportInfo) => void;
   path: string; // TODO: add path verification
   exportName: string;
-  baseStylePath: string; // TODO: add path verification
   simulations: Array<ISimulation<Props>>;
   styles: Map<any, IStyleMetadata>;
   addSim: (sim: ISimulation<Props>) => void;
@@ -23,7 +22,6 @@ export interface IComponentMetadata<Props> {
 export interface IExportInfo {
   path: string; // TODO: add path verification
   exportName: string;
-  baseStylePath: string; // TODO: add path verification
 }
 
 export interface IMetadata {

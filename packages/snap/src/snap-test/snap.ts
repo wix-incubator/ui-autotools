@@ -22,7 +22,11 @@ function getGridClientConfig(projectPath: string) {
   }
 
   if (!process.env.APPLITOOLS_API_KEY || !process.env.EYES_API_KEY) {
-    throw new Error('The environment variable "APPLITOOLS_API_KEY" or "EYES_API_KEY" needs to be defined.');
+    throw new Error('The environment variable "APPLITOOLS_API_KEY" needs to be defined.');
+  }
+
+  if (!process.env.APPLITOOLS_API_KEY) {
+    consoleLog('Falling back to using process.env.EYES_API_KEY.');
   }
 
   const branchName = projectName + '/master';
@@ -31,6 +35,7 @@ function getGridClientConfig(projectPath: string) {
 
   return {
     appName: projectName,
+    apiKey: process.env.APPLITOOLS_API_KEY || process.env.EYES_API_KEY,
     branchName,
     batchName: projectName,
     browser: {

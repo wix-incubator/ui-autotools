@@ -6,16 +6,7 @@ import Registry from '@ui-autotools/registry';
 
 export async function eyesTest(projectPath: string) {
   const dir = tmp.dirSync({unsafeCleanup: true});
-  try {
-    buildBaseFiles(projectPath, Registry);
-    await generateSnapshots(projectPath, dir.name, Registry);
-    await runEyes(projectPath, dir.name);
-  } catch (error) {
-    process.exitCode = 1;
-    if (error) {
-      process.stderr.write(error.toString());
-    }
-  } finally {
-    process.exit();
-  }
+  buildBaseFiles(projectPath, Registry);
+  await generateSnapshots(projectPath, dir.name, Registry);
+  await runEyes(projectPath, dir.name);
 }

@@ -11,7 +11,7 @@
     "pretest": "run-p lint build",
     "lint": "lerna run lint --stream && node -r @ts-tools/node scripts/json-linter",
     "test": "lerna run test --stream --parallel",
-    "run-browser": "webpack-dev-server --progress"
+    "start": "yarn workspace @ui-autotools/schema-extract start"
   },
   "devDependencies": {
     "@stylable/cli": "^1.0.12",

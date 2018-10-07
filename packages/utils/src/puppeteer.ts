@@ -8,12 +8,12 @@ export function waitForPageError(page: puppeteer.Page): Promise<never> {
     // Puppeteer functions we're awaiting on will throw on disconnect anyway.
 
     return new Promise((_, reject) => {
-        page.on('pageerror', (errorText: string) => {
-            reject(new Error(errorText));
+        page.on('pageerror', (e) => {
+            reject(e);
         });
 
-        page.on('error', () => {
-            reject(new Error('Page crashed'));
+        page.on('error', (e) => {
+            reject(new Error(`Page crashed ${e}`));
         });
     });
 }

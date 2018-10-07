@@ -32,7 +32,7 @@
   "dependencies": {
     "@stylable/core": "^0.1.10",
     "@stylable/webpack-plugin": "^0.1.11",
-    "@ts-tools/node": "^0.6.3",
+    "@ts-tools/node": "^0.6.4",
     "@ui-autotools/schema-extract": "^1.0.9",
     "@ui-autotools/utils": "^1.0.8",
     "chalk": "^2.4.1",

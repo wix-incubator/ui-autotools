@@ -48,11 +48,11 @@ program
 .command('snap')
 .description('compare components to the expected appearance using Applitools Eyes')
 .option('-f, --files [pattern]', 'metadata file pattern')
-.action((options) => {
+.action(async (options) => {
   const metaGlob: string = options.files || defaultMetaGlob;
   try {
     importMetaFiles(projectPath, metaGlob);
-    eyesTest(projectPath);
+    await eyesTest(projectPath);
   } catch (error) {
     process.exitCode = 1;
     if (error) {

@@ -50,8 +50,17 @@ program
 .option('-f, --files [pattern]', 'metadata file pattern')
 .action((options) => {
   const metaGlob: string = options.files || defaultMetaGlob;
-  importMetaFiles(projectPath, metaGlob);
-  eyesTest(projectPath);
+  try {
+    importMetaFiles(projectPath, metaGlob);
+    eyesTest(projectPath);
+  } catch (error) {
+    process.exitCode = 1;
+    if (error) {
+      process.stderr.write(error.toString());
+    }
+  } finally {
+    process.exit();
+  }
 });
 
 program.command('showcase')

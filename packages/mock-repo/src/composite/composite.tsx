@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {ChildComp} from './child';
-import style from './child.st.css';
+import style from './composite.st.css';
 
 export interface IProps {
   text?: React.ReactNode;

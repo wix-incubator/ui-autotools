@@ -58,8 +58,6 @@ program
     if (error) {
       process.stderr.write(error.toString());
     }
-  } finally {
-    process.exit();
   }
 });
 

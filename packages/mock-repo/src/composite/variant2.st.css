@@ -1,5 +1,5 @@
 :import {
-    -st-from: "./child.st.css";
+    -st-from: "./composite.st.css";
     -st-default: Composite; 
 }
 

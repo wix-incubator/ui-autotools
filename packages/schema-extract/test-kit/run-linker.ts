@@ -1,4 +1,4 @@
-import * as ts from 'typescript';
+import ts from 'typescript';
 import { MemoryFileSystem, DirectoryContent } from 'kissfs';
 import { createHost } from '../src/isomorphc-typescript-host';
 import {  Schema } from '../src/json-schema-types';

@@ -21,7 +21,7 @@ function getGridClientConfig(projectPath: string) {
     throw new Error('The project should have a package.json file with a "name" field.');
   }
 
-  if (!process.env.APPLITOOLS_API_KEY || !process.env.EYES_API_KEY) {
+  if (!process.env.APPLITOOLS_API_KEY && !process.env.EYES_API_KEY) {
     throw new Error('The environment variable "APPLITOOLS_API_KEY" needs to be defined.');
   }
 
@@ -35,7 +35,7 @@ function getGridClientConfig(projectPath: string) {
 
   return {
     appName: projectName,
-    // apiKey: process.env.APPLITOOLS_API_KEY || process.env.EYES_API_KEY,
+    apiKey: process.env.APPLITOOLS_API_KEY || process.env.EYES_API_KEY,
     branchName,
     batchName: projectName,
     browser: {

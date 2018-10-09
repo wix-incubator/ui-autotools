@@ -1,0 +1,10 @@
+:import {
+    -st-from: "./composite.st.css";
+    -st-default: Composite; 
+}
+
+.root {
+  -st-extends: Composite;
+  color: green;
+  font-size: 20px;
+}

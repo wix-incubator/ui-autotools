@@ -17,6 +17,7 @@ export const buildBaseFiles = (projectPath: string, Registry: IRegistry) => {
   const compPathPrefix = '../../';
 
   Registry.metadata.components.forEach((componentMetadata) => {
+    console.log('componentMetadata', componentMetadata);
     const simIndex = componentMetadata.simulations.length;
     const styles = componentMetadata.styles;
     const compPath =  path.join(compPathPrefix, componentMetadata.path);

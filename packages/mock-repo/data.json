@@ -1,0 +1,10 @@
+{ metadata:
+   Metadata {
+     components:
+      Map {
+        [Function] => [ComponentMetadata],
+        [Function] => [ComponentMetadata],
+        [Function] => [ComponentMetadata],
+        [Function] => [ComponentMetadata] } },
+  getComponentMetadata: [Function: getComponentMetadata],
+  clear: [Function: clear] }

@@ -1,7 +1,7 @@
 import ts from 'typescript';
 import {union} from 'lodash';
 import { transform } from './file-transformer';
-import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, NeverId, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isNeverSchema, FunctionSchemaId, isFunctionSchema, FunctionSchema, NullSchemaId } from './json-schema-types';
+import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, FunctionSchemaId, isFunctionSchema, FunctionSchema, NullSchemaId } from './json-schema-types';
 
 export class SchemaLinker {
     private checker: ts.TypeChecker;
@@ -49,9 +49,9 @@ export class SchemaLinker {
         if (isRef(entity) && entity.genericArguments) {
             return this.handleRef(entity, schema, paramsMap);
         }
-        if (entity.$allOf) {
-            return this.handleIntersection(entity.$allOf, schema, paramsMap);
-        }
+        // if (entity.$allOf) {
+        //     return this.handleIntersection(entity.$allOf, schema, paramsMap);
+        // }
         if (entity.$oneOf) {
             return this.handleUnion(entity.$oneOf, schema);
         }
@@ -78,9 +78,12 @@ export class SchemaLinker {
         if (!refEntity) {
             return {refEntity: null, refEntityType: cleanRef};
         }
+
+        // This code is not relevant at the moment
         if (ref.slice(0, poundIndex) === 'react') {
             return {refEntity: this.handleReact(refEntity, cleanRef), refEntityType: cleanRef};
         }
+
         if (isRef(refEntity)) {
             return this.getRefEntity(refEntity.$ref, schema, paramsMap);
         }
@@ -108,83 +111,83 @@ export class SchemaLinker {
     }
 
     // This implementation require major refactoring
-    private handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
-        let res: Schema & IObjectFields = {};
-        for (const option of options) {
-            let entity;
-            if (isRef(option)) {
-                entity = this.link(this.handleRef(option, schema, paramsMap), schema, paramsMap);
-                this.mergeProperties(entity, res, schema, paramsMap, option.$ref);
-            } else if (isSchemaOfType('object', option)) {
-                entity = this.link(option, schema, paramsMap);
-                this.mergeProperties(entity, res, schema, paramsMap, option.definedAt);
-            } else if (option.$oneOf) {
-                const linkedOption = this.link(option, schema, paramsMap);
-                const newRes: Schema = {$oneOf: []};
-                if (Object.keys(res).length === 0) {
-                    const rest = options.slice(1);
-                    for (const t of linkedOption.$oneOf!) {
-                        const r = this.handleIntersection([t, ...rest], schema, paramsMap);
-                        if (r.$oneOf) {
-                            newRes.$oneOf = union(newRes.$oneOf, r.$oneOf);
-                        } else {
-                            newRes.$oneOf!.push(r);
-                        }
-                    }
-                    return newRes;
-                } else {
-                    for (const t of linkedOption.$oneOf!) {
-                        const r = this.handleIntersection([res, t], schema, paramsMap);
-                        if (isNeverSchema(r)) {
-                            continue;
-                        } else {
-                            newRes.$oneOf!.push(r);
-                        }
-                    }
-                    if (res.$oneOf) {
-                        res.$oneOf = union(res.$oneOf, newRes.$oneOf);
-                    } else {
-                        res = newRes;
-                    }
-                }
-            } else {
-                if (!res.type && option.type) {
-                    res.type = option.type;
-                    if (option.enum) {
-                        res.enum = option.enum;
-                    }
-                } else {
-                    if (Object.keys(res).length === 0) {
-                        res = option;
-                    } else if (option.type && option.type === res.type) {
-                        if (option.enum) {
-                            if (!res.enum) {
-                                res.enum = option.enum;
-                            } else {
-                                const enums = [];
-                                for (let i = 0; i < option.enum.length; i++) {
-                                    if (option.enum.includes(res.enum![i])) {
-                                        enums.push(option.enum[i]);
-                                    }
-                                }
-                                if (enums.length === 0) {
-                                    return {$ref: NeverId};
-                                } else {
-                                    res.enum = enums;
-                                }
-                            }
-                        }
-                    } else {
-                        return {$ref: NeverId};
-                    }
-                }
-                if (option.definedAt) {
-                    res.definedAt = option.definedAt;
-                }
-            }
-        }
-        return res;
-    }
+    // private handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
+    //     let res: Schema & IObjectFields = {};
+    //     for (const option of options) {
+    //         let entity;
+    //         if (isRef(option)) {
+    //             entity = this.link(this.handleRef(option, schema, paramsMap), schema, paramsMap);
+    //             this.mergeProperties(entity, res, schema, paramsMap, option.$ref);
+    //         } else if (isSchemaOfType('object', option)) {
+    //             entity = this.link(option, schema, paramsMap);
+    //             this.mergeProperties(entity, res, schema, paramsMap, option.definedAt);
+    //         } else if (option.$oneOf) {
+    //             const linkedOption = this.link(option, schema, paramsMap);
+    //             const newRes: Schema = {$oneOf: []};
+    //             if (Object.keys(res).length === 0) {
+    //                 const rest = options.slice(1);
+    //                 for (const t of linkedOption.$oneOf!) {
+    //                     const r = this.handleIntersection([t, ...rest], schema, paramsMap);
+    //                     if (r.$oneOf) {
+    //                         newRes.$oneOf = union(newRes.$oneOf, r.$oneOf);
+    //                     } else {
+    //                         newRes.$oneOf!.push(r);
+    //                     }
+    //                 }
+    //                 return newRes;
+    //             } else {
+    //                 for (const t of linkedOption.$oneOf!) {
+    //                     const r = this.handleIntersection([res, t], schema, paramsMap);
+    //                     if (isNeverSchema(r)) {
+    //                         continue;
+    //                     } else {
+    //                         newRes.$oneOf!.push(r);
+    //                     }
+    //                 }
+    //                 if (res.$oneOf) {
+    //                     res.$oneOf = union(res.$oneOf, newRes.$oneOf);
+    //                 } else {
+    //                     res = newRes;
+    //                 }
+    //             }
+    //         } else {
+    //             if (!res.type && option.type) {
+    //                 res.type = option.type;
+    //                 if (option.enum) {
+    //                     res.enum = option.enum;
+    //                 }
+    //             } else {
+    //                 if (Object.keys(res).length === 0) {
+    //                     res = option;
+    //                 } else if (option.type && option.type === res.type) {
+    //                     if (option.enum) {
+    //                         if (!res.enum) {
+    //                             res.enum = option.enum;
+    //                         } else {
+    //                             const enums = [];
+    //                             for (let i = 0; i < option.enum.length; i++) {
+    //                                 if (option.enum.includes(res.enum![i])) {
+    //                                     enums.push(option.enum[i]);
+    //                                 }
+    //                             }
+    //                             if (enums.length === 0) {
+    //                                 return {$ref: NeverId};
+    //                             } else {
+    //                                 res.enum = enums;
+    //                             }
+    //                         }
+    //                     }
+    //                 } else {
+    //                     return {$ref: NeverId};
+    //                 }
+    //             }
+    //             if (option.definedAt) {
+    //                 res.definedAt = option.definedAt;
+    //             }
+    //         }
+    //     }
+    //     return res;
+    // }
 
     private handleUnion(types: Schema[], schema: ModuleSchema) {
         const res: Schema = {$oneOf: []};
@@ -213,18 +216,18 @@ export class SchemaLinker {
             for (const prop in properties) {
                 if (!res.properties.hasOwnProperty(prop)) {
                     res.properties[prop] = properties[prop];
-                } else {
-                    const r = this.handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
-                    if (isNeverSchema(r)) {
-                        // Maybe there is a better way than this
-                        res.$ref = NeverId;
-                        delete res.properties;
-                        delete res.required;
-                        delete res.type;
-                        return;
-                    } else {
-                        res.properties[prop] = r;
-                    }
+                // } else {
+                    // const r = this.handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
+                    // if (isNeverSchema(r)) {
+                    //     // Maybe there is a better way than this
+                    //     res.$ref = NeverId;
+                    //     delete res.properties;
+                    //     delete res.required;
+                    //     delete res.type;
+                    //     return;
+                    // } else {
+                    //     res.properties[prop] = r;
+                    // }
                 }
             }
         }
@@ -305,13 +308,12 @@ export class SchemaLinker {
         res.properties = this.extractClassData(entity, (refEntity as ClassSchema), refEntityType, 'properties', schema);
         res.staticProperties = this.extractClassData(entity, (refEntity as ClassSchema), refEntityType, 'staticProperties', schema);
         if (entity.genericParams) {
-            res.genericParams = entity.genericParams;
+            res.genericParams = [...entity.genericParams];
         }
         return res;
     }
 
     private extractClassData(entity: ClassSchema, refEntity: ClassSchema, extendedEntity: string, prop: 'properties' | 'staticProperties', schema: ModuleSchema): {[name: string]: Schema} {
-        const res: {[name: string]: Schema & {inheritedFrom?: string}} = {};
         const paramsMap = new Map();
         if (refEntity.genericParams && entity.extends!.genericArguments) {
             refEntity.genericParams.forEach((param, index) => {
@@ -320,21 +322,15 @@ export class SchemaLinker {
         }
         const refProperties = refEntity[prop];
         const properties = entity[prop];
-        for (const p in properties) {
-            if (properties.hasOwnProperty(p)) {
-                res[p] = this.link(properties[p], schema, paramsMap);
-            }
-        }
+        const res: {[name: string]: Schema & {inheritedFrom?: string}} = {...properties};
         for (const p in refProperties) {
-            if (refProperties.hasOwnProperty(p)) {
-                if (!properties.hasOwnProperty(p)) {
-                    const property = this.link(refProperties[p], schema, paramsMap);
-                    if (isRef(property)) {
-                        const refType = property.$ref.startsWith(`#${extendedEntity}`) ? property.$ref : `#${extendedEntity}!${property.$ref.replace('#', '')}`;
-                        res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, paramsMap.get(refType));
-                    } else {
-                        res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, property);
-                    }
+            if (refProperties.hasOwnProperty(p) && !properties.hasOwnProperty(p)) {
+                const property = refProperties[p];
+                if (isRef(property)) {
+                    const refType = property.$ref.startsWith(`#${extendedEntity}`) ? property.$ref : `#${extendedEntity}!${property.$ref.replace('#', '')}`;
+                    res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, paramsMap.get(refType));
+                } else {
+                    res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, property);
                 }
             }
         }
@@ -356,8 +352,8 @@ export class SchemaLinker {
                 const property = refProperties[propName];
                 if (isRef(property)) {
                     properties[propName] = paramsMap.get(property.$ref)!;
-                } else if (property.$allOf) {
-                    properties[propName] = this.handleIntersection(property.$allOf, schema, paramsMap);
+                // } else if (property.$allOf) {
+                //     properties[propName] = this.handleIntersection(property.$allOf, schema, paramsMap);
                 } else if (isSchemaOfType('object', property)) {
                     properties[propName] = this.linkRefObject(property, paramsMap, schema);
                 }

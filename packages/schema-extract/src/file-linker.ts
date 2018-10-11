@@ -46,7 +46,7 @@ export class SchemaLinker {
         if (isFunctionSchema(entity)) {
             return this.linkFunction(entity, schema, paramsMap);
         }
-        if (isRef(entity)) {
+        if (isRef(entity) && entity.genericArguments) {
             return this.handleRef(entity, schema, paramsMap);
         }
         if (entity.$allOf) {
@@ -107,6 +107,7 @@ export class SchemaLinker {
         return refEntity;
     }
 
+    // This implementation require major refactoring
     private handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
         let res: Schema & IObjectFields = {};
         for (const option of options) {
@@ -193,6 +194,7 @@ export class SchemaLinker {
         return res;
     }
 
+    // We probably need to replace this function now
     private mergeProperties(entity: Schema & (IObjectFields | InterfaceSchema), res: (Schema & IObjectFields) | InterfaceSchema, schema: ModuleSchema, paramsMap?: Map<string, Schema>, ref?: string) {
         if (isInterfaceSchema(entity)) {
             res.$ref = interfaceId;
@@ -210,10 +212,7 @@ export class SchemaLinker {
             }
             for (const prop in properties) {
                 if (!res.properties.hasOwnProperty(prop)) {
-                    res.properties[prop] = this.link(properties[prop], schema, paramsMap);
-                    if (ref && !res.properties[prop].definedAt && !isInterfaceSchema(entity)) {
-                        res.properties[prop].definedAt = ref;
-                    }
+                    res.properties[prop] = properties[prop];
                 } else {
                     const r = this.handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
                     if (isNeverSchema(r)) {
@@ -242,8 +241,10 @@ export class SchemaLinker {
         if (!schema.definitions) {
             return entity;
         }
-        const res = this.handleObject(entity, schema) as InterfaceSchema;
-        res.$ref = interfaceId;
+        const res: InterfaceSchema = {$ref: interfaceId, properties: {...entity.properties}};
+        if (entity.required) {
+            res.required = [...entity.required];
+        }
         if (entity.extends) {
             const {refEntity, refEntityType} = this.getRefEntity(entity.extends.$ref!, schema);
             if (!refEntity) {
@@ -371,31 +372,32 @@ export class SchemaLinker {
 
     private handleObject(entity: Schema & IObjectFields, schema: ModuleSchema): Schema {
         const res: typeof entity = {};
-        this.mergeProperties(entity, res, schema, undefined, entity.definedAt);
+        if (entity.properties) {
+            res.properties = {...entity.properties};
+        }
+        if (entity.required) {
+            res.required = [...entity.required];
+        }
         return res;
     }
 
     private linkFunction(entity: FunctionSchema, schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
-        const res = Object.assign({}, entity);
+        const res = {...entity};
         const args = [];
         for (const arg of entity.arguments) {
-            let newArg;
-            if (arg.$ref && paramsMap) {
-                // Maybe needs link here?
-                newArg = Object.assign({}, paramsMap.get(arg.$ref));
+            if (isRef(arg) && paramsMap && paramsMap.has(arg.$ref)) {
+                const newArg: Schema = {...paramsMap.get(arg.$ref)};
                 if (res.genericParams) {
                     delete res.genericParams;
                 }
+                newArg.name = arg.name;
+                args.push(newArg);
+            } else {
+                args.push(arg);
             }
-            if (!newArg) {
-                newArg = this.link(arg, schema, paramsMap);
-            }
-            newArg.name = arg.name;
-            args.push(newArg);
         }
-        if (res.returns && isRef(res.returns)) {
-            const ret = this.handleRef(res.returns, schema, paramsMap);
-            res.returns = ret ? (ret.definedAt && !ret.type) ? {$ref: ret.definedAt} : {type: ret.type} : res.returns;
+        if (res.returns && isRef(res.returns) && paramsMap && paramsMap.has(res.returns.$ref)) {
+            res.returns = paramsMap.get(res.returns.$ref);
         }
         res.arguments = args;
         return res;

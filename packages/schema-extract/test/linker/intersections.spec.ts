@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import { Schema, NeverId, interfaceId } from '../../src/json-schema-types';
 import {linkTest} from '../../test-kit/run-linker';
 
-describe('schema-linker - intersections', () => {
+xdescribe('schema-linker - intersections', () => {
     it('should flatten intersection types', async () => {
         const fileName = 'index.ts';
         const res = linkTest({[fileName]: `

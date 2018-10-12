@@ -2,8 +2,7 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "types": [
-      "mocha",
-      "chai"
+      "mocha"
     ]
   }
 }

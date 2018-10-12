@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import style from './type-definition.st.css';
 
 // TODO: we should instead use the Schema type from schema-extract, but

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {ChildComp} from './child';
 import style from './composite.st.css';
 

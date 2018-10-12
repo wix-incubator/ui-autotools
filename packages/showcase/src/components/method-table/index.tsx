@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import style from './method-table.st.css';
 import {TypeDefinition} from '../type-definition';
 

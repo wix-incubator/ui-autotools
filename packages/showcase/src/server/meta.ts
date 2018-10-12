@@ -1,5 +1,5 @@
 import '@ts-tools/node';
-import * as React from 'react';
+import React from 'react';
 import path from 'path';
 import glob from 'glob';
 import Registry, {getCompName} from '@ui-autotools/registry';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { expect } from 'chai';
 import ssrTest from './ssr-test-fixtures/mocha-wrapper';
 import Registry from '@ui-autotools/registry';

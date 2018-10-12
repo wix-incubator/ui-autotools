@@ -1,6 +1,6 @@
 import ts from 'typescript';
 import {ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchemaId, ClassSchemaId, interfaceId, InterfaceSchema } from './json-schema-types';
-import * as path from 'path';
+import path from 'path';
 import { generateDataLiteral, isFailedInference } from './data-literal-transformer';
 // console.log(types)
 const posix: typeof path.posix = path.posix ? path.posix : path;

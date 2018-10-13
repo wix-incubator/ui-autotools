@@ -1,6 +1,6 @@
 const {TestFailedError, TestResults} = require('@applitools/eyes.sdk.core');
-const {makeVisualGridClient, initConfig} = require('@applitools/visual-grid-client');
-const domNodesToCdt = require('@applitools/visual-grid-client/src/browser-util/domNodesToCdt');
+const {makeVisualGridClient, makeGetConfig} = require('@applitools/visual-grid-client');
+const {domNodesToCdt} = require('@applitools/visual-grid-client/browser');
 import path from 'path';
 import fs from 'fs';
 import glob from 'glob';
@@ -139,7 +139,7 @@ export async function runEyes(projectPath: string, tempDirectory: string) {
 
   const config = getGridClientConfig(projectPath);
   const resources = getStaticResources(cssFilenames, tempDirectory);
-  const gridClient = makeVisualGridClient(initConfig());
+  const gridClient = makeVisualGridClient(makeGetConfig());
 
   const resultPromises = [];
   consoleLog('Sending snapshots to Applitools...');

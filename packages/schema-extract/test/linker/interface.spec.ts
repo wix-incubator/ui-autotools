@@ -45,14 +45,7 @@ describe('schema-linker - interfaces', () => {
             $ref: interfaceId,
             properties: {
                 somethingElse: {
-                    $ref: interfaceId,
-                    definedAt: '#TypeA',
-                    properties: {
-                        something: {
-                            type: 'string'
-                        }
-                    },
-                    required: ['something']
+                    $ref: '#TypeA'
                 }
             },
             required: ['somethingElse']

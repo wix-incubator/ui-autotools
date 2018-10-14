@@ -18,15 +18,8 @@ describe('schema-linker - functions', () => {
             $ref: FunctionSchemaId,
             arguments: [
                 {
+                    $ref: '#MyType',
                     name: 'o',
-                    type: 'object',
-                    definedAt: '#MyType',
-                    properties: {
-                        name: {
-                            type: 'string'
-                        }
-                    },
-                    required: ['name']
                 }
             ],
             requiredArguments: ['o'],

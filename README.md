@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/wix-incubator/ui-autotools.svg?branch=master)](https://travis-ci.org/wix-incubator/ui-autotools)
 
-UI-autotools comprises a set of tools designed to automate and improve the process of developing components. These tools consume `*.meta.tsx` files in the project, which are described below. All tools share a similar command pattern:
+ui-autotools comprises a set of tools designed to automate and improve the process of developing components. These tools consume `*.meta.tsx` files in the project, which are described below. All tools share a similar command pattern:
 
 ```shell
 autotools [tool name] --files [meta files matching glob]
@@ -61,6 +61,9 @@ myComponentMetadata.addSim({
     title: 'one item',
     props: {
         items:['🐊 ']
+    },
+    state: {
+        selectedItem: 0
     }
 });
 
@@ -68,6 +71,9 @@ myComponentMetadata.addSim({
     title: 'many items',
     props: {
         items:['🧒 ', '👶 ', '🐊 ']
+    },
+    state: {
+        selectedItem: 1
     }
 });
 
@@ -76,7 +82,7 @@ myComponentMetadata.addSim({
 myComponentMetadata.exportedFrom({
   path: 'src/my-comp/my-comp',                          // the path to your component, relative to the root, and without file extension
   exportName: 'MyComp',                                 // the name under which you export your component
-  baseStylePath: 'src/my-comp/my-comp.st.css',  // the path to the base stylesheet for the component (as opposed to themes)
+  baseStylePath: 'src/my-comp/my-comp.st.css',          // the path to the base stylesheet for the component (as opposed to themes)
 });
 
 // Themes can be registered like so:

@@ -16,6 +16,9 @@ metadata.addSim({
   title: 'compositeSim',
   props: {
     text: <i>Text</i>
+  },
+  state: {
+    text: 'STATE OVERRIDE'
   }
 });
 

@@ -2,15 +2,15 @@ const StylableWebpackPlugin = require('@stylable/webpack-plugin');
 import path from 'path';
 import webpack from 'webpack';
 import glob from 'glob';
+import React from 'react';
 import {HTMLSnapshotPlugin} from '@stylable/webpack-extensions';
-import {createElement} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {getCompName, IComponentMetadata, IRegistry} from '@ui-autotools/registry';
 import {consoleLog} from '@ui-autotools/utils';
 import {dedent} from './dedent';
 import {parseSnapshotFilename} from './filename-utils';
 
-function findComponentByName(name: string, Registry: IRegistry): IComponentMetadata<any> | void {
+function findComponentByName(name: string, Registry: IRegistry): IComponentMetadata<any, any> | void {
     // We only have to do this because we currently map the component definitions to their metadata,
     // not the names. So we have no way to get component metadata by name. And at this point in the build
     // process, the component definition returned by webpack has been modified from the original, so we can't
@@ -31,9 +31,11 @@ function render(fileName: string, Registry: IRegistry, compiledFile: any, source
   }
 
   const {simIndex} = parseSnapshotFilename(sourceFile.id, '.snapshot.ts');
-  const props = compMetadata.simulations[simIndex].props;
+  const Comp = compMetadata.simulationToJSX(compMetadata.simulations[simIndex]);
+  const styledElement = React.cloneElement(Comp, {className: compiledFile.default.style.root});
   const cssLink = `<link rel="stylesheet" type="text/css" href="${fileName}.css">`;
-  const componentString = renderToStaticMarkup(createElement(compiledFile.default.comp, {className: compiledFile.default.style.root, ...props}));
+  const componentString = renderToStaticMarkup(styledElement);
+
   const template = `<!DOCTYPE html>
   <html lang="en">
   <head>

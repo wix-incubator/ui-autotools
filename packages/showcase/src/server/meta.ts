@@ -32,7 +32,7 @@ export interface IMetadataAndSchemas {
 }
 
 function findComponentSchemas(
-  componentsMetadata: Map<React.ComponentType, IComponentMetadata<any>>,
+  componentsMetadata: Map<React.ComponentType, IComponentMetadata<any, any>>,
   basePath: string,
   sourceGlob: string
 ) {

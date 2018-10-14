@@ -7,7 +7,17 @@ export interface IProps {
   className?: string;
 }
 
-export const Composite: React.SFC<IProps> = (props) =>
-  <div {...style('root', {}, props)}><ChildComp text={props.text} /></div>;
+export interface IState {
+  text?: React.ReactNode;
+}
+
+export class Composite extends React.Component<IProps, IState> {
+  public static displayName: string;
+  public state: IState = {text: ''};
+
+  public render() {
+    return <div {...style('root', {}, this.props)}><ChildComp text={this.state.text ? this.state.text : this.props.text} /></div>;
+  }
+}
 
 Composite.displayName = 'Composite';

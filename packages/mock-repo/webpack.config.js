@@ -14,6 +14,7 @@ module.exports = {
         options: {
           compilerOptions: {
             declaration: false,
+            declarationMap: false
           },
         },
       },
@@ -42,5 +43,5 @@ module.exports = {
   },
   devServer: {
     disableHostCheck: true,
-  },
+  }
 };

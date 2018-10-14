@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { expect } from 'chai';
 import ssrTest from './ssr-test-fixtures/mocha-wrapper';
 import Registry from '@ui-autotools/registry';
@@ -35,7 +35,7 @@ describe('SSR Test', () => {
       expect(flag, 'Test did not pass with valid component').to.equal(1);
       done();
     });
-  }).timeout(3000);
+  }).timeout(15000);
 
   it('should fail with an invalid component', (done) => {
     Registry.getComponentMetadata(FailingTestComp);
@@ -43,5 +43,5 @@ describe('SSR Test', () => {
       expect(flag, 'Test did not fail with invalid component').to.equal(-1);
       done();
     });
-  }).timeout(3000);
+  }).timeout(15000);
 });

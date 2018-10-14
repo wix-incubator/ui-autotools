@@ -1,4 +1,4 @@
-import 'typescript-support';
+import '@ts-tools/node';
 import path from 'path';
 import {promisify} from 'util';
 import glob from 'glob';
@@ -12,8 +12,11 @@ import {
   RawAssetWebpackPlugin,
   getServerUrl
 } from '@ui-autotools/utils';
-import {getMetadataAndSchemasInDirectory} from './meta';
-import {formatComponentDataForClient} from './client-data';
+import {
+  getMetadataAndSchemasInDirectory,
+  getComponentNamesFromMetadata
+} from './meta';
+import {getClientData} from './client-data';
 const StylableWebpackPlugin = require('@stylable/webpack-plugin');
 
 interface IProjectOptions {
@@ -50,9 +53,16 @@ function getWebsiteWebpackConfig(
     projectOptions.metadataGlob,
     projectOptions.sourcesGlob
   );
-  const schemas = Array.from(metadataAndSchemas.schemasByComponent.values());
-  const componentData = formatComponentDataForClient(metadataAndSchemas);
-  const componentPages = schemas.map(({name}) =>
+
+  const componentNames =
+    getComponentNamesFromMetadata(metadataAndSchemas.metadata);
+
+  const clientData = getClientData(
+    projectOptions.projectPath,
+    metadataAndSchemas
+  );
+
+  const componentPages = componentNames.map((name) =>
     new HtmlWebpackPlugin({
       title: name,
       filename: `components/${name}/index.html`,
@@ -75,7 +85,8 @@ function getWebsiteWebpackConfig(
             loader: 'ts-loader',
             options: {
               compilerOptions: {
-                declaration: false
+                declaration: false,
+                declarationMap: false
               }
             }
           }
@@ -86,7 +97,7 @@ function getWebsiteWebpackConfig(
       new StylableWebpackPlugin(),
       new RawAssetWebpackPlugin({
         filename: 'components.json',
-        data: JSON.stringify(componentData)
+        data: JSON.stringify(clientData)
       }),
       new HtmlWebpackPlugin({
         title: 'Website',

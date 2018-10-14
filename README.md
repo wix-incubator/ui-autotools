@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/wix-incubator/ui-autotools.svg?branch=master)](https://travis-ci.org/wix-incubator/ui-autotools)
 
-UI-autotools comprises a set of tools designed to automate and improve the process of developing components. These tools consume `*.meta.tsx` files in the project, which are described below. All tools share a similar command pattern:
+ui-autotools comprises a set of tools designed to automate and improve the process of developing components. These tools consume `*.meta.tsx` files in the project, which are described below. All tools share a similar command pattern:
 
 ```shell
 autotools [tool name] --files [meta files matching glob]
@@ -28,7 +28,7 @@ Common CLI parameters:
     - nothing was printed to the console
 - `a11y` - accessibility test:
     - checks component render result for accessibility using axe-core
-- `eyes` - tool for generating and testing component snapshots, that:
+- `snap` - tool for generating and testing component snapshots, that:
     - renders components, takes screenshots, and sends them to Applitools Eyes to run comparisons
 - `showcase` - generates a static website with component documentation, APIs and demos
 
@@ -43,6 +43,7 @@ Registering metadata is done by requiring the Registry and creating a component 
 ```ts
 import Registry from 'ui-autotools';
 import MyComp from './my-comp.tsx';
+import theme1 from './theme1.st.css';
 
 // If the component hasn't been described before, this method adds a metadata entry for the component,
 // and returns the newly created metadata
@@ -60,6 +61,9 @@ myComponentMetadata.addSim({
     title: 'one item',
     props: {
         items:['🐊 ']
+    },
+    state: {
+        selectedItem: 0
     }
 });
 
@@ -67,8 +71,26 @@ myComponentMetadata.addSim({
     title: 'many items',
     props: {
         items:['🧒 ', '👶 ', '🐊 ']
+    },
+    state: {
+        selectedItem: 1
     }
 });
+
+// If you want to use the "snap" tool, this method must be called. Currently, the snap
+// tool relies on Stylable
+myComponentMetadata.exportedFrom({
+  path: 'src/my-comp/my-comp',                          // the path to your component, relative to the root, and without file extension
+  exportName: 'MyComp',                                 // the name under which you export your component
+  baseStylePath: 'src/my-comp/my-comp.st.css',          // the path to the base stylesheet for the component (as opposed to themes)
+});
+
+// Themes can be registered like so:
+myComponentMetadata.addStyle(theme1, {
+    name: 'theme1',
+    path: 'src/composite/theme1.st.css'                 // path is relative to the root of the project
+});
+
 ```
 
 Components are assumed by default to be React Strict Mode compliant (meaning that they follow the guidelines described [here](https://reactjs.org/docs/strict-mode.html)). However, if your component is *not* React Strict Mode compliant, you can set a flag in metadata to disable rendering in strict mode, e.g.:
@@ -105,14 +127,14 @@ Asserts that components are compatable with axe-core. Allows for varying levels 
 autotools a11y --files ./components/**/*.meta.ts --impact minor
 ```
 
-### Eyes
+### Snap
 
 Renders components, takes screenshots, and then sends screenshots to Applitools Eyes to run comparisons. This tool requires that the `process.env.EYES_API_KEY` value is set to your private API key.
 
 #### Usage
 
 ```shell
-autotools eyes --files ./components/**/*.meta.ts
+autotools snap --files ./components/**/*.meta.ts
 ```
 
 ### Showcase

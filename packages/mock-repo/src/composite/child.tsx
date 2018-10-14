@@ -1,8 +1,8 @@
-import * as React from 'react';
-
+import React from 'react';
 export interface IProps {
   text: React.ReactNode;
+  className?: string;
 }
 
 export const ChildComp: React.SFC<IProps> = (props) =>
-  <h1>❦ {props.text} ❦</h1>;
+  <p>❦ {props.text} ❦</p>;

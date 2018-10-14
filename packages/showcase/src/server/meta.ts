@@ -1,11 +1,11 @@
-import 'typescript-support';
-import * as React from 'react';
+import '@ts-tools/node';
+import React from 'react';
 import path from 'path';
 import glob from 'glob';
 import Registry, {getCompName} from '@ui-autotools/registry';
 import {IComponentMetadata, IMetadata} from '@ui-autotools/registry';
 import {
-  extractSchema,
+  createLinker,
   ModuleSchema as PartialModuleSchema,
   IObjectFields,
   Schema
@@ -28,38 +28,20 @@ export interface IExportSourceAndSchema {
 
 export interface IMetadataAndSchemas {
   metadata: IMetadata;
-  schemasByFilename: Map<string, IModuleSchemaWithFilename>;
   schemasByComponent: Map<React.ComponentType, IExportSourceAndSchema>;
 }
 
-function getSchemaForExport(
-  moduleSchemas: ModuleSchemasByFilename,
-  file: string,
-  exportName: string
-) {
-  if (!moduleSchemas.has(file)) {
-    throw new Error(`Schema for "${file}" is missing`);
-  }
-
-  const {schema} = moduleSchemas.get(file)!;
-  if (!schema.properties) {
-    throw new Error(`Export "${exportName}" not found`);
-  }
-
-  const property = schema.properties[exportName];
-  const ref = property.$ref;
-
-  return ref && ref.startsWith('#typeof') ?
-    schema.definitions![ref.replace('#typeof ', '')] :
-    property;
-}
-
 function findComponentSchemas(
-  componentsMetadata: Map<React.ComponentType, IComponentMetadata<any>>,
-  schemas: ModuleSchemasByFilename
+  componentsMetadata: Map<React.ComponentType, IComponentMetadata<any, any>>,
+  basePath: string,
+  sourceGlob: string
 ) {
+  const sourceFilenames = glob.sync(sourceGlob, {
+    cwd: basePath,
+    absolute: true
+  });
+
   const matches: Map<React.ComponentType, IExportSourceAndSchema> = new Map();
-  const sourceFilenames = Array.from(schemas.keys());
 
   // TODO: we make too many assumptions here. That the meta file name is the
   // same as the component's displayName, that the meta file and the
@@ -69,6 +51,7 @@ function findComponentSchemas(
   // about the component's filename and the export name should be contained in
   // its metadata.
   const normalize = (string: string) => string.toLowerCase().replace(/-/g, '');
+  const linker = createLinker(sourceFilenames, basePath);
   for (const Comp of componentsMetadata.keys()) {
     const name = getCompName(Comp);
     const metaFile = sourceFilenames.find((file) =>
@@ -84,7 +67,7 @@ function findComponentSchemas(
     if (!componentFile) {
       continue;
     }
-    const exportSchema = getSchemaForExport(schemas, componentFile, name);
+    const exportSchema = linker.flatten(componentFile, name);
     if (!exportSchema) {
       continue;
     }
@@ -105,17 +88,15 @@ export function getMetadataAndSchemasInDirectory(
   });
   metadataFiles.forEach(require);
   const metadata = Registry.metadata;
-
-  const schemas = Array.from(extractSchema(basePath, sourceGlob));
-  const schemasByFilename: ModuleSchemasByFilename = new Map();
-  for (const item of schemas) {
-    schemasByFilename.set(item.file, item);
-  }
-
   const schemasByComponent = findComponentSchemas(
     metadata.components,
-    schemasByFilename
+    basePath,
+    sourceGlob
   );
+  return {metadata, schemasByComponent};
+}
 
-  return {metadata, schemasByFilename, schemasByComponent};
+export function getComponentNamesFromMetadata(metadata: IMetadata): string[] {
+  return Array.from(metadata.components.values())
+         .map(({component}) => getCompName(component));
 }

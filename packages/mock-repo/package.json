@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/mock-repo",
-  "version": "1.0.18",
+  "version": "1.0.24",
   "private": true,
   "author": "Wix.com",
   "license": "BSD-3-Clause",
@@ -8,23 +8,23 @@
     "start": "webpack-dev-server --progress",
     "clean": "rimraf ./cjs ./esm",
     "build": "run-p build:cjs build:esm",
-    "build:cjs": "tsc --project src --outDir cjs --module commonjs",
-    "build:esm": "tsc --project src --outDir esm --module esnext",
+    "build:cjs": "tsc -p src --outDir cjs --module commonjs",
+    "build:esm": "tsc -p src --outDir esm --module esnext",
     "build:watch": "run-p build:cjs-watch build:esm-watch",
-    "build:cjs-watch": "tsc --watch --project src --outDir cjs --module commonjs",
-    "build:esm-watch": "tsc --watch --project src --outDir esm --module esnext",
+    "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
+    "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext",
     "lint": "run-p lint:src lint:test",
-    "lint:src": "tslint --project src",
-    "lint:test": "tslint --project test",
-    "test": "mocha -r typescript-support \"./test/node/**/*.node-spec.ts?(x)\" --watch-extensions ts,tsx",
-    "eyes": "npx autotools eyes",
-    "a11y": "npx autotools a11y",
-    "sanity": "npx autotools sanity"
+    "lint:src": "tslint -p src",
+    "lint:test": "tslint -p test",
+    "test": "mocha -r @ts-tools/node \"./test/node/**/*.node-spec.ts?(x)\" --watch-extensions ts,tsx && yarn sanity && yarn a11y",
+    "snap": "yarn autotools snap",
+    "a11y": "yarn autotools a11y",
+    "sanity": "yarn autotools sanity"
   },
   "dependencies": {
-    "@ui-autotools/registry": "^1.0.7",
-    "@ui-autotools/scripts": "^1.0.18",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1"
+    "@ui-autotools/registry": "^2.0.1",
+    "@ui-autotools/scripts": "^2.0.3",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2"
   }
 }

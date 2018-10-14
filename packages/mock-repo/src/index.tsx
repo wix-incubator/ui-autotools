@@ -1,5 +1,5 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import {Composite} from './composite/composite';
 import {Modal} from './modal/modal';
 import {PostRenderHook} from './post-render-hook/post-render-hook';

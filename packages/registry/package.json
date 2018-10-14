@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/registry",
-  "version": "1.0.7",
+  "version": "2.0.1",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -8,14 +8,14 @@
     "clean": "rimraf ./cjs ./esm",
     "build": "run-p build:cjs build:esm",
     "build:watch": "run-p build:cjs-watch build:esm-watch",
-    "build:cjs": "tsc --project src --outDir cjs --module commonjs",
-    "build:esm": "tsc --project src --outDir esm --module esnext",
-    "build:cjs-watch": "tsc --watch --project src --outDir cjs --module commonjs",
-    "build:esm-watch": "tsc --watch --project src --outDir esm --module esnext",
+    "build:cjs": "tsc -p src --outDir cjs --module commonjs",
+    "build:esm": "tsc -p src --outDir esm --module esnext",
+    "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
+    "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext",
     "lint": "run-p lint:src lint:test",
-    "lint:src": "tslint --project src",
-    "lint:test": "tslint --project test",
-    "test": "mocha -r typescript-support \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
+    "lint:src": "tslint -p src",
+    "lint:test": "tslint -p test",
+    "test": "mocha -r @ts-tools/node \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
   },
   "files": [
     "cjs",
@@ -31,6 +31,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@ui-autotools/utils": "^1.0.6"
+    "@ui-autotools/utils": "^1.0.9"
   }
 }

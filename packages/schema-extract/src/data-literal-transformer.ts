@@ -1,4 +1,4 @@
-import * as ts from 'typescript';
+import ts from 'typescript';
 
 export const inferenceFailed = Symbol('literal expression parsing faild');
 export interface IFailedInference {

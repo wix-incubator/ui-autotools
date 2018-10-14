@@ -1,0 +1,53 @@
+{
+  "name": "@ui-autotools/snap",
+  "version": "1.0.4",
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "types": "esm/index.d.ts",
+  "scripts": {
+    "clean": "rimraf ./cjs ./esm",
+    "build": "run-p build:cjs build:esm",
+    "build:watch": "run-p build:cjs-watch build:esm-watch",
+    "build:cjs": "tsc -p src --outDir cjs --module commonjs",
+    "build:esm": "tsc -p src --outDir esm --module esnext",
+    "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
+    "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext",
+    "lint": "tslint -p src"
+  },
+  "files": [
+    "cjs",
+    "esm",
+    "templates"
+  ],
+  "engines": {
+    "node": ">=8"
+  },
+  "repository": "git@github.com:wix-incubator/ui-autotools.git",
+  "author": "Wix.com",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "@ui-autotools/registry": "^2.0.1"
+  },
+  "dependencies": {
+    "@applitools/eyes.sdk.core": "^2.0.0",
+    "@applitools/visual-grid-client": "^5.3.1",
+    "@stylable/webpack-extensions": "^0.1.13",
+    "@stylable/webpack-plugin": "^0.1.11",
+    "@ui-autotools/utils": "^1.0.9",
+    "chalk": "^2.4.1",
+    "create-temp-directory": "^1.0.1",
+    "dotenv": "^6.1.0",
+    "glob": "^7.1.3",
+    "jsdom": "^12.2.0",
+    "puppeteer": "^1.9.0",
+    "uuid": "^3.3.2"
+  },
+  "peerDependencies": {
+    "@ui-autotools/registry": "^2.0.0",
+    "react": ">=16",
+    "react-dom": ">=16"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

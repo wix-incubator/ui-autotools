@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/utils",
-  "version": "1.0.6",
+  "version": "1.0.9",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -8,14 +8,11 @@
     "clean": "rimraf ./cjs ./esm",
     "build": "run-p build:cjs build:esm",
     "build:watch": "run-p build:cjs-watch build:esm-watch",
-    "build:cjs": "tsc --project src --outDir cjs --module commonjs",
-    "build:esm": "tsc --project src --outDir esm --module esnext",
-    "build:cjs-watch": "tsc --watch --project src --outDir cjs --module commonjs",
-    "build:esm-watch": "tsc --watch --project src --outDir esm --module esnext",
-    "lint": "run-p lint:src lint:test",
-    "lint:src": "tslint --project src",
-    "lint:test": "true",
-    "test": "true"
+    "build:cjs": "tsc -p src --outDir cjs --module commonjs",
+    "build:esm": "tsc -p src --outDir esm --module esnext",
+    "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
+    "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext",
+    "lint": "tslint -p src"
   },
   "files": [
     "cjs",
@@ -29,10 +26,10 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@stylable/node": "^0.0.2",
+    "@stylable/node": "^0.1.12",
     "html-webpack-plugin": "^3.2.0",
-    "koa": "^2.5.1",
-    "koa-webpack": "^5.0.2"
+    "koa": "^2.5.3",
+    "koa-webpack": "^5.1.0"
   },
   "peerDependencies": {
     "webpack": ">=4"

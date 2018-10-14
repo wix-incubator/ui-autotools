@@ -1,13 +1,13 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import {Website} from '../components/website';
-import {IComponentData} from '../server/client-data';
+import {IClientData} from '../server/client-data';
 
 (async () => {
-  const components: IComponentData[] =
+  const {projectName, components}: IClientData =
     await fetch('/components.json').then((data) => data.json());
 
-  const path = (
+  const route = (
     window.location.pathname +
     window.location.search +
     window.location.hash
@@ -16,5 +16,12 @@ import {IComponentData} from '../server/client-data';
   const root = document.createElement('div');
   root.id = 'react-root';
   document.body.appendChild(root);
-  ReactDOM.render(<Website components={components} path={path} />, root);
+  ReactDOM.render(
+    <Website
+      projectName={projectName}
+      components={components}
+      route={route}
+    />,
+    root
+  );
 })();

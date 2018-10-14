@@ -1,8 +1,12 @@
 import Registry from '@ui-autotools/registry';
 import {PostRenderHook} from './post-render-hook';
 
-Registry.getComponentMetadata(PostRenderHook)
+const postRenderMeta = Registry.getComponentMetadata(PostRenderHook);
+postRenderMeta
   .addSim({
     title: 'postRenderHookSim',
-    props: {}
+    props: {},
+    state: {
+      label: 'the label was changed via state override'
+    }
   });

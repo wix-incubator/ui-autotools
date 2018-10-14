@@ -77,6 +77,7 @@ export type ModuleSchema<T extends  SchemaTypes = SchemaTypes> = Schema<T> & {
     '$id': string,
     '$ref': typeof ModuleSchemaId,
     'definitions'?: {[name: string]: Schema},
+    'properties'?: {[name: string]: Schema},
 };
 
 export type FunctionSchema = Schema & {
@@ -89,7 +90,8 @@ export type FunctionSchema = Schema & {
 
 export type InterfaceSchema = Schema & {
     $ref: typeof interfaceId;
-    properties?: {[name: string]: Schema};
+    properties: {[name: string]: Schema};
+    required?: string[];
     extends?: Schema;
 };
 
@@ -107,7 +109,7 @@ export function isSchemaOfType<T extends SchemaTypes>(t: T, s: object): s is Sch
 }
 
 export function isRef(schema: Schema): schema is Schema & {$ref: string} {
-    return !!schema && !!schema.$ref;
+    return !!schema && !!schema.$ref && schema.$ref.includes('#');
 }
 
 export function isClassSchema(schema: Schema): schema is ClassSchema {
@@ -116,4 +118,12 @@ export function isClassSchema(schema: Schema): schema is ClassSchema {
 
 export function isInterfaceSchema(schema: Schema): schema is InterfaceSchema {
     return !!schema && !!schema.$ref && schema.$ref === interfaceId;
+}
+
+export function isFunctionSchema(schema: Schema): schema is FunctionSchema {
+    return !!schema && !!schema.$ref && schema.$ref === FunctionSchemaId;
+}
+
+export function isNeverSchema(schema: Schema): boolean {
+    return !!schema && !!schema.$ref && schema.$ref === NeverId;
 }

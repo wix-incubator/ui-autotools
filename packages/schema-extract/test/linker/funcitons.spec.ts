@@ -49,7 +49,7 @@ describe('schema-linker - functions', () => {
             genericParams: [{name: 'T'}],
             requiredArguments: ['o'],
             returns: {
-                type: 'object'
+                $ref: '#T'
             }
         };
         expect(res).to.eql(expected);

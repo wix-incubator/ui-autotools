@@ -795,49 +795,62 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
         };
     }
 
-    const properties = checker.getPropertiesOfType(t);
+    if (typeString.startsWith('{')) {
+        const properties = checker.getPropertiesOfType(t);
 
-    const res: Schema<'object'> = {
-        type: 'object',
-    };
+        const res: Schema<'object'> = {
+            type: 'object',
+        };
 
-    if (properties.length) {
-        res.properties = {};
-        res.required = [];
-        for (const prop of properties) {
+        if (properties.length) {
+            res.properties = {};
+            res.required = [];
+            for (const prop of properties) {
 
-            const fieldType = checker.getTypeOfSymbolAtLocation(prop, rootNode);
-            res.required!.push(prop.getName());
-            const propName = prop.getName();
-            if (memoMap.has(propName)) {
-                res.properties![propName] = memoMap.get(propName);
-            } else {
-                if (fieldType.symbol) {
-                    const tyepName = checker.getFullyQualifiedName(fieldType.symbol);
-                    if (circularSet && circularSet.has(tyepName)) {
-                        res.properties![propName] = {$ref: '#' + tyepName};
-                        break;
-                    }
-                    const cSet = circularSet ? new Set(circularSet) : new Set();
-                    if (fieldType.symbol) {
-                        cSet.add(tyepName);
-                    }
-                    memoMap.set(propName, serializeType(fieldType, rootNode, checker, env, cSet, memoMap).schema);
+                const fieldType = checker.getTypeOfSymbolAtLocation(prop, rootNode);
+                res.required!.push(prop.getName());
+                const propName = prop.getName();
+                const cSet = circularSet ? new Set(circularSet) : new Set();
+                if (memoMap.has(propName)) {
                     res.properties![propName] = memoMap.get(propName);
                 } else {
-                    memoMap.set(propName, serializeType(fieldType, rootNode, checker, env, circularSet, memoMap).schema);
-                    res.properties![propName] = memoMap.get(propName);
+                    if (fieldType.symbol) {
+                        const tyepName = checker.getFullyQualifiedName(fieldType.symbol);
+                        if (circularSet && circularSet.has(tyepName)) {
+                            res.properties![propName] = {$ref: '#' + tyepName};
+                            break;
+                        }
+                        // const cSet = circularSet ? new Set(circularSet) : new Set();
+                        if (fieldType.symbol) {
+                            cSet.add(tyepName);
+                        }
+                        memoMap.set(propName, serializeType(fieldType, rootNode, checker, env, cSet, memoMap).schema);
+                        res.properties![propName] = memoMap.get(propName);
+                    } else {
+                        cSet.add(propName);
+                        memoMap.set(propName, serializeType(fieldType, rootNode, checker, env, cSet, memoMap).schema);
+                        res.properties![propName] = memoMap.get(propName);
+                    }
                 }
             }
         }
+
+        const indexType = checker.getIndexTypeOfType(t, ts.IndexKind.String);
+        if (indexType) {
+            res.additionalProperties = serializeType(indexType, rootNode, checker, env, circularSet, memoMap).schema;
+        }
+        return {schema: res};
     }
 
-    const indexType = checker.getIndexTypeOfType(t, ts.IndexKind.String);
-    if (indexType) {
-        res.additionalProperties = serializeType(indexType, rootNode, checker, env, circularSet, memoMap).schema;
+    if (typeString) {
+        return {
+            schema: {$ref: '#' + typeString}
+        };
     }
-    return {schema: res};
 
+    return {
+        schema: {$ref: UndefinedSchemaId}
+    };
 }
 
 function getGenericParams(decl: ts.SignatureDeclaration | ts.ClassLikeDeclaration | ts.InterfaceDeclaration | ts.TypeAliasDeclaration, checker: ts.TypeChecker, env: IEnv): Schema[] | undefined {
@@ -872,6 +885,34 @@ function addJsDocsTagsToSchema(tags: ts.JSDocTag[], schema: Schema) {
             }
         }
     }
+}
+
+export function getSchemaFromImport(importPath: string, ref: string, checker: ts.TypeChecker, program: ts.Program, sourceFile?: ts.SourceFile): ModuleSchema | null {
+    const extensions = ['.js', '.d.ts', '.ts', '.tsx'];
+    let importSourceFile;
+    if (sourceFile) {
+        /* resolvedModules is an internal ts property that exists on a sourcefile and maps the imports to the path of the imported file
+        * This can change in future versions without us knowing but there is no public way of getting this information right now.
+        */
+        const module = (sourceFile as any).resolvedModules && (sourceFile as any).resolvedModules.get(importPath);
+        if (module) {
+            const newRef = module.resolvedFileName;
+            importSourceFile = program.getSourceFile(newRef);
+            if (importSourceFile) {
+                return transform(checker, importSourceFile , importPath + ref, importPath);
+            }
+        }
+    }
+    for (const extension of extensions) {
+        importSourceFile = program.getSourceFile(importPath + extension);
+        if (importSourceFile) {
+            break;
+        }
+    }
+    if (!importSourceFile) {
+        return null;
+    }
+    return transform(checker, importSourceFile , importPath + ref, importPath);
 }
 
 // This is to handle circular types

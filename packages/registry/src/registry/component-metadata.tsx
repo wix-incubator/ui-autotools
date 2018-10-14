@@ -44,11 +44,4 @@ export class ComponentMetadata<Props, State> implements IComponentMetadata<Props
     this.exportName = exportName;
     this.baseStylePath = baseStylePath;
   }
-
-  public exportedFrom(compInfo: IExportInfo) {
-    const {path, exportName, baseStylePath} = compInfo;
-    this.path = path;
-    this.exportName = exportName;
-    this.baseStylePath = baseStylePath;
-  }
 }

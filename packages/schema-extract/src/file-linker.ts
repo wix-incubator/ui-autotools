@@ -197,49 +197,6 @@ export class SchemaLinker {
         return res;
     }
 
-    // We probably need to replace this function now
-    private mergeProperties(entity: Schema & (IObjectFields | InterfaceSchema), res: (Schema & IObjectFields) | InterfaceSchema, schema: ModuleSchema, paramsMap?: Map<string, Schema>, ref?: string) {
-        if (isInterfaceSchema(entity)) {
-            res.$ref = interfaceId;
-            if (res.type) {
-                delete res.type;
-            }
-        }
-        if (entity.type && !isInterfaceSchema(res)) {
-            res.type = entity.type;
-        }
-        if (entity.properties) {
-            const properties = entity.properties;
-            if (!res.properties) {
-                res.properties = {};
-            }
-            for (const prop in properties) {
-                if (!res.properties.hasOwnProperty(prop)) {
-                    res.properties[prop] = properties[prop];
-                // } else {
-                    // const r = this.handleIntersection([res.properties![prop], properties[prop]], schema, paramsMap);
-                    // if (isNeverSchema(r)) {
-                    //     // Maybe there is a better way than this
-                    //     res.$ref = NeverId;
-                    //     delete res.properties;
-                    //     delete res.required;
-                    //     delete res.type;
-                    //     return;
-                    // } else {
-                    //     res.properties[prop] = r;
-                    // }
-                }
-            }
-        }
-        if (entity.required) {
-            if (!res.required) {
-                res.required = entity.required;
-            } else {
-                res.required = union(res.required, entity.required);
-            }
-        }
-    }
-
     private linkInterface(entity: InterfaceSchema, schema: ModuleSchema): InterfaceSchema {
         if (!schema.definitions) {
             return entity;
@@ -253,35 +210,25 @@ export class SchemaLinker {
             if (!refEntity) {
                 return entity;
             }
-            let refInterface: InterfaceSchema;
-            let pMap: Map<string, Schema> | undefined;
+            const refInterface = this.linkInterface(refEntity as InterfaceSchema, schema);
+            const pMap: Map<string, Schema> = new Map();
             if (refEntity.genericParams) {
-                pMap = new Map();
                 refEntity.genericParams.forEach((param, index) => {
                     pMap!.set(`#${refEntityType}!${param.name}`, entity.genericArguments![index]);
                 });
-                refInterface = this.linkInterface(refEntity as InterfaceSchema, schema);
-                if (refInterface.properties) {
-                    const properties = refInterface.properties;
-                    for (const prop in properties) {
-                        if (properties.hasOwnProperty(prop)) {
-                            const tempInheritedFrom = properties[prop].inheritedFrom ? properties[prop].inheritedFrom : '#' + refEntityType;
-                            properties[prop] = pMap.has(properties[prop].$ref!) ? pMap.get(properties[prop].$ref!)! : properties[prop];
-                            properties[prop].inheritedFrom = tempInheritedFrom;
-                        }
-                    }
-                }
-            } else {
-                refInterface = this.linkInterface(refEntity as InterfaceSchema, schema);
-                if (refInterface.properties) {
-                    for (const p in refInterface.properties) {
-                        if (refInterface.properties.hasOwnProperty(p) && !refInterface.properties[p].inheritedFrom) {
-                            refInterface.properties[p].inheritedFrom = '#' + refEntityType;
-                        }
-                    }
+            }
+            const properties = refInterface.properties;
+            for (const prop in properties) {
+                if (properties.hasOwnProperty(prop) && !res.properties.hasOwnProperty(prop)) {
+                    res.properties[prop] = pMap.has(properties[prop].$ref!) ? pMap.get(properties[prop].$ref!)! : properties[prop];
+                    res.properties[prop].inheritedFrom = properties[prop].inheritedFrom ? properties[prop].inheritedFrom : '#' + refEntityType;
                 }
             }
-            this.mergeProperties(refInterface, res, schema, pMap);
+            if (!res.required) {
+                res.required = refInterface.required;
+            } else {
+                res.required = union(res.required, refInterface.required);
+            }
         }
         return res;
     }

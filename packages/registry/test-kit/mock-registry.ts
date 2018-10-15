@@ -1,4 +1,6 @@
+import {attachHook} from '@stylable/node';
 import Registry from '../src/registry/registry';
+attachHook({});
 import {MockComp} from './fixtures/mock-comp';
 import style from './fixtures/variant.st.css';
 

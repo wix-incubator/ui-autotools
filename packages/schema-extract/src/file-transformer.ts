@@ -814,23 +814,13 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
                 if (memoMap.has(propName)) {
                     res.properties![propName] = memoMap.get(propName);
                 } else {
-                    if (fieldType.symbol) {
-                        const tyepName = checker.getFullyQualifiedName(fieldType.symbol);
-                        if (circularSet && circularSet.has(tyepName)) {
-                            res.properties![propName] = {$ref: '#' + tyepName};
-                            break;
-                        }
-                        // const cSet = circularSet ? new Set(circularSet) : new Set();
-                        if (fieldType.symbol) {
-                            cSet.add(tyepName);
-                        }
-                        memoMap.set(propName, serializeType(fieldType, rootNode, checker, env, cSet, memoMap).schema);
-                        res.properties![propName] = memoMap.get(propName);
-                    } else {
-                        cSet.add(propName);
-                        memoMap.set(propName, serializeType(fieldType, rootNode, checker, env, cSet, memoMap).schema);
-                        res.properties![propName] = memoMap.get(propName);
+                    if (circularSet && circularSet.has(propName)) {
+                        res.properties![propName] = {$ref: '#' + propName};
+                        break;
                     }
+                    cSet.add(propName);
+                    memoMap.set(propName, serializeType(fieldType, rootNode, checker, env, cSet, memoMap).schema);
+                    res.properties![propName] = memoMap.get(propName);
                 }
             }
         }

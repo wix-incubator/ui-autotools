@@ -1,12 +1,13 @@
 import ts from 'typescript';
 import {union} from 'lodash';
-import { transform } from './file-transformer';
+import { transform, getSchemaFromImport } from './file-transformer';
 import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, FunctionSchemaId, isFunctionSchema, FunctionSchema, NullSchemaId } from './json-schema-types';
 
 export class SchemaLinker {
     private checker: ts.TypeChecker;
     private program: ts.Program;
     private projectPath: string;
+    private sourceFile: ts.SourceFile | undefined;
 
     constructor(program: ts.Program, checker: ts.TypeChecker, projectPath: string) {
         this.checker = checker;
@@ -15,11 +16,11 @@ export class SchemaLinker {
     }
 
     public flatten(file: string, entityName: string): Schema {
-        const sourceFile = this.program.getSourceFile(file);
-        if (!sourceFile) {
+        this.sourceFile = this.program.getSourceFile(file);
+        if (!this.sourceFile) {
             return {$ref: UnknownId};
         }
-        const schema = transform(this.checker, sourceFile, file, this.projectPath);
+        const schema = transform(this.checker, this.sourceFile, file, this.projectPath);
         let entity;
         if (schema.definitions) {
             entity = schema.definitions[entityName];
@@ -70,11 +71,18 @@ export class SchemaLinker {
         if (!schema.definitions) {
             return {refEntity: null, refEntityType: cleanRef};
         }
-        const refEntity = (paramsMap && paramsMap.has(ref)) ?
+        let refEntity = (paramsMap && paramsMap.has(ref)) ?
                         paramsMap.get(ref) :
                         schema.definitions[cleanRef] ?
                         schema.definitions[cleanRef] :
                         null;
+        if (!refEntity) {
+            const importSchema = getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1), this.checker, this.program, this.sourceFile);
+            if (importSchema && importSchema.definitions) {
+                refEntity = importSchema.definitions[cleanRef];
+            }
+        }
+
         if (!refEntity) {
             return {refEntity: null, refEntityType: cleanRef};
         }

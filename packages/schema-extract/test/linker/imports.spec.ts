@@ -3,7 +3,7 @@ import { Schema } from '../../src/json-schema-types';
 import {linkTest} from '../../test-kit/run-linker';
 
 describe('schema-linker - imports', () => {
-    it('should link imported type definition', async () => {
+    it('should link imported generic type definition', async () => {
         const fileName = 'index.ts';
         const res = linkTest({
             [fileName]: `
@@ -16,10 +16,13 @@ describe('schema-linker - imports', () => {
         }, 'B', fileName);
 
         const expected: Schema<'object'> = {
-            $ref: '/someProject/src/import#MyType',
-            genericArguments: [{
-                type: 'string'
-            }]
+            type: 'object',
+            properties: {
+                something: {
+                    type: 'string'
+                }
+            },
+            required: ['something']
         };
         expect(res).to.eql(expected);
     });

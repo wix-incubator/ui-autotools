@@ -15,12 +15,11 @@ module.exports = {
         rules: [
             {
                 test: /\.tsx?$/,
-                loader: 'ts-loader',
+                loader: '@ts-tools/webpack-loader',
                 options: {
                     compilerOptions: {
                         declaration: false,
-                        declarationMap: false,
-                        module: 'esnext'
+                        declarationMap: false
                     }
                 }
             },

@@ -33,6 +33,7 @@
     "@stylable/core": "^0.1.10",
     "@stylable/webpack-plugin": "^0.1.11",
     "@ts-tools/node": "^0.6.5",
+    "@ts-tools/webpack-loader": "^0.3.1",
     "@ui-autotools/schema-extract": "^1.0.10",
     "@ui-autotools/utils": "^1.0.9",
     "chalk": "^2.4.1",
@@ -40,7 +41,6 @@
     "html-webpack-plugin": "^3.2.0",
     "koa": "^2.5.3",
     "koa-webpack": "^5.1.0",
-    "ts-loader": "^5.2.1",
     "webpack": "^4.20.2"
   },
   "peerDependencies": {

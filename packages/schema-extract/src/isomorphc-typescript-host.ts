@@ -1,6 +1,6 @@
+import path from 'path';
 import ts from 'typescript';
 import {FileSystemReadSync} from 'kissfs';
-import * as path from 'path';
 
 const posix: typeof path.posix = path.posix ? path.posix : path;
 

@@ -7,7 +7,7 @@ import {isValidComponentName} from '../utils';
 
 const Registry: IRegistry = {
   metadata: new Metadata(),
-  getComponentMetadata <Props>(comp: ComponentType<Props>): ComponentMetadata<Props> {
+  getComponentMetadata <Props, State>(comp: ComponentType<Props>): ComponentMetadata<Props, State> {
     const newCompName = getCompName(comp);
 
     if (!newCompName) {
@@ -25,7 +25,7 @@ const Registry: IRegistry = {
         }
       }
 
-      this.metadata.components.set(comp, new ComponentMetadata<Props>(comp));
+      this.metadata.components.set(comp, new ComponentMetadata<Props, State>(comp));
     }
 
     return this.metadata.components.get(comp)!;

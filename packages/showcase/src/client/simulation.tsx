@@ -1,17 +1,17 @@
 import Registry, {getCompName, IComponentMetadata} from '@ui-autotools/registry';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 function findComponent(compName: string) {
   const comps = Array.from(Registry.metadata.components.keys());
   return comps.find((c) => getCompName(c) === compName);
 }
 
-function findSimulation<T>(compMeta: IComponentMetadata<T>, simName: string) {
+function findSimulation<T, K>(compMeta: IComponentMetadata<T, K>, simName: string) {
   return compMeta.simulations.find(({title}) => title === simName);
 }
 
-function findStyle<T>(compMeta: IComponentMetadata<T>, styleName: string) {
+function findStyle<T, K>(compMeta: IComponentMetadata<T, K>, styleName: string) {
   for (const [style, styleMeta] of compMeta.styles) {
     if (styleMeta.name === styleName) {
       return style;

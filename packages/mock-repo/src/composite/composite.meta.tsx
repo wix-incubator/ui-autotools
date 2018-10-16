@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Registry from '@ui-autotools/registry';
 import {Composite} from './composite';
 import style1 from './variant1.st.css';
@@ -16,6 +16,9 @@ metadata.addSim({
   title: 'compositeSim',
   props: {
     text: <i>Text</i>
+  },
+  state: {
+    text: 'STATE OVERRIDE'
   }
 });
 

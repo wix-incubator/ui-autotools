@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {TestComp, CopyCatTestComp, InvalidNameComp} from '../fixtures/component-fixtures';
 import Registry, {ComponentMetadata} from '../../src';
 import {expect} from 'chai';

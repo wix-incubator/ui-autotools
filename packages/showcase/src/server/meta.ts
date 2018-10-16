@@ -1,5 +1,5 @@
 import '@ts-tools/node';
-import * as React from 'react';
+import React from 'react';
 import path from 'path';
 import glob from 'glob';
 import Registry, {getCompName} from '@ui-autotools/registry';
@@ -32,7 +32,7 @@ export interface IMetadataAndSchemas {
 }
 
 function findComponentSchemas(
-  componentsMetadata: Map<React.ComponentType, IComponentMetadata<any>>,
+  componentsMetadata: Map<React.ComponentType, IComponentMetadata<any, any>>,
   basePath: string,
   sourceGlob: string
 ) {

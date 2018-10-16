@@ -349,7 +349,7 @@ describe('schema-extract - functions', () => {
     xit('should support functions that return JSX element', async () => {
         const moduleId = 'jsx_functions';
         const res = transformTest(`
-        import * as React from 'react';
+        import React from 'react';
 
         export function jsxFunction(){
             return <p>Hello!</p>;

@@ -1,6 +1,6 @@
 import Registry, {getCompName} from '@ui-autotools/registry';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 // [ISSUE] If the registry imported here and the registry imported by the
 // project sit in different node_modules we're screwed.

@@ -1,9 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 import {IComponentMetadata, ISimulation, IStyleMetadata, IExportInfo} from './types';
-import {isValidSimulationTitle} from '../utils';
+import {isValidSimulationTitle, getCompWithState} from '../utils';
 
-export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
-  public simulations: Array<ISimulation<Props>> = []; // Initialize with "empty" simulation
+export class ComponentMetadata<Props, State> implements IComponentMetadata<Props, State> {
+  public simulations: Array<ISimulation<Props, State>> = []; // Initialize with "empty" simulation
   public styles: Map<any, IStyleMetadata> = new Map<any, IStyleMetadata>();
   public reactStrictModeCompliant: boolean = true;
   public path: string = '';
@@ -12,7 +12,7 @@ export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
 
   public constructor(public component: React.ComponentType<Props>) {}
 
-  public addSim(sim: ISimulation<Props>) {
+  public addSim(sim: ISimulation<Props, State>) {
     if (!this.simulations.every((simulation) => simulation.title !== sim.title)) {
       throw new Error(`There's already a simulation with the title ${sim.title}. Titles should be unique.`);
     } else if (!isValidSimulationTitle(sim.title)) {
@@ -28,9 +28,14 @@ export class ComponentMetadata<Props> implements IComponentMetadata<Props> {
     }
   }
 
-  public simulationToJSX(simulation: ISimulation<Props>) {
+  public simulationToJSX(simulation: ISimulation<Props, State>) {
     const Comp = this.component;
-    return <Comp {...simulation.props} />;
+    if (simulation.state) {
+      // Assume that if someone added state to a simulation, the component they're adding it for is NOT an SFC
+      return getCompWithState(Comp as React.ComponentClass<any>, simulation);
+    } else {
+      return <Comp {...simulation.props} />;
+    }
   }
 
   public exportedFrom(compInfo: IExportInfo) {

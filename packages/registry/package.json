@@ -30,6 +30,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "devDependencies": {
+    "@ui-autotools/utils": "^1.0.9"
+  },
   "dependencies": {
     "@ui-autotools/utils": "^1.0.9"
   }

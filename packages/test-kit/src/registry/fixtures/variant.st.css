@@ -1,0 +1,9 @@
+:import {
+    -st-from: "./base-style.st.css";
+    -st-default: MockComp; 
+}
+
+.root {
+  -st-extends: MockComp;
+  color: blue;
+}

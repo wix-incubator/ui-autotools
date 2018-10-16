@@ -1,1 +1,1 @@
-export {MockRegistry} from './mock-registry';
+export {MockRegistry} from './registry/mock-registry';

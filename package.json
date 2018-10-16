@@ -16,7 +16,6 @@
   "devDependencies": {
     "@stylable/cli": "^1.0.12",
     "@stylable/core": "^0.1.10",
-    "@stylable/node": "^0.1.12",
     "@ts-tools/node": "^0.6.5",
     "@types/autobahn": "^0.9.39",
     "@types/chai": "^4.1.6",

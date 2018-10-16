@@ -82,7 +82,7 @@ function getWebsiteWebpackConfig(
         {
           test: /\.tsx?$/,
           use: {
-            loader: 'ts-loader',
+            loader: '@ts-tools/webpack-loader',
             options: {
               compilerOptions: {
                 declaration: false,

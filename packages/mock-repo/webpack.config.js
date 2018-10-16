@@ -25,7 +25,7 @@ module.exports = {
           path.dirname(require.resolve('chai-style')),
           path.join(__dirname, 'node_modules', 'webpack-dev-server', 'client'),
         ],
-        loader: 'ts-loader',
+        loader: '@ts-tools/webpack-loader',
         options: {
           // needed so it has a separate transpilation instance
           instance: 'lib-compat',

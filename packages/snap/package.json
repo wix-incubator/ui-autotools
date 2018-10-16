@@ -27,7 +27,8 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "@ui-autotools/registry": "^2.0.1"
+    "@ui-autotools/registry": "^2.0.1",
+    "@ui-autotools/test-kit": "^1.0.0"
   },
   "dependencies": {
     "@applitools/eyes.sdk.core": "^2.0.0",

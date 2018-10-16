@@ -729,6 +729,14 @@
   resolved "https://registry.yarnpkg.com/@ts-tools/typescript-service/-/typescript-service-0.7.1.tgz#d0d52e62cd5f4697293a1b62c2ef437f78ba270c"
   integrity sha512-WTePj5zgXrntNMdpdnMFls5Jy+3f2Y7TFAKjShSjz548tMs3ZHZIZLCt8reiax2T3obMQ6ab1ILC/PIsf7PtDA==
 
+"@ts-tools/webpack-loader@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@ts-tools/webpack-loader/-/webpack-loader-0.3.1.tgz#973f9d00fc9a4aada12b14b42abe7bbce44f79c3"
+  integrity sha512-lI2og6I9m/LGbtJHrnyEOewZbht89SCNZt6G7BVO6MesMhJMWz7HhL9h2eI3/4HZ4Bgqk3M6SAJYkPgdr/vnJA==
+  dependencies:
+    "@ts-tools/typescript-service" "^0.7.1"
+    loader-utils "^1.1.0"
+
 "@types/accepts@*":
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/@types/accepts/-/accepts-1.3.5.tgz#c34bec115cfc746e04fe5a059df4ce7e7b391575"

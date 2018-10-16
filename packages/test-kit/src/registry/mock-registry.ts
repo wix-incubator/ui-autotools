@@ -1,3 +1,5 @@
+import {registerRequireHooks} from '@ui-autotools/utils';
+registerRequireHooks();
 import Registry from '@ui-autotools/registry';
 import {MockComp} from './fixtures/mock-comp';
 import style from './fixtures/variant.st.css';

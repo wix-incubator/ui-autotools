@@ -1,9 +1,8 @@
 {
-  "name": "@ui-autotools/registry",
-  "version": "2.0.1",
+  "name": "@ui-autotools/test-kit",
+  "version": "1.0.0",
   "main": "cjs/index.js",
-  "module": "esm/index.js",
-  "types": "esm/index.d.ts",
+  "types": "cjs/index.d.ts",
   "scripts": {
     "clean": "rimraf ./cjs ./esm",
     "build": "run-p build:cjs build:esm",
@@ -12,28 +11,28 @@
     "build:esm": "tsc -p src --outDir esm --module esnext",
     "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
     "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext",
-    "lint": "run-p lint:src lint:test",
-    "lint:src": "tslint -p src",
-    "lint:test": "tslint -p test",
-    "test": "mocha -r @ts-tools/node \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
+    "lint": "tslint -p src"
   },
   "files": [
     "cjs",
-    "esm"
+    "esm",
+    "templates"
   ],
   "engines": {
     "node": ">=8"
   },
-  "repository": "git@github.com:wix-incubator/ui-autotools.git",
+  "repository": "git@github.com:wix/ui-autotools.git",
   "author": "Wix.com",
   "license": "BSD-3-Clause",
+  "dependencies": {
+    "@ui-autotools/registry": "^2.0.1"
+  },
+  "peerDependencies": {
+    "@ui-autotools/registry": "^2.0.0",
+    "react": ">=16",
+    "react-dom": ">=16"
+  },
   "publishConfig": {
     "access": "public"
-  },
-  "devDependencies": {
-    "@ui-autotools/utils": "^1.0.9"
-  },
-  "dependencies": {
-    "@ui-autotools/utils": "^1.0.9"
   }
 }

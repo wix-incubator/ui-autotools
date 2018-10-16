@@ -1,9 +1,9 @@
-const path = require('path');
+const StylableWebpackPlugin = require('@stylable/webpack-plugin');
 
 module.exports = {
   devtool: 'source-map',
   entry: {
-    main: ['core-js/shim', './src/index.tsx'],
+    main: ['./src/index.tsx'],
   },
   mode: 'development',
   module: {
@@ -29,5 +29,8 @@ module.exports = {
   },
   devServer: {
     disableHostCheck: true,
-  }
+  },
+  plugins: [
+    new StylableWebpackPlugin()
+  ]
 };

@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/test-kit",
-  "version": "1.0.17",
+  "version": "1.0.0",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
   "scripts": {

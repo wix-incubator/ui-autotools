@@ -10,7 +10,6 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        exclude: /node_modules/,
         loader: '@ts-tools/webpack-loader',
         options: {
           compilerOptions: {

@@ -15,14 +15,7 @@ module.exports = {
         rules: [
             {
                 test: /\.tsx?$/,
-                loader: 'ts-loader',
-                options: {
-                    compilerOptions: {
-                        declaration: false,
-                        declarationMap: false,
-                        module: 'esnext'
-                    }
-                }
+                loader: '@ts-tools/webpack-loader',
             },
             // when parsing typescript, make sure webpack ignores the dynamic require() calls
             // and doesn't polyfill different node globals (__dirname, etc)

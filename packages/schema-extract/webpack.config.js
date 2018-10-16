@@ -16,12 +16,6 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 loader: '@ts-tools/webpack-loader',
-                options: {
-                    compilerOptions: {
-                        declaration: false,
-                        declarationMap: false
-                    }
-                }
             },
             // when parsing typescript, make sure webpack ignores the dynamic require() calls
             // and doesn't polyfill different node globals (__dirname, etc)

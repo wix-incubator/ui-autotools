@@ -11,12 +11,6 @@ module.exports = {
       {
         test: /\.tsx?$/,
         loader: '@ts-tools/webpack-loader',
-        options: {
-          compilerOptions: {
-            declaration: false,
-            declarationMap: false
-          }
-        }
       },
     ],
   },

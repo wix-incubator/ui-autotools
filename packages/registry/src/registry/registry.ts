@@ -35,5 +35,7 @@ const Registry: IRegistry = {
   }
 };
 
+const MockRegistry = Object.assign({}, Registry);
+
 Object.freeze(Registry);
-export default Registry;
+export {Registry as default, MockRegistry};

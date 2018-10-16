@@ -1,15 +1,15 @@
 import {registerRequireHooks} from '@ui-autotools/utils';
 registerRequireHooks();
-import Registry from '../src/registry/registry';
+import {MockRegistry} from '@ui-autotools/registry';
 import {MockComp} from './fixtures/mock-comp';
 import style from './fixtures/variant.st.css';
 
-const mockMetadata = Registry.getComponentMetadata(MockComp);
+const mockMetadata = MockRegistry.getComponentMetadata(MockComp);
 
 mockMetadata.exportedFrom({
-  baseStylePath: 'test-kit/fixtures/base-style.st.css',
+  baseStylePath: 'src/test-kit/fixtures/base-style.st.css',
   exportName: 'MockComp',
-  path: 'test-kit/fixtures/mock-comp'
+  path: 'src/test-kit/fixtures/mock-comp'
 });
 
 mockMetadata.addSim({
@@ -24,7 +24,7 @@ mockMetadata.addSim({
 
 mockMetadata.addStyle(style, {
   name: 'variant',
-  path: 'test-kit/fixtures/variant.st.css'
+  path: 'src/test-kit/fixtures/variant.st.css'
 });
 
-export {Registry as MockRegistry};
+export {MockRegistry};

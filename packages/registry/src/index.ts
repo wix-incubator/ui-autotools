@@ -1,5 +1,4 @@
-import Registry from './registry/registry';
-export * from '../test-kit/mock-registry';
+import Registry, {MockRegistry} from './registry/registry';
 export * from './registry';
 export * from './utils';
-export default Registry;
+export {Registry as default, MockRegistry};

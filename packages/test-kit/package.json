@@ -24,11 +24,8 @@
   "repository": "git@github.com:wix/ui-autotools.git",
   "author": "Wix.com",
   "license": "BSD-3-Clause",
-  "devDependencies": {
-    "@ui-autotools/registry": "^2.0.1"
-  },
   "dependencies": {
-    "@ui-autotools/utils": "^1.0.9"
+    "@ui-autotools/registry": "^2.0.1"
   },
   "peerDependencies": {
     "@ui-autotools/registry": "^2.0.0",

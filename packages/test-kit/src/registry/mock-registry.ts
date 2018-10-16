@@ -1,8 +1,8 @@
-import {MockRegistry} from '@ui-autotools/registry';
+import Registry from '@ui-autotools/registry';
 import {MockComp} from './fixtures/mock-comp';
 import style from './fixtures/variant.st.css';
 
-const mockMetadata = MockRegistry.getComponentMetadata(MockComp);
+const mockMetadata = Registry.getComponentMetadata(MockComp);
 
 mockMetadata.exportedFrom({
   baseStylePath: 'src/test-kit/fixtures/base-style.st.css',
@@ -25,4 +25,4 @@ mockMetadata.addStyle(style, {
   path: 'src/test-kit/fixtures/variant.st.css'
 });
 
-export {MockRegistry};
+export {Registry as MockRegistry};

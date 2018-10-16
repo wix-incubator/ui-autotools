@@ -7,9 +7,9 @@ import style from './fixtures/variant.st.css';
 const mockMetadata = Registry.getComponentMetadata(MockComp);
 
 mockMetadata.exportedFrom({
-  baseStylePath: 'src/test-kit/fixtures/base-style.st.css',
+  baseStylePath: 'src/registry/fixtures/base-style.st.css',
   exportName: 'MockComp',
-  path: 'src/test-kit/fixtures/mock-comp'
+  path: 'src/registry/fixtures/mock-comp'
 });
 
 mockMetadata.addSim({
@@ -24,7 +24,7 @@ mockMetadata.addSim({
 
 mockMetadata.addStyle(style, {
   name: 'variant',
-  path: 'src/test-kit/fixtures/variant.st.css'
+  path: 'src/registry/fixtures/variant.st.css'
 });
 
 export {Registry as MockRegistry};

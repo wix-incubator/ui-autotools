@@ -129,6 +129,6 @@ export const generateSnapshots = async (projectDir: string, tempDirectory: strin
 
   consoleLog('Generating snapshots...');
   for (const file of files) {
-    await buildSingleFile(file.filename, file.filepath, tempDirectory, webpackConfig, Registry);
+    await buildSingleFile(file.basename, file.filepath, tempDirectory, webpackConfig, Registry);
   }
 };

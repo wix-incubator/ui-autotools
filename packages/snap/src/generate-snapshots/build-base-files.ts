@@ -5,7 +5,7 @@ import path from 'path';
 import { IFileSystem } from '..';
 
 export interface IFileInfo {
-  filename: string;
+  basename: string;
   filepath: string;
 }
 
@@ -34,17 +34,17 @@ export const buildBaseFiles = (projectPath: string, Registry: IRegistry, fs: IFi
         if (styles.size) {
           styles.forEach((style) => {
             const stylePath = path.join(stylePathPrefix, style.path);
-            const filename = generateSnapshotFilename(compName, simulationName, i, style.name);
-            const filepath = path.join(autotoolsFolder, filename + '.snapshot.ts');
-            files.push({filename, filepath});
+            const basename = generateSnapshotFilename(compName, simulationName, i, style.name);
+            const filepath = path.join(autotoolsFolder, basename + '.snapshot.ts');
+            files.push({basename, filepath});
             const data = generateData(compName, compPath, stylePath);
             fs.writeFileSync(filepath, data);
           });
         } else {
           // We only want to render the base style if there are no other style variants
-          const filename = generateSnapshotFilename(compName, simulationName, i);
-          const filepath = path.join(autotoolsFolder, filename, '.snapshot.ts');
-          files.push({filename, filepath});
+          const basename = generateSnapshotFilename(compName, simulationName, i);
+          const filepath = path.join(autotoolsFolder, basename, '.snapshot.ts');
+          files.push({basename, filepath});
           const data = generateData(compName, compPath);
           fs.writeFileSync(filepath, data);
         }

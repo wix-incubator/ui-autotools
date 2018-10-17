@@ -55,10 +55,10 @@ interface IResource {
 function getStaticResources(cssFiles: IFileInfo[], resourceDir: string, fs: IFileSystem): {[url: string]: IResource} {
   const resources: {[url: string]: IResource} = {};
   for (const cssFile of cssFiles) {
-    resources[cssFile.filename] = {
-      url: cssFile.filename + '.css',
+    resources[cssFile.basename] = {
+      url: cssFile.basename + '.css',
       type: 'text/css',
-      value: fs.readFileSync(path.join(resourceDir, cssFile.filename + '.css')) as Buffer
+      value: fs.readFileSync(path.join(resourceDir, cssFile.basename + '.css')) as Buffer
     };
   }
   return resources;
@@ -142,8 +142,8 @@ export async function runEyes(projectPath: string, tempDirectory: string, fs: IF
   consoleLog('Sending snapshots to Applitools...');
 
   for (const file of files) {
-    const html = fs.readFileSync(path.join(tempDirectory, file.filename + '.snapshot.snapshot.html'), 'utf-8');
-    const testName = formatName(file.filename);
+    const html = fs.readFileSync(path.join(tempDirectory, file.basename + '.snapshot.snapshot.html'), 'utf-8');
+    const testName = formatName(file.basename);
 
     const result = getTestResult(runTest(
       gridClient,

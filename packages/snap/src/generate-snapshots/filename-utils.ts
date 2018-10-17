@@ -1,5 +1,4 @@
 export interface IFileParts {
-  file: string;
   compName: string;
   simIndex: number;
   simName: string;
@@ -26,5 +25,5 @@ export default {comp: ${componentName}, name: '${componentName}'${styleExport}};
 export function parseSnapshotFilename(file: string): IFileParts {
   const [compName, simIndex, simName, styleName] = file.split('@');
 
-  return {file, compName, simIndex: parseInt(simIndex, 10), simName, styleName};
+  return {compName, simIndex: parseInt(simIndex, 10), simName, styleName};
 }

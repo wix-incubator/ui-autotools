@@ -2,13 +2,14 @@ import {consoleLog} from '@ui-autotools/utils';
 import {generateSnapshotFilename, generateData} from './filename-utils';
 import { IRegistry } from '@ui-autotools/registry';
 import path from 'path';
+import { IFileSystem } from '..';
 
 export interface IFileInfo {
   filename: string;
   filepath: string;
 }
 
-export const buildBaseFiles = (projectPath: string, Registry: IRegistry, fs: any): IFileInfo[] => {
+export const buildBaseFiles = (projectPath: string, Registry: IRegistry, fs: IFileSystem): IFileInfo[] => {
   consoleLog('Building base files...');
 
   const autotoolsFolder = path.join(projectPath, '.autotools', 'tmp');

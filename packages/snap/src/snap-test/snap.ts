@@ -7,6 +7,7 @@ import {JSDOM} from 'jsdom';
 import {consoleLog, consoleError} from '@ui-autotools/utils';
 import {parseSnapshotFilename} from '../generate-snapshots/filename-utils';
 import { IFileInfo } from '../generate-snapshots/build-base-files';
+import { IFileSystem } from '..';
 
 interface ITestResult {
   status: 'error' | 'new' | 'modified' | 'unmodified';
@@ -51,13 +52,13 @@ interface IResource {
   value: Buffer;
 }
 
-function getStaticResources(cssFiles: IFileInfo[], resourceDir: string, fs: any): {[url: string]: IResource} {
+function getStaticResources(cssFiles: IFileInfo[], resourceDir: string, fs: IFileSystem): {[url: string]: IResource} {
   const resources: {[url: string]: IResource} = {};
   for (const cssFile of cssFiles) {
     resources[cssFile.filename] = {
       url: cssFile.filename + '.css',
       type: 'text/css',
-      value: fs.readFileSync(path.join(resourceDir, cssFile.filename + '.css'))
+      value: fs.readFileSync(path.join(resourceDir, cssFile.filename + '.css')) as Buffer
     };
   }
   return resources;
@@ -132,7 +133,7 @@ async function runTest(gridClient: any, gridClientConfig: any, testName: string,
   return close();
 }
 
-export async function runEyes(projectPath: string, tempDirectory: string, fs: any, files: IFileInfo[]) {
+export async function runEyes(projectPath: string, tempDirectory: string, fs: IFileSystem, files: IFileInfo[]) {
   const config = getGridClientConfig(projectPath);
   const resources = getStaticResources(files, tempDirectory, fs);
   const gridClient = makeVisualGridClient(makeGetConfig());
@@ -148,7 +149,7 @@ export async function runEyes(projectPath: string, tempDirectory: string, fs: an
       gridClient,
       config,
       testName,
-      html,
+      html as string,
       resources
     ));
 

@@ -1,10 +1,9 @@
 import {consoleLog} from '@ui-autotools/utils';
-import fs from 'fs';
-import path from 'path';
 import {generateSnapshotFilename, generateData} from './filename-utils';
 import { IRegistry } from '@ui-autotools/registry';
+import path from 'path';
 
-export const buildBaseFiles = (projectPath: string, Registry: IRegistry) => {
+export const buildBaseFiles = (projectPath: string, Registry: IRegistry, fs: any) => {
   consoleLog('Building base files...');
 
   const autotoolsFolder = path.join(projectPath, '.autotools', 'tmp');

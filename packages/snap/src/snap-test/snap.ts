@@ -2,7 +2,6 @@ const {TestFailedError, TestResults} = require('@applitools/eyes.sdk.core');
 const {makeVisualGridClient, makeGetConfig} = require('@applitools/visual-grid-client');
 const {domNodesToCdt} = require('@applitools/visual-grid-client/browser');
 import path from 'path';
-import fs from 'fs';
 import glob from 'glob';
 import chalk from 'chalk';
 import {JSDOM} from 'jsdom';
@@ -52,7 +51,7 @@ interface IResource {
   value: Buffer;
 }
 
-function getStaticResources(cssFilenames: string[], resourceDir: string): {[url: string]: IResource} {
+function getStaticResources(cssFilenames: string[], resourceDir: string, fs: any): {[url: string]: IResource} {
   const resources: {[url: string]: IResource} = {};
   for (const cssFilename of cssFilenames) {
     resources[cssFilename] = {
@@ -133,12 +132,12 @@ async function runTest(gridClient: any, gridClientConfig: any, testName: string,
   return close();
 }
 
-export async function runEyes(projectPath: string, tempDirectory: string) {
+export async function runEyes(projectPath: string, tempDirectory: string, fs: any) {
   const cssFilenames  = glob.sync('*.css', {cwd: tempDirectory});
   const htmlFilenames = glob.sync('*.snapshot.html', {cwd: tempDirectory});
 
   const config = getGridClientConfig(projectPath);
-  const resources = getStaticResources(cssFilenames, tempDirectory);
+  const resources = getStaticResources(cssFilenames, tempDirectory, fs);
   const gridClient = makeVisualGridClient(makeGetConfig());
 
   const resultPromises = [];

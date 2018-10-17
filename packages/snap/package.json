@@ -29,10 +29,10 @@
     "@ui-autotools/registry": "^2.0.1"
   },
   "dependencies": {
-    "@applitools/eyes.sdk.core": "^2.0.0",
-    "@applitools/visual-grid-client": "^5.3.1",
-    "@stylable/webpack-extensions": "^0.1.13",
-    "@stylable/webpack-plugin": "^0.1.11",
+    "@applitools/eyes.sdk.core": "^2.0.1",
+    "@applitools/visual-grid-client": "^5.3.5",
+    "@stylable/webpack-extensions": "^0.1.14",
+    "@stylable/webpack-plugin": "^0.1.12",
     "@ui-autotools/utils": "^1.0.9",
     "chalk": "^2.4.1",
     "create-temp-directory": "^1.0.1",

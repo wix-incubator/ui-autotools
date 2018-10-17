@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 // import { Schema, NeverId, interfaceId } from '../../src/json-schema-types';
-import { Schema, NeverId, interfaceId } from '../../src/json-schema-types';
+import { Schema, NeverId } from '../../src/json-schema-types';
 import {linkTest} from '../../test-kit/run-linker';
 
 describe('schema-linker - intersections', () => {
@@ -53,23 +53,22 @@ describe('schema-linker - intersections', () => {
         export interface A {
             something:string
         }
-        export interface B extends A {
-        }
-        export type b = {
+
+        export type B = {
             someone: number
         }
-        export type c = B & b;
-        `}, 'c', fileName);
+        export type C = A & B;
+        `}, 'C', fileName);
 
         const expected: Schema<'object'> = {
-            $ref: interfaceId,
+            type: 'object',
             properties: {
                 something: {
-                    inheritedFrom: '#A',
+                    definedAt: '#A',
                     type: 'string'
                 },
                 someone: {
-                    definedAt: '#b',
+                    definedAt: '#B',
                     type: 'number'
                 }
             },

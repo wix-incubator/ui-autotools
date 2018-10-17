@@ -128,10 +128,10 @@ export class SchemaLinker {
         const rest = options.slice(1);
         for (const o of rest) {
             const option = isRef(o) ? this.handleRef(o, schema, paramsMap) : o;
-            if (res.type !== option.type) {
+            if (res.type && option.type && res.type !== option.type) {
                 return {$ref: NeverId};
             }
-            if (isObjectSchema(option)) {
+            if (isObjectSchema(option) && (isInterfaceSchema(res) || isObjectSchema(res))) {
                 res = this.mergeObjects(res, option, schema, paramsMap);
             }
         }

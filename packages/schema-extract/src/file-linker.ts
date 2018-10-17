@@ -1,7 +1,7 @@
 import ts from 'typescript';
 import {union} from 'lodash';
 import { transform, getSchemaFromImport } from './file-transformer';
-import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, FunctionSchemaId, isFunctionSchema, FunctionSchema, NullSchemaId, NeverId, isObjectSchema, isNeverSchema } from './json-schema-types';
+import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isFunctionSchema, FunctionSchema, NeverId, isObjectSchema, isNeverSchema } from './json-schema-types';
 
 export class SchemaLinker {
     private checker: ts.TypeChecker;
@@ -88,9 +88,9 @@ export class SchemaLinker {
         }
 
         // This code is not relevant at the moment
-        if (ref.slice(0, poundIndex) === 'react') {
-            return {refEntity: this.handleReact(refEntity, cleanRef), refEntityType: cleanRef};
-        }
+        // if (ref.slice(0, poundIndex) === 'react') {
+        //     return {refEntity: this.handleReact(refEntity, cleanRef), refEntityType: cleanRef};
+        // }
 
         if (isRef(refEntity)) {
             return this.getRefEntity(refEntity.$ref, schema, paramsMap);
@@ -303,25 +303,27 @@ export class SchemaLinker {
             staticProperties: {}
         } as ClassSchema;
         const paramsMap = new Map();
+        let isGeneric = false;
         if (refEntity.genericParams && entity.extends!.genericArguments) {
             refEntity.genericParams.forEach((param, index) => {
                 paramsMap.set(`#${refEntityType}!${param.name}`, entity.extends!.genericArguments![index]);
             });
+            isGeneric = true;
         }
         if (entity.hasOwnProperty('constructor')) {
             res.constructor = Object.assign({}, entity.constructor);
         } else if (refEntity.hasOwnProperty('constructor')) {
             res.constructor = Object.assign({}, (refEntity as ClassSchema).constructor);
         }
-        res.properties = this.extractClassData(entity, (refEntity as ClassSchema), refEntityType, 'properties', schema, paramsMap);
-        res.staticProperties = this.extractClassData(entity, (refEntity as ClassSchema), refEntityType, 'staticProperties', schema, paramsMap);
+        res.properties = this.extractClassData(entity, (refEntity as ClassSchema), refEntityType, 'properties', schema, paramsMap, isGeneric);
+        res.staticProperties = this.extractClassData(entity, (refEntity as ClassSchema), refEntityType, 'staticProperties', schema, paramsMap, isGeneric);
         if (entity.genericParams) {
             res.genericParams = [...entity.genericParams];
         }
         return res;
     }
 
-    private extractClassData(entity: ClassSchema, refEntity: ClassSchema, extendedEntity: string, prop: 'properties' | 'staticProperties', schema: ModuleSchema, paramsMap: Map<string, Schema>): {[name: string]: Schema} {
+    private extractClassData(entity: ClassSchema, refEntity: ClassSchema, extendedEntity: string, prop: 'properties' | 'staticProperties', schema: ModuleSchema, paramsMap: Map<string, Schema>, isGeneric: boolean): {[name: string]: Schema} {
         const refProperties = refEntity[prop];
         const properties = entity[prop];
         const res: {[name: string]: Schema & {inheritedFrom?: string}} = {...properties};
@@ -332,8 +334,7 @@ export class SchemaLinker {
                     const refType = property.$ref.startsWith(`#${extendedEntity}`) ? property.$ref : `#${extendedEntity}!${property.$ref.replace('#', '')}`;
                     res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, paramsMap.get(refType));
                 } else {
-                    // const x = this.link(property, schema, paramsMap);
-                    res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, property);
+                    res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, isGeneric ? this.link(property, schema, paramsMap) : property);
                 }
             }
         }
@@ -402,42 +403,42 @@ export class SchemaLinker {
         return res;
     }
 
-    private handleReact(entity: Schema, ref: string): Schema {
-        const newEntity: any = Object.assign({}, entity);
-        if (ref === 'Component') {
-            newEntity.properties = {props: newEntity.properties.props, state: newEntity.properties.state};
-            const props = newEntity.properties.props;
-            if (props.$allOf) {
-                if (props.$allOf.length === 2) {
-                    newEntity.properties.props = props.$allOf[1];
-                } else {
-                    newEntity.properties.props.$allOf = props.$allOf.slice(1);
-                }
-            }
-            return newEntity;
-        }
-        if (ref === 'SFC') {
-            const res = {
-                $ref: FunctionSchemaId,
-                arguments: [{
-                    name: 'props',
-                    $ref: entity.genericArguments![0].$ref
-                }],
-                requiredArguments: ['props'],
-                returns: {
-                    $oneOf: [
-                        {
-                            $ref: 'react#ReactElement'
-                        },
-                        {
-                            $ref: NullSchemaId
-                        }
-                    ]
-                },
-                genericParams: entity.genericParams
-            };
-            return res;
-        }
-        return {$ref: 'react#' + ref};
-    }
+    // private handleReact(entity: Schema, ref: string): Schema {
+    //     const newEntity: any = Object.assign({}, entity);
+    //     if (ref === 'Component') {
+    //         newEntity.properties = {props: newEntity.properties.props, state: newEntity.properties.state};
+    //         const props = newEntity.properties.props;
+    //         if (props.$allOf) {
+    //             if (props.$allOf.length === 2) {
+    //                 newEntity.properties.props = props.$allOf[1];
+    //             } else {
+    //                 newEntity.properties.props.$allOf = props.$allOf.slice(1);
+    //             }
+    //         }
+    //         return newEntity;
+    //     }
+    //     if (ref === 'SFC') {
+    //         const res = {
+    //             $ref: FunctionSchemaId,
+    //             arguments: [{
+    //                 name: 'props',
+    //                 $ref: entity.genericArguments![0].$ref
+    //             }],
+    //             requiredArguments: ['props'],
+    //             returns: {
+    //                 $oneOf: [
+    //                     {
+    //                         $ref: 'react#ReactElement'
+    //                     },
+    //                     {
+    //                         $ref: NullSchemaId
+    //                     }
+    //                 ]
+    //             },
+    //             genericParams: entity.genericParams
+    //         };
+    //         return res;
+    //     }
+    //     return {$ref: 'react#' + ref};
+    // }
 }

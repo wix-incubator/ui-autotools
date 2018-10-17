@@ -3,7 +3,12 @@ import {generateSnapshotFilename, generateData} from './filename-utils';
 import { IRegistry } from '@ui-autotools/registry';
 import path from 'path';
 
-export const buildBaseFiles = (projectPath: string, Registry: IRegistry, fs: any) => {
+export interface IFileInfo {
+  filename: string;
+  filepath: string;
+}
+
+export const buildBaseFiles = (projectPath: string, Registry: IRegistry, fs: any): IFileInfo[] => {
   consoleLog('Building base files...');
 
   const autotoolsFolder = path.join(projectPath, '.autotools', 'tmp');
@@ -14,6 +19,7 @@ export const buildBaseFiles = (projectPath: string, Registry: IRegistry, fs: any
 
   const stylePathPrefix = '../../'; // We're two folders deep in .autotools
   const compPathPrefix = '../../';
+  const files: IFileInfo[] = [];
 
   Registry.metadata.components.forEach((componentMetadata) => {
     const simIndex = componentMetadata.simulations.length;
@@ -28,16 +34,22 @@ export const buildBaseFiles = (projectPath: string, Registry: IRegistry, fs: any
           styles.forEach((style) => {
             const stylePath = path.join(stylePathPrefix, style.path);
             const filename = generateSnapshotFilename(compName, simulationName, i, style.name);
+            const filepath = path.join(autotoolsFolder, filename + '.snapshot.ts');
+            files.push({filename, filepath});
             const data = generateData(compName, compPath, stylePath);
-            fs.writeFileSync(path.join(autotoolsFolder, filename), data);
+            fs.writeFileSync(filepath, data);
           });
         } else {
           // We only want to render the base style if there are no other style variants
           const filename = generateSnapshotFilename(compName, simulationName, i);
+          const filepath = path.join(autotoolsFolder, filename, '.snapshot.ts');
+          files.push({filename, filepath});
           const data = generateData(compName, compPath);
-          fs.writeFileSync(path.join(autotoolsFolder, filename), data);
+          fs.writeFileSync(filepath, data);
         }
       }
     }
   });
+
+  return files;
 };

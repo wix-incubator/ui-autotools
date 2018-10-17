@@ -6,8 +6,8 @@ import Registry from '@ui-autotools/registry';
 
 export async function eyesTest(projectPath: string, fs: any) {
   const tmpDir = await createTempDirectory();
-  buildBaseFiles(projectPath, Registry, fs);
-  await generateSnapshots(projectPath, tmpDir.path, Registry);
-  await runEyes(projectPath, tmpDir.path, fs);
+  const files = buildBaseFiles(projectPath, Registry, fs);
+  await generateSnapshots(projectPath, tmpDir.path, Registry, files);
+  await runEyes(projectPath, tmpDir.path, fs, files);
   await tmpDir.remove();
 }

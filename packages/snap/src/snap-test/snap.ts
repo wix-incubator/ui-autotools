@@ -2,11 +2,11 @@ const {TestFailedError, TestResults} = require('@applitools/eyes.sdk.core');
 const {makeVisualGridClient, makeGetConfig} = require('@applitools/visual-grid-client');
 const {domNodesToCdt} = require('@applitools/visual-grid-client/browser');
 import path from 'path';
-import glob from 'glob';
 import chalk from 'chalk';
 import {JSDOM} from 'jsdom';
 import {consoleLog, consoleError} from '@ui-autotools/utils';
 import {parseSnapshotFilename} from '../generate-snapshots/filename-utils';
+import { IFileInfo } from '../generate-snapshots/build-base-files';
 
 interface ITestResult {
   status: 'error' | 'new' | 'modified' | 'unmodified';
@@ -51,20 +51,20 @@ interface IResource {
   value: Buffer;
 }
 
-function getStaticResources(cssFilenames: string[], resourceDir: string, fs: any): {[url: string]: IResource} {
+function getStaticResources(cssFiles: IFileInfo[], resourceDir: string, fs: any): {[url: string]: IResource} {
   const resources: {[url: string]: IResource} = {};
-  for (const cssFilename of cssFilenames) {
-    resources[cssFilename] = {
-      url: cssFilename,
+  for (const cssFile of cssFiles) {
+    resources[cssFile.filename] = {
+      url: cssFile.filename + '.css',
       type: 'text/css',
-      value: fs.readFileSync(path.join(resourceDir, cssFilename))
+      value: fs.readFileSync(path.join(resourceDir, cssFile.filename + '.css'))
     };
   }
   return resources;
 }
 
 function formatName(filename: string) {
-  const {compName, simName, styleName} = parseSnapshotFilename(filename, '.snapshot.html');
+  const {compName, simName, styleName} = parseSnapshotFilename(filename);
 
   return styleName ? `${compName}: ${simName}. Style: ${styleName}.` : `${compName}: ${simName}.`;
 }
@@ -132,20 +132,17 @@ async function runTest(gridClient: any, gridClientConfig: any, testName: string,
   return close();
 }
 
-export async function runEyes(projectPath: string, tempDirectory: string, fs: any) {
-  const cssFilenames  = glob.sync('*.css', {cwd: tempDirectory});
-  const htmlFilenames = glob.sync('*.snapshot.html', {cwd: tempDirectory});
-
+export async function runEyes(projectPath: string, tempDirectory: string, fs: any, files: IFileInfo[]) {
   const config = getGridClientConfig(projectPath);
-  const resources = getStaticResources(cssFilenames, tempDirectory, fs);
+  const resources = getStaticResources(files, tempDirectory, fs);
   const gridClient = makeVisualGridClient(makeGetConfig());
 
   const resultPromises = [];
   consoleLog('Sending snapshots to Applitools...');
 
-  for (const htmlFilename of htmlFilenames) {
-    const html = fs.readFileSync(path.join(tempDirectory, htmlFilename), 'utf-8');
-    const testName = formatName(htmlFilename);
+  for (const file of files) {
+    const html = fs.readFileSync(path.join(tempDirectory, file.filename + '.snapshot.snapshot.html'), 'utf-8');
+    const testName = formatName(file.filename);
 
     const result = getTestResult(runTest(
       gridClient,

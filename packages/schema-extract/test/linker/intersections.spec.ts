@@ -77,51 +77,76 @@ describe('schema-linker - intersections', () => {
         expect(res).to.eql(expected);
     });
 
-    // it('should flatten intersection types inside union', async () => {
-    //     const fileName = 'index.ts';
-    //     const res = linkTest({[fileName]: `
-    //     export type A = {
-    //         something:number;
-    //     };
-    //     export type B = {
-    //         somethingElse:string;
-    //     };
-    //     export type C = {
-    //         somethingNew:number;
-    //     };
-    //     export type D = A  |  ( B & C );
-    //     `}, 'D', fileName);
+    it('should flatten intersection types inside union', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
+        export type A = {
+            something:number;
+        };
+        export type B = {
+            somethingElse:string;
+        };
+        export type C = {
+            somethingNew:number;
+        };
+        export type D = A  |  ( B & C );
+        `}, 'D', fileName);
 
-    //     const expected: Schema<'object'> = {
-    //         $oneOf: [
-    //             {
-    //                 type: 'object',
-    //                 definedAt: '#A',
-    //                 properties: {
-    //                     something: {
-    //                         type: 'number'
-    //                     }
-    //                 },
-    //                 required: ['something']
-    //             },
-    //             {
-    //                 type: 'object',
-    //                 properties: {
-    //                     somethingElse: {
-    //                         definedAt: '#B',
-    //                         type: 'string'
-    //                     },
-    //                     somethingNew: {
-    //                         definedAt: '#C',
-    //                         type: 'number'
-    //                     }
-    //                 },
-    //                 required: ['somethingElse', 'somethingNew']
-    //             }
-    //         ]
-    //     };
-    //     expect(res).to.eql(expected);
-    // });
+        const expected: Schema<'object'> = {
+            $oneOf: [
+                {
+                    $ref: '#A'
+                },
+                {
+                    type: 'object',
+                    properties: {
+                        somethingElse: {
+                            definedAt: '#B',
+                            type: 'string'
+                        },
+                        somethingNew: {
+                            definedAt: '#C',
+                            type: 'number'
+                        }
+                    },
+                    required: ['somethingElse', 'somethingNew']
+                }
+            ]
+        };
+        expect(res).to.eql(expected);
+    });
+    it('should deep flatten generic type definition with intersections', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
+        export type MyType<T> = {
+            something: {
+                a: T;
+            };
+        };
+        export type B = MyType<string> & {id:string};
+        `}, 'B', fileName);
+
+        const expected: Schema<'object'> = {
+            type: 'object',
+            properties: {
+                something: {
+                    definedAt: '#MyType',
+                    type: 'object',
+                    properties: {
+                        a: {
+                            type: 'string'
+                        }
+                    },
+                    required: ['a']
+                },
+                id: {
+                    type: 'string'
+                }
+            },
+            required: ['something', 'id']
+        };
+        expect(res).to.eql(expected);
+    });
 
     // it('should flatten intersection types with unions', async () => {
     //     const fileName = 'index.ts';
@@ -228,38 +253,6 @@ describe('schema-linker - intersections', () => {
     //                 required: ['somethingElse', 'something']
     //             }
     //         ]
-    //     };
-    //     expect(res).to.eql(expected);
-    // });
-    // it('should deep flatten generic type definition with intersections', async () => {
-    //     const fileName = 'index.ts';
-    //     const res = linkTest({[fileName]: `
-    //     export type MyType<T> = {
-    //         something: {
-    //             a: T;
-    //         };
-    //     };
-    //     export type B = MyType<string> & {id:string};
-    //     `}, 'B', fileName);
-
-    //     const expected: Schema<'object'> = {
-    //         type: 'object',
-    //         properties: {
-    //             something: {
-    //                 definedAt: '#MyType',
-    //                 type: 'object',
-    //                 properties: {
-    //                     a: {
-    //                         type: 'string'
-    //                     }
-    //                 },
-    //                 required: ['a']
-    //             },
-    //             id: {
-    //                 type: 'string'
-    //             }
-    //         },
-    //         required: ['something', 'id']
     //     };
     //     expect(res).to.eql(expected);
     // });

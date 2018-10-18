@@ -141,10 +141,10 @@ export class SchemaLinker {
             return object1;
         }
         const res: Schema & IObjectFields & {properties: {[name: string]: Schema}} = {type: 'object', properties: {}};
-        if (object1.definedAt) {
-            for (const p in object1.properties) {
-                if (object1.properties.hasOwnProperty(p)) {
-                    res.properties[p] = object1.properties[p];
+        for (const p in object1.properties) {
+            if (object1.properties.hasOwnProperty(p)) {
+                res.properties[p] = object1.properties[p];
+                if (object1.definedAt) {
                     res.properties[p].definedAt = object1.definedAt;
                 }
             }
@@ -279,12 +279,15 @@ export class SchemaLinker {
                 const property = refProperties[propName];
                 if (isRef(property)) {
                     properties[propName] = paramsMap.get(property.$ref)!;
-                // } else if (property.$allOf) {
-                //     properties[propName] = this.handleIntersection(property.$allOf, schema, paramsMap);
+                } else if (property.$allOf) {
+                    properties[propName] = this.handleIntersection(property.$allOf, schema, paramsMap);
                 } else if (isSchemaOfType('object', property)) {
                     properties[propName] = this.linkRefObject(property, paramsMap, schema);
                 }
             }
+        }
+        if (refEntity.definedAt) {
+            res.definedAt = refEntity.definedAt;
         }
         res.properties = properties;
         if (refEntity.required) {

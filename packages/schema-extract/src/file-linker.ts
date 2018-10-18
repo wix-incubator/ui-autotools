@@ -1,7 +1,7 @@
 import ts from 'typescript';
 import {union} from 'lodash';
 import { transform, getSchemaFromImport } from './file-transformer';
-import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isFunctionSchema, FunctionSchema, isObjectSchema, isNeverSchema, NullSchemaId, FunctionSchemaId } from './json-schema-types';
+import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isFunctionSchema, FunctionSchema, isObjectSchema, NullSchemaId, FunctionSchemaId } from './json-schema-types';
 
 export class SchemaLinker {
     private checker: ts.TypeChecker;
@@ -119,13 +119,21 @@ export class SchemaLinker {
 
     private handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
         if (options.length === 0) {
-            return {$ref: UnknownId};
+            throw new Error('Cannot intersect an empty array');
         }
-        const first = {...options[0]};
-        let res = isRef(first) ? this.handleRef(first, schema, paramsMap) : first;
-        const rest = options.slice(1);
-        for (const o of rest) {
+        let res: Schema = {};
+        for (const o of options) {
             const option = isRef(o) ? this.handleRef(o, schema, paramsMap) : o;
+            if (isClassSchema(option) || isFunctionSchema(option)) {
+                throw new Error('Invalid intersection');
+            }
+            if (Object.keys(res).length === 0) {
+                res = option;
+                continue;
+            }
+            if (res.type && option.type && res.type !== option.type) {
+                throw new Error('Cannot intersect two different type');
+            }
             if (isObjectSchema(option) && (isInterfaceSchema(res) || isObjectSchema(res))) {
                 res = this.mergeObjects(res, option, schema, paramsMap);
             }
@@ -138,22 +146,20 @@ export class SchemaLinker {
             return object1;
         }
         const res: Schema & IObjectFields & {properties: {[name: string]: Schema}} = {type: 'object', properties: {}};
-        for (const p in object1.properties) {
-            if (object1.properties.hasOwnProperty(p)) {
-                res.properties[p] = object1.properties[p];
-                if (object1.definedAt) {
-                    res.properties[p].definedAt = object1.definedAt;
-                }
+        for (const [key, val] of Object.entries(object1.properties)) {
+            res.properties[key] = val;
+            if (object1.definedAt) {
+                res.properties[key].definedAt = object1.definedAt;
             }
         }
-        for (const p in object2.properties) {
-            if (!res.properties.hasOwnProperty(p)) {
-                res.properties[p] = object2.properties[p];
+        for (const [key, val] of Object.entries(object2.properties)) {
+            if (!res.properties.hasOwnProperty(key)) {
+                res.properties[key] = val;
                 if (object2.definedAt) {
-                    res.properties[p].definedAt = object2.definedAt;
+                    res.properties[key].definedAt = res.properties[key].definedAt ? res.properties[key].definedAt : object2.definedAt;
                 }
             } else {
-                res.properties[p] = this.handleIntersection([res.properties[p], object2.properties[p]], schema, paramsMap);
+                res.properties[key] = this.handleIntersection([res.properties[key], val], schema, paramsMap);
             }
         }
         res.required = union(object1.required, object2.required);

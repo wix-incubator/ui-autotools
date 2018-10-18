@@ -1,22 +1,8 @@
 import {expect} from 'chai';
-import { Schema, NeverId } from '../../src/json-schema-types';
+import { Schema } from '../../src/json-schema-types';
 import {linkTest} from '../../test-kit/run-linker';
 
 describe('schema-linker - intersections', () => {
-    it('should return never if intersection is impossible', async () => {
-        const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
-        export type a = number;
-        export type b = string;
-        export type c = a & b;
-        `}, 'c', fileName);
-
-        const expected: Schema<'object'> = {
-            $ref: NeverId
-        };
-        expect(res).to.eql(expected);
-    });
-
     it('should flatten intersection types', async () => {
         const fileName = 'index.ts';
         const res = linkTest({[fileName]: `

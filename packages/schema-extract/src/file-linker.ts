@@ -1,7 +1,7 @@
 import ts from 'typescript';
 import {union} from 'lodash';
 import { transform, getSchemaFromImport } from './file-transformer';
-import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isFunctionSchema, FunctionSchema, NeverId, isObjectSchema, isNeverSchema, NullSchemaId, FunctionSchemaId } from './json-schema-types';
+import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isFunctionSchema, FunctionSchema, isObjectSchema, isNeverSchema, NullSchemaId, FunctionSchemaId } from './json-schema-types';
 
 export class SchemaLinker {
     private checker: ts.TypeChecker;
@@ -126,9 +126,6 @@ export class SchemaLinker {
         const rest = options.slice(1);
         for (const o of rest) {
             const option = isRef(o) ? this.handleRef(o, schema, paramsMap) : o;
-            if (res.type && option.type && res.type !== option.type) {
-                return {$ref: NeverId};
-            }
             if (isObjectSchema(option) && (isInterfaceSchema(res) || isObjectSchema(res))) {
                 res = this.mergeObjects(res, option, schema, paramsMap);
             }
@@ -156,11 +153,7 @@ export class SchemaLinker {
                     res.properties[p].definedAt = object2.definedAt;
                 }
             } else {
-                const tempRes = this.handleIntersection([res.properties[p], object2.properties[p]], schema, paramsMap);
-                if (isNeverSchema(tempRes)) {
-                    return tempRes;
-                }
-                res.properties[p] = tempRes;
+                res.properties[p] = this.handleIntersection([res.properties[p], object2.properties[p]], schema, paramsMap);
             }
         }
         res.required = union(object1.required, object2.required);

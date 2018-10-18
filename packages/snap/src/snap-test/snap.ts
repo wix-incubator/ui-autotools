@@ -149,7 +149,7 @@ export async function runEyes(projectPath: string, tempDirectory: string, files:
       gridClient,
       config,
       testName,
-      html as string,
+      html,
       resources
     ));
 

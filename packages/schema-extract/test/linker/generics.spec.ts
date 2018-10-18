@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import { Schema } from '../../src/json-schema-types';
+import { Schema, ClassSchemaId } from '../../src/json-schema-types';
 import {linkTest} from '../../test-kit/run-linker';
 
 describe('schema-linker - generic types', () => {
@@ -15,6 +15,7 @@ describe('schema-linker - generic types', () => {
 
         const expected: Schema<'object'> = {
             type: 'object',
+            definedAt: '#MyType',
             properties: {
                 something: {
                     type: 'number'
@@ -41,6 +42,7 @@ describe('schema-linker - generic types', () => {
 
         const expected: Schema<'object'> = {
             type: 'object',
+            definedAt: '#MyType',
             properties: {
                 something: {
                     type: 'object',
@@ -53,6 +55,35 @@ describe('schema-linker - generic types', () => {
                 }
             },
             required: ['something']
+        };
+        expect(res).to.eql(expected);
+    });
+
+    it('should deep flatten genric class definition', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
+        export class A<T>{
+            b: {b: T}
+        };
+
+        export class B extends A<string>{};
+        `}, 'B', fileName);
+
+        const expected = {
+            $ref: ClassSchemaId,
+            extends: {
+                $ref: '#A',
+            },
+            staticProperties: {},
+            properties: {
+                b: {
+                    inheritedFrom: '#A',
+                    properties: {
+                        b: {type: 'string'}
+                    },
+                    required: ['b']
+                }
+            }
         };
         expect(res).to.eql(expected);
     });

@@ -127,3 +127,7 @@ export function isFunctionSchema(schema: Schema): schema is FunctionSchema {
 export function isNeverSchema(schema: Schema): boolean {
     return !!schema && !!schema.$ref && schema.$ref === NeverId;
 }
+
+export function isObjectSchema(schema: Schema): schema is Schema & IObjectFields {
+    return !!schema && !!schema.type && schema.type === 'object';
+}

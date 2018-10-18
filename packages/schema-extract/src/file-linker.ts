@@ -1,7 +1,7 @@
 import ts from 'typescript';
 import {union} from 'lodash';
 import { transform, getSchemaFromImport } from './file-transformer';
-import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isFunctionSchema, FunctionSchema, NeverId, isObjectSchema, isNeverSchema } from './json-schema-types';
+import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isFunctionSchema, FunctionSchema, NeverId, isObjectSchema, isNeverSchema, NullSchemaId, FunctionSchemaId } from './json-schema-types';
 
 export class SchemaLinker {
     private checker: ts.TypeChecker;
@@ -47,7 +47,7 @@ export class SchemaLinker {
         if (isFunctionSchema(entity)) {
             return this.linkFunction(entity, schema, paramsMap);
         }
-        if (isRef(entity) && entity.genericArguments) {
+        if (isRef(entity) && (paramsMap || entity.genericArguments)) {
             return this.handleRef(entity, schema, paramsMap);
         }
         if (entity.$allOf) {
@@ -57,7 +57,7 @@ export class SchemaLinker {
             return this.handleUnion(entity.$oneOf, schema);
         }
         if (isSchemaOfType('object', entity)) {
-            return this.handleObject(entity, schema);
+            return this.handleObject(entity, schema, paramsMap);
         }
         return entity;
     }
@@ -71,11 +71,10 @@ export class SchemaLinker {
         if (!schema.definitions) {
             return {refEntity: null, refEntityType: cleanRef};
         }
-        let refEntity = (paramsMap && paramsMap.has(ref)) ?
-                        paramsMap.get(ref) :
-                        schema.definitions[cleanRef] ?
-                        schema.definitions[cleanRef] :
-                        null;
+        if (paramsMap && paramsMap.has(ref)) {
+            return {refEntity: paramsMap.get(ref)!, refEntityType: cleanRef};
+        }
+        let refEntity = schema.definitions[cleanRef] ? schema.definitions[cleanRef] : null;
         if (!refEntity) {
             const importSchema = getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1), this.checker, this.program, this.sourceFile);
             if (importSchema && importSchema.definitions) {
@@ -88,9 +87,9 @@ export class SchemaLinker {
         }
 
         // This code is not relevant at the moment
-        // if (ref.slice(0, poundIndex) === 'react') {
-        //     return {refEntity: this.handleReact(refEntity, cleanRef), refEntityType: cleanRef};
-        // }
+        if (ref.slice(0, poundIndex) === 'react') {
+            return {refEntity: this.handleReact(refEntity, cleanRef), refEntityType: cleanRef};
+        }
 
         if (isRef(refEntity)) {
             return this.getRefEntity(refEntity.$ref, schema, paramsMap);
@@ -118,7 +117,6 @@ export class SchemaLinker {
         return refEntity;
     }
 
-    // This implementation require major refactoring
     private handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
         if (options.length === 0) {
             return {$ref: UnknownId};
@@ -168,81 +166,6 @@ export class SchemaLinker {
         res.required = union(object1.required, object2.required);
         return res;
     }
-    //     for (const option of options) {
-    //         let entity;
-    //         if (isRef(option)) {
-    //             entity = this.link(this.handleRef(option, schema, paramsMap), schema, paramsMap);
-    //             this.mergeProperties(entity, res, schema, paramsMap, option.$ref);
-    //         } else if (isSchemaOfType('object', option)) {
-    //             entity = this.link(option, schema, paramsMap);
-    //             this.mergeProperties(entity, res, schema, paramsMap, option.definedAt);
-    //         } else if (option.$oneOf) {
-    //             const linkedOption = this.link(option, schema, paramsMap);
-    //             const newRes: Schema = {$oneOf: []};
-    //             if (Object.keys(res).length === 0) {
-    //                 const rest = options.slice(1);
-    //                 for (const t of linkedOption.$oneOf!) {
-    //                     const r = this.handleIntersection([t, ...rest], schema, paramsMap);
-    //                     if (r.$oneOf) {
-    //                         newRes.$oneOf = union(newRes.$oneOf, r.$oneOf);
-    //                     } else {
-    //                         newRes.$oneOf!.push(r);
-    //                     }
-    //                 }
-    //                 return newRes;
-    //             } else {
-    //                 for (const t of linkedOption.$oneOf!) {
-    //                     const r = this.handleIntersection([res, t], schema, paramsMap);
-    //                     if (isNeverSchema(r)) {
-    //                         continue;
-    //                     } else {
-    //                         newRes.$oneOf!.push(r);
-    //                     }
-    //                 }
-    //                 if (res.$oneOf) {
-    //                     res.$oneOf = union(res.$oneOf, newRes.$oneOf);
-    //                 } else {
-    //                     res = newRes;
-    //                 }
-    //             }
-    //         } else {
-    //             if (!res.type && option.type) {
-    //                 res.type = option.type;
-    //                 if (option.enum) {
-    //                     res.enum = option.enum;
-    //                 }
-    //             } else {
-    //                 if (Object.keys(res).length === 0) {
-    //                     res = option;
-    //                 } else if (option.type && option.type === res.type) {
-    //                     if (option.enum) {
-    //                         if (!res.enum) {
-    //                             res.enum = option.enum;
-    //                         } else {
-    //                             const enums = [];
-    //                             for (let i = 0; i < option.enum.length; i++) {
-    //                                 if (option.enum.includes(res.enum![i])) {
-    //                                     enums.push(option.enum[i]);
-    //                                 }
-    //                             }
-    //                             if (enums.length === 0) {
-    //                                 return {$ref: NeverId};
-    //                             } else {
-    //                                 res.enum = enums;
-    //                             }
-    //                         }
-    //                     }
-    //                 } else {
-    //                     return {$ref: NeverId};
-    //                 }
-    //             }
-    //             if (option.definedAt) {
-    //                 res.definedAt = option.definedAt;
-    //             }
-    //         }
-    //     }
-    //     return res;
-    // }
 
     private handleUnion(types: Schema[], schema: ModuleSchema) {
         const res: Schema = {$oneOf: []};
@@ -370,10 +293,16 @@ export class SchemaLinker {
         return res;
     }
 
-    private handleObject(entity: Schema & IObjectFields, schema: ModuleSchema): Schema {
+    private handleObject(entity: Schema & IObjectFields, schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
         const res: typeof entity = {};
-        if (entity.properties) {
-            res.properties = {...entity.properties};
+        if (!entity.properties) {
+            return entity;
+        }
+        res.properties = {};
+        for (const p in entity.properties) {
+            if (entity.properties.hasOwnProperty(p)) {
+                res.properties[p] = paramsMap ? this.link(entity.properties[p], schema, paramsMap) : entity.properties[p];
+            }
         }
         if (entity.required) {
             res.required = [...entity.required];
@@ -385,6 +314,10 @@ export class SchemaLinker {
         const res = {...entity};
         const args = [];
         for (const arg of entity.arguments) {
+            // if (paramsMap) {
+            //     const x = this.link(arg, schema, paramsMap);
+            //     debugger;
+            // }
             if (isRef(arg) && paramsMap && paramsMap.has(arg.$ref)) {
                 const newArg: Schema = {...paramsMap.get(arg.$ref)};
                 if (res.genericParams) {
@@ -403,42 +336,42 @@ export class SchemaLinker {
         return res;
     }
 
-    // private handleReact(entity: Schema, ref: string): Schema {
-    //     const newEntity: any = Object.assign({}, entity);
-    //     if (ref === 'Component') {
-    //         newEntity.properties = {props: newEntity.properties.props, state: newEntity.properties.state};
-    //         const props = newEntity.properties.props;
-    //         if (props.$allOf) {
-    //             if (props.$allOf.length === 2) {
-    //                 newEntity.properties.props = props.$allOf[1];
-    //             } else {
-    //                 newEntity.properties.props.$allOf = props.$allOf.slice(1);
-    //             }
-    //         }
-    //         return newEntity;
-    //     }
-    //     if (ref === 'SFC') {
-    //         const res = {
-    //             $ref: FunctionSchemaId,
-    //             arguments: [{
-    //                 name: 'props',
-    //                 $ref: entity.genericArguments![0].$ref
-    //             }],
-    //             requiredArguments: ['props'],
-    //             returns: {
-    //                 $oneOf: [
-    //                     {
-    //                         $ref: 'react#ReactElement'
-    //                     },
-    //                     {
-    //                         $ref: NullSchemaId
-    //                     }
-    //                 ]
-    //             },
-    //             genericParams: entity.genericParams
-    //         };
-    //         return res;
-    //     }
-    //     return {$ref: 'react#' + ref};
-    // }
+    private handleReact(entity: Schema, ref: string): Schema {
+        const newEntity: any = Object.assign({}, entity);
+        if (ref === 'Component') {
+            newEntity.properties = {props: newEntity.properties.props, state: newEntity.properties.state};
+            const props = newEntity.properties.props;
+            if (props.$allOf) {
+                if (props.$allOf.length === 2) {
+                    newEntity.properties.props = props.$allOf[1];
+                } else {
+                    newEntity.properties.props.$allOf = props.$allOf.slice(1);
+                }
+            }
+            return newEntity;
+        }
+        if (ref === 'SFC') {
+            const res = {
+                $ref: FunctionSchemaId,
+                arguments: [{
+                    name: 'props',
+                    $ref: entity.genericArguments![0].$ref
+                }],
+                requiredArguments: ['props'],
+                returns: {
+                    $oneOf: [
+                        {
+                            $ref: 'react#ReactElement'
+                        },
+                        {
+                            $ref: NullSchemaId
+                        }
+                    ]
+                },
+                genericParams: entity.genericParams
+            };
+            return res;
+        }
+        return {$ref: 'react#' + ref};
+    }
 }

@@ -1,25 +1,22 @@
-import {consoleLog} from '@ui-autotools/utils';
+import path from 'path';
 import {generateSnapshotFilename, generateData} from './filename-utils';
 import { IRegistry } from '@ui-autotools/registry';
-import path from 'path';
-import { IFileSystem } from '..';
+import { consoleLog } from '@ui-autotools/utils';
+import {createAutotoolsFolder} from './create-autotools-folder';
+import { writeDataToFiles } from './write-data-to-files';
 
 export interface IFileInfo {
   basename: string;
   filepath: string;
+  data: string;
 }
 
-export const buildBaseFiles = (projectPath: string, Registry: IRegistry, fs: IFileSystem): IFileInfo[] => {
+const stylePathPrefix = '../../'; // We're two folders deep in .autotools
+const compPathPrefix = '../../';
+
+export const buildBaseFiles = (projectPath: string, Registry: IRegistry): IFileInfo[] => {
   consoleLog('Building base files...');
-
-  const autotoolsFolder = path.join(projectPath, '.autotools', 'tmp');
-
-  if (!fs.existsSync(autotoolsFolder)) {
-    fs.mkdirSync(autotoolsFolder);
-  }
-
-  const stylePathPrefix = '../../'; // We're two folders deep in .autotools
-  const compPathPrefix = '../../';
+  const autotoolsFolder = createAutotoolsFolder(projectPath);
   const files: IFileInfo[] = [];
 
   Registry.metadata.components.forEach((componentMetadata) => {
@@ -36,21 +33,20 @@ export const buildBaseFiles = (projectPath: string, Registry: IRegistry, fs: IFi
             const stylePath = path.join(stylePathPrefix, style.path);
             const basename = generateSnapshotFilename(compName, simulationName, i, style.name);
             const filepath = path.join(autotoolsFolder, basename + '.snapshot.ts');
-            files.push({basename, filepath});
             const data = generateData(compName, compPath, stylePath);
-            fs.writeFileSync(filepath, data);
+            files.push({basename, filepath, data});
           });
         } else {
           // We only want to render the base style if there are no other style variants
           const basename = generateSnapshotFilename(compName, simulationName, i);
           const filepath = path.join(autotoolsFolder, basename, '.snapshot.ts');
-          files.push({basename, filepath});
           const data = generateData(compName, compPath);
-          fs.writeFileSync(filepath, data);
+          files.push({basename, filepath, data});
         }
       }
     }
   });
 
+  writeDataToFiles(files);
   return files;
 };

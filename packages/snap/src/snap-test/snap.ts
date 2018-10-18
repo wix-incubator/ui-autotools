@@ -1,13 +1,12 @@
 const {TestFailedError, TestResults} = require('@applitools/eyes.sdk.core');
 const {makeVisualGridClient, makeGetConfig} = require('@applitools/visual-grid-client');
 const {domNodesToCdt} = require('@applitools/visual-grid-client/browser');
-import path from 'path';
 import chalk from 'chalk';
 import {JSDOM} from 'jsdom';
 import {consoleLog, consoleError} from '@ui-autotools/utils';
 import {parseSnapshotFilename} from '../generate-snapshots/filename-utils';
 import { IFileInfo } from '../generate-snapshots/build-base-files';
-import { IFileSystem } from '..';
+import { IFileSystem, IPath } from '..';
 
 interface ITestResult {
   status: 'error' | 'new' | 'modified' | 'unmodified';
@@ -15,7 +14,7 @@ interface ITestResult {
   error?: any;
 }
 
-function getGridClientConfig(projectPath: string) {
+function getGridClientConfig(projectPath: string, path: IPath) {
   const projectName = require(path.join(projectPath, 'package.json')).name;
   if (!projectName) {
     throw new Error('The project should have a package.json file with a "name" field.');
@@ -52,7 +51,7 @@ interface IResource {
   value: Buffer;
 }
 
-function getStaticResources(cssFiles: IFileInfo[], resourceDir: string, fs: IFileSystem): {[url: string]: IResource} {
+function getStaticResources(cssFiles: IFileInfo[], resourceDir: string, fs: IFileSystem, path: IPath): {[url: string]: IResource} {
   const resources: {[url: string]: IResource} = {};
   for (const cssFile of cssFiles) {
     resources[cssFile.basename] = {
@@ -133,9 +132,9 @@ async function runTest(gridClient: any, gridClientConfig: any, testName: string,
   return close();
 }
 
-export async function runEyes(projectPath: string, tempDirectory: string, fs: IFileSystem, files: IFileInfo[]) {
-  const config = getGridClientConfig(projectPath);
-  const resources = getStaticResources(files, tempDirectory, fs);
+export async function runEyes(projectPath: string, tempDirectory: string, fs: IFileSystem, files: IFileInfo[], path: IPath) {
+  const config = getGridClientConfig(projectPath, path);
+  const resources = getStaticResources(files, tempDirectory, fs, path);
   const gridClient = makeVisualGridClient(makeGetConfig());
 
   const resultPromises = [];

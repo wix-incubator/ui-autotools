@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import fs from 'fs';
 import path from 'path';
 import glob from 'glob';
 import dotenv from 'dotenv';
@@ -53,7 +52,7 @@ program
   const metaGlob: string = options.files || defaultMetaGlob;
   try {
     importMetaFiles(projectPath, metaGlob);
-    await eyesTest(projectPath, fs);
+    await eyesTest(projectPath);
   } catch (error) {
     process.exitCode = 1;
     if (error) {

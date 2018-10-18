@@ -3,19 +3,24 @@ import {generateSnapshots} from './generate-snapshots/generate-snapshots';
 import {runEyes} from './snap-test/snap';
 import {createTempDirectory} from 'create-temp-directory';
 import Registry from '@ui-autotools/registry';
-import {PathLike} from 'fs';
+import path from 'path';
+import fs from 'fs';
 
 export interface IFileSystem {
-  existsSync: (dir: PathLike) => boolean;
-  mkdirSync: (dir: PathLike) => void;
-  writeFileSync: (path: PathLike | number, data: any) => void;
-  readFileSync: (path: PathLike | number, options?: string) => string | Buffer;
+  existsSync: (dir: string) => boolean;
+  mkdirSync: (dir: string) => void;
+  writeFileSync: (path: string, data: any) => void;
+  readFileSync: (path: string, options?: string) => string | Buffer;
 }
 
-export async function eyesTest(projectPath: string, fs: IFileSystem) {
+export interface IPath {
+  join: (...args: string[]) => string;
+}
+
+export async function eyesTest(projectPath: string) {
   const tmpDir = await createTempDirectory();
-  const files = buildBaseFiles(projectPath, Registry, fs);
-  await generateSnapshots(projectPath, tmpDir.path, Registry, files);
-  await runEyes(projectPath, tmpDir.path, fs, files);
+  const files = buildBaseFiles(projectPath, Registry);
+  await generateSnapshots(projectPath, tmpDir.path, Registry, files, path);
+  await runEyes(projectPath, tmpDir.path, fs, files, path);
   await tmpDir.remove();
 }

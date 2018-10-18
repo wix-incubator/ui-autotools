@@ -56,6 +56,26 @@
     node-fetch "^2.2.0"
     throat "^4.1.0"
 
+"@file-services/memory@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@file-services/memory/-/memory-0.1.1.tgz#469d27e357d026e3116b6b07d241e8cacd2242b8"
+  integrity sha512-xzF9VLe4xwXd6SvRUY3Pqa8H8w3qKMmZNF+uFn6ZHDycSqmxjiIdZc160igy2wmIzyt0J0jfohxXMQuj7w5KDA==
+  dependencies:
+    "@file-services/types" "^0.1.1"
+    "@file-services/utils" "^0.1.1"
+
+"@file-services/types@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@file-services/types/-/types-0.1.1.tgz#60c7bc47dc718f014e258fdfb09b6386d6e2ac87"
+  integrity sha512-qExBVVMWfCsnqNR7GQ5CPyCtm4N6Mr30p9mIGE2nUs2i2YD6SLcWFxG1fcYryzez4Djf93kD3QdqcbwYg8jxkw==
+
+"@file-services/utils@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@file-services/utils/-/utils-0.1.1.tgz#9abd5b9de0c7d8b7a57aaef4a5741aeab99a74ff"
+  integrity sha512-Cfouquu7ZhvbuQoVD44Lc/KO8W1wgdLkUzH1qjdGy6ib7C9RzJ1PAIJ0aPedQLDdNks6ujW8Lug698Py5e5TEA==
+  dependencies:
+    "@file-services/types" "^0.1.1"
+
 "@lerna/add@^3.4.1":
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/@lerna/add/-/add-3.4.1.tgz#d41068317e30f530df48220d256b5e79690b1877"

@@ -1,4 +1,5 @@
 const StylableWebpackPlugin = require('@stylable/webpack-plugin');
+import path from 'path';
 import webpack from 'webpack';
 import React from 'react';
 import {HTMLSnapshotPlugin} from '@stylable/webpack-extensions';
@@ -8,7 +9,6 @@ import {consoleLog} from '@ui-autotools/utils';
 import {dedent} from './dedent';
 import {parseSnapshotFilename} from './filename-utils';
 import { IFileInfo } from './build-base-files';
-import { IPath } from '..';
 
 function findComponentByName(name: string, Registry: IRegistry): IComponentMetadata<any, any> | void {
     // We only have to do this because we currently map the component definitions to their metadata,
@@ -124,7 +124,7 @@ async function buildSingleFile(fileName: string, filePath: string, directory: st
   });
 }
 
-export const generateSnapshots = async (projectDir: string, tempDirectory: string, Registry: IRegistry, files: IFileInfo[], path: IPath) => {
+export const generateSnapshots = async (projectDir: string, tempDirectory: string, Registry: IRegistry, files: IFileInfo[]) => {
   const webpackConfig = require(path.join(projectDir, '.autotools/webpack.config.js'));
 
   consoleLog('Generating snapshots...');

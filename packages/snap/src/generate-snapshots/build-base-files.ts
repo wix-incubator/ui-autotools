@@ -1,20 +1,21 @@
-import {consoleLog} from '@ui-autotools/utils';
-import fs from 'fs';
 import path from 'path';
 import {generateSnapshotFilename, generateData} from './filename-utils';
-import { IRegistry } from '@ui-autotools/registry';
+import {IRegistry} from '@ui-autotools/registry';
+import {consoleLog} from '@ui-autotools/utils';
+import {createAutotoolsFolder} from './create-autotools-folder';
+import {writeDataToFs} from './write-data-to-fs';
 
-export const buildBaseFiles = (projectPath: string, Registry: IRegistry) => {
-  consoleLog('Building base files...');
+export interface IFileInfo {
+  basename: string;
+  filepath: string;
+  data: string;
+}
 
-  const autotoolsFolder = path.join(projectPath, '.autotools', 'tmp');
+const stylePathPrefix = '../../'; // We're two folders deep in .autotools
+const compPathPrefix = '../../';
 
-  if (!fs.existsSync(autotoolsFolder)) {
-    fs.mkdirSync(autotoolsFolder);
-  }
-
-  const stylePathPrefix = '../../'; // We're two folders deep in .autotools
-  const compPathPrefix = '../../';
+export function generateIndexFileData(Registry: IRegistry, autotoolsFolder: string): IFileInfo[]  {
+  const files: IFileInfo[] = [];
 
   Registry.metadata.components.forEach((componentMetadata) => {
     const simIndex = componentMetadata.simulations.length;
@@ -28,17 +29,30 @@ export const buildBaseFiles = (projectPath: string, Registry: IRegistry) => {
         if (styles.size) {
           styles.forEach((style) => {
             const stylePath = path.join(stylePathPrefix, style.path);
-            const filename = generateSnapshotFilename(compName, simulationName, i, style.name);
+            const basename = generateSnapshotFilename(compName, simulationName, i, style.name);
+            const filepath = path.join(autotoolsFolder, basename + '.snapshot.ts');
             const data = generateData(compName, compPath, stylePath);
-            fs.writeFileSync(path.join(autotoolsFolder, filename), data);
+            files.push({basename, filepath, data});
           });
         } else {
           // We only want to render the base style if there are no other style variants
-          const filename = generateSnapshotFilename(compName, simulationName, i);
+          const basename = generateSnapshotFilename(compName, simulationName, i);
+          const filepath = path.join(autotoolsFolder, basename, '.snapshot.ts');
           const data = generateData(compName, compPath);
-          fs.writeFileSync(path.join(autotoolsFolder, filename), data);
+          files.push({basename, filepath, data});
         }
       }
     }
   });
+
+  return files;
+}
+
+export const buildBaseFiles = (projectPath: string, Registry: IRegistry): IFileInfo[] => {
+  consoleLog('Building base files...');
+  const autotoolsFolder = createAutotoolsFolder(projectPath);
+  const files = generateIndexFileData(Registry, autotoolsFolder);
+  writeDataToFs(files);
+
+  return files;
 };

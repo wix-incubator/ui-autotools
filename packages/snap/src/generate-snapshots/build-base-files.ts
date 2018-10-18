@@ -1,9 +1,8 @@
-import path from 'path';
-import {generateSnapshotFilename, generateData} from './filename-utils';
 import { IRegistry } from '@ui-autotools/registry';
 import { consoleLog } from '@ui-autotools/utils';
 import {createAutotoolsFolder} from './create-autotools-folder';
-import { writeDataToFiles } from './write-data-to-files';
+import { writeDataToFs } from './write-data-to-fs';
+import { generateIndexFileData } from './generate-index-file-data';
 
 export interface IFileInfo {
   basename: string;
@@ -17,36 +16,8 @@ const compPathPrefix = '../../';
 export const buildBaseFiles = (projectPath: string, Registry: IRegistry): IFileInfo[] => {
   consoleLog('Building base files...');
   const autotoolsFolder = createAutotoolsFolder(projectPath);
-  const files: IFileInfo[] = [];
+  const files = generateIndexFileData(Registry, autotoolsFolder, compPathPrefix, stylePathPrefix);
+  writeDataToFs(files);
 
-  Registry.metadata.components.forEach((componentMetadata) => {
-    const simIndex = componentMetadata.simulations.length;
-    const styles = componentMetadata.styles;
-    const compPath =  path.join(compPathPrefix, componentMetadata.path);
-    const compName = componentMetadata.exportName;
-
-    if (compName) {
-      for (let i = 0; i < simIndex; i++) {
-        const simulationName = componentMetadata.simulations[i].title;
-        if (styles.size) {
-          styles.forEach((style) => {
-            const stylePath = path.join(stylePathPrefix, style.path);
-            const basename = generateSnapshotFilename(compName, simulationName, i, style.name);
-            const filepath = path.join(autotoolsFolder, basename + '.snapshot.ts');
-            const data = generateData(compName, compPath, stylePath);
-            files.push({basename, filepath, data});
-          });
-        } else {
-          // We only want to render the base style if there are no other style variants
-          const basename = generateSnapshotFilename(compName, simulationName, i);
-          const filepath = path.join(autotoolsFolder, basename, '.snapshot.ts');
-          const data = generateData(compName, compPath);
-          files.push({basename, filepath, data});
-        }
-      }
-    }
-  });
-
-  writeDataToFiles(files);
   return files;
 };

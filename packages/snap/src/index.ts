@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 import {buildBaseFiles} from './generate-snapshots/build-base-files';
 import {generateSnapshots} from './generate-snapshots/generate-snapshots';
 import {runEyes} from './snap-test/snap';

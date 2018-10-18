@@ -317,10 +317,6 @@ export class SchemaLinker {
         const res = {...entity};
         const args = [];
         for (const arg of entity.arguments) {
-            // if (paramsMap) {
-            //     const x = this.link(arg, schema, paramsMap);
-            //     debugger;
-            // }
             if (isRef(arg) && paramsMap && paramsMap.has(arg.$ref)) {
                 const newArg: Schema = {...paramsMap.get(arg.$ref)};
                 if (res.genericParams) {

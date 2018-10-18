@@ -225,12 +225,11 @@ export class SchemaLinker {
             staticProperties: {}
         } as ClassSchema;
         const paramsMap = new Map();
-        let isGeneric = false;
-        if (refEntity.genericParams && entity.extends!.genericArguments) {
-            refEntity.genericParams.forEach((param, index) => {
+        const isGeneric = !!(refEntity.genericParams && entity.extends!.genericArguments);
+        if (isGeneric) {
+            refEntity.genericParams!.forEach((param, index) => {
                 paramsMap.set(`#${refEntityType}!${param.name}`, entity.extends!.genericArguments![index]);
             });
-            isGeneric = true;
         }
         if (entity.hasOwnProperty('constructor')) {
             res.constructor = Object.assign({}, entity.constructor);

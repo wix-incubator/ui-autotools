@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/schema-extract",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",

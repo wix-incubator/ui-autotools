@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/registry",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -34,6 +34,6 @@
     "@ui-autotools/utils": "^1.0.9"
   },
   "dependencies": {
-    "@ui-autotools/utils": "^1.0.9"
+    "@ui-autotools/utils": "^1.0.10"
   }
 }

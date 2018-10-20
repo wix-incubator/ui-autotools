@@ -1,5 +1,4 @@
 import ts from 'typescript';
-import {union} from 'lodash';
 import { transform, getSchemaFromImport } from './file-transformer';
 import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isFunctionSchema, FunctionSchema, isObjectSchema, NullSchemaId, FunctionSchemaId } from './json-schema-types';
 
@@ -162,7 +161,7 @@ export class SchemaLinker {
                 res.properties[key] = this.handleIntersection([res.properties[key], val], schema, paramsMap);
             }
         }
-        res.required = union(object1.required, object2.required);
+        res.required = Array.from(new Set([...object1.required || [], ...object2.required || []]));
         return res;
     }
 
@@ -204,7 +203,7 @@ export class SchemaLinker {
             if (!res.required) {
                 res.required = refInterface.required;
             } else {
-                res.required = union(res.required, refInterface.required);
+                res.required = Array.from(new Set([...res.required, ...refInterface.required || []]));
             }
         }
         return res;

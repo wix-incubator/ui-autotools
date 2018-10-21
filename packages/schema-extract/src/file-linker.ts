@@ -1,6 +1,7 @@
 import ts from 'typescript';
 import { transform, getSchemaFromImport } from './file-transformer';
-import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isFunctionSchema, FunctionSchema, isObjectSchema, NullSchemaId, FunctionSchemaId } from './json-schema-types';
+import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isFunctionSchema, FunctionSchema, isObjectSchema } from './json-schema-types';
+// import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isFunctionSchema, FunctionSchema, isObjectSchema, NullSchemaId, FunctionSchemaId } from './json-schema-types';
 
 export class SchemaLinker {
     private checker: ts.TypeChecker;
@@ -71,7 +72,11 @@ export class SchemaLinker {
             return {refEntity: null, refEntityType: cleanRef};
         }
         if (paramsMap && paramsMap.has(ref)) {
-            return {refEntity: paramsMap.get(ref)!, refEntityType: cleanRef};
+            const e = paramsMap.get(ref)!;
+            if (isRef(e)) {
+                return this.getRefEntity(e.$ref, schema, paramsMap);
+            }
+            return {refEntity: e, refEntityType: cleanRef};
         }
         let refEntity = schema.definitions[cleanRef] ? schema.definitions[cleanRef] : null;
         if (!refEntity) {
@@ -86,9 +91,9 @@ export class SchemaLinker {
         }
 
         // This code is not relevant at the moment
-        if (ref.slice(0, poundIndex) === 'react') {
-            return {refEntity: this.handleReact(refEntity, cleanRef), refEntityType: cleanRef};
-        }
+        // if (ref.slice(0, poundIndex) === 'react') {
+        //     return {refEntity: this.handleReact(refEntity, cleanRef), refEntityType: cleanRef};
+        // }
 
         if (isRef(refEntity)) {
             return this.getRefEntity(refEntity.$ref, schema, paramsMap);
@@ -133,7 +138,7 @@ export class SchemaLinker {
             if (res.type && option.type && res.type !== option.type) {
                 throw new Error('Cannot intersect two different type');
             }
-            if (isObjectSchema(option) && (isInterfaceSchema(res) || isObjectSchema(res))) {
+            if ((isObjectSchema(option) || isInterfaceSchema(option)) && (isInterfaceSchema(res) || isObjectSchema(res))) {
                 res = this.mergeObjects(res, option, schema, paramsMap);
             }
         }
@@ -248,7 +253,7 @@ export class SchemaLinker {
         const properties = entity[prop];
         const res: {[name: string]: Schema & {inheritedFrom?: string}} = {...properties};
         for (const p in refProperties) {
-            if (refProperties.hasOwnProperty(p) && !properties.hasOwnProperty(p)) {
+            if (!properties.hasOwnProperty(p)) {
                 const property = refProperties[p];
                 if (isRef(property)) {
                     const refType = property.$ref.startsWith(`#${extendedEntity}`) ? property.$ref : `#${extendedEntity}!${property.$ref.replace('#', '')}`;
@@ -332,42 +337,42 @@ export class SchemaLinker {
         return res;
     }
 
-    private handleReact(entity: Schema, ref: string): Schema {
-        const newEntity: any = Object.assign({}, entity);
-        if (ref === 'Component') {
-            newEntity.properties = {props: newEntity.properties.props, state: newEntity.properties.state};
-            const props = newEntity.properties.props;
-            if (props.$allOf) {
-                if (props.$allOf.length === 2) {
-                    newEntity.properties.props = props.$allOf[1];
-                } else {
-                    newEntity.properties.props.$allOf = props.$allOf.slice(1);
-                }
-            }
-            return newEntity;
-        }
-        if (ref === 'SFC') {
-            const res = {
-                $ref: FunctionSchemaId,
-                arguments: [{
-                    name: 'props',
-                    $ref: entity.genericArguments![0].$ref
-                }],
-                requiredArguments: ['props'],
-                returns: {
-                    $oneOf: [
-                        {
-                            $ref: 'react#ReactElement'
-                        },
-                        {
-                            $ref: NullSchemaId
-                        }
-                    ]
-                },
-                genericParams: entity.genericParams
-            };
-            return res;
-        }
-        return {$ref: 'react#' + ref};
-    }
+    // private handleReact(entity: Schema, ref: string): Schema {
+    //     const newEntity: any = Object.assign({}, entity);
+    //     if (ref === 'Component') {
+    //         newEntity.properties = {props: newEntity.properties.props, state: newEntity.properties.state};
+    //         const props = newEntity.properties.props;
+    //         if (props.$allOf) {
+    //             if (props.$allOf.length === 2) {
+    //                 newEntity.properties.props = props.$allOf[1];
+    //             } else {
+    //                 newEntity.properties.props.$allOf = props.$allOf.slice(1);
+    //             }
+    //         }
+    //         return newEntity;
+    //     }
+    //     if (ref === 'SFC') {
+    //         const res = {
+    //             $ref: FunctionSchemaId,
+    //             arguments: [{
+    //                 name: 'props',
+    //                 $ref: entity.genericArguments![0].$ref
+    //             }],
+    //             requiredArguments: ['props'],
+    //             returns: {
+    //                 $oneOf: [
+    //                     {
+    //                         $ref: 'react#ReactElement'
+    //                     },
+    //                     {
+    //                         $ref: NullSchemaId
+    //                     }
+    //                 ]
+    //             },
+    //             genericParams: entity.genericParams
+    //         };
+    //         return res;
+    //     }
+    //     return {$ref: 'react#' + ref};
+    // }
 }

@@ -73,10 +73,6 @@ export class SchemaLinker {
         if (paramsMap && paramsMap.has(ref)) {
             const e = paramsMap.get(ref)!;
             return isRef(e) ? this.getRefEntity(e.$ref, schema, paramsMap) : {refEntity: e, refEntityType: cleanRef};
-            // if (isRef(e)) {
-            //     return this.getRefEntity(e.$ref, schema, paramsMap);
-            // }
-            // return {refEntity: e, refEntityType: cleanRef};
         }
         let refEntity = schema.definitions[cleanRef] ? schema.definitions[cleanRef] : null;
         if (!refEntity) {

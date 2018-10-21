@@ -23,7 +23,7 @@ function findComponentByName(name: string, Registry: IRegistry): IComponentMetad
   }
 }
 
-function render(fileName: string, Registry: IRegistry, compiledFile: any, sourceFile: any) {
+export function render(fileName: string, Registry: IRegistry, compiledFile: any, sourceFile: any) {
   const compMetadata = findComponentByName(compiledFile.default.name, Registry);
 
   if (!compMetadata) {

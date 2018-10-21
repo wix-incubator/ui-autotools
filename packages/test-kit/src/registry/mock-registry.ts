@@ -64,4 +64,4 @@ mockMetadata.addStyle(style, {
   path: 'src/registry/fixtures/variant.st.css'
 });
 
-export {Registry as MockRegistry, mockData, IMockData};
+export {Registry as MockRegistry, mockData, mockMetadata, IMockData};

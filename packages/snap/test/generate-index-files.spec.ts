@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import {MockRegistry, mockData} from '@ui-autotools/test-kit';
+import {MockRegistry} from '@ui-autotools/test-kit';
 import {generateIndexFileData} from '../src/generate-snapshots/build-base-files';
 
 describe('Generating index file data', () => {

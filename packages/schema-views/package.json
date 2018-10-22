@@ -12,10 +12,7 @@
     "build:watch": "run-p build:cjs-watch build:esm-watch",
     "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
     "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext",
-    "lint": "run-p lint:src lint:test",
-    "lint:src": "tslint -p src",
-    "lint:test": "tslint -p test",
-    "test": "true"
+    "lint": "tslint -p src"
   },
   "dependencies": {
     "react": "^16.5.2",

@@ -66,7 +66,7 @@ export class SchemaLinker {
             return {refEntity: null, refEntityType: ref};
         }
         const poundIndex = ref.indexOf('#');
-        const cleanRef = ref.slice(poundIndex + 1).replace('typeof ', '');
+        let cleanRef = ref.slice(poundIndex + 1).replace('typeof ', '');
         if (!schema.definitions) {
             return {refEntity: null, refEntityType: cleanRef};
         }
@@ -79,6 +79,10 @@ export class SchemaLinker {
             const importSchema = getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1), this.checker, this.program, this.sourceFile);
             if (importSchema && importSchema.definitions) {
                 refEntity = importSchema.definitions[cleanRef];
+                while (isRef(refEntity)) {
+                    cleanRef = refEntity.$ref.slice(refEntity.$ref.indexOf('#') + 1);
+                    refEntity = importSchema.definitions[cleanRef];
+                }
             }
         }
 
@@ -104,7 +108,7 @@ export class SchemaLinker {
             refEntity.genericParams!.forEach((param, index) => {
                 pMap.set(`#${refEntityType}!${param.name}`, this.link(entity.genericArguments![index], schema));
             });
-            if (isSchemaOfType('object', refEntity)) {
+            if (isSchemaOfType('object', refEntity) || isInterfaceSchema(refEntity)) {
                 return this.linkRefObject(refEntity, pMap, schema);
             }
             return this.link(refEntity, schema, pMap);
@@ -267,16 +271,16 @@ export class SchemaLinker {
             return res;
         }
         const properties: typeof refProperties = {};
-        for (const propName in refProperties) {
-            if (refProperties.hasOwnProperty(propName)) {
-                const property = refProperties[propName];
-                if (isRef(property)) {
-                    properties[propName] = paramsMap.get(property.$ref)!;
-                } else if (property.$allOf) {
-                    properties[propName] = this.handleIntersection(property.$allOf, schema, paramsMap);
-                } else if (isSchemaOfType('object', property)) {
-                    properties[propName] = this.linkRefObject(property, paramsMap, schema);
+        for (const [key, val] of Object.entries(refProperties)) {
+            if (isRef(val)) {
+                if (paramsMap.has(val.$ref)) {
+                    const p = paramsMap.get(val.$ref)!;
+                    properties[key] = isRef(p) ? this.handleRef(p, schema, paramsMap) : p;
                 }
+            } else if (val.$allOf) {
+                properties[key] = this.handleIntersection(val.$allOf, schema, paramsMap);
+            } else if (isObjectSchema(val) || isInterfaceSchema(val)) {
+                properties[key] = this.linkRefObject(val, paramsMap, schema);
             }
         }
         if (refEntity.definedAt) {

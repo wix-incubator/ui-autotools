@@ -1,0 +1,24 @@
+{
+  "name": "@ui-autotools/schema-views",
+  "version": "0.0.1",
+  "private": true,
+  "author": "Wix.com",
+  "license": "BSD-3-Clause",
+  "scripts": {
+    "clean": "rimraf ./cjs ./esm",
+    "build": "run-p build:cjs build:esm",
+    "build:cjs": "tsc -p src --outDir cjs --module commonjs",
+    "build:esm": "tsc -p src --outDir esm --module esnext",
+    "build:watch": "run-p build:cjs-watch build:esm-watch",
+    "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
+    "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext",
+    "lint": "run-p lint:src lint:test",
+    "lint:src": "tslint -p src",
+    "lint:test": "tslint -p test",
+    "test": "true"
+  },
+  "dependencies": {
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2"
+  }
+}

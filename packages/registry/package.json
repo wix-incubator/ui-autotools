@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/registry",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -29,11 +29,5 @@
   "license": "BSD-3-Clause",
   "publishConfig": {
     "access": "public"
-  },
-  "devDependencies": {
-    "@ui-autotools/utils": "^1.0.9"
-  },
-  "dependencies": {
-    "@ui-autotools/utils": "^1.0.9"
   }
 }

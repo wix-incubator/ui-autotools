@@ -49,7 +49,7 @@ async function main() {
     const baseHost = createBaseHost(fs, '/');
 
     const languageServiceHost = createLanguageServiceHost(
-        fs, baseHost, ['/src/index.tsx'], compilerOptions, '/node_modules/lib'
+        fs, baseHost, ['/src/index.tsx'], compilerOptions, '/node_modules/typescript/lib'
     );
 
     const languageService = ts.createLanguageService(languageServiceHost);

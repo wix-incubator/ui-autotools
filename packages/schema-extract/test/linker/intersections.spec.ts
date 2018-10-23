@@ -62,6 +62,36 @@ describe('schema-linker - intersections', () => {
         expect(res).to.eql(expected);
     });
 
+    it('should properly handle an intersection between a type and interface 2', async () => {
+        const fileName = 'index.ts';
+        const res = linkTest({[fileName]: `
+        export interface A {
+            something:string
+        }
+
+        export type B = {
+            someone: number
+        }
+        export type C = B & A;
+        `}, 'C', fileName);
+
+        const expected: Schema<'object'> = {
+            type: 'object',
+            properties: {
+                something: {
+                    definedAt: '#A',
+                    type: 'string'
+                },
+                someone: {
+                    definedAt: '#B',
+                    type: 'number'
+                }
+            },
+            required: ['someone', 'something']
+        };
+        expect(res).to.eql(expected);
+    });
+
     it('should flatten intersection types inside union', async () => {
         const fileName = 'index.ts';
         const res = linkTest({[fileName]: `

@@ -1,6 +1,6 @@
 import ts from 'typescript';
 import { transform, getSchemaFromImport } from './file-transformer';
-import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isFunctionSchema, FunctionSchema, isObjectSchema, NullSchemaId, FunctionSchemaId } from './json-schema-types';
+import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isFunctionSchema, FunctionSchema, isObjectSchema } from './json-schema-types';
 
 export class SchemaLinker {
     private checker: ts.TypeChecker;
@@ -66,28 +66,28 @@ export class SchemaLinker {
             return {refEntity: null, refEntityType: ref};
         }
         const poundIndex = ref.indexOf('#');
-        const cleanRef = ref.slice(poundIndex + 1).replace('typeof ', '');
+        let cleanRef = ref.slice(poundIndex + 1).replace('typeof ', '');
         if (!schema.definitions) {
             return {refEntity: null, refEntityType: cleanRef};
         }
         if (paramsMap && paramsMap.has(ref)) {
-            return {refEntity: paramsMap.get(ref)!, refEntityType: cleanRef};
+            const e = paramsMap.get(ref)!;
+            return isRef(e) ? this.getRefEntity(e.$ref, schema, paramsMap) : {refEntity: e, refEntityType: cleanRef};
         }
         let refEntity = schema.definitions[cleanRef] ? schema.definitions[cleanRef] : null;
         if (!refEntity) {
             const importSchema = getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1), this.checker, this.program, this.sourceFile);
             if (importSchema && importSchema.definitions) {
                 refEntity = importSchema.definitions[cleanRef];
+                while (isRef(refEntity)) {
+                    cleanRef = refEntity.$ref.slice(refEntity.$ref.indexOf('#') + 1);
+                    refEntity = importSchema.definitions[cleanRef];
+                }
             }
         }
 
         if (!refEntity) {
             return {refEntity: null, refEntityType: cleanRef};
-        }
-
-        // This code is not relevant at the moment
-        if (ref.slice(0, poundIndex) === 'react') {
-            return {refEntity: this.handleReact(refEntity, cleanRef), refEntityType: cleanRef};
         }
 
         if (isRef(refEntity)) {
@@ -108,7 +108,7 @@ export class SchemaLinker {
             refEntity.genericParams!.forEach((param, index) => {
                 pMap.set(`#${refEntityType}!${param.name}`, this.link(entity.genericArguments![index], schema));
             });
-            if (isSchemaOfType('object', refEntity)) {
+            if (isSchemaOfType('object', refEntity) || isInterfaceSchema(refEntity)) {
                 return this.linkRefObject(refEntity, pMap, schema);
             }
             return this.link(refEntity, schema, pMap);
@@ -133,7 +133,7 @@ export class SchemaLinker {
             if (res.type && option.type && res.type !== option.type) {
                 throw new Error('Cannot intersect two different type');
             }
-            if (isObjectSchema(option) && (isInterfaceSchema(res) || isObjectSchema(res))) {
+            if ((isObjectSchema(option) || isInterfaceSchema(option)) && (isInterfaceSchema(res) || isObjectSchema(res))) {
                 res = this.mergeObjects(res, option, schema, paramsMap);
             }
         }
@@ -248,7 +248,7 @@ export class SchemaLinker {
         const properties = entity[prop];
         const res: {[name: string]: Schema & {inheritedFrom?: string}} = {...properties};
         for (const p in refProperties) {
-            if (refProperties.hasOwnProperty(p) && !properties.hasOwnProperty(p)) {
+            if (!properties.hasOwnProperty(p)) {
                 const property = refProperties[p];
                 if (isRef(property)) {
                     const refType = property.$ref.startsWith(`#${extendedEntity}`) ? property.$ref : `#${extendedEntity}!${property.$ref.replace('#', '')}`;
@@ -271,16 +271,16 @@ export class SchemaLinker {
             return res;
         }
         const properties: typeof refProperties = {};
-        for (const propName in refProperties) {
-            if (refProperties.hasOwnProperty(propName)) {
-                const property = refProperties[propName];
-                if (isRef(property)) {
-                    properties[propName] = paramsMap.get(property.$ref)!;
-                } else if (property.$allOf) {
-                    properties[propName] = this.handleIntersection(property.$allOf, schema, paramsMap);
-                } else if (isSchemaOfType('object', property)) {
-                    properties[propName] = this.linkRefObject(property, paramsMap, schema);
+        for (const [key, val] of Object.entries(refProperties)) {
+            if (isRef(val)) {
+                if (paramsMap.has(val.$ref)) {
+                    const p = paramsMap.get(val.$ref)!;
+                    properties[key] = isRef(p) ? this.handleRef(p, schema, paramsMap) : p;
                 }
+            } else if (val.$allOf) {
+                properties[key] = this.handleIntersection(val.$allOf, schema, paramsMap);
+            } else if (isObjectSchema(val) || isInterfaceSchema(val)) {
+                properties[key] = this.linkRefObject(val, paramsMap, schema);
             }
         }
         if (refEntity.definedAt) {
@@ -330,44 +330,5 @@ export class SchemaLinker {
         }
         res.arguments = args;
         return res;
-    }
-
-    private handleReact(entity: Schema, ref: string): Schema {
-        const newEntity: any = Object.assign({}, entity);
-        if (ref === 'Component') {
-            newEntity.properties = {props: newEntity.properties.props, state: newEntity.properties.state};
-            const props = newEntity.properties.props;
-            if (props.$allOf) {
-                if (props.$allOf.length === 2) {
-                    newEntity.properties.props = props.$allOf[1];
-                } else {
-                    newEntity.properties.props.$allOf = props.$allOf.slice(1);
-                }
-            }
-            return newEntity;
-        }
-        if (ref === 'SFC') {
-            const res = {
-                $ref: FunctionSchemaId,
-                arguments: [{
-                    name: 'props',
-                    $ref: entity.genericArguments![0].$ref
-                }],
-                requiredArguments: ['props'],
-                returns: {
-                    $oneOf: [
-                        {
-                            $ref: 'react#ReactElement'
-                        },
-                        {
-                            $ref: NullSchemaId
-                        }
-                    ]
-                },
-                genericParams: entity.genericParams
-            };
-            return res;
-        }
-        return {$ref: 'react#' + ref};
     }
 }

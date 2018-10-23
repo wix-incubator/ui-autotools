@@ -23,8 +23,7 @@ export function* extractSchema(basePath: string, filesGlob: string) {
 
 export function createLinker(files: string[], projectPath: string): SchemaLinker {
   const program = typescript.createProgram(files, {});
-  const checker = program.getTypeChecker();
-  return new SchemaLinker(program, checker, projectPath);
+  return new SchemaLinker(program, projectPath);
 }
 
 export function* extractLinkedSchema(basePath: string, filesGlob: string) {
@@ -33,7 +32,7 @@ export function* extractLinkedSchema(basePath: string, filesGlob: string) {
   const checker = program.getTypeChecker();
   for (const file of files) {
     const linkedSchema: any = {};
-    const linker = new SchemaLinker(program, checker, path.join(basePath, file));
+    const linker = new SchemaLinker(program, path.join(basePath, file));
     const source = program.getSourceFile(file);
     const schema = transform(checker, source!, file, '');
     if (schema.definitions) {

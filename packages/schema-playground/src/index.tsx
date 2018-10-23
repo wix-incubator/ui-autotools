@@ -1,5 +1,3 @@
-// tslint:disable:no-console
-
 import ts from 'typescript';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -66,4 +64,5 @@ async function main() {
     ), container);
 }
 
+// tslint:disable-next-line:no-console
 main().catch(console.error);

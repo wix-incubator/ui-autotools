@@ -16,8 +16,7 @@ export function linkTest(sourceDir: DirectoryContent, entityName: string, fileNa
         },
     });
     const prg = ts.createProgram([testedFile], {}, createHost(memFs));
-    const chckr = prg.getTypeChecker();
-    const linker = new SchemaLinker(prg, chckr, projectPath);
+    const linker = new SchemaLinker(prg, projectPath);
 
     return linker.flatten(testedFile, entityName);
 }

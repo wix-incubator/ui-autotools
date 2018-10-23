@@ -7,9 +7,10 @@ export class SchemaLinker {
     private program: ts.Program;
     private projectPath: string;
     private sourceFile: ts.SourceFile | undefined;
+    private schema: ModuleSchema | undefined;
 
-    constructor(program: ts.Program, checker: ts.TypeChecker, projectPath: string) {
-        this.checker = checker;
+    constructor(program: ts.Program, projectPath: string) {
+        this.checker = program.getTypeChecker();
         this.program = program;
         this.projectPath = projectPath;
     }
@@ -19,62 +20,62 @@ export class SchemaLinker {
         if (!this.sourceFile) {
             return {$ref: UnknownId};
         }
-        const schema = transform(this.checker, this.sourceFile, file, this.projectPath);
+        this.schema = transform(this.checker, this.sourceFile, file, this.projectPath);
         let entity;
-        if (schema.definitions) {
-            entity = schema.definitions[entityName];
+        if (this.schema.definitions) {
+            entity = this.schema.definitions[entityName];
         }
-        if (!entity && schema.properties) {
-            entity = schema.properties[entityName];
+        if (!entity && this.schema.properties) {
+            entity = this.schema.properties[entityName];
         }
         if (!entity) {
             return {$ref: UnknownId};
         }
-        return this.link(entity, schema);
+        return this.link(entity);
     }
 
-    private link(entity: Schema, schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
+    private link(entity: Schema, paramsMap?: Map<string, Schema>): Schema {
         if (!entity) {
             return {$ref: UnknownId};
         }
         if (isClassSchema(entity)) {
-            return this.linkClass(schema, entity);
+            return this.linkClass(entity);
         }
         if (isInterfaceSchema(entity)) {
-            return this.linkInterface(entity, schema);
+            return this.linkInterface(entity);
         }
         if (isFunctionSchema(entity)) {
-            return this.linkFunction(entity, schema, paramsMap);
+            return this.linkFunction(entity, paramsMap);
         }
         if (isRef(entity) && (paramsMap || entity.genericArguments)) {
-            return this.handleRef(entity, schema, paramsMap);
+            return this.handleRef(entity, paramsMap);
         }
         if (entity.$allOf) {
-            return this.handleIntersection(entity.$allOf, schema, paramsMap);
+            return this.handleIntersection(entity.$allOf, paramsMap);
         }
         if (entity.$oneOf) {
-            return this.handleUnion(entity.$oneOf, schema);
+            return this.handleUnion(entity.$oneOf);
         }
         if (isSchemaOfType('object', entity)) {
-            return this.handleObject(entity, schema, paramsMap);
+            return this.handleObject(entity, paramsMap);
         }
         return entity;
     }
 
-    private getRefEntity(ref: string, schema: ModuleSchema, paramsMap?: Map<string, Schema>): {refEntity: Schema | null, refEntityType: string} {
+    private getRefEntity(ref: string, paramsMap?: Map<string, Schema>): {refEntity: Schema | null, refEntityType: string} {
         if (!ref) {
             return {refEntity: null, refEntityType: ref};
         }
         const poundIndex = ref.indexOf('#');
         let cleanRef = ref.slice(poundIndex + 1).replace('typeof ', '');
-        if (!schema.definitions) {
+        if (!this.schema || !this.schema.definitions) {
             return {refEntity: null, refEntityType: cleanRef};
         }
         if (paramsMap && paramsMap.has(ref)) {
             const e = paramsMap.get(ref)!;
-            return isRef(e) ? this.getRefEntity(e.$ref, schema, paramsMap) : {refEntity: e, refEntityType: cleanRef};
+            return isRef(e) ? this.getRefEntity(e.$ref, paramsMap) : {refEntity: e, refEntityType: cleanRef};
         }
-        let refEntity = schema.definitions[cleanRef] ? schema.definitions[cleanRef] : null;
+        let refEntity = this.schema.definitions[cleanRef] ? this.schema.definitions[cleanRef] : null;
         if (!refEntity) {
             const importSchema = getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1), this.checker, this.program, this.sourceFile);
             if (importSchema && importSchema.definitions) {
@@ -91,38 +92,38 @@ export class SchemaLinker {
         }
 
         if (isRef(refEntity)) {
-            return this.getRefEntity(refEntity.$ref, schema, paramsMap);
+            return this.getRefEntity(refEntity.$ref, paramsMap);
         }
         refEntity.definedAt = refEntity.definedAt || '#' + cleanRef;
 
         return {refEntity, refEntityType: cleanRef};
     }
 
-    private handleRef(entity: Schema & {$ref: string}, schema: ModuleSchema, paramsMap?: Map<string, Schema>) {
-        const {refEntity, refEntityType} = this.getRefEntity(entity.$ref, schema, paramsMap);
+    private handleRef(entity: Schema & {$ref: string}, paramsMap?: Map<string, Schema>) {
+        const {refEntity, refEntityType} = this.getRefEntity(entity.$ref, paramsMap);
         if (!refEntity) {
             return entity;
         }
         if (refEntity.genericParams && entity.genericArguments)  {
             const pMap = new Map();
             refEntity.genericParams!.forEach((param, index) => {
-                pMap.set(`#${refEntityType}!${param.name}`, this.link(entity.genericArguments![index], schema));
+                pMap.set(`#${refEntityType}!${param.name}`, this.link(entity.genericArguments![index]));
             });
             if (isSchemaOfType('object', refEntity) || isInterfaceSchema(refEntity)) {
-                return this.linkRefObject(refEntity, pMap, schema);
+                return this.linkRefObject(refEntity, pMap);
             }
-            return this.link(refEntity, schema, pMap);
+            return this.link(refEntity, pMap);
         }
         return refEntity;
     }
 
-    private handleIntersection(options: Schema[], schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
+    private handleIntersection(options: Schema[], paramsMap?: Map<string, Schema>): Schema {
         if (options.length === 0) {
             throw new Error('Cannot intersect an empty array');
         }
         let res: Schema = {};
         for (const o of options) {
-            const option = isRef(o) ? this.handleRef(o, schema, paramsMap) : o;
+            const option = isRef(o) ? this.handleRef(o, paramsMap) : o;
             if (isClassSchema(option) || isFunctionSchema(option)) {
                 throw new Error('Invalid intersection');
             }
@@ -134,13 +135,13 @@ export class SchemaLinker {
                 throw new Error('Cannot intersect two different type');
             }
             if ((isObjectSchema(option) || isInterfaceSchema(option)) && (isInterfaceSchema(res) || isObjectSchema(res))) {
-                res = this.mergeObjects(res, option, schema, paramsMap);
+                res = this.mergeObjects(res, option, paramsMap);
             }
         }
         return res;
     }
 
-    private mergeObjects(object1: Schema & IObjectFields, object2: Schema & IObjectFields, schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema & IObjectFields {
+    private mergeObjects(object1: Schema & IObjectFields, object2: Schema & IObjectFields, paramsMap?: Map<string, Schema>): Schema & IObjectFields {
         if (!object1.properties || !object2.properties) {
             return object1;
         }
@@ -158,23 +159,23 @@ export class SchemaLinker {
                     res.properties[key].definedAt = res.properties[key].definedAt ? res.properties[key].definedAt : object2.definedAt;
                 }
             } else {
-                res.properties[key] = this.handleIntersection([res.properties[key], val], schema, paramsMap);
+                res.properties[key] = this.handleIntersection([res.properties[key], val], paramsMap);
             }
         }
         res.required = Array.from(new Set([...object1.required || [], ...object2.required || []]));
         return res;
     }
 
-    private handleUnion(types: Schema[], schema: ModuleSchema) {
+    private handleUnion(types: Schema[]) {
         const res: Schema = {$oneOf: []};
         for (const type of types) {
-            res.$oneOf!.push(this.link(type, schema));
+            res.$oneOf!.push(this.link(type));
         }
         return res;
     }
 
-    private linkInterface(entity: InterfaceSchema, schema: ModuleSchema): InterfaceSchema {
-        if (!schema.definitions) {
+    private linkInterface(entity: InterfaceSchema): InterfaceSchema {
+        if (!this.schema || !this.schema.definitions) {
             return entity;
         }
         const res: InterfaceSchema = {$ref: interfaceId, properties: {...entity.properties}};
@@ -182,11 +183,11 @@ export class SchemaLinker {
             res.required = [...entity.required];
         }
         if (entity.extends) {
-            const {refEntity, refEntityType} = this.getRefEntity(entity.extends.$ref!, schema);
+            const {refEntity, refEntityType} = this.getRefEntity(entity.extends.$ref!);
             if (!refEntity) {
                 return entity;
             }
-            const refInterface = this.linkInterface(refEntity as InterfaceSchema, schema);
+            const refInterface = this.linkInterface(refEntity as InterfaceSchema);
             const pMap: Map<string, Schema> = new Map();
             if (refEntity.genericParams) {
                 refEntity.genericParams.forEach((param, index) => {
@@ -209,11 +210,11 @@ export class SchemaLinker {
         return res;
     }
 
-    private linkClass(schema: ModuleSchema, entity: ClassSchema): ClassSchema {
-        if (!schema.definitions || !entity.extends) {
+    private linkClass(entity: ClassSchema): ClassSchema {
+        if (!this.schema || !this.schema.definitions || !entity.extends) {
             return entity;
         }
-        const {refEntity, refEntityType} = this.getRefEntity(entity.extends.$ref!, schema);
+        const {refEntity, refEntityType} = this.getRefEntity(entity.extends.$ref!);
         if (!refEntity) {
             return entity;
         }
@@ -235,15 +236,15 @@ export class SchemaLinker {
         } else if (refEntity.hasOwnProperty('constructor')) {
             res.constructor = Object.assign({}, (refEntity as ClassSchema).constructor);
         }
-        res.properties = this.extractClassData(entity, (refEntity as ClassSchema), refEntityType, 'properties', schema, paramsMap, isGeneric);
-        res.staticProperties = this.extractClassData(entity, (refEntity as ClassSchema), refEntityType, 'staticProperties', schema, paramsMap, isGeneric);
+        res.properties = this.extractClassData(entity, (refEntity as ClassSchema), refEntityType, 'properties', paramsMap, isGeneric);
+        res.staticProperties = this.extractClassData(entity, (refEntity as ClassSchema), refEntityType, 'staticProperties', paramsMap, isGeneric);
         if (entity.genericParams) {
             res.genericParams = [...entity.genericParams];
         }
         return res;
     }
 
-    private extractClassData(entity: ClassSchema, refEntity: ClassSchema, extendedEntity: string, prop: 'properties' | 'staticProperties', schema: ModuleSchema, paramsMap: Map<string, Schema>, isGeneric: boolean): {[name: string]: Schema} {
+    private extractClassData(entity: ClassSchema, refEntity: ClassSchema, extendedEntity: string, prop: 'properties' | 'staticProperties', paramsMap: Map<string, Schema>, isGeneric: boolean): {[name: string]: Schema} {
         const refProperties = refEntity[prop];
         const properties = entity[prop];
         const res: {[name: string]: Schema & {inheritedFrom?: string}} = {...properties};
@@ -254,14 +255,14 @@ export class SchemaLinker {
                     const refType = property.$ref.startsWith(`#${extendedEntity}`) ? property.$ref : `#${extendedEntity}!${property.$ref.replace('#', '')}`;
                     res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, paramsMap.get(refType));
                 } else {
-                    res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, isGeneric ? this.link(property, schema, paramsMap) : property);
+                    res[p] = Object.assign({inheritedFrom: `#${extendedEntity}`}, isGeneric ? this.link(property, paramsMap) : property);
                 }
             }
         }
         return res;
     }
 
-    private linkRefObject(refEntity: Schema & IObjectFields, paramsMap: Map<string, Schema>, schema: ModuleSchema): Schema {
+    private linkRefObject(refEntity: Schema & IObjectFields, paramsMap: Map<string, Schema>): Schema {
         const res: typeof refEntity = {};
         if (refEntity.type) {
             res.type = refEntity.type;
@@ -275,12 +276,12 @@ export class SchemaLinker {
             if (isRef(val)) {
                 if (paramsMap.has(val.$ref)) {
                     const p = paramsMap.get(val.$ref)!;
-                    properties[key] = isRef(p) ? this.handleRef(p, schema, paramsMap) : p;
+                    properties[key] = isRef(p) ? this.handleRef(p, paramsMap) : p;
                 }
             } else if (val.$allOf) {
-                properties[key] = this.handleIntersection(val.$allOf, schema, paramsMap);
+                properties[key] = this.handleIntersection(val.$allOf, paramsMap);
             } else if (isObjectSchema(val) || isInterfaceSchema(val)) {
-                properties[key] = this.linkRefObject(val, paramsMap, schema);
+                properties[key] = this.linkRefObject(val, paramsMap);
             }
         }
         if (refEntity.definedAt) {
@@ -293,7 +294,7 @@ export class SchemaLinker {
         return res;
     }
 
-    private handleObject(entity: Schema & IObjectFields, schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
+    private handleObject(entity: Schema & IObjectFields, paramsMap?: Map<string, Schema>): Schema {
         const res: typeof entity = {};
         if (!entity.properties) {
             return entity;
@@ -301,7 +302,7 @@ export class SchemaLinker {
         res.properties = {};
         for (const p in entity.properties) {
             if (entity.properties.hasOwnProperty(p)) {
-                res.properties[p] = paramsMap ? this.link(entity.properties[p], schema, paramsMap) : entity.properties[p];
+                res.properties[p] = paramsMap ? this.link(entity.properties[p], paramsMap) : entity.properties[p];
             }
         }
         if (entity.required) {
@@ -310,7 +311,7 @@ export class SchemaLinker {
         return res;
     }
 
-    private linkFunction(entity: FunctionSchema, schema: ModuleSchema, paramsMap?: Map<string, Schema>): Schema {
+    private linkFunction(entity: FunctionSchema, paramsMap?: Map<string, Schema>): Schema {
         const res = {...entity};
         const args = [];
         for (const arg of entity.arguments) {

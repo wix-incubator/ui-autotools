@@ -4,30 +4,7 @@ import ReactDOM from 'react-dom';
 import { createMemoryFs } from '@file-services/memory';
 import { createBaseHost, createLanguageServiceHost } from '@file-services/typescript';
 import { Playground } from './playground';
-
-const compilerOptions: ts.CompilerOptions = {
-    target: ts.ScriptTarget.ES2017,
-    lib: [
-        'lib.es2017.d.ts',
-        'lib.dom.d.ts',
-    ],
-    jsx: ts.JsxEmit.React,
-    esModuleInterop: true
-};
-
-const sampleFilePath = '/index.tsx';
-const sampleFile = `
-import React from 'react'
-
-export interface IProps {
-}
-
-export class Comp extends React.Component<IProps> {
-    render() {
-        return <div />
-    }
-}
-`.trimLeft();
+import { sampleFilePath, sampleFile, compilerOptions } from './constants';
 
 async function main() {
     const fs = createMemoryFs();
@@ -38,19 +15,23 @@ async function main() {
         import('./recipes/react' /* webpackChunkName: 'react-recipe' */)
     ]);
 
+    // populate bundles into fs
     fs.populateDirectorySync('/', typescriptRecipe);
     fs.populateDirectorySync('/', reactRecipe);
 
+    // add initial sample file
     fs.writeFileSync(sampleFilePath, sampleFile);
 
+    // initialize hosts
     const baseHost = createBaseHost(fs, '/');
-
     const languageServiceHost = createLanguageServiceHost(
         fs, baseHost, [sampleFilePath], compilerOptions, '/node_modules/typescript/lib'
     );
 
+    // initialize language service
     const languageService = ts.createLanguageService(languageServiceHost);
 
+    // initialize UI
     const container = document.createElement('div');
     document.body.appendChild(container);
     ReactDOM.render((

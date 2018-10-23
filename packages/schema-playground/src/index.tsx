@@ -15,6 +15,7 @@ const compilerOptions: ts.CompilerOptions = {
     esModuleInterop: true
 };
 
+const sampleFilePath = '/index.tsx';
 const sampleFile = `
 import React from 'react'
 
@@ -31,23 +32,21 @@ export class Comp extends React.Component<IProps> {
 async function main() {
     const fs = createMemoryFs();
 
-    const { typescriptRecipe } =
-        await import('./recipes/typescript' /* webpackChunkName: 'typescript-recipe' */);
+    // load .d.ts bundles of TypeScript and React
+    const [ typescriptBundle, reactBundle ] = await Promise.all([
+        import('./recipes/typescript' /* webpackChunkName: 'typescript-recipe' */),
+        import('./recipes/react' /* webpackChunkName: 'react-recipe' */)
+    ]);
 
-    const { reactRecipe } =
-        await import('./recipes/react' /* webpackChunkName: 'react-recipe' */);
+    fs.populateDirectorySync('/', typescriptBundle.typescriptRecipe);
+    fs.populateDirectorySync('/', reactBundle.reactRecipe);
 
-    fs.populateDirectorySync('/', typescriptRecipe);
-    fs.populateDirectorySync('/', reactRecipe);
-
-    const sourceFilePath = '/src/index.tsx';
-    fs.mkdir('/src');
-    fs.writeFileSync(sourceFilePath, sampleFile);
+    fs.writeFileSync(sampleFilePath, sampleFile);
 
     const baseHost = createBaseHost(fs, '/');
 
     const languageServiceHost = createLanguageServiceHost(
-        fs, baseHost, ['/src/index.tsx'], compilerOptions, '/node_modules/typescript/lib'
+        fs, baseHost, [sampleFilePath], compilerOptions, '/node_modules/typescript/lib'
     );
 
     const languageService = ts.createLanguageService(languageServiceHost);
@@ -59,7 +58,7 @@ async function main() {
             baseHost={baseHost}
             fs={fs}
             languageService={languageService}
-            filePath={sourceFilePath}
+            filePath={sampleFilePath}
         />
     ), container);
 }

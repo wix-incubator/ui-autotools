@@ -7,7 +7,9 @@ cjs
 .history
 .DS_Store
 package-lock.json
-
+.bit
+.bitmap
+bit.json
 
 # https://github.com/github/gitignore/blob/master/Node.gitignore
 

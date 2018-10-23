@@ -23,7 +23,7 @@ export class Playground extends React.PureComponent<IPlaygroundProps, IPlaygroun
     };
 
     public componentDidMount() {
-        this.tranpileFile();
+        this.transpileFile();
     }
 
     public render() {
@@ -50,14 +50,14 @@ export class Playground extends React.PureComponent<IPlaygroundProps, IPlaygroun
         );
     }
 
-    private tranpileFile() {
+    private transpileFile() {
         this.setState({ transpiledOutput: this.getTranspiledCode() });
     }
 
     private onInputChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
         this.props.fs.writeFileSync(this.props.filePath, e.target.value);
         this.forceUpdate();
-        requestAnimationFrame(() => this.tranpileFile());
+        requestAnimationFrame(() => this.transpileFile());
     }
 
     private getTranspiledCode(): string {

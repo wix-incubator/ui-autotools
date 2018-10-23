@@ -1,0 +1,22 @@
+{
+  "name": "@ui-autotools/schema-playground",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "prebuild": "yarn clean",
+    "build": "webpack --progress --mode production --devtool false",
+    "start": "webpack-dev-server --progress --open",
+    "start:server": "node server.js"
+  },
+  "dependencies": {
+    "@file-services/memory": "^0.2.3",
+    "@file-services/typescript": "^0.2.4",
+    "@ui-autotools/schema-extract": "^1.0.11",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "sanitize.css": "^8.0.0",
+    "tslib": "^1.9.3"
+  }
+}

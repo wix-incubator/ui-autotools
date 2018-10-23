@@ -23,7 +23,7 @@ function findComponentByName(name: string, Registry: IRegistry): IComponentMetad
   }
 }
 
-function render(fileName: string, Registry: IRegistry, compiledFile: any, sourceFile: any) {
+export function render(fileName: string, Registry: IRegistry, compiledFile: any, sourceFile: any) {
   const compMetadata = findComponentByName(compiledFile.default.name, Registry);
 
   if (!compMetadata) {
@@ -58,7 +58,7 @@ function render(fileName: string, Registry: IRegistry, compiledFile: any, source
  * build the auto-generated files in the .autotools/tmp folder. By default, the HTMLSnapshotPlugin will only
  * build files that have the same name as the associated stylesheet, hence the custom logic.
  */
-function filterLogicModule(stylableModule: any) {
+export function filterLogicModule(stylableModule: any) {
   const views = stylableModule.reasons
     .filter(({ module: _module }: {module: any}) => {
         const isProperModule = _module &&

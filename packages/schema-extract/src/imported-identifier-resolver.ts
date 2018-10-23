@@ -18,9 +18,10 @@ export function resolveImportedIdentifier(node: ts.Node, modulePath: string, pos
         const target = node.parent!.moduleSpecifier.getText().slice(1, -1);
         return resolveImportPath(target,  '#' + node.getText(), modulePath, posix);
     }
+    return null;
 }
 
-function resolveImportPath(relativeUrl: string, importInternal: string, modulePath: string, posix: typeof path.posix) {
+export function resolveImportPath(relativeUrl: string, importInternal: string, modulePath: string, posix: typeof path.posix) {
     if (relativeUrl.startsWith('.') || relativeUrl.startsWith('/')) {
         const currentDir = posix.dirname(modulePath);
         const resolvedPath = posix.join(currentDir, relativeUrl);

@@ -2,6 +2,7 @@ import ts from 'typescript';
 import {ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchemaId, ClassSchemaId, interfaceId, InterfaceSchema } from './json-schema-types';
 import path from 'path';
 import { generateDataLiteral, isFailedInference } from './data-literal-transformer';
+import { resolveImportedIdentifier, resolveImportPath } from './imported-identifier-resolver';
 // console.log(types)
 const posix: typeof path.posix = path.posix ? path.posix : path;
 
@@ -111,7 +112,7 @@ const exportSpecifierDescriber: TsNodeDescriber<ts.ExportSpecifier> = (decl, che
     if (ts.isExportDeclaration(exportClause) && exportClause.moduleSpecifier) {
         return {
             schema: {
-                $ref: resolveImportPath(exportClause.moduleSpecifier!.getText().slice(1, -1), '#typeof ' + symb!.name, env),
+                $ref: resolveImportPath(exportClause.moduleSpecifier!.getText().slice(1, -1), '#typeof ' + symb!.name, env.modulePath, posix),
             }
         };
     }
@@ -496,44 +497,31 @@ const describeIdentifier: TsNodeDescriber<ts.Identifier> = (decl, checker, env, 
     }
     const referencedSymb = checker.getSymbolAtLocation(decl)!;
     const referencedSymbDecl = getNode(referencedSymb);
-    let importPath: string = '';
-    let importInternal: string = '';
+    let ref: string = '';
     if (referencedSymbDecl) {
-        if (ts.isVariableDeclaration(referencedSymbDecl)) {
-            return describeVariableDeclaration(referencedSymbDecl, checker, env, tSet);
-        } else if (ts.isNamespaceImport(referencedSymbDecl)) {
-            const target = referencedSymbDecl.parent!.parent!.moduleSpecifier.getText().slice(1, -1);
-            importPath = target;
-            importInternal = '';
-        } else if (ts.isImportSpecifier(referencedSymbDecl)) {
-            const target = referencedSymbDecl.parent!.parent!.parent!.moduleSpecifier.getText().slice(1, -1);
-            importPath = target;
-            importInternal = '#' + referencedSymbDecl.getText();
-        } else if (ts.isImportClause(referencedSymbDecl)) {
-            const target = referencedSymbDecl.parent!.moduleSpecifier.getText().slice(1, -1);
-            importPath = target;
-        } else if (ts.isTypeParameterDeclaration(referencedSymbDecl)) {
-            if (ts.isFunctionTypeNode(referencedSymbDecl.parent!)) {
-                importInternal = '#' + ts.getNameOfDeclaration(referencedSymbDecl.parent!.parent as any)!.getText() + '!' + referencedSymb.name;
-            } else {
-                importInternal = '#' + ts.getNameOfDeclaration(referencedSymbDecl.parent as any)!.getText() + '!' + referencedSymb.name;
-            }
-        } else {
-            importInternal = '#' + referencedSymb.name;
-        }
-
-        if (importPath) {
+        const importedRef = resolveImportedIdentifier(referencedSymbDecl, env.modulePath, posix);
+        if (importedRef) {
             return {
                 schema: {
-
-                    $ref: resolveImportPath(importPath, importInternal, env),
+                    $ref: importedRef
                 }
             };
-
         }
+        if (ts.isVariableDeclaration(referencedSymbDecl)) {
+            return describeVariableDeclaration(referencedSymbDecl, checker, env, tSet);
+        } else if (ts.isTypeParameterDeclaration(referencedSymbDecl)) {
+            if (ts.isFunctionTypeNode(referencedSymbDecl.parent!)) {
+                ref = '#' + ts.getNameOfDeclaration(referencedSymbDecl.parent!.parent as any)!.getText() + '!' + referencedSymb.name;
+            } else {
+                ref = '#' + ts.getNameOfDeclaration(referencedSymbDecl.parent as any)!.getText() + '!' + referencedSymb.name;
+            }
+        } else {
+            ref = '#' + referencedSymb.name;
+        }
+
         return {
             schema: {
-                $ref: importInternal,
+                $ref: ref,
 
             }
         };
@@ -548,17 +536,6 @@ const describeIdentifier: TsNodeDescriber<ts.Identifier> = (decl, checker, env, 
     }
 
 };
-
-function resolveImportPath(relativeUrl: string, importInternal: string, env: IEnv) {
-    if (relativeUrl.startsWith('.') || relativeUrl.startsWith('/')) {
-        const currentDir = posix.dirname(env.modulePath);
-        const resolvedPath = posix.join(currentDir, relativeUrl);
-
-        return resolvedPath + importInternal;
-    }
-
-    return relativeUrl + importInternal;
-}
 
 const describeTypeLiteral: TsNodeDescriber<ts.TypeLiteralNode | ts.InterfaceDeclaration> = (decl, checker, env, tSet) => {
     const res: Schema<'object'>  = {};

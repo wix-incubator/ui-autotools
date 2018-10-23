@@ -33,13 +33,13 @@ async function main() {
     const fs = createMemoryFs();
 
     // load .d.ts bundles of TypeScript and React
-    const [ typescriptBundle, reactBundle ] = await Promise.all([
+    const [{ typescriptRecipe }, { reactRecipe }] = await Promise.all([
         import('./recipes/typescript' /* webpackChunkName: 'typescript-recipe' */),
         import('./recipes/react' /* webpackChunkName: 'react-recipe' */)
     ]);
 
-    fs.populateDirectorySync('/', typescriptBundle.typescriptRecipe);
-    fs.populateDirectorySync('/', reactBundle.reactRecipe);
+    fs.populateDirectorySync('/', typescriptRecipe);
+    fs.populateDirectorySync('/', reactRecipe);
 
     fs.writeFileSync(sampleFilePath, sampleFile);
 

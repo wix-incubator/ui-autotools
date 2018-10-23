@@ -13,7 +13,8 @@
     "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
     "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext",
     "lint": "tslint -p src",
-    "test": "mocha -r @ts-tools/node \"./test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
+    "test": "mocha -r @ts-tools/node \"./test/**/*.spec.ts?(x)\"",
+    "test:watch": "mocha -r @ts-tools/node \"./test/**/*.spec.ts?(x)\" --watch --watch-extensions ts,tsx"
   },
   "files": [
     "cjs",

@@ -1,20 +1,25 @@
 {
   "name": "@ui-autotools/schema-views",
   "version": "0.0.2",
-  "private": true,
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "types": "esm/index.d.ts",
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "scripts": {
     "clean": "rimraf ./cjs ./esm",
-    "build": "run-p build:cjs build:esm",
+    "build": "run-s build:cjs build:esm build:stylable",
     "build:cjs": "tsc -p src --outDir cjs --module commonjs",
     "build:esm": "tsc -p src --outDir esm --module esnext",
     "build:watch": "run-p build:cjs-watch build:esm-watch",
     "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
     "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext",
+    "build:stylable": "stc --srcDir src --outDir esm",
     "lint": "tslint -p src"
   },
   "dependencies": {
+    "@stylable/core": "^0.1.11",
+    "@stylable/webpack-plugin": "^0.1.13",
     "react": "^16.5.2",
     "react-dom": "^16.5.2"
   }

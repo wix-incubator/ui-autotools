@@ -33,6 +33,7 @@ async function main() {
 
     // initialize UI
     const container = document.createElement('div');
+    container.className = 'react-root';
     document.body.appendChild(container);
     ReactDOM.render((
         <Playground

@@ -16,4 +16,4 @@ registry.registerView(views.UndefinedTypeView, predicates.isUndefined);
 registry.registerView(views.NullTypeView, predicates.isNull);
 registry.registerView(views.AnyTypeView, predicates.isAny);
 
-export default registry;
+export const defaultSchemaViewRegistry = registry;

@@ -1,27 +1,22 @@
 import ts from 'typescript';
 
-export const inferenceFailed = Symbol('literal expression parsing faild');
-export interface IFailedInference {
-    type: typeof inferenceFailed;
-    expression: string;
+export interface IInferenceResult {
+    isLiteral: boolean;
+    value: any;
 }
 
-function failed(expression: string): IFailedInference {
+function literal(value: any) {
     return {
-        type: inferenceFailed,
-        expression
+        isLiteral: true,
+        value
     };
 }
 
-export function isFailedInference(val: any): val is IFailedInference {
-    return val && val.type === inferenceFailed;
-}
-
-export function generateDataLiteral(checker: ts.TypeChecker, node: ts.Node): IFailedInference | any {
+export function generateDataLiteral(checker: ts.TypeChecker, node: ts.Node): IInferenceResult {
     if (ts.isStringLiteral(node)) {
-        return node.text;
+        return literal(node.text);
     } else if (ts.isNumericLiteral(node)) {
-        return parseFloat(node.text);
+        return literal(parseFloat(node.text));
     } else if (node.getText() === 'true' || node.getText() === 'false') {
         return node.getText() === 'true';
     } else if (ts.isObjectLiteralExpression(node)) {

@@ -6,3 +6,5 @@ export * from './get-project-name';
 export * from './http';
 export * from './raw-asset-webpack-plugin';
 export {registerRequireHooks} from './require-hooks/require-hooks';
+export {compilerOptions} from './typescript/constants';
+export {createTsService} from './typescript/createMemoryTsService';

@@ -1,22 +1,18 @@
-import ts from 'typescript';
-import { MemoryFileSystem, DirectoryContent } from 'kissfs';
-import { createHost } from '../src/isomorphc-typescript-host';
 import {  Schema } from '../src/json-schema-types';
 import { SchemaLinker } from '../src/file-linker';
-
-export function linkTest(sourceDir: DirectoryContent, entityName: string, fileName: string): Schema {
-    const memFs = new MemoryFileSystem();
+import {createTsProgram } from '../src/typescript/createMemoryTsProgram';
+import { IDirectoryContents} from '@file-services/types';
+export async function linkTest(sourceDir: IDirectoryContents, entityName: string, fileName: string): Promise<Schema> {
     const projectName = 'someProject';
     const projectPath = `/${projectName}`;
     const testedPath = projectPath + '/src/';
     const testedFile = testedPath + fileName;
-    MemoryFileSystem.addContent(memFs, {
+    const {program} = await createTsProgram({
         [projectName]: {
             src: sourceDir,
         },
-    });
-    const prg = ts.createProgram([testedFile], {}, createHost(memFs));
-    const linker = new SchemaLinker(prg, projectPath);
+    }, [testedFile]);
+    const linker = new SchemaLinker(program, projectPath);
 
     return linker.flatten(testedFile, entityName);
 }

@@ -5,7 +5,7 @@ import {transformTest} from '../test-kit/run-transform';
 describe('schema-extract - classes', () => {
     it('should support classes', async () => {
         const moduleId = 'classes';
-        const res = transformTest(`
+        const res = await transformTest(`
         import { AClass} from './test-assets'
 
         export class MyClass extends AClass{

@@ -5,7 +5,7 @@ import {transformTest} from '../test-kit/run-transform';
 describe('schema-extract - interfaces', () => {
     it('should support typed interfaces', async () => {
         const moduleId = 'arrays';
-        const res = transformTest(`
+        const res = await transformTest(`
         import { AType } from './test-assets';
 
         export interface MyInterface{
@@ -54,7 +54,7 @@ describe('schema-extract - interfaces', () => {
     });
     it('should support recursive interfaces', async () => {
         const moduleId = 'arrays';
-        const res = transformTest(`
+        const res = await transformTest(`
         import { AType } from './test-assets';
 
         export interface MyInterface{

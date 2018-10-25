@@ -1,11 +1,8 @@
-import ts from 'typescript';
 import { transform } from '../src/file-transformer';
-import { MemoryFileSystem } from 'kissfs';
-import { createHost } from '../src/isomorphc-typescript-host';
 import { ModuleSchema } from '../src/json-schema-types';
+import {createTsProgram } from '../src/typescript/createMemoryTsProgram';
 
-export function transformTest(source: string, moduleId: string): ModuleSchema<any> {
-    const memFs = new MemoryFileSystem();
+export async function transformTest(source: string, moduleId: string): Promise<ModuleSchema<any>> {
     const projectName = 'someProject';
     const testedPath = '/' + projectName + '/src/tested-module';
     const testedFile = testedPath + '.ts';
@@ -17,7 +14,7 @@ export function transformTest(source: string, moduleId: string): ModuleSchema<an
     export class AGenericClass<T,Q>{
 
     }`;
-    MemoryFileSystem.addContent(memFs, {
+    const {program} = await createTsProgram({
         [projectName]: {
             src: {
                 'tested-module.ts': source,
@@ -25,8 +22,7 @@ export function transformTest(source: string, moduleId: string): ModuleSchema<an
             },
         },
 
-    });
-    const prg = ts.createProgram([testedFile, projectName + '/src/test-assets.ts'], {}, createHost(memFs));
-    const chckr = prg.getTypeChecker();
-    return transform(chckr, prg.getSourceFile(testedFile)!, '/src/' + moduleId, '/' + projectName);
+    }, [testedFile, projectName + '/src/test-assets.ts']);
+    const chckr = program.getTypeChecker();
+    return transform(chckr, program.getSourceFile(testedFile)!, '/src/' + moduleId, '/' + projectName);
 }

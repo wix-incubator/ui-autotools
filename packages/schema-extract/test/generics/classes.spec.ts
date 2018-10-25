@@ -5,7 +5,7 @@ import {transformTest} from '../../test-kit/run-transform';
 describe('schema-extract - generic classes', () => {
     it('should support generic classes', async () => {
         const moduleId = 'classes';
-        const res = transformTest(`
+        const res = await transformTest(`
         import { AGenericClass} from './test-assets'
 
         export class MyClass<P, T> extends AGenericClass<P>{
@@ -85,7 +85,7 @@ describe('schema-extract - generic classes', () => {
     // Need a better description
     xit('should support classes with generic handlers', async () => {
         const moduleId = 'classes';
-        const res = transformTest(`
+        const res = await transformTest(`
         import { Event} from './test-assets'
 
         export class MyClass{

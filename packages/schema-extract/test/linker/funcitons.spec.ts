@@ -5,7 +5,7 @@ import {linkTest} from '../../test-kit/run-linker';
 describe('schema-linker - functions', () => {
     it('should flatten function definitions', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
+        const res = await linkTest({[fileName]: `
         export type MyType = {
             name: string;
         }
@@ -32,7 +32,7 @@ describe('schema-linker - functions', () => {
 
     it('should flatten generic function definitions', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
+        const res = await linkTest({[fileName]: `
         export function MyGenericFunc<T>(o: T) {
             return o;
         };
@@ -57,7 +57,7 @@ describe('schema-linker - functions', () => {
 
     it('should flatten generic function definitions 2', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
+        const res = await linkTest({[fileName]: `
         export type Func<T> = (x: T) => T;
         export const MyFunc: Func<number> = (x) => {
             return x;

@@ -5,7 +5,7 @@ import {transformTest} from '../test-kit/run-transform';
 describe('schema-extract - parentheses types', () => {
     it('should support intersection types', async () => {
         const moduleId = 'intersection';
-        const res = transformTest(`
+        const res = await transformTest(`
         export type A = {
             a:string;
             b:string;
@@ -75,7 +75,7 @@ describe('schema-extract - parentheses types', () => {
 
     it('should support union types', async () => {
         const moduleId = 'unions';
-        const res = transformTest(`
+        const res = await transformTest(`
         import {AType} from './test-assets'
 
         export let declared_union : (string | number);
@@ -181,7 +181,7 @@ describe('schema-extract - parentheses types', () => {
 
     it('should flatten intersection types inside union', async () => {
         const moduleId = 'union-intersect';
-        const res = transformTest(`
+        const res = await transformTest(`
         export type A = number | ( {id: string} & {name: string} );
         `, moduleId);
 

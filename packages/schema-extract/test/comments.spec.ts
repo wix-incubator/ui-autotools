@@ -5,7 +5,7 @@ import {transformTest} from '../test-kit/run-transform';
 describe('schema-extract - comments', () => {
     it('should support comments before vars', async () => {
         const moduleId = 'comments';
-        const res = transformTest(`
+        const res = await transformTest(`
         /**
          * param documentation
          * @minLength 5
@@ -31,7 +31,7 @@ describe('schema-extract - comments', () => {
     });
     it('should support comments before types and type members', async () => {
         const moduleId = 'comments';
-        const res = transformTest(`
+        const res = await transformTest(`
         /**
          * type documentation
          * @zagzag 5
@@ -72,7 +72,7 @@ describe('schema-extract - comments', () => {
     });
     it('should support comments before functions', async () => {
         const moduleId = 'comments';
-        const res = transformTest(`
+        const res = await transformTest(`
         /**
          * function documentation
          * @param a my parameter documentation
@@ -113,7 +113,7 @@ describe('schema-extract - comments', () => {
 
     it('should support comments in classes', async () => {
         const moduleId = 'comments';
-        const res = transformTest(`
+        const res = await transformTest(`
         /**
          * Documentation for C
          */
@@ -168,7 +168,7 @@ describe('schema-extract - comments', () => {
 
     it('should support comments on class members', async () => {
         const moduleId = 'comments';
-        const res = transformTest(`
+        const res = await transformTest(`
             export class C {
                 /**
                  * member documentation

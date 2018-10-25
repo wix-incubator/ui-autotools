@@ -5,7 +5,7 @@ import {transformTest} from '../test-kit/run-transform';
 describe('schema-extract - type declarations', () => {
     it('should support type definition', async () => {
         const moduleId = 'type-definition';
-        const res = transformTest(`
+        const res = await transformTest(`
         import { AType } from './test-assets';
 
         export type MyType = {
@@ -43,7 +43,7 @@ describe('schema-extract - type declarations', () => {
     });
     it('should support type alias', async () => {
         const moduleId = 'type-alias';
-        const res = transformTest(`
+        const res = await transformTest(`
         export type alias = string;
         export let param:alias;
         `, moduleId);
@@ -68,7 +68,7 @@ describe('schema-extract - type declarations', () => {
 
     it('should support recursive types', async () => {
         const moduleId = 'type-recurse';
-        const res = transformTest(`
+        const res = await transformTest(`
         export type recurse = {
             prop:recurse;
         };
@@ -101,7 +101,7 @@ describe('schema-extract - type declarations', () => {
 
     it('should support types with specific index signature ( mapped-types )', async () => {
         const moduleId = 'index-signatures';
-        const res = transformTest(`
+        const res = await transformTest(`
         import { AType } from './test-assets';
 
         export type mappedType = {[key in 'a' | 'b']:string};

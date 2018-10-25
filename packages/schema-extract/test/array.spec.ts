@@ -5,7 +5,7 @@ import {transformTest} from '../test-kit/run-transform';
 describe('schema-extract - arrays', () => {
     it('should support types arrays', async () => {
         const moduleId = 'arrays';
-        const res = transformTest(`
+        const res = await transformTest(`
         import { AType } from './test-assets';
 
         export let declared_array:string[];

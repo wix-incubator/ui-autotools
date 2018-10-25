@@ -5,7 +5,7 @@ import {linkTest} from '../../test-kit/run-linker';
 describe('schema-linker - classes', () => {
     it('should flatten inheritance', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
+        const res = await linkTest({[fileName]: `
         export class A{
             /** static property desc A*/
             static a:string;
@@ -98,7 +98,7 @@ describe('schema-linker - classes', () => {
 
     it('should flatten inheritance with no constructor', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
+        const res = await linkTest({[fileName]: `
         export class A{
             constructor(public id:string){
                 super();
@@ -136,7 +136,7 @@ describe('schema-linker - classes', () => {
 
     it('should flatten inheritance with generics', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
+        const res = await linkTest({[fileName]: `
         export class A<T, W>{
             static a: T;
             b: W

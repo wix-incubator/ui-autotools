@@ -2,9 +2,10 @@ import path from 'path';
 import glob from 'glob';
 import typescript from 'typescript';
 import {LocalFileSystem} from 'kissfs';
-import {transform} from './file-transformer';
+import {transform, getSchemaFromImport} from './file-transformer';
 import {createHost} from './isomorphc-typescript-host';
-import {SchemaLinker} from './file-linker';
+import {SchemaLinker, IExtractor} from './file-linker';
+import { ModuleSchema } from './json-schema-types';
 
 export function* extractSchema(basePath: string, filesGlob: string) {
   const files = glob.sync(filesGlob, {cwd: basePath});
@@ -21,40 +22,26 @@ export function* extractSchema(basePath: string, filesGlob: string) {
   }
 }
 
-export function createLinker(files: string[], projectPath: string): SchemaLinker {
+export function createLinker(files: string[]) {
   const program = typescript.createProgram(files, {});
-  return new SchemaLinker(program, projectPath);
-}
-
-export function* extractLinkedSchema(basePath: string, filesGlob: string) {
-  const files = glob.sync(filesGlob, {cwd: basePath});
-  const program = typescript.createProgram(files, {});
-  const checker = program.getTypeChecker();
-  for (const file of files) {
-    const linkedSchema: any = {};
-    const linker = new SchemaLinker(program, path.join(basePath, file));
-    const source = program.getSourceFile(file);
-    const schema = transform(checker, source!, file, '');
-    if (schema.definitions) {
-      linkedSchema.properties = schema.properties;
-      linkedSchema.definitions = schema.definitions;
-      for (const definition in schema.definitions ) {
-        if (schema.definitions.hasOwnProperty(definition)) {
-          linkedSchema.definitions[definition] = linker.flatten(file, definition);
-        }
-      }
-      if (schema.properties) {
-        for (const property in schema.properties ) {
-          if (schema.properties.hasOwnProperty(property)) {
-            linkedSchema.properties[property] = linker.flatten(file, property);
-          }
-        }
-      }
-    }
-    yield {
-      file: path.join(basePath, file),
-      schema,
-      linkedSchema
+  function getSchema(file: string): ModuleSchema {
+    const sourceFile = program.getSourceFile(file);
+    if (!sourceFile) {
+      return {
+        $schema: 'http://json-schema.org/draft-06/schema#',
+        $id: '',
+        $ref: 'common/module',
+        properties: {},
     };
+    }
+    return transform(program.getTypeChecker(), sourceFile, file, '');
   }
+  function getImport(importPath: string, ref: string, file: string): ModuleSchema | null {
+    return getSchemaFromImport(importPath, ref, program, program.getSourceFile(file));
+  }
+  const x: IExtractor = {
+    getSchema,
+    getSchemaFromImport: getImport
+  };
+  return new SchemaLinker(x);
 }

@@ -1,6 +1,8 @@
 import {expect} from 'chai';
 import {runDataLiteralExtract} from '../../test-kit/run-data-literal-exctrator';
 const testSerialize = (src: string) => runDataLiteralExtract(src, 'a', 'index.tsx');
+const literal = (value: any) => ({value, isLiteral: true});
+const anExpression = (value: any) => ({value, isLiteral: false});
 describe ('generate data literals', () => {
 
     describe('Primitives', () => {
@@ -8,19 +10,19 @@ describe ('generate data literals', () => {
             const res = await testSerialize(`
                 export const a = 'gaga';
             `);
-            expect(res).to.equal('gaga');
+            expect(res).to.eql(literal('gaga'));
         });
         it('should serialize a number', async () => {
             const res = await testSerialize(`
                 export const a = 5;
             `);
-            expect(res).to.equal( 5);
+            expect(res).to.eql( literal(5));
         });
         it('should serialize a boolean', async () => {
             const res = await testSerialize(`
                 export const a = true;
             `);
-            expect(res).to.equal( true);
+            expect(res).to.eql( literal(true));
         });
 
     });
@@ -30,7 +32,7 @@ describe ('generate data literals', () => {
             const res = await testSerialize(`
                 export const a = {};
             `);
-            expect(res).to.eql( {});
+            expect(res).to.eql(literal({}));
         });
 
         it('should serialize an object with properties', async () => {
@@ -39,9 +41,9 @@ describe ('generate data literals', () => {
                     b:5
                 };
             `);
-            expect(res).to.eql( {
+            expect(res).to.eql( literal({
                 b: 5
-            });
+            }));
         });
 
         it('should serialize an object with object properties', async () => {
@@ -51,10 +53,10 @@ describe ('generate data literals', () => {
                     j: {c: 4}
                 };
             `);
-            expect(res).to.eql( {
+            expect(res).to.eql(literal({
                 o: {b: 5},
                 j: {c: 4}
-            });
+            }));
         });
     });
 
@@ -63,14 +65,14 @@ describe ('generate data literals', () => {
             const res = await testSerialize(`
                 export const a = [];
             `);
-            expect(res).to.eql( []);
+            expect(res).to.eql(literal([]));
         });
 
         it('should serialize an array with items', async () => {
             const res = await testSerialize(`
                 export const a = [5, 'gaga'];
             `);
-            expect(res).to.eql( [5, 'gaga']);
+            expect(res).to.eql(literal([5, 'gaga']));
         });
     });
 
@@ -83,11 +85,11 @@ describe ('generate data literals', () => {
                 }
                 export const a = b;
             `);
-            expect(res).to.eql( {
+            expect(res).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: '"/index".b',
+                id: 'index.tsx#b',
                 symbolPath: ''
-            });
+            }));
         });
         it('should serialize a property reference', async () => {
             const res = await testSerialize(`
@@ -98,7 +100,7 @@ describe ('generate data literals', () => {
             `);
             expect(res).to.eql( {
                 __serilizedType: 'reference',
-                id: '"/index".b',
+                id: 'index.tsx#b',
                 symbolPath: '.c'
             });
         });

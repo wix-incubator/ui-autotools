@@ -75,7 +75,6 @@ export class SchemaLinker {
         }
         let refEntity = this.schema.definitions[cleanRef] ? this.schema.definitions[cleanRef] : null;
         if (!refEntity) {
-            // const importSchema = getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1), this.program, this.sourceFile);
             const importSchema = this.extractor.getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1), this.file);
             if (importSchema && importSchema.definitions) {
                 refEntity = importSchema.definitions[cleanRef];

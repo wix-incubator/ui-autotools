@@ -3,7 +3,7 @@ import {transform, getSchemaFromImport} from './file-transformer';
 import {SchemaLinker, IExtractor} from './file-linker';
 import { ModuleSchema } from './json-schema-types';
 
-export function createLinker(files: string[]) {
+export function createLinker(files: string[]): SchemaLinker {
   const program = typescript.createProgram(files, {});
   function getSchema(file: string): ModuleSchema {
     const sourceFile = program.getSourceFile(file);

@@ -75,6 +75,7 @@ export class SchemaLinker {
         }
         let refEntity = this.schema.definitions[cleanRef] ? this.schema.definitions[cleanRef] : null;
         if (!refEntity) {
+            // If we are dealing with an import, the $ref will be 'module#type' so we break it into two parts for getSchemaFromImport
             const importSchema = this.extractor.getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1), this.file);
             if (importSchema && importSchema.definitions) {
                 refEntity = importSchema.definitions[cleanRef];

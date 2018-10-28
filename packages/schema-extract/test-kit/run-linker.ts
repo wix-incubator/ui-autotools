@@ -22,7 +22,7 @@ export function linkTest(sourceDir: DirectoryContent, entityName: string, fileNa
         if (!sourceFile) {
           return {
             $schema: 'http://json-schema.org/draft-06/schema#',
-            $id: '',
+            $id: file,
             $ref: 'common/module',
             properties: {},
         };

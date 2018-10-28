@@ -1,5 +1,4 @@
-const {TestFailedError, TestResults} = require('@applitools/eyes.sdk.core');
-const {makeVisualGridClient, makeGetConfig} = require('@applitools/visual-grid-client');
+const {makeVisualGridClient, makeGetConfig, TestResults, TestFailedError} = require('@applitools/visual-grid-client');
 const {domNodesToCdt} = require('@applitools/visual-grid-client/browser');
 import path from 'path';
 import fs from 'fs';

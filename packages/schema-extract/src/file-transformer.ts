@@ -855,8 +855,9 @@ function addJsDocsTagsToSchema(tags: ts.JSDocTag[], schema: Schema) {
     }
 }
 
-export function getSchemaFromImport(importPath: string, ref: string, checker: ts.TypeChecker, program: ts.Program,  pathUtil: typeof path.posix, sourceFile?: ts.SourceFile): ModuleSchema | null {
+export function getSchemaFromImport(importPath: string, ref: string, program: ts.Program, pathUtil: typeof path.posix, sourceFile?: ts.SourceFile): ModuleSchema | null {
     const extensions = ['.js', '.d.ts', '.ts', '.tsx'];
+    const checker = program.getTypeChecker();
     let importSourceFile;
     if (sourceFile) {
         /* resolvedModules is an internal ts property that exists on a sourcefile and maps the imports to the path of the imported file

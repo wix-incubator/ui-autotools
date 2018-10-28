@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const StylableWebpackPlugin = require('@stylable/webpack-plugin')
 
 module.exports = (_env, {mode = 'development', devtool = 'source-map'}) => {
     return {
@@ -24,6 +25,7 @@ module.exports = (_env, {mode = 'development', devtool = 'source-map'}) => {
                 },
                 {
                     test: /\.css$/,
+                    exclude: /\.st\.css$/,
                     use: ['style-loader', 'css-loader']
                 }
             ],
@@ -35,6 +37,7 @@ module.exports = (_env, {mode = 'development', devtool = 'source-map'}) => {
             extensions: ['.tsx', '.ts', '.js', '.json']
         },
         plugins: [
+            new StylableWebpackPlugin(),
             new HtmlWebpackPlugin({
                 title: 'Schema Playground'
             }),

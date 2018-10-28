@@ -1,6 +1,6 @@
 .root {
   -st-states: category(string);
   display: inline;
-  white-space: pre;
-  font-family: monospace;
+  white-space: pre-wrap;
+  font-family: Consolas, Menlo, monospace;
 }

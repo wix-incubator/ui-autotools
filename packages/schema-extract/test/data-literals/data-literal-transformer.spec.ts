@@ -2,58 +2,58 @@ import {expect} from 'chai';
 import {runDataLiteralExtract} from '../../test-kit/run-data-literal-exctrator';
 const testSerialize = (src: string) => runDataLiteralExtract(src, 'a', 'index.tsx');
 const literal = (value: any) => ({value, isLiteral: true});
-const anExpression = (value: any) => ({value, isLiteral: false});
+const anExpression = (value: any, expression: string) => ({value, isLiteral: false, expression});
 describe ('generate data literals', () => {
 
     describe('Primitives', () => {
         it('should serialize a string', async () => {
-            const res = await testSerialize(`
+            const {output} = await testSerialize(`
                 export const a = 'gaga';
             `);
-            expect(res).to.eql(literal('gaga'));
+            expect(output).to.eql(literal('gaga'));
         });
         it('should serialize a number', async () => {
-            const res = await testSerialize(`
+            const {output} = await testSerialize(`
                 export const a = 5;
             `);
-            expect(res).to.eql( literal(5));
+            expect(output).to.eql( literal(5));
         });
         it('should serialize a boolean', async () => {
-            const res = await testSerialize(`
+            const {output} = await testSerialize(`
                 export const a = true;
             `);
-            expect(res).to.eql( literal(true));
+            expect(output).to.eql( literal(true));
         });
 
     });
 
     describe('objects', () => {
         it('should serialize an object', async () => {
-            const res = await testSerialize(`
+            const {output} = await testSerialize(`
                 export const a = {};
             `);
-            expect(res).to.eql(literal({}));
+            expect(output).to.eql(literal({}));
         });
 
         it('should serialize an object with properties', async () => {
-            const res = await testSerialize(`
+            const {output} = await testSerialize(`
                 export const a = {
                     b:5
                 };
             `);
-            expect(res).to.eql( literal({
+            expect(output).to.eql( literal({
                 b: 5
             }));
         });
 
         it('should serialize an object with object properties', async () => {
-            const res = await testSerialize(`
+            const {output} = await testSerialize(`
                 export const a = {
                     o: {b: 5},
                     j: {c: 4}
                 };
             `);
-            expect(res).to.eql(literal({
+            expect(output).to.eql(literal({
                 o: {b: 5},
                 j: {c: 4}
             }));
@@ -62,140 +62,142 @@ describe ('generate data literals', () => {
 
     describe('arrays', () => {
         it('should serialize an array', async () => {
-            const res = await testSerialize(`
+            const {output} = await testSerialize(`
                 export const a = [];
             `);
-            expect(res).to.eql(literal([]));
+            expect(output).to.eql(literal([]));
         });
 
         it('should serialize an array with items', async () => {
-            const res = await testSerialize(`
+            const {output} = await testSerialize(`
                 export const a = [5, 'gaga'];
             `);
-            expect(res).to.eql(literal([5, 'gaga']));
+            expect(output).to.eql(literal([5, 'gaga']));
         });
     });
 
     describe('references', () => {
 
         it('should serialize an identifier reference', async () => {
-            const res = await testSerialize(`
+            const {output, node} = await testSerialize(`
                 export const b = {
                     c:'gaga'
                 }
                 export const a = b;
             `);
-            expect(res).to.eql(anExpression({
+            expect(output).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: 'index.tsx#b',
-                symbolPath: ''
-            }));
+                id: '#b'
+            }, node.getText()));
         });
         it('should serialize a property reference', async () => {
-            const res = await testSerialize(`
+            const {output, node} = await testSerialize(`
                 export const b = {
                     c:'gaga'
                 }
                 export const a = b.c;
             `);
-            expect(res).to.eql( {
+            expect(output).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: 'index.tsx#b',
-                symbolPath: '.c'
-            });
+                id: '#b',
+                innerPath: ['c']
+            }, node.getText()));
         });
 
         it('should serialize an element reference', async () => {
-            const res = await testSerialize(`
+            const {output, node} = await testSerialize(`
                 export const b = {
                     c:'gaga'
                 }
                 export const a = b['c-d'];
             `);
-            expect(res).to.eql( {
+            expect(output).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: '"/index".b',
-                symbolPath: "['c-d']"
-            });
+                id: '#b',
+                innerPath: ['c-d']
+            }, node.getText()));
         });
 
         it('should serialize an element reference with variable', async () => {
-            const res = await testSerialize(`
-                export const b = {
-                    c:'gaga'
-                }
+            const {output, node} = await testSerialize(`
                 const e = 'c-d';
-                export const a = b[e];
+                export const b = {
+                    [e]:'gaga'
+                }
+                export const a = b[e].length;
             `);
-            expect(res).to.eql( {
+            expect(output).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: '"/index".b',
-                symbolPath: '[e]'
-            });
+                id: '#b',
+                innerPath: [{
+                    __serilizedType: 'reference',
+                    id: '#e'
+                }, 'length']
+            }, node.getText()));
         });
 
         it('should serialize a reference to an import', async () => {
-            const res = await testSerialize(`
+            const {output, node} = await testSerialize(`
                 import {b} from './other';
                 export const a = b.c;
             `);
-            expect(res).to.eql( {
+            expect(output).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: '"./other".b',
-                symbolPath: '.c'
-            });
+                id: 'other#b',
+                innerPath: ['c']
+            }, node.getText()));
         });
 
         it('should serialize a reference to "*" as import', async () => {
-            const res = await testSerialize(`
+            const {output, node} = await testSerialize(`
                 import * as d from './other';
                 export const a = d.b.c;
             `);
-            expect(res).to.eql( {
+            expect(output).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: '"./other"',
-                symbolPath: '.b.c'
-            });
+                id: 'other',
+                innerPath: ['b', 'c']
+            }, node.getText()));
         });
 
         it('should serialize a reference to a default import', async () => {
-            const res = await testSerialize(`
+            const {output, node} = await testSerialize(`
                 import b from './other';
                 export const a = b.c;
             `);
-            expect(res).to.eql( {
+            expect(output).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: '"./other".default',
-                symbolPath: '.c'
-            });
+                id: 'other#default',
+                innerPath: ['c']
+            }, node.getText()));
         });
 
         it('should serialize a function call', async () => {
-            const res = await testSerialize(`
+            const {output, node} = await testSerialize(`
                 export function func() {}
                 export const a = func("xxx", 555);
             `);
-            expect(res).to.eql( {
+            expect(output).to.eql(anExpression({
                 __serilizedType: 'reference-call',
-                id: '"/index".func',
+                id: '#func',
                 args: ['xxx', 555]
-            });
+            }, node.getText()));
         });
 
         it('should serialize a function call from an import', async () => {
-            const res = await testSerialize(`
+            const {output, node} = await testSerialize(`
                 import {func} from './other';
                 export const a = func("xxx", 555);
             `);
-            expect(res).to.eql( {
+            expect(output).to.eql(anExpression( {
                 __serilizedType: 'reference-call',
-                id: '"./other".func',
+                id: 'other#func',
                 args: ['xxx', 555]
-            });
+            }, node.getText()));
         });
 
         it('should serialize an instance creation', async () => {
-            const res = await testSerialize(`
+            const {output, node} = await testSerialize(`
                 export class cls() {
                     constructor(name:string){
 
@@ -203,11 +205,11 @@ describe ('generate data literals', () => {
                 }
                 export const a = new cls('gaga');
             `);
-            expect(res).to.eql( {
+            expect(output).to.eql(anExpression({
                 __serilizedType: 'reference-construct',
-                id: '"/index".cls',
+                id: '#cls',
                 args: ['gaga']
-            });
+            }, node.getText()));
         });
 
     });

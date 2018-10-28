@@ -1,18 +1,15 @@
 import ts from 'typescript';
+import * as path from 'path';
 import { transform, getSchemaFromImport } from './file-transformer';
 import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isFunctionSchema, FunctionSchema, isObjectSchema } from './json-schema-types';
 
 export class SchemaLinker {
     private checker: ts.TypeChecker;
-    private program: ts.Program;
-    private projectPath: string;
     private sourceFile: ts.SourceFile | undefined;
     private schema: ModuleSchema | undefined;
 
-    constructor(program: ts.Program, projectPath: string) {
+    constructor(private program: ts.Program, private projectPath: string, private pathUtils: typeof path.posix) {
         this.checker = program.getTypeChecker();
-        this.program = program;
-        this.projectPath = projectPath;
     }
 
     public flatten(file: string, entityName: string): Schema {
@@ -20,7 +17,7 @@ export class SchemaLinker {
         if (!this.sourceFile) {
             return {$ref: UnknownId};
         }
-        this.schema = transform(this.checker, this.sourceFile, file, this.projectPath);
+        this.schema = transform(this.checker, this.sourceFile, file, this.projectPath, this.pathUtils);
         let entity;
         if (this.schema.definitions) {
             entity = this.schema.definitions[entityName];
@@ -77,7 +74,7 @@ export class SchemaLinker {
         }
         let refEntity = this.schema.definitions[cleanRef] ? this.schema.definitions[cleanRef] : null;
         if (!refEntity) {
-            const importSchema = getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1), this.checker, this.program, this.sourceFile);
+            const importSchema = getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1), this.checker, this.program, this.pathUtils, this.sourceFile);
             if (importSchema && importSchema.definitions) {
                 refEntity = importSchema.definitions[cleanRef];
                 while (isRef(refEntity)) {

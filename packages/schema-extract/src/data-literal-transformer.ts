@@ -1,30 +1,45 @@
 import ts from 'typescript';
 import * as path from 'path';
 import {  resolveImportedIdentifier} from './imported-identifier-resolver';
-export interface IInferenceResult {
-    isLiteral: boolean;
+export interface ILiteralInferenceResult {
+    isLiteral: true;
     value: any;
 }
 
-function aLiteralValue(value: any) {
+export interface IExpressionInferenceResult {
+    isLiteral: false;
+    value: any;
+    expression: string;
+}
+
+function aLiteralValue(value: any): ILiteralInferenceResult {
     return {
         isLiteral: true,
         value
     };
 }
 
-function anExpression(type: string, id: string, extraFields: any = {}) {
+function anExpression(value: any, expression: string,  extraFields: any = {}): IExpressionInferenceResult {
+    return {
+        isLiteral: false,
+        value,
+        expression
+    };
+}
+
+function aProcessedExpression(type: string, id: string, expression: string,  extraFields: any = {}): IExpressionInferenceResult {
     return {
         isLiteral: false,
         value: {
             __serilizedType: type,
             id,
             ...extraFields
-        }
+        },
+        expression
     };
 }
 
-export function generateDataLiteral(checker: ts.TypeChecker, node: ts.Node, usedPath: typeof path.posix, modulePath: string = '', ): IInferenceResult {
+export function generateDataLiteral(checker: ts.TypeChecker, node: ts.Node, usedPath: typeof path.posix, modulePath: string = '', ): ILiteralInferenceResult | IExpressionInferenceResult {
     if (ts.isStringLiteral(node)) {
         return aLiteralValue(node.text);
     } else if (ts.isNumericLiteral(node)) {
@@ -41,7 +56,7 @@ export function generateDataLiteral(checker: ts.TypeChecker, node: ts.Node, used
                 value[prop.name!.getText()] = innerRes.value;
             }
         }
-        return { isLiteral, value};
+        return isLiteral ?  aLiteralValue(value) : anExpression(value, node.getText());
     } else if (ts.isObjectBindingPattern(node)) {
         const value: any = {};
         let isLiteral = true;
@@ -55,7 +70,7 @@ export function generateDataLiteral(checker: ts.TypeChecker, node: ts.Node, used
                 value[bindingElement.name!.getText()] = innerRes.value;
             }
         }
-        return value;
+        return isLiteral ?  aLiteralValue(value) : anExpression(value, node.getText());
     } else if (ts.isArrayLiteralExpression(node)) {
         const value: any[] = [];
         let isLiteral = true;
@@ -65,12 +80,47 @@ export function generateDataLiteral(checker: ts.TypeChecker, node: ts.Node, used
             value.push(innerRes.value);
         }
 
-        return { isLiteral, value};
-    } else if (ts.isIdentifier(node)) {
-        const aPath =  resolveImportedIdentifier(node, modulePath, usedPath)!;
-        return anExpression('reference', aPath);
-        // return { isLiteral, value};
-    }
+        return isLiteral ?  aLiteralValue(value) : anExpression(value, node.getText());
+    } else if (ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)) {
+        let currentNode: ts.Node = node;
+        const expression: string[] = [];
+        do {
+            if (ts.isPropertyAccessExpression(currentNode)) {
+                expression.push(currentNode.name.getText());
+                currentNode = currentNode.expression;
+            }
+            if (ts.isElementAccessExpression(currentNode)) {
+                const innerValue = generateDataLiteral(checker, currentNode.argumentExpression, usedPath, modulePath);
+                expression.push(innerValue.value);
+                currentNode = currentNode.expression;
+            }
+        } while (ts.isPropertyAccessExpression(currentNode) || ts.isElementAccessExpression(currentNode));
 
-    return { isLiteral: false, value: undefined};
+        const id = getIdFromExpression(checker, currentNode as ts.Expression, modulePath, usedPath);
+        return aProcessedExpression('reference', id, node.getText(), {innerPath: expression.reverse()});
+    } else if (ts.isIdentifier(node)) {
+        return aProcessedExpression('reference', getIdFromExpression(checker, node, modulePath, usedPath), node.getText());
+    } else if (ts.isCallExpression(node)) {
+        return aProcessedExpression('reference-call', getIdFromExpression(checker, node.expression, modulePath, usedPath), node.getText(), {
+            args: node.arguments.map((arg) => generateDataLiteral(checker, arg, usedPath, modulePath).value)
+        });
+    } else if (ts.isNewExpression(node)) {
+        return aProcessedExpression('reference-construct', getIdFromExpression(checker, node.expression, modulePath, usedPath), node.getText(),  {
+            args: node.arguments!.map((arg) => generateDataLiteral(checker, arg, usedPath, modulePath).value)
+        });
+    }
+    return anExpression(undefined, node.getText());
+}
+
+function getIdFromExpression(checker: ts.TypeChecker, node: ts.Expression, modulePath: string, pathUtil: typeof path.posix) {
+
+    const referencedSymb = checker.getSymbolAtLocation(node)!;
+    const referencedSymbDecl = referencedSymb.valueDeclaration || referencedSymb.declarations[0];
+    if (referencedSymbDecl) {
+        const importedRef = resolveImportedIdentifier(referencedSymbDecl, modulePath, pathUtil);
+        if (importedRef) {
+            return importedRef;
+        }
+    }
+    return '#' + node.getText();
 }

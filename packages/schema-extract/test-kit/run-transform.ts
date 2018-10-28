@@ -1,6 +1,6 @@
 import { transform } from '../src/file-transformer';
 import { ModuleSchema } from '../src/json-schema-types';
-import {createTsProgram } from '../src/typescript/createMemoryTsProgram';
+import {createTsService } from '../src/typescript/createMemoryTsService';
 
 export async function transformTest(source: string, moduleId: string): Promise<ModuleSchema<any>> {
     const projectName = 'someProject';
@@ -14,7 +14,7 @@ export async function transformTest(source: string, moduleId: string): Promise<M
     export class AGenericClass<T,Q>{
 
     }`;
-    const {program} = await createTsProgram({
+    const {tsService, fs} = await createTsService({
         [projectName]: {
             src: {
                 'tested-module.ts': source,
@@ -23,6 +23,7 @@ export async function transformTest(source: string, moduleId: string): Promise<M
         },
 
     }, [testedFile, projectName + '/src/test-assets.ts']);
+    const program = tsService.getProgram()!;
     const chckr = program.getTypeChecker();
-    return transform(chckr, program.getSourceFile(testedFile)!, '/src/' + moduleId, '/' + projectName);
+    return transform(chckr, program.getSourceFile(testedFile)!, '/src/' + moduleId, '/' + projectName, fs.path);
 }

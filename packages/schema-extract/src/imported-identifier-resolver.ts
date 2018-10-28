@@ -16,7 +16,7 @@ export function resolveImportedIdentifier(node: ts.Node, modulePath: string, pos
 
     } else if (ts.isImportClause(node)) {
         const target = node.parent!.moduleSpecifier.getText().slice(1, -1);
-        return resolveImportPath(target,  '#' + node.getText(), modulePath, posix);
+        return resolveImportPath(target,  '#default', modulePath, posix);
     }
     return null;
 }

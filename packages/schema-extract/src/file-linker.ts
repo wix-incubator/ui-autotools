@@ -1,32 +1,30 @@
-import ts from 'typescript';
-import { transform, getSchemaFromImport } from './file-transformer';
 import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef, isSchemaOfType, isClassSchema, UnknownId, isInterfaceSchema, InterfaceSchema, interfaceId, isFunctionSchema, FunctionSchema, isObjectSchema } from './json-schema-types';
 
-export class SchemaLinker {
-    private checker: ts.TypeChecker;
-    private program: ts.Program;
-    private projectPath: string;
-    private sourceFile: ts.SourceFile | undefined;
-    private schema: ModuleSchema | undefined;
+export interface IExtractor {
+    getSchema: (f: string) => ModuleSchema;
+    getSchemaFromImport: (path: string, ref: string, file: string) => ModuleSchema | null;
+  }
 
-    constructor(program: ts.Program, projectPath: string) {
-        this.checker = program.getTypeChecker();
-        this.program = program;
-        this.projectPath = projectPath;
+export class SchemaLinker {
+    private file: string;
+    private schema: ModuleSchema | undefined;
+    private extractor: IExtractor;
+
+    constructor(extractor: IExtractor) {
+        this.file = '';
+        this.extractor = extractor;
     }
 
     public flatten(file: string, entityName: string): Schema {
-        this.sourceFile = this.program.getSourceFile(file);
-        if (!this.sourceFile) {
-            return {$ref: UnknownId};
-        }
-        this.schema = transform(this.checker, this.sourceFile, file, this.projectPath);
         let entity;
-        if (this.schema.definitions) {
-            entity = this.schema.definitions[entityName];
+        this.file = file;
+        const schema = this.extractor.getSchema(file);
+        this.schema = schema;
+        if (schema.definitions) {
+            entity = schema.definitions[entityName];
         }
-        if (!entity && this.schema.properties) {
-            entity = this.schema.properties[entityName];
+        if (!entity && schema.properties) {
+            entity = schema.properties[entityName];
         }
         if (!entity) {
             return {$ref: UnknownId};
@@ -77,10 +75,11 @@ export class SchemaLinker {
         }
         let refEntity = this.schema.definitions[cleanRef] ? this.schema.definitions[cleanRef] : null;
         if (!refEntity) {
-            const importSchema = getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1), this.checker, this.program, this.sourceFile);
+            // If we are dealing with an import, the $ref will be 'module#type' so we break it into two parts for getSchemaFromImport
+            const importSchema = this.extractor.getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1), this.file);
             if (importSchema && importSchema.definitions) {
                 refEntity = importSchema.definitions[cleanRef];
-                while (isRef(refEntity)) {
+                while (refEntity && isRef(refEntity)) {
                     cleanRef = refEntity.$ref.slice(refEntity.$ref.indexOf('#') + 1);
                     refEntity = importSchema.definitions[cleanRef];
                 }

@@ -20,14 +20,6 @@ function getGridClientConfig(projectPath: string) {
     throw new Error('The project should have a package.json file with a "name" field.');
   }
 
-  if (!process.env.APPLITOOLS_API_KEY && !process.env.EYES_API_KEY) {
-    throw new Error('The environment variable "APPLITOOLS_API_KEY" needs to be defined.');
-  }
-
-  if (!process.env.APPLITOOLS_API_KEY) {
-    consoleError('Warning: falling back to using process.env.EYES_API_KEY, please set process.env.APPLITOOLS_API_KEY instead.');
-  }
-
   const branchName = projectName + '/master';
   const viewportWidth = 800;
   const viewportHeight = 600;

@@ -11,7 +11,7 @@ export interface DateDisplayProps{
      * the date in iso number format
      * */
     value:number;
-    formater?: DateFormatter
+    formatter?: DateFormatter
 }
 
 export class DateDisplay extends React.Component<DateDisplayProps>{
@@ -111,7 +111,7 @@ type: DateDisplayProps
 | Name | Type | Default value| is optional | description |
 | - | -| - | - | - |
 | value | number | - | false | the date in isso number format
-| formatter | #DateFormatter | #defaultDateFormater | true | -
+| formatter | #DateFormatter | #defaultDateFormatter | true | -
 
 ## Methods
 

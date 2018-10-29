@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import chalk from 'chalk';
 import {JSDOM} from 'jsdom';
-import {consoleLog, consoleError} from '@ui-autotools/utils';
+import {consoleLog} from '@ui-autotools/utils';
 import {parseSnapshotFilename} from '../generate-snapshots/filename-utils';
 import { IFileInfo } from '../generate-snapshots/build-base-files';
 

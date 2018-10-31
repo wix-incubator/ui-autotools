@@ -1,14 +1,15 @@
 import ts from 'typescript';
 import {  resolveImportedIdentifier, IFileSystemPath} from './imported-identifier-resolver';
 
-export interface ILiteralInferenceResult {
+export interface ILiteralInferenceResult<VALUE = any> {
     isLiteral: true;
-    value: any;
+    value: VALUE;
+    name?: string;
 }
 
-export interface IExpressionInferenceResult {
+export interface IExpressionInferenceResult<VALUE = any> {
     isLiteral: false;
-    value: any;
+    value: VALUE;
     expression: string;
 }
 
@@ -17,6 +18,74 @@ export interface IExctractorEnv {
     pathUtil: IFileSystemPath;
     modulePath: string;
 }
+export function isOfType<TYPE, SERIALIZED_TYPE>(type: SERIALIZED_TYPE): (item: any) => item is TYPE {
+    return ((item: any) => item.__serilizedType === type) as any;
+}
+export const IReferenceCall = 'reference-call';
+export const isReferenceCall = isOfType<IReferenceCall, typeof IReferenceCall>(IReferenceCall);
+export interface IReferenceCall {
+    __serilizedType: typeof IReferenceCall;
+    args: any[];
+    $ref: string;
+    innerPath?: any[];
+}
+
+export const IReferenceConstruct = 'reference-construct';
+export const isReferenceConstruct = isOfType<IReferenceConstruct, typeof IReferenceConstruct>(IReferenceConstruct);
+export interface IReferenceConstruct {
+    __serilizedType: typeof IReferenceConstruct;
+    args: any[];
+    $ref: string;
+    innerPath?: any[];
+}
+
+export const IReference = 'reference';
+export const isReference = isOfType<IReference, typeof IReference>(IReference);
+export interface IReference {
+    __serilizedType: typeof IReference;
+    $ref: string;
+    innerPath?: any[];
+}
+
+export const ICommonIf = 'common/if';
+export const isCommonIf = isOfType<ICommonIf, typeof ICommonIf>(ICommonIf);
+export interface ICommonIf {
+    __serilizedType: typeof ICommonIf;
+    condition: any;
+    whenTrue: any;
+    whenFalse: any;
+}
+export const ICommonNot = 'common/not-operator';
+export const isCommonNot = isOfType<ICommonNot, typeof ICommonNot>(ICommonNot);
+export interface ICommonNot {
+    __serilizedType: typeof ICommonNot;
+    expression: any;
+}
+export const IJSXAttribute = 'jsx-attribute';
+export const isJSXAttribute = isOfType<IJSXAttribute, typeof IJSXAttribute>(IJSXAttribute);
+export interface IJSXAttribute {
+    __serilizedType: typeof IJSXAttribute;
+    name?: string;
+    value: any;
+}
+export const IJSXNode = 'jsx-node';
+export const isJSXNode = isOfType<IJSXNode, typeof IJSXNode>(IJSXNode);
+export interface IJSXNode {
+    __serilizedType: typeof IJSXNode;
+    $ref: string;
+    attributes?: IJSXAttribute[];
+    children?: any[];
+}
+
+export const IFunction = 'function';
+export const isFunction = isOfType<IFunction, typeof IFunction>(IFunction);
+export interface IFunction {
+    __serilizedType: typeof IFunction;
+    arguments: any[];
+    returns: any[];
+}
+
+export const FRAGMENT_REF = 'dom/fragment';
 
 interface ISerializer<INPUT extends ts.Node, OUTPUT extends ILiteralInferenceResult | IExpressionInferenceResult = ILiteralInferenceResult | IExpressionInferenceResult> {
     isApplicable: (node: ts.Node) => node is INPUT;
@@ -38,60 +107,61 @@ function anExpression(value: any, expression: string,  extraFields: any = {}): I
     };
 }
 
-function aProcessedExpression(type: string, expression: string,  extraFields: any = {}): IExpressionInferenceResult {
+function aProcessedExpression<T extends string, V extends object = {}>(type: T, expression: string,  extraFields?: V): IExpressionInferenceResult<{__serilizedType: T} & V> {
+    const fields = extraFields || {};
     return {
         isLiteral: false,
         value: {
             __serilizedType: type,
-            ...extraFields
-        },
+            ...fields
+        } as any,
         expression
     };
 }
 
-function getReferencePath(env: IExctractorEnv, node: ts.Node): {id: string, innerPath ?: any[]; } {
+function getReferencePath(env: IExctractorEnv, node: ts.Node): {$ref: string, innerPath ?: any[]; } {
     if (propertyAccessSerializer.isApplicable(node)) {
         const res = propertyAccessSerializer.serialize(env, node);
         return {
-            id: res.value.id,
+            $ref: res.value.$ref,
             innerPath: res.value.innerPath
         };
     }
-    return {id: getIdFromExpression(env, node as any) };
+    return {$ref: getIdFromExpression(env, node as any) };
 }
 
-const callExpressionSerializer: ISerializer<ts.CallExpression> = {
+const callExpressionSerializer: ISerializer<ts.CallExpression, IExpressionInferenceResult<IReferenceCall>> = {
     isApplicable: function is(node): node is ts.CallExpression {
         return ts.isCallExpression(node);
     },
     serialize: (env, node) =>  {
         const referencePath = getReferencePath(env, node.expression);
-        return aProcessedExpression('reference-call', node.getText(), {
+        return aProcessedExpression(IReferenceCall, node.getText(), {
             ...referencePath,
             args: node.arguments.map((arg) => generateDataLiteral(env, arg).value)
         });
     }
 };
-const newExpressionSerializer: ISerializer<ts.NewExpression> = {
+const newExpressionSerializer: ISerializer<ts.NewExpression, IExpressionInferenceResult<IReferenceConstruct>> = {
     isApplicable: function is(node): node is ts.NewExpression {
         return ts.isNewExpression(node);
     },
     serialize: (env, node) =>  {
         const referencePath = getReferencePath(env, node.expression);
-        return aProcessedExpression('reference-construct', node.getText(),  {
+        return aProcessedExpression(IReferenceConstruct, node.getText(),  {
             ...referencePath,
             args: node.arguments!.map((arg) => generateDataLiteral(env, arg).value)
         });
     }
 };
 
-const identifierSerializer: ISerializer<ts.Identifier> = {
+const identifierSerializer: ISerializer<ts.Identifier, IExpressionInferenceResult<IReference>> = {
     isApplicable: function is(node): node is ts.Identifier {
         return ts.isIdentifier(node);
     },
     serialize: (env, node) =>  {
-        return aProcessedExpression('reference', node.getText(), {
-            id: getIdFromExpression(env, node)
+        return aProcessedExpression(IReference, node.getText(), {
+            $ref: getIdFromExpression(env, node)
         });
     }
 };
@@ -197,16 +267,16 @@ const propertyAccessSerializer: ISerializer<ts.PropertyAccessExpression | ts.Ele
             }
         } while (ts.isPropertyAccessExpression(currentNode) || ts.isElementAccessExpression(currentNode));
 
-        const id = getIdFromExpression(env, currentNode as ts.Expression);
-        return aProcessedExpression('reference', node.getText(), {id, innerPath: expression.reverse()});
+        const $ref = getIdFromExpression(env, currentNode as ts.Expression);
+        return aProcessedExpression(IReference, node.getText(), {$ref, innerPath: expression.reverse()});
     }
 };
-const trinaryExpressionSerializer: ISerializer<ts.ConditionalExpression> = {
+const trinaryExpressionSerializer: ISerializer<ts.ConditionalExpression, IExpressionInferenceResult<ICommonIf>> = {
     isApplicable: function is(node): node is ts.ConditionalExpression {
         return ts.isConditionalExpression(node) || ts.isElementAccessExpression(node);
     },
     serialize: (env, node) =>  {
-       return aProcessedExpression('common/if', node.getText(), {
+       return aProcessedExpression(ICommonIf, node.getText(), {
            condition: generateDataLiteral(env, node.condition).value,
            whenTrue: generateDataLiteral(env, node.whenTrue).value,
            whenFalse: generateDataLiteral(env, node.whenFalse).value
@@ -214,12 +284,12 @@ const trinaryExpressionSerializer: ISerializer<ts.ConditionalExpression> = {
     }
 };
 
-const notExpressionSerializer: ISerializer<ts.PrefixUnaryExpression> = {
+const notExpressionSerializer: ISerializer<ts.PrefixUnaryExpression, IExpressionInferenceResult<ICommonNot>> = {
     isApplicable: function is(node): node is ts.PrefixUnaryExpression {
         return ts.isPrefixUnaryExpression(node) && ts.SyntaxKind.ExclamationToken === node.operator;
     },
     serialize: (env, node) =>  {
-       return aProcessedExpression('common/not-operator', node.getText(), {
+       return aProcessedExpression(ICommonNot, node.getText(), {
            expression: generateDataLiteral(env, node.operand).value
        });
     }
@@ -265,34 +335,31 @@ const parenthesisSerializer: ISerializer<ts.ParenthesizedExpression> = {
             expression: node.getText()};
     }
 };
-const jsxAttributeSerializer: ISerializer<ts.JsxAttribute> = {
+const jsxAttributeSerializer: ISerializer<ts.JsxAttribute, IExpressionInferenceResult<IJSXAttribute>> = {
     isApplicable: function is(node): node is ts.JsxAttribute {
         return ts.isJsxAttribute(node);
     },
     serialize: (env, node) =>  {
         if (!node.initializer) {
-            return {
-                __serilizedType: 'jsx-attribute',
+            return aProcessedExpression(IJSXAttribute, node.getText(), {
                 name: node.name.getText(),
                 value: true,
                 isLiteral: true
-            };
+            });
         }
         const initializer = node.initializer;
         if (ts.isStringLiteral(initializer)) {
-            return {
-                __serilizedType: 'jsx-attribute',
+            return aProcessedExpression(IJSXAttribute, node.getText(), {
                 name: node.name.getText(),
                 value: initializer.text,
                 isLiteral: true
-            };
+            });
         } else {
             const res = generateDataLiteral(env, initializer.expression!);
-            return {
+            return aProcessedExpression(IJSXAttribute, node.getText(), {
                 ...res,
-                __serilizedType: 'jsx-attribute',
-                name: node.name.getText()
-            };
+                name: node.name.getText(),
+            });
         }
     }
 };
@@ -323,14 +390,14 @@ const reactChildSerializers: Array<ISerializer<any>> = [
 function startsWithLowerCase(str: string) {
     return str.charAt(0).toUpperCase() !== str.charAt(0);
 }
-const reactNodeSerializer: ISerializer<ts.JsxElement | ts.JsxSelfClosingElement | ts.JsxFragment> = {
+const reactNodeSerializer: ISerializer<ts.JsxElement | ts.JsxSelfClosingElement | ts.JsxFragment, IExpressionInferenceResult<IJSXNode>> = {
     isApplicable: function is(node): node is ts.JsxElement | ts.JsxSelfClosingElement | ts.JsxFragment {
         return ts.isJsxSelfClosingElement(node) || ts.isJsxElement(node) || ts.isJsxFragment(node);
     },
     serialize: (env, node) =>  {
         const startNode = ts.isJsxElement(node) ? node.openingElement : node;
 
-        const tagName = ts.isJsxFragment(startNode) ? 'dom/fragment' :
+        const tagName = ts.isJsxFragment(startNode) ? FRAGMENT_REF :
                         startsWithLowerCase(startNode.tagName.getText()) ? 'dom/' + startNode.tagName.getText() :
                         getIdFromExpression(env, startNode.tagName);
         const attributes: ts.NodeArray<ts.JsxAttributeLike> = ts.isJsxFragment(startNode) ? ([] as any) : startNode.attributes.properties;
@@ -338,7 +405,7 @@ const reactNodeSerializer: ISerializer<ts.JsxElement | ts.JsxSelfClosingElement 
         const attributeOutputs = attributes.map((attribute) => {
             const serializer = attributeSerializers.find((optionalSerializer) => optionalSerializer.isApplicable(attribute));
             if (serializer) {
-                return serializer.serialize(env, attribute as any);
+                return serializer.serialize(env, attribute as any).value;
             }
             return {
                 name: ''
@@ -356,20 +423,20 @@ const reactNodeSerializer: ISerializer<ts.JsxElement | ts.JsxSelfClosingElement 
             });
         }
 
-        const extra: any = {
-            id: tagName
+        const extra: Partial<IJSXNode> = {
+            $ref: tagName
         };
         if (attributeOutputs.length) {
-                extra.attributes = attributeOutputs;
+            extra.attributes = attributeOutputs;
         }
         if (children.length) {
-                extra.children = children;
+            extra.children = children;
         }
-        return aProcessedExpression('jsx-node', node.getText(), extra);
+        return aProcessedExpression(IJSXNode, node.getText(), extra as IJSXNode);
     }
 };
 reactChildSerializers.push(reactNodeSerializer);
-const functionSerializer: ISerializer<ts.ArrowFunction | ts.FunctionExpression> = {
+const functionSerializer: ISerializer<ts.ArrowFunction | ts.FunctionExpression, IExpressionInferenceResult<IFunction>> = {
     isApplicable: function is(node): node is ts.ArrowFunction | ts.FunctionExpression {
         return ts.isArrowFunction(node) || ts.isFunctionExpression(node);
     },
@@ -382,7 +449,7 @@ const functionSerializer: ISerializer<ts.ArrowFunction | ts.FunctionExpression> 
                 generateDataLiteral(env, statement.expression!).value
             );
         }
-        return aProcessedExpression('function', node.getText(), {
+        return aProcessedExpression(IFunction, node.getText(), {
             returns: returnValues,
             arguments: node.parameters.map((param) => param.name.getText())
         });

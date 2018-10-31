@@ -87,7 +87,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: '#b'
+                $ref: '#b'
             }, node.getText()));
         });
         it('should serialize a property reference', async () => {
@@ -99,7 +99,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: '#b',
+                $ref: '#b',
                 innerPath: ['c']
             }, node.getText()));
         });
@@ -113,7 +113,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: '#b',
+                $ref: '#b',
                 innerPath: ['c-d']
             }, node.getText()));
         });
@@ -128,10 +128,10 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: '#b',
+                $ref: '#b',
                 innerPath: [{
                     __serilizedType: 'reference',
-                    id: '#e'
+                    $ref: '#e'
                 }, 'length']
             }, node.getText()));
         });
@@ -143,7 +143,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: '/other#b',
+                $ref: '/other#b',
                 innerPath: ['c']
             }, node.getText()));
         });
@@ -155,7 +155,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: '/other',
+                $ref: '/other',
                 innerPath: ['b', 'c']
             }, node.getText()));
         });
@@ -167,7 +167,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: '/other#default',
+                $ref: '/other#default',
                 innerPath: ['c']
             }, node.getText()));
         });
@@ -179,7 +179,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'reference-call',
-                id: '#func',
+                $ref: '#func',
                 args: ['xxx', 555]
             }, node.getText()));
         });
@@ -191,7 +191,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'reference-call',
-                id: '#b',
+                $ref: '#b',
                 innerPath: ['func'],
                 args: ['xxx', 555]
             }, node.getText()));
@@ -204,7 +204,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression( {
                 __serilizedType: 'reference-call',
-                id: '/other#func',
+                $ref: '/other#func',
                 args: ['xxx', 555]
             }, node.getText()));
         });
@@ -220,7 +220,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'reference-construct',
-                id: '#cls',
+                $ref: '#cls',
                 args: ['gaga']
             }, node.getText()));
         });
@@ -236,7 +236,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'reference-construct',
-                id: '#b',
+                $ref: '#b',
                 innerPath: ['cls'],
                 args: ['gaga']
             }, node.getText()));
@@ -250,7 +250,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'jsx-node',
-                id: 'dom/div'
+                $ref: 'dom/div'
             }, node.getText()));
         });
         it('should serialize jsx elements with reference tagname', async () => {
@@ -261,7 +261,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'jsx-node',
-                id: '/button#Button'
+                $ref: '/button#Button'
             }, node.getText()));
         });
         it('should serialize jsx elements attributes', async () => {
@@ -271,7 +271,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'jsx-node',
-                id: 'dom/div',
+                $ref: 'dom/div',
                 attributes: [{
                     __serilizedType: 'jsx-attribute',
                     name: 'a',
@@ -287,7 +287,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'jsx-node',
-                id: 'dom/div',
+                $ref: 'dom/div',
                 attributes: [{
                     __serilizedType: 'jsx-attribute',
                     name: 'a',
@@ -304,7 +304,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'jsx-node',
-                id: 'dom/div',
+                $ref: 'dom/div',
                 attributes: [{
                     __serilizedType: 'jsx-attribute',
                     name: 'style',
@@ -320,7 +320,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'jsx-node',
-                id: 'dom/div',
+                $ref: 'dom/div',
                 attributes: [{
                     __serilizedType: 'jsx-attribute',
                     name: 'style',
@@ -341,13 +341,13 @@ describe ('generate data literals', () => {
                     __serilizedType: 'common/if',
                     condition: {
                         __serilizedType: 'reference-call',
-                        id: '#sometimes',
+                        $ref: '#sometimes',
                         args: []
                     },
                     whenTrue: 'a',
                     whenFalse: {
                         __serilizedType: 'reference',
-                        id: '#b'
+                        $ref: '#b'
                     }
                 }, node.getText()));
             });
@@ -360,7 +360,7 @@ describe ('generate data literals', () => {
                 `);
                 expect(output).to.eql(anExpression({
                     __serilizedType: 'jsx-node',
-                    id: 'dom/div',
+                    $ref: 'dom/div',
                     children: ['hello world']
                 }, node.getText()));
             });
@@ -371,11 +371,11 @@ describe ('generate data literals', () => {
                 `);
                 expect(output).to.eql(anExpression({
                     __serilizedType: 'jsx-node',
-                    id: 'dom/div',
+                    $ref: 'dom/div',
                     children: [
                         {
                             __serilizedType: 'jsx-node',
-                            id: 'dom/div',
+                            $ref: 'dom/div',
                             attributes: [{
                                 __serilizedType: 'jsx-attribute',
                                 name: 'style',
@@ -393,11 +393,11 @@ describe ('generate data literals', () => {
                 `);
                 expect(output).to.eql(anExpression({
                     __serilizedType: 'jsx-node',
-                    id: 'dom/fragment',
+                    $ref: 'dom/fragment',
                     children: [
                         {
                             __serilizedType: 'jsx-node',
-                            id: 'dom/div',
+                            $ref: 'dom/div',
                             attributes: [{
                                 __serilizedType: 'jsx-attribute',
                                 name: 'style',
@@ -417,11 +417,11 @@ describe ('generate data literals', () => {
                 `);
                 expect(output).to.eql(anExpression({
                     __serilizedType: 'jsx-node',
-                    id: 'dom/div',
+                    $ref: 'dom/div',
                     children: [
                         {
                             __serilizedType: 'reference',
-                            id: '#b'
+                            $ref: '#b'
                         }
                     ]
                 }, node.getText()));
@@ -439,7 +439,7 @@ describe ('generate data literals', () => {
                 __serilizedType: 'common/not-operator',
                 expression: {
                     __serilizedType: 'reference',
-                    id: '#b'
+                    $ref: '#b'
                 }
 
             }, node.getText()));
@@ -452,7 +452,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                     __serilizedType: 'reference',
-                    id: '#b'
+                    $ref: '#b'
             }, node.getText()));
         });
     });
@@ -467,11 +467,11 @@ describe ('generate data literals', () => {
             __serilizedType: serilizedType,
             firstOption: {
                 __serilizedType:  'reference',
-                id:  '#c'
+                $ref:  '#c'
             },
             secondOption: {
                 __serilizedType: 'reference',
-                id: '#b'
+                $ref: '#b'
             }
         });
         it('should serialize boolean or expression', async () => {
@@ -542,11 +542,11 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'jsx-node',
-                id: 'dom/div',
+                $ref: 'dom/div',
                 children: [
                     {
                         __serilizedType: 'reference-call',
-                        id: '#b',
+                        $ref: '#b',
                         innerPath: ['map'],
                         args: [
                             {
@@ -554,10 +554,10 @@ describe ('generate data literals', () => {
                                 arguments: ['item'],
                                 returns: [{
                                     __serilizedType: 'jsx-node',
-                                    id: 'dom/span',
+                                    $ref: 'dom/span',
                                     children: [{
                                         __serilizedType: 'reference',
-                                        id: '#item'
+                                        $ref: '#item'
                                     }]
                                 }]
                             }
@@ -576,11 +576,11 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'jsx-node',
-                id: 'dom/div',
+                $ref: 'dom/div',
                 children: [
                     {
                         __serilizedType: 'reference-call',
-                        id: '#b',
+                        $ref: '#b',
                         innerPath: ['map'],
                         args: [
                             {
@@ -588,10 +588,10 @@ describe ('generate data literals', () => {
                                 arguments: ['item'],
                                 returns: [{
                                     __serilizedType: 'jsx-node',
-                                    id: 'dom/span',
+                                    $ref: 'dom/span',
                                     children: [{
                                         __serilizedType: 'reference',
-                                        id: '#item'
+                                        $ref: '#item'
                                     }]
                                 }]
                             }

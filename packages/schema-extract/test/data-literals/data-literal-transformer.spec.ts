@@ -107,7 +107,7 @@ describe ('generate data literals', () => {
         it('should serialize an element reference', async () => {
             const {output, node} = await testSerialize(`
                 export const b = {
-                    c:'gaga'
+                    'c-d':'gaga'
                 }
                 export const a = b['c-d'];
             `);
@@ -213,5 +213,286 @@ describe ('generate data literals', () => {
         });
 
     });
+    describe('jsx', () => {
+        it('should serialize jsx elements', async () => {
+            const {output, node} = await testSerialize(`
+                import * as React from 'react';
+                export const a = <div></div>;
+            `);
+            expect(output).to.eql(anExpression({
+                __serilizedType: 'jsx-node',
+                id: 'dom/div'
+            }, node.getText()));
+        });
+        it('should serialize jsx elements attributes', async () => {
+            const {output, node} = await testSerialize(`
+                import * as React from 'react';
+                export const a = <div a="a"></div>;
+            `);
+            expect(output).to.eql(anExpression({
+                __serilizedType: 'jsx-node',
+                id: 'dom/div',
+                attributes: [{
+                    __serilizedType: 'jsx-attribute',
+                    name: 'a',
+                    isLiteral: true,
+                    value: 'a'
+                }]
+            }, node.getText()));
+        });
+        it('should serialize jsx self closing elements', async () => {
+            const {output, node} = await testSerialize(`
+                import * as React from 'react';
+                export const a = <div a="a"/>;
+            `);
+            expect(output).to.eql(anExpression({
+                __serilizedType: 'jsx-node',
+                id: 'dom/div',
+                attributes: [{
+                    __serilizedType: 'jsx-attribute',
+                    name: 'a',
+                    isLiteral: true,
+                    value: 'a'
+                }]
+            }, node.getText()));
+        });
 
+        it('should serialize jsx elements expressions', async () => {
+            const {output, node} = await testSerialize(`
+                import * as React from 'react';
+                export const a = <div style={{height:'100px'}}></div>;
+            `);
+            expect(output).to.eql(anExpression({
+                __serilizedType: 'jsx-node',
+                id: 'dom/div',
+                attributes: [{
+                    __serilizedType: 'jsx-attribute',
+                    name: 'style',
+                    isLiteral: true,
+                    value: {height: '100px'}
+                }]
+            }, node.getText()));
+        });
+        it('should serialize jsx elements expressions', async () => {
+            const {output, node} = await testSerialize(`
+                import * as React from 'react';
+                export const a = <div style={{height:'100px'}}></div>;
+            `);
+            expect(output).to.eql(anExpression({
+                __serilizedType: 'jsx-node',
+                id: 'dom/div',
+                attributes: [{
+                    __serilizedType: 'jsx-attribute',
+                    name: 'style',
+                    isLiteral: true,
+                    value: {height: '100px'}
+                }]
+            }, node.getText()));
+        });
+        describe('expressions', async () => {
+            it('should serialize trinary expressions', async () => {
+                const {output, node} = await testSerialize(`
+                    import * as React from 'react';
+                    export const b = 'b';
+                    export const sometimes = ()=> Math.random() > 0.5;
+                    export const a = sometimes() ? 'a' : b;
+                `);
+                expect(output).to.eql(anExpression({
+                    __serilizedType: 'common/if',
+                    condition: {
+                        __serilizedType: 'reference-call',
+                        id: '#sometimes',
+                        args: []
+                    },
+                    whenTrue: 'a',
+                    whenFalse: {
+                        __serilizedType: 'reference',
+                        id: '#b'
+                    }
+                }, node.getText()));
+            });
+        });
+        describe('jsx children', async () => {
+            it('should serialize jsx text', async () => {
+                const {output, node} = await testSerialize(`
+                    import * as React from 'react';
+                    export const a = <div>hello world</div>;
+                `);
+                expect(output).to.eql(anExpression({
+                    __serilizedType: 'jsx-node',
+                    id: 'dom/div',
+                    children: ['hello world']
+                }, node.getText()));
+            });
+            it('should serialize jsx children', async () => {
+                const {output, node} = await testSerialize(`
+                    import * as React from 'react';
+                    export const a = <div><div style={{height:'100px'}}></div></div>;
+                `);
+                expect(output).to.eql(anExpression({
+                    __serilizedType: 'jsx-node',
+                    id: 'dom/div',
+                    children: [
+                        {
+                            __serilizedType: 'jsx-node',
+                            id: 'dom/div',
+                            attributes: [{
+                                __serilizedType: 'jsx-attribute',
+                                name: 'style',
+                                isLiteral: true,
+                                value: {height: '100px'}
+                            }]
+                        }
+                    ]
+                }, node.getText()));
+            });
+            it('should serialize jsx fragments', async () => {
+                const {output, node} = await testSerialize(`
+                    import * as React from 'react';
+                    export const a = <><div style={{height:'100px'}}></div></>;
+                `);
+                expect(output).to.eql(anExpression({
+                    __serilizedType: 'jsx-node',
+                    id: 'dom/fragment',
+                    children: [
+                        {
+                            __serilizedType: 'jsx-node',
+                            id: 'dom/div',
+                            attributes: [{
+                                __serilizedType: 'jsx-attribute',
+                                name: 'style',
+                                isLiteral: true,
+                                value: {height: '100px'}
+                            }]
+                        }
+                    ]
+                }, node.getText()));
+            });
+
+            it('should serialize jsx child expression', async () => {
+                const {output, node} = await testSerialize(`
+                    import * as React from 'react';
+                    export const b = 'hello world';
+                    export const a = <div>{b}</div>;
+                `);
+                expect(output).to.eql(anExpression({
+                    __serilizedType: 'jsx-node',
+                    id: 'dom/div',
+                    children: [
+                        {
+                            __serilizedType: 'reference',
+                            id: '#b'
+                        }
+                    ]
+                }, node.getText()));
+            });
+        });
+    });
+    describe('boolean operations', () => {
+        it('should serialize not expression', async () => {
+            const {output, node} = await testSerialize(`
+                import * as React from 'react';
+                export const b = true;
+                export const a = !b;
+            `);
+            expect(output).to.eql(anExpression({
+                __serilizedType: 'common/not-operator',
+                expression: {
+                    __serilizedType: 'reference',
+                    id: '#b'
+                }
+
+            }, node.getText()));
+        });
+        it('should serialize parenthesized expression', async () => {
+            const {output, node} = await testSerialize(`
+                import * as React from 'react';
+                export const b = true;
+                export const a = (b);
+            `);
+            expect(output).to.eql(anExpression({
+                __serilizedType: 'common/parenthesis',
+                expression: {
+                    __serilizedType: 'reference',
+                    id: '#b'
+                }
+
+            }, node.getText()));
+        });
+    });
+    describe('binary operations', () => {
+        const inputFactory = (operator: string) => `
+        import * as React from 'react';
+        export const b = true;
+        export const c = false;
+        export const a = c ${operator} b;
+        `;
+        const outputFacotry = (serilizedType: string) => ({
+            __serilizedType: serilizedType,
+            firstOption: {
+                __serilizedType:  'reference',
+                id:  '#c'
+            },
+            secondOption: {
+                __serilizedType: 'reference',
+                id: '#b'
+            }
+        });
+        it('should serialize boolean or expression', async () => {
+            const {output, node} = await testSerialize(inputFactory('||'));
+            expect(output).to.eql(anExpression(outputFacotry('common/binary-or-operator'), node.getText()));
+        });
+        it('should serialize boolean and expression', async () => {
+            const {output, node} = await testSerialize(inputFactory('&&'));
+            expect(output).to.eql(anExpression(outputFacotry('common/binary-and-operator'), node.getText()));
+        });
+        it('should serialize ">" expression', async () => {
+            const {output, node} = await testSerialize(inputFactory('>'));
+            expect(output).to.eql(anExpression(outputFacotry('common/greater-then-operator'), node.getText()));
+        });
+        it('should serialize ">=" expression', async () => {
+            const {output, node} = await testSerialize(inputFactory('>='));
+            expect(output).to.eql(anExpression(outputFacotry('common/equal-greater-then-operator'), node.getText()));
+        });
+        it('should serialize "<" expression', async () => {
+            const {output, node} = await testSerialize(inputFactory('<'));
+            expect(output).to.eql(anExpression(outputFacotry('common/lesser-then-operator'), node.getText()));
+        });
+        it('should serialize "<=" expression', async () => {
+            const {output, node} = await testSerialize(inputFactory('<='));
+            expect(output).to.eql(anExpression(outputFacotry('common/equal-lesser-then-operator'), node.getText()));
+        });
+        it('should serialize "===" expression', async () => {
+            const {output, node} = await testSerialize(inputFactory('==='));
+            expect(output).to.eql(anExpression(outputFacotry('common/equal-operator'), node.getText()));
+        });
+        it('should serialize "==" expression', async () => {
+            const {output, node} = await testSerialize(inputFactory('=='));
+            expect(output).to.eql(anExpression(outputFacotry('common/equal-operator'), node.getText()));
+        });
+        it('should serialize "!==" expression', async () => {
+            const {output, node} = await testSerialize(inputFactory('!=='));
+            expect(output).to.eql(anExpression(outputFacotry('common/not-equal-operator'), node.getText()));
+        });
+        it('should serialize "!=" expression', async () => {
+            const {output, node} = await testSerialize(inputFactory('!='));
+            expect(output).to.eql(anExpression(outputFacotry('common/not-equal-operator'), node.getText()));
+        });
+        it('should serialize "+" expression', async () => {
+            const {output, node} = await testSerialize(inputFactory('+'));
+            expect(output).to.eql(anExpression(outputFacotry('common/plus-operator'), node.getText()));
+        });
+        it('should serialize "-" expression', async () => {
+            const {output, node} = await testSerialize(inputFactory('-'));
+            expect(output).to.eql(anExpression(outputFacotry('common/minus-operator'), node.getText()));
+        });
+        it('should serialize "*" expression', async () => {
+            const {output, node} = await testSerialize(inputFactory('*'));
+            expect(output).to.eql(anExpression(outputFacotry('common/multiplication-operator'), node.getText()));
+        });
+        it('should serialize "/" expression', async () => {
+            const {output, node} = await testSerialize(inputFactory('/'));
+            expect(output).to.eql(anExpression(outputFacotry('common/division-operator'), node.getText()));
+        });
+    });
 });

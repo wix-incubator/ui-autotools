@@ -1,6 +1,6 @@
 import ts from 'typescript';
-import * as path from 'path';
-import {  resolveImportedIdentifier} from './imported-identifier-resolver';
+import {  resolveImportedIdentifier, IFileSystemPath} from './imported-identifier-resolver';
+
 export interface ILiteralInferenceResult {
     isLiteral: true;
     value: any;
@@ -39,7 +39,7 @@ function aProcessedExpression(type: string, id: string, expression: string,  ext
     };
 }
 
-export function generateDataLiteral(checker: ts.TypeChecker, node: ts.Node, usedPath: typeof path.posix, modulePath: string = '', ): ILiteralInferenceResult | IExpressionInferenceResult {
+export function generateDataLiteral(checker: ts.TypeChecker, node: ts.Node, usedPath: IFileSystemPath, modulePath: string = '', ): ILiteralInferenceResult | IExpressionInferenceResult {
     if (ts.isStringLiteral(node)) {
         return aLiteralValue(node.text);
     } else if (ts.isNumericLiteral(node)) {
@@ -112,7 +112,7 @@ export function generateDataLiteral(checker: ts.TypeChecker, node: ts.Node, used
     return anExpression(undefined, node.getText());
 }
 
-function getIdFromExpression(checker: ts.TypeChecker, node: ts.Expression, modulePath: string, pathUtil: typeof path.posix) {
+function getIdFromExpression(checker: ts.TypeChecker, node: ts.Expression, modulePath: string, pathUtil: IFileSystemPath) {
 
     const referencedSymb = checker.getSymbolAtLocation(node)!;
     const referencedSymbDecl = referencedSymb.valueDeclaration || referencedSymb.declarations[0];

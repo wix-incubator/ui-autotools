@@ -1,5 +1,4 @@
 import ts from 'typescript';
-import * as path from 'path';
 import React from 'react';
 import { IFileSystem } from '@file-services/types';
 import { IBaseHost } from '@file-services/typescript';
@@ -65,7 +64,7 @@ export class Playground extends React.PureComponent<IPlaygroundProps, IPlaygroun
         const typeChecker = program && program.getTypeChecker();
         const sourceFile = program && program.getSourceFile(this.props.filePath);
         if (typeChecker && sourceFile) {
-            const moduleSchema = transform(typeChecker, sourceFile, this.props.filePath, '/', path.posix);
+            const moduleSchema = transform(typeChecker, sourceFile, this.props.filePath, '/', this.props.fs.path);
             const schema = moduleSchema.properties && moduleSchema.properties.default ?
                 moduleSchema.properties.default : moduleSchema;
             this.setState({ transpiledOutput, schema });

@@ -1,17 +1,16 @@
 import ts from 'typescript';
 import {ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchemaId, ClassSchemaId, interfaceId, InterfaceSchema } from './json-schema-types';
-import path from 'path';
 import { generateDataLiteral } from './data-literal-transformer';
-import { resolveImportedIdentifier, resolveImportPath } from './imported-identifier-resolver';
+import { resolveImportedIdentifier, resolveImportPath, IFileSystemPath } from './imported-identifier-resolver';
 // console.log(types)
 
 export interface IEnv {
     modulePath: string;
     projectPath: string;
-    pathUtil: typeof path.posix;
+    pathUtil: IFileSystemPath;
 }
 
-export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, moduleId: string, projectPath: string, pathUtil: typeof path.posix) {
+export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, moduleId: string, projectPath: string, pathUtil: IFileSystemPath) {
     const moduleSymbol = (sourceFile as any).symbol;
     const res: ModuleSchema = {
         $schema: 'http://json-schema.org/draft-06/schema#',
@@ -651,7 +650,7 @@ function isUnionType(t: ts.Type): t is ts.UnionType {
     return !!(t as any).types;
 }
 
-function removeExtension(pathName: string, pathUtil: typeof path.posix): string {
+function removeExtension(pathName: string, pathUtil: IFileSystemPath): string {
     return pathName.slice(0, pathUtil.extname(pathName).length * -1);
 }
 
@@ -855,7 +854,7 @@ function addJsDocsTagsToSchema(tags: ts.JSDocTag[], schema: Schema) {
     }
 }
 
-export function getSchemaFromImport(importPath: string, ref: string, program: ts.Program, pathUtil: typeof path.posix, sourceFile?: ts.SourceFile): ModuleSchema | null {
+export function getSchemaFromImport(importPath: string, ref: string, program: ts.Program, pathUtil: IFileSystemPath, sourceFile?: ts.SourceFile): ModuleSchema | null {
     const extensions = ['.js', '.d.ts', '.ts', '.tsx'];
     const checker = program.getTypeChecker();
     let importSourceFile;

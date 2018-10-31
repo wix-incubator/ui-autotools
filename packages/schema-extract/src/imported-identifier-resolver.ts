@@ -1,11 +1,6 @@
 import * as ts from 'typescript';
 export type IFileSystemPath = import ('@file-services/types').IFileSystem['path'];
 
-export interface IEnv {
-    modulePath: string;
-    projectPath: string;
-}
-
 export function resolveImportedIdentifier(node: ts.Node, modulePath: string, posix: IFileSystemPath) {
     if (ts.isNamespaceImport(node)) {
         const target = node.parent!.parent!.moduleSpecifier.getText().slice(1, -1);

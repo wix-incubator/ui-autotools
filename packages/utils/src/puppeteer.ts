@@ -89,7 +89,7 @@ export async function runTestsInPuppeteer({testPageUrl, noSandbox}: {testPageUrl
   } finally {
     try {
       if (browser) {
-        browser.close();
+        await browser.close();
       }
     } catch (_) {
       // If the main code throws and browser.close() also throws, we don't want

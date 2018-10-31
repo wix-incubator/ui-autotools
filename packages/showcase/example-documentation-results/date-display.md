@@ -159,7 +159,7 @@ example style api schema:
             "type": "class",
             "extends": {
                 "$ref": "stylable/html-input"
-            }
+            },
             "states":{
                 "weekend":{
                     "type":"boolean"

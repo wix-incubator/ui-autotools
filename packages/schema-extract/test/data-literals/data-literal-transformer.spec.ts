@@ -440,12 +440,8 @@ describe ('generate data literals', () => {
                 export const a = (b);
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'common/parenthesis',
-                expression: {
                     __serilizedType: 'reference',
                     id: '#b'
-                }
-
             }, node.getText()));
         });
     });
@@ -525,12 +521,46 @@ describe ('generate data literals', () => {
         });
     });
     describe('arrow functions', () => {
-        it('should simple arrow functions', async () => {
+        it('should seriallize simple arrow functions', async () => {
             const {output, node} = await testSerialize(`
                 import * as React from 'react';
                 export const b = ['a','b'];
                 export const a = <div>{
                     b.map((item)=><span>{item}</span>)
+                }</div>;
+            `);
+            expect(output).to.eql(anExpression({
+                __serilizedType: 'jsx-node',
+                id: 'dom/div',
+                children: [
+                    {
+                        __serilizedType: 'reference-call',
+                        id: '#b',
+                        innerPath: ['map'],
+                        args: [
+                            {
+                                __serilizedType: 'function',
+                                arguments: ['item'],
+                                returns: [{
+                                    __serilizedType: 'jsx-node',
+                                    id: 'dom/span',
+                                    children: [{
+                                        __serilizedType: 'reference',
+                                        id: '#item'
+                                    }]
+                                }]
+                            }
+                        ]
+                    }
+                ]
+            }, node.getText()));
+        });
+        it('should serialize functions', async () => {
+            const {output, node} = await testSerialize(`
+                import * as React from 'react';
+                export const b = ['a','b'];
+                export const a = <div>{
+                    b.map((function(item){ return <span>{item}</span>})
                 }</div>;
             `);
             expect(output).to.eql(anExpression({

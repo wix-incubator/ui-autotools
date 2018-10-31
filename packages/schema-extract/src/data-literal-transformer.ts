@@ -254,9 +254,9 @@ const parenthesisSerializer: ISerializer<ts.ParenthesizedExpression> = {
         return ts.isParenthesizedExpression(node);
     },
     serialize: (checker, node, usedPath, modulePath) =>  {
-       return aProcessedExpression('common/parenthesis', node.getText(), {
-          expression: generateDataLiteral(checker, node.expression, usedPath, modulePath).value
-       });
+       return {
+            ...generateDataLiteral(checker, node.expression, usedPath, modulePath),
+            expression: node.getText()};
     }
 };
 const jsxAttributeSerializer: ISerializer<ts.JsxAttribute> = {
@@ -358,17 +358,17 @@ const reactNodeSerializer: ISerializer<ts.JsxElement | ts.JsxSelfClosingElement 
     }
 };
 reactChildSerializers.push(reactNodeSerializer);
-const arrowFunctionSerializer: ISerializer<ts.ArrowFunction> = {
-    isApplicable: function is(node): node is ts.ArrowFunction {
-        return ts.isArrowFunction(node);
+const functionSerializer: ISerializer<ts.ArrowFunction | ts.FunctionExpression> = {
+    isApplicable: function is(node): node is ts.ArrowFunction | ts.FunctionExpression {
+        return ts.isArrowFunction(node) || ts.isFunctionExpression(node);
     },
     serialize: (checker, node, usedPath, modulePath) =>  {
         let returnValues: any[] = [];
-        if (!ts.isBlock(node.body)) {
+        if (ts.isArrowFunction(node) && !ts.isBlock(node.body)) {
             returnValues =  [generateDataLiteral(checker, node.body, usedPath, modulePath).value];
-        } else {
+        } else if (node.body) {
             returnValues = findReturnStatements(node.body).map((statement) =>
-                generateDataLiteral(checker, statement, usedPath, modulePath).value
+                generateDataLiteral(checker, statement.expression!, usedPath, modulePath).value
             );
         }
         return aProcessedExpression('function', node.getText(), {
@@ -378,11 +378,11 @@ const arrowFunctionSerializer: ISerializer<ts.ArrowFunction> = {
     }
 };
 
-export function findReturnStatements(node: ts.Node): ts.Node[] {
+export function findReturnStatements(node: ts.Node): ts.ReturnStatement[] {
     if (ts.isArrowFunction(node) || ts.isMethodDeclaration(node) || ts.isFunctionDeclaration(node)) {
         return [];
     }
-    let res: ts.Node[] = [];
+    let res: ts.ReturnStatement[] = [];
     for (const childDecl of node.getChildren()) {
         if (ts.isReturnStatement(childDecl)) {
             res.push(childDecl);
@@ -408,7 +408,7 @@ const dataLiteralSerializers: Array<ISerializer<any>> = [
     notExpressionSerializer,
     binaryExpressionSerializer,
     parenthesisSerializer,
-    arrowFunctionSerializer
+    functionSerializer
 ];
 export function generateDataLiteral(checker: ts.TypeChecker, node: ts.Node, usedPath: IFileSystemPath, modulePath: string = '', ): ILiteralInferenceResult | IExpressionInferenceResult {
     const serializer = dataLiteralSerializers.find((optionalSerializer) => optionalSerializer.isApplicable(node));

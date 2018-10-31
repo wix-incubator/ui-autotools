@@ -38,7 +38,7 @@ date-display.st.css
 
 .day{
     -st-extends: input;
-    --st-states: weekend, weekdays(enum( sun, mon, ...)) sun;
+    -st-states: weekend, weekdays(enum( sun, mon, ...)) sun;
 }
 
 .month{
@@ -130,7 +130,7 @@ arguments
 | speed | number | 1 | true | -
 
 
-### style API
+### Style API
 
 | Part | Type | States| 
 | - | -| - | - | - |
@@ -146,14 +146,20 @@ example style api schema:
 ```json
 {
     "$schema": "http://json-schema.org/draft-06/schema#",
-    "$id": "src/...date-display.st.css",
+    "$id": "src/.../date-display.st.css",
     "$ref":"stylable/module",
     "properties":{
         "root":{
-            "$ref":"stylable/html-element"
+            "type": "class",
+            "extends": {
+                "$ref": "stylable/html-element"
+            }
         },
         "day":{
-            "$ref":"stylable/html-input",
+            "type": "class",
+            "extends": {
+                "$ref": "stylable/html-input"
+            }
             "states":{
                 "weekend":{
                     "type":"boolean"
@@ -170,13 +176,22 @@ example style api schema:
             }
         },
         "month":{
-            "$ref":"stylable/html-input"
+            "type": "class",
+            "extends": {
+                "$ref": "stylable/html-input"
+            }
         },
         "year":{
-            "$ref":"stylable/html-input"
+            "type": "class",
+            "extends": {
+                "$ref": "stylable/html-input"
+            }
         },
         "clicker":{
-            "$ref":"src/components/button.st.css"
+            "type": "class",
+            "extends": {
+                "$ref": "src/components/button.st.css#root"
+            }
         }
 
     }

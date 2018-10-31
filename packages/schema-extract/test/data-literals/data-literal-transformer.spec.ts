@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {runDataLiteralExtract} from '../../test-kit/run-data-literal-exctrator';
-const testSerialize = (src: string) => runDataLiteralExtract(src, 'a', 'index.tsx');
+const testSerialize = (src: string) => runDataLiteralExtract(src, 'a', '/index.tsx');
 const literal = (value: any) => ({value, isLiteral: true});
 const anExpression = (value: any, expression: string) => ({value, isLiteral: false, expression});
 describe ('generate data literals', () => {
@@ -143,7 +143,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: 'other#b',
+                id: '/other#b',
                 innerPath: ['c']
             }, node.getText()));
         });
@@ -155,7 +155,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: 'other',
+                id: '/other',
                 innerPath: ['b', 'c']
             }, node.getText()));
         });
@@ -167,7 +167,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serilizedType: 'reference',
-                id: 'other#default',
+                id: '/other#default',
                 innerPath: ['c']
             }, node.getText()));
         });
@@ -204,7 +204,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression( {
                 __serilizedType: 'reference-call',
-                id: 'other#func',
+                id: '/other#func',
                 args: ['xxx', 555]
             }, node.getText()));
         });
@@ -251,6 +251,17 @@ describe ('generate data literals', () => {
             expect(output).to.eql(anExpression({
                 __serilizedType: 'jsx-node',
                 id: 'dom/div'
+            }, node.getText()));
+        });
+        it('should serialize jsx elements with reference tagname', async () => {
+            const {output, node} = await testSerialize(`
+                import * as React from 'react';
+                import {Button} from './button';
+                export const a = <Button></Button>;
+            `);
+            expect(output).to.eql(anExpression({
+                __serilizedType: 'jsx-node',
+                id: '/button#Button'
             }, node.getText()));
         });
         it('should serialize jsx elements attributes', async () => {

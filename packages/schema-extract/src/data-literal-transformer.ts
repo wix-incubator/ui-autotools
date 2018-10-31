@@ -314,6 +314,9 @@ const reactChildSerializers: Array<ISerializer<any>> = [
     jsxTextSerializer,
     jsxExpressionSerializer
 ];
+function startsWithLowerCase(str: string) {
+    return str.charAt(0).toUpperCase() !== str.charAt(0);
+}
 const reactNodeSerializer: ISerializer<ts.JsxElement | ts.JsxSelfClosingElement | ts.JsxFragment> = {
     isApplicable: function is(node): node is ts.JsxElement | ts.JsxSelfClosingElement | ts.JsxFragment {
         return ts.isJsxSelfClosingElement(node) || ts.isJsxElement(node) || ts.isJsxFragment(node);
@@ -321,7 +324,9 @@ const reactNodeSerializer: ISerializer<ts.JsxElement | ts.JsxSelfClosingElement 
     serialize: (checker, node, usedPath, modulePath) =>  {
         const startNode = ts.isJsxElement(node) ? node.openingElement : node;
 
-        const tagName = ts.isJsxFragment(startNode) ? 'dom/fragment' : 'dom/' + startNode.tagName.getText();
+        const tagName = ts.isJsxFragment(startNode) ? 'dom/fragment' :
+                        startsWithLowerCase(startNode.tagName.getText()) ? 'dom/' + startNode.tagName.getText() :
+                        getIdFromExpression(checker, startNode.tagName, modulePath, usedPath);
         const attributes: ts.NodeArray<ts.JsxAttributeLike> = ts.isJsxFragment(startNode) ? ([] as any) : startNode.attributes.properties;
         let children: any[] = [];
         const attributeOutputs = attributes.map((attribute) => {

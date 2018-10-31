@@ -157,7 +157,11 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
         res = describeTypeNode(decl.type!, checker, env, set).schema;
         if (decl.initializer) {
             isRequired = false;
-            const defaultVal = generateDataLiteral(checker, decl.initializer, env.pathUtil, env.modulePath);
+            const defaultVal = generateDataLiteral({
+                checker,
+                pathUtil: env.pathUtil,
+                modulePath: env.modulePath
+            }, decl.initializer);
             if (!defaultVal.isLiteral) {
                 res!.initializer = defaultVal.expression;
             } else {
@@ -182,7 +186,11 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
             };
         } else {
             res = serializeType(checker.getTypeAtLocation(decl), decl, checker, env).schema;
-            const defaultVal = generateDataLiteral(checker, decl.initializer, env.pathUtil, env.modulePath);
+            const defaultVal = generateDataLiteral({
+                checker,
+                pathUtil: env.pathUtil,
+                modulePath: env.modulePath
+            }, decl.initializer);
             if (!defaultVal.isLiteral) {
                 res!.initializer = defaultVal.expression;
             } else {
@@ -201,7 +209,11 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
         res = serializeType(checker.getTypeAtLocation(decl), decl, checker, env).schema;
         const child = decl.getChildAt(0);
         if (child && ts.isObjectBindingPattern(child)) {
-            const defaultVal = generateDataLiteral(checker, child, env.pathUtil, env.modulePath);
+            const defaultVal = generateDataLiteral({
+                checker,
+                pathUtil: env.pathUtil,
+                modulePath: env.modulePath
+            }, child);
             if (!defaultVal.isLiteral) {
                 res!.initializer = defaultVal.expression;
             } else {

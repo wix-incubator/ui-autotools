@@ -13,5 +13,9 @@ export async function runDataLiteralExtract(sourceFile: string, entityName: stri
         throw new Error('invalid input for run-data-literal');
     }
 
-    return {output: generateDataLiteral(checker, node.initializer!, fs.path, fileName), node: node.initializer!};
+    return {output: generateDataLiteral({
+        checker,
+        modulePath: fileName,
+        pathUtil: fs.path
+    }, node.initializer!), node: node.initializer!};
 }

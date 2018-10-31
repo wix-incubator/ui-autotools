@@ -184,6 +184,19 @@ describe ('generate data literals', () => {
             }, node.getText()));
         });
 
+        it('should serialize a function call', async () => {
+            const {output, node} = await testSerialize(`
+                export const b = { func:()=>{} }
+                export const a = b.func("xxx", 555);
+            `);
+            expect(output).to.eql(anExpression({
+                __serilizedType: 'reference-call',
+                id: '#b',
+                innerPath: ['func'],
+                args: ['xxx', 555]
+            }, node.getText()));
+        });
+
         it('should serialize a function call from an import', async () => {
             const {output, node} = await testSerialize(`
                 import {func} from './other';
@@ -211,7 +224,23 @@ describe ('generate data literals', () => {
                 args: ['gaga']
             }, node.getText()));
         });
+        it('should serialize an instance creation with innerPath', async () => {
+            const {output, node} = await testSerialize(`
+                export class cls() {
+                    constructor(name:string){
 
+                    }
+                }
+                export const b = {cls}
+                export const a = new b.cls('gaga');
+            `);
+            expect(output).to.eql(anExpression({
+                __serilizedType: 'reference-construct',
+                id: '#b',
+                innerPath: ['cls'],
+                args: ['gaga']
+            }, node.getText()));
+        });
     });
     describe('jsx', () => {
         it('should serialize jsx elements', async () => {
@@ -493,6 +522,42 @@ describe ('generate data literals', () => {
         it('should serialize "/" expression', async () => {
             const {output, node} = await testSerialize(inputFactory('/'));
             expect(output).to.eql(anExpression(outputFacotry('common/division-operator'), node.getText()));
+        });
+    });
+    describe('arrow functions', () => {
+        it('should simple arrow functions', async () => {
+            const {output, node} = await testSerialize(`
+                import * as React from 'react';
+                export const b = ['a','b'];
+                export const a = <div>{
+                    b.map((item)=><span>{item}</span>)
+                }</div>;
+            `);
+            expect(output).to.eql(anExpression({
+                __serilizedType: 'jsx-node',
+                id: 'dom/div',
+                children: [
+                    {
+                        __serilizedType: 'reference-call',
+                        id: '#b',
+                        innerPath: ['map'],
+                        args: [
+                            {
+                                __serilizedType: 'function',
+                                arguments: ['item'],
+                                returns: [{
+                                    __serilizedType: 'jsx-node',
+                                    id: 'dom/span',
+                                    children: [{
+                                        __serilizedType: 'reference',
+                                        id: '#item'
+                                    }]
+                                }]
+                            }
+                        ]
+                    }
+                ]
+            }, node.getText()));
         });
     });
 });

@@ -43,13 +43,25 @@ function aProcessedExpression(type: string, expression: string,  extraFields: an
     };
 }
 
+function getReferencePath(checker: ts.TypeChecker, node: ts.Node, pathUtil: IFileSystemPath, modulePath: string): {id: string, innerPath ?: any[]; } {
+    if (propertyAccessSerializer.isApplicable(node)) {
+        const res = propertyAccessSerializer.serialize(checker, node, pathUtil, modulePath);
+        return {
+            id: res.value.id,
+            innerPath: res.value.innerPath
+        };
+    }
+    return {id: getIdFromExpression(checker, node as any, modulePath, pathUtil) };
+}
+
 const callExpressionSerializer: ISerializer<ts.CallExpression> = {
     isApplicable: function is(node): node is ts.CallExpression {
         return ts.isCallExpression(node);
     },
     serialize: (checker, node, usedPath, modulePath) =>  {
+        const referencePath = getReferencePath(checker, node.expression, usedPath, modulePath);
         return aProcessedExpression('reference-call', node.getText(), {
-            id: getIdFromExpression(checker, node.expression, modulePath, usedPath),
+            ...referencePath,
             args: node.arguments.map((arg) => generateDataLiteral(checker, arg, usedPath, modulePath).value)
         });
     }
@@ -59,8 +71,9 @@ const newExpressionSerializer: ISerializer<ts.NewExpression> = {
         return ts.isNewExpression(node);
     },
     serialize: (checker, node, usedPath, modulePath) =>  {
+        const referencePath = getReferencePath(checker, node.expression, usedPath, modulePath);
         return aProcessedExpression('reference-construct', node.getText(),  {
-            id: getIdFromExpression(checker, node.expression, modulePath, usedPath),
+            ...referencePath,
             args: node.arguments!.map((arg) => generateDataLiteral(checker, arg, usedPath, modulePath).value)
         });
     }
@@ -345,7 +358,40 @@ const reactNodeSerializer: ISerializer<ts.JsxElement | ts.JsxSelfClosingElement 
     }
 };
 reactChildSerializers.push(reactNodeSerializer);
+const arrowFunctionSerializer: ISerializer<ts.ArrowFunction> = {
+    isApplicable: function is(node): node is ts.ArrowFunction {
+        return ts.isArrowFunction(node);
+    },
+    serialize: (checker, node, usedPath, modulePath) =>  {
+        let returnValues: any[] = [];
+        if (!ts.isBlock(node.body)) {
+            returnValues =  [generateDataLiteral(checker, node.body, usedPath, modulePath).value];
+        } else {
+            returnValues = findReturnStatements(node.body).map((statement) =>
+                generateDataLiteral(checker, statement, usedPath, modulePath).value
+            );
+        }
+        return aProcessedExpression('function', node.getText(), {
+            returns: returnValues,
+            arguments: node.parameters.map((param) => param.name.getText())
+        });
+    }
+};
 
+export function findReturnStatements(node: ts.Node): ts.Node[] {
+    if (ts.isArrowFunction(node) || ts.isMethodDeclaration(node) || ts.isFunctionDeclaration(node)) {
+        return [];
+    }
+    let res: ts.Node[] = [];
+    for (const childDecl of node.getChildren()) {
+        if (ts.isReturnStatement(childDecl)) {
+            res.push(childDecl);
+        } else {
+            res = res.concat(findReturnStatements(childDecl));
+        }
+    }
+    return res;
+}
 const dataLiteralSerializers: Array<ISerializer<any>> = [
     stringLiteralSerializer,
     numericLiteralSerializer,
@@ -361,7 +407,8 @@ const dataLiteralSerializers: Array<ISerializer<any>> = [
     trinaryExpressionSerializer,
     notExpressionSerializer,
     binaryExpressionSerializer,
-    parenthesisSerializer
+    parenthesisSerializer,
+    arrowFunctionSerializer
 ];
 export function generateDataLiteral(checker: ts.TypeChecker, node: ts.Node, usedPath: IFileSystemPath, modulePath: string = '', ): ILiteralInferenceResult | IExpressionInferenceResult {
     const serializer = dataLiteralSerializers.find((optionalSerializer) => optionalSerializer.isApplicable(node));

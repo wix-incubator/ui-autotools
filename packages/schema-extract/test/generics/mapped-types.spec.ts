@@ -5,7 +5,7 @@ import {transformTest} from '../../test-kit/run-transform';
 describe('schema-extract - generic mapped types', () => {
     it('should support genric mapped type definition', async () => {
         const moduleId = 'type-definition';
-        const res = transformTest(`
+        const res = await transformTest(`
         export type MyType<T> = {
             [something in 'a' | 'b']:T;
         };
@@ -45,7 +45,7 @@ describe('schema-extract - generic mapped types', () => {
 
     it('should support generic key for mapped types', async () => {
         const moduleId = 'type-definition';
-        const res = transformTest(`
+        const res = await transformTest(`
         export type MyType<T extends string> = {
             [key in T]:string;
         };

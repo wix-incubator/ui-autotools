@@ -5,7 +5,7 @@ import {transformTest} from '../../test-kit/run-transform';
 describe('schema-extract - generic types', () => {
     it('should support genric type definition', async () => {
         const moduleId = 'type-definition';
-        const res = transformTest(`
+        const res = await transformTest(`
         export type MyType<T> = {
             something:T;
         };
@@ -44,7 +44,7 @@ describe('schema-extract - generic types', () => {
 
     it('should support generic arguments schema', async () => {
         const moduleId = 'type-definition';
-        const res = transformTest(`
+        const res = await transformTest(`
         export type MyType<T extends string> = {
             something:T;
         };
@@ -87,7 +87,7 @@ describe('schema-extract - generic types', () => {
 
     it('generic arguments should be passed deeply', async () => {
         const moduleId = 'type-definition';
-        const res = transformTest(`
+        const res = await transformTest(`
         export type MyType<T extends string> = {
             something:{
                 deepKey:T

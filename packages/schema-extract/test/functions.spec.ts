@@ -5,7 +5,7 @@ import {transformTest} from '../test-kit/run-transform';
 describe('schema-extract - functions', () => {
     it('should support infered function return values', async () => {
         const moduleId = 'infered_functions';
-        const res = transformTest(`
+        const res = await transformTest(`
         export function inferedFunction(str:string){
             return str+'a'
         };
@@ -40,7 +40,7 @@ describe('schema-extract - functions', () => {
         const functionInitializer = `(str:string)=>{
             return str+'a'
         }`;
-        const res = transformTest(`
+        const res = await transformTest(`
 
         export const declaredFunction:(str:string)=>string = ${functionInitializer};
 
@@ -79,7 +79,7 @@ describe('schema-extract - functions', () => {
         const functionInitializer = `(str:string)=>{
             return str+'a'
         }`;
-        const res = transformTest(`
+        const res = await transformTest(`
 
         export const declaredFunction:(str:string,num?:number)=>string = ${functionInitializer};
 
@@ -120,7 +120,7 @@ describe('schema-extract - functions', () => {
         const functionInitializer = `(str:string)=>{
             return str+'a'
         }`;
-        const res = transformTest(`
+        const res = await transformTest(`
 
         export const declaredFunction:(str:string,num:number = 5)=>string = ${functionInitializer};
 
@@ -160,7 +160,7 @@ describe('schema-extract - functions', () => {
 
     it('should support functions with parameter deconstruct', async () => {
         const moduleId = 'functions';
-        const res = transformTest(`
+        const res = await transformTest(`
 
         export function inferedDeconstruct ({x=1, y="text"}) { return x + y; };
 
@@ -210,7 +210,7 @@ describe('schema-extract - functions', () => {
         const functionInitializer = `(str:string)=>{
             return str+'a'
         }`;
-        const res = transformTest(`
+        const res = await transformTest(`
         export const functionWithRestParams:(str:string, ...rest:number[])=>string = ${functionInitializer};
 
         `, moduleId);
@@ -249,7 +249,7 @@ describe('schema-extract - functions', () => {
 
     it('should support infered void functions', async () => {
         const moduleId = 'functions';
-        const res = transformTest(`
+        const res = await transformTest(`
         export function voidFunc(str:string){
             console.log(str);
         };
@@ -281,7 +281,7 @@ describe('schema-extract - functions', () => {
 
     it('should support declared void functions', async () => {
         const moduleId = 'functions';
-        const res = transformTest(`
+        const res = await transformTest(`
         export function voidFunc(str:string):void{
             console.log(str);
         };
@@ -313,7 +313,7 @@ describe('schema-extract - functions', () => {
 
     it('should support infered function return type (non primitive import)', async () => {
         const moduleId = 'infered_functions';
-        const res = transformTest(`
+        const res = await transformTest(`
         import {AClass} from './test-assets
         export function inferedFunction(str:string){
             const res:AClass = 'gaga' as any;
@@ -348,7 +348,7 @@ describe('schema-extract - functions', () => {
 
     xit('should support functions that return JSX element', async () => {
         const moduleId = 'jsx_functions';
-        const res = transformTest(`
+        const res = await transformTest(`
         import React from 'react';
 
         export function jsxFunction(){

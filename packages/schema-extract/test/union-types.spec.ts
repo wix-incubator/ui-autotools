@@ -5,7 +5,7 @@ import {transformTest} from '../test-kit/run-transform';
 describe('schema-extract - union', () => {
     it('should support union types', async () => {
         const moduleId = 'unions';
-        const res = transformTest(`
+        const res = await transformTest(`
         import {AType} from './test-assets'
 
         export let declared_union : string | number;

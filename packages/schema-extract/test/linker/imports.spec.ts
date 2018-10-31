@@ -5,7 +5,7 @@ import {linkTest} from '../../test-kit/run-linker';
 describe('schema-linker - imports', () => {
     it('should link imported generic type definition', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({
+        const res = await linkTest({
             [fileName]: `
                 import {MyType} from './import';
                 export type B = MyType<string>;`,

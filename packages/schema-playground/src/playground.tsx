@@ -64,7 +64,7 @@ export class Playground extends React.PureComponent<IPlaygroundProps, IPlaygroun
         const typeChecker = program && program.getTypeChecker();
         const sourceFile = program && program.getSourceFile(this.props.filePath);
         if (typeChecker && sourceFile) {
-            const moduleSchema = transform(typeChecker, sourceFile, this.props.filePath, '/');
+            const moduleSchema = transform(typeChecker, sourceFile, this.props.filePath, '/', this.props.fs.path);
             const schema = moduleSchema.properties && moduleSchema.properties.default ?
                 moduleSchema.properties.default : moduleSchema;
             this.setState({ transpiledOutput, schema });

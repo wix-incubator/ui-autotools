@@ -5,7 +5,7 @@ import {transformTest} from '../test-kit/run-transform';
 describe('schema-extract - objects', () => {
     it('should support "any" object', async () => {
         const moduleId = 'export-types';
-        const res = transformTest(`
+        const res = await transformTest(`
         import { AType } from './test-assets';
 
         export let declared_object:Object;
@@ -25,7 +25,7 @@ describe('schema-extract - objects', () => {
     });
     it('should objects with properties', async () => {
         const moduleId = 'export-types';
-        const res = transformTest(`
+        const res = await transformTest(`
         import { AType } from './test-assets';
 
         export let declared_object:{};
@@ -93,7 +93,7 @@ describe('schema-extract - objects', () => {
     });
     it('should suport objects with optional properties', async () => {
         const moduleId = 'export-types';
-        const res = transformTest(`
+        const res = await transformTest(`
         import { AType } from './test-assets';
 
 
@@ -129,7 +129,7 @@ describe('schema-extract - objects', () => {
     });
     it('should objects with index signature', async () => {
         const moduleId = 'index-signatures';
-        const res = transformTest(`
+        const res = await transformTest(`
         import { AType } from './test-assets';
 
         export let declared_object_with_index:{[key:string]:string};
@@ -182,7 +182,7 @@ describe('schema-extract - objects', () => {
 
     it('should objects with specific index signature', async () => {
         const moduleId = 'index-signatures';
-        const res = transformTest(`
+        const res = await transformTest(`
         import { AType } from './test-assets';
 
         export let declared_object_with_specific_index:{[key in 'a' | 'b']:string};

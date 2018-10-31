@@ -5,7 +5,7 @@ import {linkTest} from '../../test-kit/run-linker';
 describe('schema-linker - intersections', () => {
     it('should flatten intersection types', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
+        const res = await linkTest({[fileName]: `
         export type A = {
             something:number;
         };
@@ -34,7 +34,7 @@ describe('schema-linker - intersections', () => {
 
     it('should properly handle an intersection between a type and interface', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
+        const res = await linkTest({[fileName]: `
         export interface A {
             something:string
         }
@@ -64,7 +64,7 @@ describe('schema-linker - intersections', () => {
 
     it('should properly handle an intersection between a type and interface 2', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
+        const res = await linkTest({[fileName]: `
         export interface A {
             something:string
         }
@@ -94,7 +94,7 @@ describe('schema-linker - intersections', () => {
 
     it('should flatten intersection types inside union', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
+        const res = await linkTest({[fileName]: `
         export type A = {
             something:number;
         };
@@ -132,7 +132,7 @@ describe('schema-linker - intersections', () => {
     });
     it('should deep flatten generic type definition with intersections', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
+        const res = await linkTest({[fileName]: `
         export type MyType<T> = {
             something: {
                 a: T;

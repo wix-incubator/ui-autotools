@@ -5,7 +5,7 @@ import {transformTest} from '../test-kit/run-transform';
 describe('schema-extract - primitives', () => {
     it('should support primitives', async () => {
         const moduleId = 'primitives';
-        const res = transformTest(`
+        const res = await transformTest(`
         export let declared_string: string;
         export let declared_number: number;
         export let declared_boolean: boolean;
@@ -60,7 +60,7 @@ describe('schema-extract - primitives', () => {
 
     it('should support exact primitives', async () => {
         const moduleId = 'primitives';
-        const res = transformTest(`
+        const res = await transformTest(`
         export let specificString: "A";
         export let specificNumber: 5;
 
@@ -90,7 +90,7 @@ describe('schema-extract - primitives', () => {
 
     it('should support all primitive types', async () => {
         const moduleId = 'primitives';
-        const res = transformTest(`
+        const res = await transformTest(`
              export interface InterfaceA {
              foobar?: 5 | 'hello' | false | true | undefined | null | any;
              }

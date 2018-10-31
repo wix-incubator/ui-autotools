@@ -5,7 +5,7 @@ import {transformTest} from '../test-kit/run-transform';
 describe('schema-extract - intersection', () => {
     it('should support intersection types', async () => {
         const moduleId = 'intersection';
-        const res = transformTest(`
+        const res = await transformTest(`
         export type A = {
             a:string;
             b:string;

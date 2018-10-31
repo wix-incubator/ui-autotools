@@ -1,17 +1,16 @@
 import ts from 'typescript';
 import {ModuleSchema, Schema, NullSchemaId, UndefinedSchemaId, FunctionSchemaId, isSchemaOfType, FunctionSchema, ClassSchema, ClassConstructorSchemaId, ClassSchemaId, interfaceId, InterfaceSchema } from './json-schema-types';
-import path from 'path';
-import { generateDataLiteral, isFailedInference } from './data-literal-transformer';
-import { resolveImportedIdentifier, resolveImportPath } from './imported-identifier-resolver';
+import { generateDataLiteral } from './data-literal-transformer';
+import { resolveImportedIdentifier, resolveImportPath, IFileSystemPath } from './imported-identifier-resolver';
 // console.log(types)
-const posix: typeof path.posix = path.posix ? path.posix : path;
 
 export interface IEnv {
     modulePath: string;
     projectPath: string;
+    pathUtil: IFileSystemPath;
 }
 
-export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, moduleId: string, projectPath: string) {
+export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, moduleId: string, projectPath: string, pathUtil: IFileSystemPath) {
     const moduleSymbol = (sourceFile as any).symbol;
     const res: ModuleSchema = {
         $schema: 'http://json-schema.org/draft-06/schema#',
@@ -25,6 +24,7 @@ export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, mo
     const env: IEnv = {
         modulePath: moduleId,
         projectPath,
+        pathUtil
     };
     const exports = checker.getExportsOfModule(moduleSymbol);
 
@@ -112,7 +112,7 @@ const exportSpecifierDescriber: TsNodeDescriber<ts.ExportSpecifier> = (decl, che
     if (ts.isExportDeclaration(exportClause) && exportClause.moduleSpecifier) {
         return {
             schema: {
-                $ref: resolveImportPath(exportClause.moduleSpecifier!.getText().slice(1, -1), '#typeof ' + symb!.name, env.modulePath, posix),
+                $ref: resolveImportPath(exportClause.moduleSpecifier!.getText().slice(1, -1), '#typeof ' + symb!.name, env.modulePath, env.pathUtil),
             }
         };
     }
@@ -157,11 +157,11 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
         res = describeTypeNode(decl.type!, checker, env, set).schema;
         if (decl.initializer) {
             isRequired = false;
-            const defaultVal = generateDataLiteral(checker, decl.initializer);
-            if (isFailedInference(defaultVal)) {
+            const defaultVal = generateDataLiteral(checker, decl.initializer, env.pathUtil, env.modulePath);
+            if (!defaultVal.isLiteral) {
                 res!.initializer = defaultVal.expression;
             } else {
-                res!.default = defaultVal;
+                res!.default = defaultVal.value;
             }
         }
     } else if (decl.initializer) {
@@ -182,11 +182,11 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
             };
         } else {
             res = serializeType(checker.getTypeAtLocation(decl), decl, checker, env).schema;
-            const defaultVal = generateDataLiteral(checker, decl.initializer);
-            if (isFailedInference(defaultVal)) {
+            const defaultVal = generateDataLiteral(checker, decl.initializer, env.pathUtil, env.modulePath);
+            if (!defaultVal.isLiteral) {
                 res!.initializer = defaultVal.expression;
             } else {
-                res!.default = defaultVal;
+                res!.default = defaultVal.value;
             }
         }
     }
@@ -201,11 +201,11 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
         res = serializeType(checker.getTypeAtLocation(decl), decl, checker, env).schema;
         const child = decl.getChildAt(0);
         if (child && ts.isObjectBindingPattern(child)) {
-            const defaultVal = generateDataLiteral(checker, child);
-            if (isFailedInference(defaultVal)) {
+            const defaultVal = generateDataLiteral(checker, child, env.pathUtil, env.modulePath);
+            if (!defaultVal.isLiteral) {
                 res!.initializer = defaultVal.expression;
             } else {
-                res!.default = defaultVal;
+                res!.default = defaultVal.value;
             }
         }
 
@@ -499,7 +499,7 @@ const describeIdentifier: TsNodeDescriber<ts.Identifier> = (decl, checker, env, 
     const referencedSymbDecl = getNode(referencedSymb);
     let ref: string = '';
     if (referencedSymbDecl) {
-        const importedRef = resolveImportedIdentifier(referencedSymbDecl, env.modulePath, posix);
+        const importedRef = resolveImportedIdentifier(referencedSymbDecl, env.modulePath, env.pathUtil);
         if (importedRef) {
             return {
                 schema: {
@@ -650,8 +650,8 @@ function isUnionType(t: ts.Type): t is ts.UnionType {
     return !!(t as any).types;
 }
 
-function removeExtension(pathName: string): string {
-    return pathName.slice(0, posix.extname(pathName).length * -1);
+function removeExtension(pathName: string, pathUtil: IFileSystemPath): string {
+    return pathName.slice(0, pathUtil.extname(pathName).length * -1);
 }
 
 const supportedPrimitives = ['string', 'number', 'boolean'];
@@ -670,7 +670,7 @@ function serializeType(t: ts.Type, rootNode: ts.Node, checker: ts.TypeChecker, e
             const fileName = node.getSourceFile().fileName;
             const currentFileName = rootNode.getSourceFile().fileName;
             if (fileName !== currentFileName) {
-                const fileNameNoExt = removeExtension(fileName);
+                const fileNameNoExt = removeExtension(fileName, env.pathUtil);
                 const pathInProj = fileNameNoExt.includes('node_modules') ? fileNameNoExt : fileNameNoExt.slice(env.projectPath.length);
                 return {
                     schema: {
@@ -854,7 +854,7 @@ function addJsDocsTagsToSchema(tags: ts.JSDocTag[], schema: Schema) {
     }
 }
 
-export function getSchemaFromImport(importPath: string, ref: string, program: ts.Program, sourceFile?: ts.SourceFile): ModuleSchema | null {
+export function getSchemaFromImport(importPath: string, ref: string, program: ts.Program, pathUtil: IFileSystemPath, sourceFile?: ts.SourceFile): ModuleSchema | null {
     const extensions = ['.js', '.d.ts', '.ts', '.tsx'];
     const checker = program.getTypeChecker();
     let importSourceFile;
@@ -867,7 +867,7 @@ export function getSchemaFromImport(importPath: string, ref: string, program: ts
             const newRef = module.resolvedFileName;
             importSourceFile = program.getSourceFile(newRef);
             if (importSourceFile) {
-                return transform(checker, importSourceFile , importPath + ref, importPath);
+                return transform(checker, importSourceFile , importPath + ref, importPath, pathUtil);
             }
         }
     }
@@ -880,7 +880,7 @@ export function getSchemaFromImport(importPath: string, ref: string, program: ts
     if (!importSourceFile) {
         return null;
     }
-    return transform(checker, importSourceFile , importPath + ref, importPath);
+    return transform(checker, importSourceFile , importPath + ref, importPath, pathUtil);
 }
 
 // This is to handle circular types

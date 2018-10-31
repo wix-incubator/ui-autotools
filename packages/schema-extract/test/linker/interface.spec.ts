@@ -5,7 +5,7 @@ import {linkTest} from '../../test-kit/run-linker';
 describe('schema-linker - interfaces', () => {
     it('should flatten interface definitions', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
+        const res = await linkTest({[fileName]: `
         export interface TypeA<T> {
             something:T;
         };
@@ -32,7 +32,7 @@ describe('schema-linker - interfaces', () => {
 
     it('should flatten interface definitions 2', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
+        const res = await linkTest({[fileName]: `
         export interface TypeA {
             something:string;
         };
@@ -55,7 +55,7 @@ describe('schema-linker - interfaces', () => {
 
     it('should flatten interface definitions 3', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
+        const res = await linkTest({[fileName]: `
         export interface TypeA {
             something:string;
         };
@@ -83,7 +83,7 @@ describe('schema-linker - interfaces', () => {
 
     it('should flatten interfaces that extend an already extended interface', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
+        const res = await linkTest({[fileName]: `
         export interface TypeA {
             something:string;
         };
@@ -118,7 +118,7 @@ describe('schema-linker - interfaces', () => {
 
     it('should flatten interfaces that extend an already extended interface 2', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
+        const res = await linkTest({[fileName]: `
         export interface TypeA<T> {
             something:T;
         };
@@ -153,7 +153,7 @@ describe('schema-linker - interfaces', () => {
 
     it('should return the correct interface if no flattening is needed', async () => {
         const fileName = 'index.ts';
-        const res = linkTest({[fileName]: `
+        const res = await linkTest({[fileName]: `
         export interface TypeA {
             something:string;
         };

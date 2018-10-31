@@ -2,7 +2,7 @@ import ts from 'typescript';
 import React from 'react';
 import { IFileSystem } from '@file-services/types';
 import { IBaseHost } from '@file-services/typescript';
-import { transform } from '@ui-autotools/schema-extract/esm/file-transformer';
+import { transform } from '@ui-autotools/schema-extract';
 import {BaseView as BaseSchemaView, defaultSchemaViewRegistry} from '@ui-autotools/schema-views/src';
 
 import 'sanitize.css';

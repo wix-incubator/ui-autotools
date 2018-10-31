@@ -137,6 +137,10 @@ Renders components, takes screenshots, and then sends screenshots to Applitools 
 autotools snap --files ./components/**/*.meta.ts
 ```
 
+#### Options
+
+- `skip-if-missing-key`: set this flag if you want to skip testing when `process.env.EYES_API_KEY` or `process.env.APPLITOOLS_API_KEY` variables are not set. By default, snap will fail if either of these keys are not set.
+
 ### Showcase
 
 Creates a static website with documentation, API and demos for all components described in the meta files.

@@ -1,10 +1,7 @@
 import {consoleError} from '@ui-autotools/utils';
 
-export function eyesKeyExists(skipOnMissingKey: boolean): boolean {
+export function eyesKeyExists(): boolean {
   if (!process.env.APPLITOOLS_API_KEY && !process.env.EYES_API_KEY) {
-    if (!skipOnMissingKey) {
-      throw new Error('The environment variable "APPLITOOLS_API_KEY" needs to be defined.');
-    }
     return false;
   }
 

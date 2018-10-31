@@ -7,13 +7,15 @@ import Registry from '@ui-autotools/registry';
 import { consoleLog } from '@ui-autotools/utils';
 
 export async function eyesTest(projectPath: string, skipOnMissingKey: boolean) {
-  if (eyesKeyExists(skipOnMissingKey)) {
+  if (eyesKeyExists()) {
     const tmpDir = await createTempDirectory();
     const files = buildBaseFiles(projectPath, Registry);
     await generateSnapshots(projectPath, tmpDir.path, Registry, files);
     await runEyes(projectPath, tmpDir.path, files);
     await tmpDir.remove();
-  } else {
+  } else if (skipOnMissingKey) {
     consoleLog('The "--skip-on-missing-key" flag was set to true, and no API key exists, so snap is skipping the eyes test.');
+  } else {
+    throw new Error('The environment variable "APPLITOOLS_API_KEY" needs to be defined.');
   }
 }

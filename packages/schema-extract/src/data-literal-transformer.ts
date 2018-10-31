@@ -1,6 +1,6 @@
 import ts from 'typescript';
-import * as path from 'path';
-import {  resolveImportedIdentifier} from './imported-identifier-resolver';
+import {  resolveImportedIdentifier, IFileSystemPath} from './imported-identifier-resolver';
+
 export interface ILiteralInferenceResult {
     isLiteral: true;
     value: any;
@@ -14,7 +14,7 @@ export interface IExpressionInferenceResult {
 
 interface ISerializer<INPUT extends ts.Node, OUTPUT extends ILiteralInferenceResult | IExpressionInferenceResult = ILiteralInferenceResult | IExpressionInferenceResult> {
     isApplicable: (node: ts.Node) => node is INPUT;
-    serialize: (checker: ts.TypeChecker, node: INPUT, usedPath: typeof path.posix, modulePath: string) => OUTPUT;
+    serialize: (checker: ts.TypeChecker, node: INPUT, usedPath: IFileSystemPath, modulePath: string) => OUTPUT;
 }
 
 function aLiteralValue(value: any): ILiteralInferenceResult {
@@ -363,7 +363,7 @@ const dataLiteralSerializers: Array<ISerializer<any>> = [
     binaryExpressionSerializer,
     parenthesisSerializer
 ];
-export function generateDataLiteral(checker: ts.TypeChecker, node: ts.Node, usedPath: typeof path.posix, modulePath: string = '', ): ILiteralInferenceResult | IExpressionInferenceResult {
+export function generateDataLiteral(checker: ts.TypeChecker, node: ts.Node, usedPath: IFileSystemPath, modulePath: string = '', ): ILiteralInferenceResult | IExpressionInferenceResult {
     const serializer = dataLiteralSerializers.find((optionalSerializer) => optionalSerializer.isApplicable(node));
     if (serializer) {
         return serializer.serialize(checker, node as any, usedPath, modulePath );
@@ -371,7 +371,7 @@ export function generateDataLiteral(checker: ts.TypeChecker, node: ts.Node, used
     return anExpression(undefined, node.getText());
 }
 
-function getIdFromExpression(checker: ts.TypeChecker, node: ts.Expression, modulePath: string, pathUtil: typeof path.posix) {
+function getIdFromExpression(checker: ts.TypeChecker, node: ts.Expression, modulePath: string, pathUtil: IFileSystemPath) {
 
     const referencedSymb = checker.getSymbolAtLocation(node)!;
     if (referencedSymb) {

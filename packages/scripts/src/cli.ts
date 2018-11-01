@@ -48,7 +48,7 @@ program
 .command('snap')
 .description('compare components to the expected appearance using Applitools Eyes')
 .option('-f, --files [pattern]', 'metadata file pattern')
-.option('-s, --skip-on-missing-key [boolean]', 'Grep file')
+.option('-s, --skip-on-missing-key [boolean]', 'if flag is set, skip tests when no EYES or APPLITOOLS API key present')
 .action(async (options) => {
   const metaGlob: string = options.files || defaultMetaGlob;
   try {

@@ -13,6 +13,8 @@ export class PostRenderHook extends React.Component<{}, IState> {
 
   public componentDidMount() {
     this.setState({label: 'I mounted and changed my label'});
+
+    document.addEventListener('clicl')
   }
 
   public render() {

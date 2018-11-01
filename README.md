@@ -100,6 +100,12 @@ const meta = Registry.getComponentMetadata(compWithUnsafeLifecycle);
 meta.reactStrictModeCompliant = false;
 ```
 
+## CLI Tools
+
+### Universal Options
+
+- `files`: glob pattern used to match metadata files. Defaults to `src/**/*.meta.ts?(x)`
+
 ### Sanity
 
 Runs over every simulation and asserts the following:
@@ -139,7 +145,7 @@ autotools snap --files ./components/**/*.meta.ts
 
 #### Options
 
-- `skip-if-missing-key`: set this flag if you want to skip testing when `process.env.EYES_API_KEY` or `process.env.APPLITOOLS_API_KEY` variables are not set. By default, snap will fail if either of these keys are not set.
+- `skip-if-missing-key`: set this flag if you want to skip testing when `process.env.EYES_API_KEY` or `process.env.APPLITOOLS_API_KEY` variables are not set. By default, snap will fail if either of these keys are not set. Example usage: `snap --skip-if-missing-key`, or, `snap -s`.
 
 ### Showcase
 

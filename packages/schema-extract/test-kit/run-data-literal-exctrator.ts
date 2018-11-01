@@ -1,7 +1,7 @@
 import { generateDataLiteral } from '../src/data-literal-transformer';
 import {createTsService } from '../src/typescript/createMemoryTsService';
 import * as ts from 'typescript';
-export async function runDataLiteralExtract(sourceFile: string, entityName: string, fileName: string) {
+export async function runDataLiteralExtract(sourceFile: string, entityName: string, fileName: string, includeNodes: boolean = false) {
     const {tsService, fs} = await createTsService({[fileName]: sourceFile}, [fileName], false);
     const program = tsService.getProgram()!;
     const file = program.getSourceFile(fileName);
@@ -13,5 +13,11 @@ export async function runDataLiteralExtract(sourceFile: string, entityName: stri
         throw new Error('invalid input for run-data-literal');
     }
 
-    return {output: generateDataLiteral(checker, node.initializer!, fs.path, fileName), node: node.initializer!};
+    return {output: generateDataLiteral({
+        checker,
+        modulePath: fileName,
+        pathUtil: fs.path,
+        includeTopMostExpression: true,
+        includeNode: includeNodes
+    }, node.initializer!), node: node.initializer!};
 }

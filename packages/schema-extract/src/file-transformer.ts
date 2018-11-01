@@ -160,7 +160,8 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
             const defaultVal = generateDataLiteral({
                 checker,
                 pathUtil: env.pathUtil,
-                modulePath: env.modulePath
+                modulePath: env.modulePath,
+                includeTopMostExpression: true
             }, decl.initializer);
             if (!defaultVal.isLiteral) {
                 res!.initializer = defaultVal.expression;
@@ -189,7 +190,8 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
             const defaultVal = generateDataLiteral({
                 checker,
                 pathUtil: env.pathUtil,
-                modulePath: env.modulePath
+                modulePath: env.modulePath,
+                includeTopMostExpression: true
             }, decl.initializer);
             if (!defaultVal.isLiteral) {
                 res!.initializer = defaultVal.expression;
@@ -212,7 +214,8 @@ const describeVariableDeclaration: TsNodeDescriber<ts.VariableDeclaration | ts.P
             const defaultVal = generateDataLiteral({
                 checker,
                 pathUtil: env.pathUtil,
-                modulePath: env.modulePath
+                modulePath: env.modulePath,
+                includeTopMostExpression: true
             }, child);
             if (!defaultVal.isLiteral) {
                 res!.initializer = defaultVal.expression;

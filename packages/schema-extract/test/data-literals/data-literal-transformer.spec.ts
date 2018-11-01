@@ -1,6 +1,7 @@
 import {expect} from 'chai';
+import * as ts from 'typescript';
 import {runDataLiteralExtract} from '../../test-kit/run-data-literal-exctrator';
-const testSerialize = (src: string) => runDataLiteralExtract(src, 'a', '/index.tsx');
+const testSerialize = (src: string, includeNodes: boolean = false) => runDataLiteralExtract(src, 'a', '/index.tsx', includeNodes);
 const literal = (value: any) => ({value, isLiteral: true});
 const anExpression = (value: any, expression: string) => ({value, isLiteral: false, expression});
 describe ('generate data literals', () => {
@@ -86,7 +87,7 @@ describe ('generate data literals', () => {
                 export const a = b;
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'reference',
+                __serializedType: 'reference',
                 $ref: '#b'
             }, node.getText()));
         });
@@ -98,7 +99,7 @@ describe ('generate data literals', () => {
                 export const a = b.c;
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'reference',
+                __serializedType: 'reference',
                 $ref: '#b',
                 innerPath: ['c']
             }, node.getText()));
@@ -112,7 +113,7 @@ describe ('generate data literals', () => {
                 export const a = b['c-d'];
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'reference',
+                __serializedType: 'reference',
                 $ref: '#b',
                 innerPath: ['c-d']
             }, node.getText()));
@@ -127,10 +128,10 @@ describe ('generate data literals', () => {
                 export const a = b[e].length;
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'reference',
+                __serializedType: 'reference',
                 $ref: '#b',
                 innerPath: [{
-                    __serilizedType: 'reference',
+                    __serializedType: 'reference',
                     $ref: '#e'
                 }, 'length']
             }, node.getText()));
@@ -145,7 +146,7 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __spread0: {
-                    __serilizedType: 'reference-spread',
+                    __serializedType: 'reference-spread',
                     $ref: '#b'
                 }
             }, node.getText()));
@@ -157,7 +158,7 @@ describe ('generate data literals', () => {
                 export const a = b.c;
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'reference',
+                __serializedType: 'reference',
                 $ref: '/other#b',
                 innerPath: ['c']
             }, node.getText()));
@@ -169,7 +170,7 @@ describe ('generate data literals', () => {
                 export const a = d.b.c;
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'reference',
+                __serializedType: 'reference',
                 $ref: '/other',
                 innerPath: ['b', 'c']
             }, node.getText()));
@@ -181,7 +182,7 @@ describe ('generate data literals', () => {
                 export const a = b.c;
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'reference',
+                __serializedType: 'reference',
                 $ref: '/other#default',
                 innerPath: ['c']
             }, node.getText()));
@@ -193,7 +194,7 @@ describe ('generate data literals', () => {
                 export const a = func("xxx", 555);
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'reference-call',
+                __serializedType: 'reference-call',
                 $ref: '#func',
                 args: ['xxx', 555]
             }, node.getText()));
@@ -205,7 +206,7 @@ describe ('generate data literals', () => {
                 export const a = b.func("xxx", 555);
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'reference-call',
+                __serializedType: 'reference-call',
                 $ref: '#b',
                 innerPath: ['func'],
                 args: ['xxx', 555]
@@ -218,7 +219,7 @@ describe ('generate data literals', () => {
                 export const a = func("xxx", 555);
             `);
             expect(output).to.eql(anExpression( {
-                __serilizedType: 'reference-call',
+                __serializedType: 'reference-call',
                 $ref: '/other#func',
                 args: ['xxx', 555]
             }, node.getText()));
@@ -234,7 +235,7 @@ describe ('generate data literals', () => {
                 export const a = new cls('gaga');
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'reference-construct',
+                __serializedType: 'reference-construct',
                 $ref: '#cls',
                 args: ['gaga']
             }, node.getText()));
@@ -250,7 +251,7 @@ describe ('generate data literals', () => {
                 export const a = new b.cls('gaga');
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'reference-construct',
+                __serializedType: 'reference-construct',
                 $ref: '#b',
                 innerPath: ['cls'],
                 args: ['gaga']
@@ -264,7 +265,7 @@ describe ('generate data literals', () => {
                 export const a = <div></div>;
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'jsx-node',
+                __serializedType: 'jsx-node',
                 $ref: 'dom/div'
             }, node.getText()));
         });
@@ -275,7 +276,7 @@ describe ('generate data literals', () => {
                 export const a = <Button></Button>;
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'jsx-node',
+                __serializedType: 'jsx-node',
                 $ref: '/button#Button'
             }, node.getText()));
         });
@@ -285,10 +286,10 @@ describe ('generate data literals', () => {
                 export const a = <div a="a"></div>;
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'jsx-node',
+                __serializedType: 'jsx-node',
                 $ref: 'dom/div',
                 attributes: [{
-                    __serilizedType: 'jsx-attribute',
+                    __serializedType: 'jsx-attribute',
                     name: 'a',
                     isLiteral: true,
                     value: 'a'
@@ -302,10 +303,10 @@ describe ('generate data literals', () => {
                 export const a = <div {...b}></div>;
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'jsx-node',
+                __serializedType: 'jsx-node',
                 $ref: 'dom/div',
                 attributes: [{
-                    __serilizedType: 'reference-spread',
+                    __serializedType: 'reference-spread',
                     $ref: '#b'
                 }]
             }, node.getText()));
@@ -316,10 +317,10 @@ describe ('generate data literals', () => {
                 export const a = <div a="a"/>;
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'jsx-node',
+                __serializedType: 'jsx-node',
                 $ref: 'dom/div',
                 attributes: [{
-                    __serilizedType: 'jsx-attribute',
+                    __serializedType: 'jsx-attribute',
                     name: 'a',
                     isLiteral: true,
                     value: 'a'
@@ -333,10 +334,10 @@ describe ('generate data literals', () => {
                 export const a = <div style={{height:'100px'}}></div>;
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'jsx-node',
+                __serializedType: 'jsx-node',
                 $ref: 'dom/div',
                 attributes: [{
-                    __serilizedType: 'jsx-attribute',
+                    __serializedType: 'jsx-attribute',
                     name: 'style',
                     isLiteral: true,
                     value: {height: '100px'}
@@ -349,10 +350,10 @@ describe ('generate data literals', () => {
                 export const a = <div style={{height:'100px'}}></div>;
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'jsx-node',
+                __serializedType: 'jsx-node',
                 $ref: 'dom/div',
                 attributes: [{
-                    __serilizedType: 'jsx-attribute',
+                    __serializedType: 'jsx-attribute',
                     name: 'style',
                     isLiteral: true,
                     value: {height: '100px'}
@@ -368,15 +369,15 @@ describe ('generate data literals', () => {
                     export const a = sometimes() ? 'a' : b;
                 `);
                 expect(output).to.eql(anExpression({
-                    __serilizedType: 'common/if',
+                    __serializedType: 'common/if',
                     condition: {
-                        __serilizedType: 'reference-call',
+                        __serializedType: 'reference-call',
                         $ref: '#sometimes',
                         args: []
                     },
                     whenTrue: 'a',
                     whenFalse: {
-                        __serilizedType: 'reference',
+                        __serializedType: 'reference',
                         $ref: '#b'
                     }
                 }, node.getText()));
@@ -389,7 +390,7 @@ describe ('generate data literals', () => {
                     export const a = <div>hello world</div>;
                 `);
                 expect(output).to.eql(anExpression({
-                    __serilizedType: 'jsx-node',
+                    __serializedType: 'jsx-node',
                     $ref: 'dom/div',
                     children: ['hello world']
                 }, node.getText()));
@@ -400,14 +401,14 @@ describe ('generate data literals', () => {
                     export const a = <div><div style={{height:'100px'}}></div></div>;
                 `);
                 expect(output).to.eql(anExpression({
-                    __serilizedType: 'jsx-node',
+                    __serializedType: 'jsx-node',
                     $ref: 'dom/div',
                     children: [
                         {
-                            __serilizedType: 'jsx-node',
+                            __serializedType: 'jsx-node',
                             $ref: 'dom/div',
                             attributes: [{
-                                __serilizedType: 'jsx-attribute',
+                                __serializedType: 'jsx-attribute',
                                 name: 'style',
                                 isLiteral: true,
                                 value: {height: '100px'}
@@ -422,14 +423,14 @@ describe ('generate data literals', () => {
                     export const a = <><div style={{height:'100px'}}></div></>;
                 `);
                 expect(output).to.eql(anExpression({
-                    __serilizedType: 'jsx-node',
+                    __serializedType: 'jsx-node',
                     $ref: 'dom/fragment',
                     children: [
                         {
-                            __serilizedType: 'jsx-node',
+                            __serializedType: 'jsx-node',
                             $ref: 'dom/div',
                             attributes: [{
-                                __serilizedType: 'jsx-attribute',
+                                __serializedType: 'jsx-attribute',
                                 name: 'style',
                                 isLiteral: true,
                                 value: {height: '100px'}
@@ -446,11 +447,11 @@ describe ('generate data literals', () => {
                     export const a = <div>{b}</div>;
                 `);
                 expect(output).to.eql(anExpression({
-                    __serilizedType: 'jsx-node',
+                    __serializedType: 'jsx-node',
                     $ref: 'dom/div',
                     children: [
                         {
-                            __serilizedType: 'reference',
+                            __serializedType: 'reference',
                             $ref: '#b'
                         }
                     ]
@@ -466,9 +467,9 @@ describe ('generate data literals', () => {
                 export const a = !b;
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'common/not-operator',
+                __serializedType: 'common/not-operator',
                 expression: {
-                    __serilizedType: 'reference',
+                    __serializedType: 'reference',
                     $ref: '#b'
                 }
 
@@ -481,7 +482,7 @@ describe ('generate data literals', () => {
                 export const a = (b);
             `);
             expect(output).to.eql(anExpression({
-                    __serilizedType: 'reference',
+                    __serializedType: 'reference',
                     $ref: '#b'
             }, node.getText()));
         });
@@ -494,13 +495,13 @@ describe ('generate data literals', () => {
         export const a = c ${operator} b;
         `;
         const outputFacotry = (serilizedType: string) => ({
-            __serilizedType: serilizedType,
+            __serializedType: serilizedType,
             firstOption: {
-                __serilizedType:  'reference',
+                __serializedType:  'reference',
                 $ref:  '#c'
             },
             secondOption: {
-                __serilizedType: 'reference',
+                __serializedType: 'reference',
                 $ref: '#b'
             }
         });
@@ -571,22 +572,22 @@ describe ('generate data literals', () => {
                 }</div>;
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'jsx-node',
+                __serializedType: 'jsx-node',
                 $ref: 'dom/div',
                 children: [
                     {
-                        __serilizedType: 'reference-call',
+                        __serializedType: 'reference-call',
                         $ref: '#b',
                         innerPath: ['map'],
                         args: [
                             {
-                                __serilizedType: 'function',
+                                __serializedType: 'function',
                                 arguments: ['item'],
                                 returns: [{
-                                    __serilizedType: 'jsx-node',
+                                    __serializedType: 'jsx-node',
                                     $ref: 'dom/span',
                                     children: [{
-                                        __serilizedType: 'reference',
+                                        __serializedType: 'reference',
                                         $ref: '#item'
                                     }]
                                 }]
@@ -605,22 +606,22 @@ describe ('generate data literals', () => {
                 }</div>;
             `);
             expect(output).to.eql(anExpression({
-                __serilizedType: 'jsx-node',
+                __serializedType: 'jsx-node',
                 $ref: 'dom/div',
                 children: [
                     {
-                        __serilizedType: 'reference-call',
+                        __serializedType: 'reference-call',
                         $ref: '#b',
                         innerPath: ['map'],
                         args: [
                             {
-                                __serilizedType: 'function',
+                                __serializedType: 'function',
                                 arguments: ['item'],
                                 returns: [{
-                                    __serilizedType: 'jsx-node',
+                                    __serializedType: 'jsx-node',
                                     $ref: 'dom/span',
                                     children: [{
-                                        __serilizedType: 'reference',
+                                        __serializedType: 'reference',
                                         $ref: '#item'
                                     }]
                                 }]
@@ -629,6 +630,27 @@ describe ('generate data literals', () => {
                     }
                 ]
             }, node.getText()));
+        });
+        describe('ENV', () => {
+            it('should include nodes if requested', async () => {
+                const {output, node} = await testSerialize(`
+                    import * as React from 'react';
+                    export const b = 'hello world';
+                    export const a = <div>{b}</div>;
+                `, true);
+                expect(output).to.eql(anExpression({
+                    __serializedType: 'jsx-node',
+                    $ref: 'dom/div',
+                    node,
+                    children: [
+                        {
+                            __serializedType: 'reference',
+                            $ref: '#b',
+                            node: ((node as ts.JsxElement).children[0] as ts.JsxExpression).expression
+                        }
+                    ]
+                }, node.getText()));
+            });
         });
     });
 });

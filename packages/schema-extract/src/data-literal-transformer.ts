@@ -1,30 +1,37 @@
 import ts from 'typescript';
 import {  resolveImportedIdentifier, IFileSystemPath} from './imported-identifier-resolver';
 
-export interface ILiteralInferenceResult<VALUE = any> {
-    isLiteral: true;
-    value: VALUE;
-    name?: string;
-}
-
-export interface IExpressionInferenceResult<VALUE = any> {
-    isLiteral: false;
-    value: VALUE;
-    expression: string;
-}
-
-export interface IExctractorEnv {
+export interface IExctractorEnv extends Object {
     checker: ts.TypeChecker;
     pathUtil: IFileSystemPath;
     modulePath: string;
+    includeNode?: boolean;
+    includeTopMostExpression: boolean;
 }
+export interface ILiteralInferenceResult<ENV extends IExctractorEnv = IExctractorEnv, VALUE = any> {
+    isLiteral: true;
+    value: VALUE;
+    node: ENV['includeNode'] extends true ?  ts.Node : undefined ;
+}
+
+export interface ISerializedNonLiteral<T extends string = string> {
+    __serializedType: T;
+    node ?: ts.Node;
+}
+
+export interface IExpressionInferenceResult<VALUE extends any, ENV extends IExctractorEnv = IExctractorEnv> {
+    isLiteral: false;
+    value: VALUE;
+    node: ENV['includeNode'] extends true ?  ts.Node : undefined ;
+    expression: ENV['includeTopMostExpression'] extends true ? string : undefined;
+}
+
 export function isOfType<TYPE, SERIALIZED_TYPE>(type: SERIALIZED_TYPE): (item: any) => item is TYPE {
-    return ((item: any) => item.__serilizedType === type) as any;
+    return ((item: any) => item.__serializedType === type) as any;
 }
 export const IReferenceCall = 'reference-call';
 export const isReferenceCall = isOfType<IReferenceCall, typeof IReferenceCall>(IReferenceCall);
-export interface IReferenceCall {
-    __serilizedType: typeof IReferenceCall;
+export interface IReferenceCall extends ISerializedNonLiteral<typeof IReferenceCall> {
     args: any[];
     $ref: string;
     innerPath?: any[];
@@ -32,8 +39,7 @@ export interface IReferenceCall {
 
 export const IReferenceConstruct = 'reference-construct';
 export const isReferenceConstruct = isOfType<IReferenceConstruct, typeof IReferenceConstruct>(IReferenceConstruct);
-export interface IReferenceConstruct {
-    __serilizedType: typeof IReferenceConstruct;
+export interface IReferenceConstruct extends ISerializedNonLiteral<typeof IReferenceConstruct> {
     args: any[];
     $ref: string;
     innerPath?: any[];
@@ -41,45 +47,39 @@ export interface IReferenceConstruct {
 
 export const IReferenceSpread = 'reference-spread';
 export const isReferenceSpread = isOfType<IReferenceSpread, typeof IReferenceSpread>(IReferenceSpread);
-export interface IReferenceSpread {
-    __serilizedType: typeof IReferenceSpread;
+export interface IReferenceSpread extends ISerializedNonLiteral<typeof IReferenceSpread> {
     $ref: string;
     innerPath?: any[];
 }
 
 export const IReference = 'reference';
 export const isReference = isOfType<IReference, typeof IReference>(IReference);
-export interface IReference {
-    __serilizedType: typeof IReference;
+export interface IReference  extends ISerializedNonLiteral<typeof IReference> {
     $ref: string;
     innerPath?: any[];
 }
 
 export const ICommonIf = 'common/if';
 export const isCommonIf = isOfType<ICommonIf, typeof ICommonIf>(ICommonIf);
-export interface ICommonIf {
-    __serilizedType: typeof ICommonIf;
+export interface ICommonIf  extends ISerializedNonLiteral<typeof ICommonIf> {
     condition: any;
     whenTrue: any;
     whenFalse: any;
 }
 export const ICommonNot = 'common/not-operator';
 export const isCommonNot = isOfType<ICommonNot, typeof ICommonNot>(ICommonNot);
-export interface ICommonNot {
-    __serilizedType: typeof ICommonNot;
+export interface ICommonNot extends ISerializedNonLiteral<typeof ICommonNot> {
     expression: any;
 }
 export const IJSXAttribute = 'jsx-attribute';
 export const isJSXAttribute = isOfType<IJSXAttribute, typeof IJSXAttribute>(IJSXAttribute);
-export interface IJSXAttribute {
-    __serilizedType: typeof IJSXAttribute;
+export interface IJSXAttribute  extends ISerializedNonLiteral<typeof IJSXAttribute> {
     name?: string;
     value: any;
 }
 export const IJSXNode = 'jsx-node';
 export const isJSXNode = isOfType<IJSXNode, typeof IJSXNode>(IJSXNode);
-export interface IJSXNode {
-    __serilizedType: typeof IJSXNode;
+export interface IJSXNode extends ISerializedNonLiteral<typeof IJSXNode> {
     $ref: string;
     attributes?: IJSXAttribute[];
     children?: any[];
@@ -87,44 +87,50 @@ export interface IJSXNode {
 
 export const IFunction = 'function';
 export const isFunction = isOfType<IFunction, typeof IFunction>(IFunction);
-export interface IFunction {
-    __serilizedType: typeof IFunction;
+export interface IFunction extends ISerializedNonLiteral<typeof IFunction> {
     arguments: any[];
     returns: any[];
 }
 
 export const FRAGMENT_REF = 'dom/fragment';
 
-interface ISerializer<INPUT extends ts.Node, OUTPUT extends ILiteralInferenceResult | IExpressionInferenceResult = ILiteralInferenceResult | IExpressionInferenceResult> {
+interface ISerializer<INPUT extends ts.Node, OUTPUT extends ILiteralInferenceResult | IExpressionInferenceResult<any> = ILiteralInferenceResult | IExpressionInferenceResult<any>> {
     isApplicable: (node: ts.Node) => node is INPUT;
     serialize: (env: IExctractorEnv, node: INPUT) => OUTPUT;
 }
 
-function aLiteralValue(value: any): ILiteralInferenceResult {
-    return {
+function aLiteralValue<ENV extends IExctractorEnv, VALUE>(value: VALUE, node: ts.Node, env: ENV): ILiteralInferenceResult<ENV, VALUE> {
+    const res: Partial<ILiteralInferenceResult<ENV, VALUE>> =  {
         isLiteral: true,
-        value
+        value,
     };
+    if (env.includeNode === true) {
+        (res.value as any).node = (node as any);
+    }
+    return res as ILiteralInferenceResult<ENV, VALUE>;
 }
 
-function anExpression(value: any, expression: string,  extraFields: any = {}): IExpressionInferenceResult {
-    return {
+function anExpression<ENV extends IExctractorEnv, VALUE extends any = any>(value: VALUE): IExpressionInferenceResult<VALUE, ENV> {
+    const res: Partial<IExpressionInferenceResult<VALUE, ENV>> =  {
         isLiteral: false,
         value,
-        expression
     };
+    return res as IExpressionInferenceResult<VALUE, ENV>;
 }
 
-function aProcessedExpression<T extends string, V extends object = {}>(type: T, expression: string,  extraFields?: V): IExpressionInferenceResult<{__serilizedType: T} & V> {
+function aProcessedExpression<T extends string, ENV extends IExctractorEnv, VALUE = any>(type: T, node: ts.Node, env: ENV,  extraFields?: VALUE): IExpressionInferenceResult<{__serializedType: T} & VALUE, ENV> {
     const fields = extraFields || {};
-    return {
-        isLiteral: false,
-        value: {
-            __serilizedType: type,
-            ...fields
-        } as any,
-        expression
+    const input: any = {
+        __serializedType: type,
+        ...fields
     };
+    if (env.includeNode === true) {
+        input.node = (node as any);
+    }
+
+    const res = anExpression<ENV, ISerializedNonLiteral<T>>(input);
+
+    return res as any;
 }
 
 function getReferencePath(env: IExctractorEnv, node: ts.Node): {$ref: string, innerPath ?: any[]; } {
@@ -144,7 +150,7 @@ const callExpressionSerializer: ISerializer<ts.CallExpression, IExpressionInfere
     },
     serialize: (env, node) =>  {
         const referencePath = getReferencePath(env, node.expression);
-        return aProcessedExpression(IReferenceCall, node.getText(), {
+        return aProcessedExpression(IReferenceCall, node, env, {
             ...referencePath,
             args: node.arguments.map((arg) => generateDataLiteral(env, arg).value)
         });
@@ -156,7 +162,7 @@ const newExpressionSerializer: ISerializer<ts.NewExpression, IExpressionInferenc
     },
     serialize: (env, node) =>  {
         const referencePath = getReferencePath(env, node.expression);
-        return aProcessedExpression(IReferenceConstruct, node.getText(),  {
+        return aProcessedExpression(IReferenceConstruct, node, env,  {
             ...referencePath,
             args: node.arguments!.map((arg) => generateDataLiteral(env, arg).value)
         });
@@ -168,7 +174,7 @@ const spreadExpressionSerializer: ISerializer<ts.JsxSpreadAttribute | ts.SpreadA
     },
     serialize: (env, node) =>  {
         const referencePath = getReferencePath(env, node.expression);
-        return aProcessedExpression(IReferenceSpread, node.getText(),  {
+        return aProcessedExpression(IReferenceSpread, node, env,  {
             ...referencePath
         });
     }
@@ -179,7 +185,7 @@ const identifierSerializer: ISerializer<ts.Identifier, IExpressionInferenceResul
         return ts.isIdentifier(node);
     },
     serialize: (env, node) =>  {
-        return aProcessedExpression(IReference, node.getText(), {
+        return aProcessedExpression(IReference, node, env, {
             $ref: getIdFromExpression(env, node)
         });
     }
@@ -190,7 +196,7 @@ const stringLiteralSerializer: ISerializer<ts.StringLiteral> = {
         return ts.isStringLiteral(node);
     },
     serialize: (env, node) =>  {
-        return aLiteralValue(node.text);
+        return aLiteralValue(node.text, node, env);
     }
 };
 
@@ -199,7 +205,7 @@ const booleanLiteralSerializer: ISerializer<ts.BooleanLiteral> = {
         return node.getText() === 'true' || node.getText() === 'false';
     },
     serialize: (env, node) =>  {
-        return aLiteralValue(node.getText() === 'true');
+        return aLiteralValue(node.getText() === 'true', node, env);
     }
 };
 const numericLiteralSerializer: ISerializer<ts.NumericLiteral> = {
@@ -207,7 +213,7 @@ const numericLiteralSerializer: ISerializer<ts.NumericLiteral> = {
         return ts.isNumericLiteral(node);
     },
     serialize: (env, node) =>  {
-        return  aLiteralValue(parseFloat(node.text));
+        return  aLiteralValue(parseFloat(node.text), node, env);
     }
 };
 
@@ -230,7 +236,7 @@ const objectLiteralSerializer: ISerializer<ts.ObjectLiteralExpression> = {
                 value['__spread' + spreadCounter++] = innerRes.value;
             }
         }
-        return isLiteral ?  aLiteralValue(value) : anExpression(value, node.getText());
+        return isLiteral ?  aLiteralValue(value, node, env) : anExpression(value);
     }
 };
 
@@ -247,7 +253,7 @@ const arrayLiteralSerializer: ISerializer<ts.ArrayLiteralExpression> = {
             value.push(innerRes.value);
         }
 
-        return isLiteral ?  aLiteralValue(value) : anExpression(value, node.getText());
+        return isLiteral ?  aLiteralValue(value, node, env) : anExpression(value);
     }
 };
 
@@ -268,7 +274,7 @@ const objectBindingSerializer: ISerializer<ts.ObjectBindingPattern> = {
                 value[bindingElement.name!.getText()] = innerRes.value;
             }
         }
-        return isLiteral ?  aLiteralValue(value) : anExpression(value, node.getText());
+        return isLiteral ?  aLiteralValue(value, node, env) : anExpression(value);
     }
 };
 
@@ -292,7 +298,7 @@ const propertyAccessSerializer: ISerializer<ts.PropertyAccessExpression | ts.Ele
         } while (ts.isPropertyAccessExpression(currentNode) || ts.isElementAccessExpression(currentNode));
 
         const $ref = getIdFromExpression(env, currentNode as ts.Expression);
-        return aProcessedExpression(IReference, node.getText(), {$ref, innerPath: expression.reverse()});
+        return aProcessedExpression(IReference, node, env, {$ref, innerPath: expression.reverse()});
     }
 };
 const trinaryExpressionSerializer: ISerializer<ts.ConditionalExpression, IExpressionInferenceResult<ICommonIf>> = {
@@ -300,7 +306,7 @@ const trinaryExpressionSerializer: ISerializer<ts.ConditionalExpression, IExpres
         return ts.isConditionalExpression(node) || ts.isElementAccessExpression(node);
     },
     serialize: (env, node) =>  {
-       return aProcessedExpression(ICommonIf, node.getText(), {
+       return aProcessedExpression(ICommonIf, node, env, {
            condition: generateDataLiteral(env, node.condition).value,
            whenTrue: generateDataLiteral(env, node.whenTrue).value,
            whenFalse: generateDataLiteral(env, node.whenFalse).value
@@ -313,7 +319,7 @@ const notExpressionSerializer: ISerializer<ts.PrefixUnaryExpression, IExpression
         return ts.isPrefixUnaryExpression(node) && ts.SyntaxKind.ExclamationToken === node.operator;
     },
     serialize: (env, node) =>  {
-       return aProcessedExpression(ICommonNot, node.getText(), {
+       return aProcessedExpression(ICommonNot, node, env, {
            expression: generateDataLiteral(env, node.operand).value
        });
     }
@@ -342,7 +348,7 @@ const binaryExpressionSerializer: ISerializer<ts.BinaryExpression> = {
     },
     serialize: (env, node) =>  {
        const typeStr = supportedBinaryOperatorsNames[node.operatorToken.kind];
-       return aProcessedExpression(typeStr, node.getText(), {
+       return aProcessedExpression(typeStr, node, env, {
           firstOption: generateDataLiteral(env, node.left).value,
           secondOption: generateDataLiteral(env, node.right).value
        });
@@ -356,7 +362,7 @@ const parenthesisSerializer: ISerializer<ts.ParenthesizedExpression> = {
     serialize: (env, node) =>  {
        return {
             ...generateDataLiteral(env, node.expression),
-            expression: node.getText()};
+        };
     }
 };
 const jsxAttributeSerializer: ISerializer<ts.JsxAttribute, IExpressionInferenceResult<IJSXAttribute>> = {
@@ -365,7 +371,7 @@ const jsxAttributeSerializer: ISerializer<ts.JsxAttribute, IExpressionInferenceR
     },
     serialize: (env, node) =>  {
         if (!node.initializer) {
-            return aProcessedExpression(IJSXAttribute, node.getText(), {
+            return aProcessedExpression(IJSXAttribute, node, env, {
                 name: node.name.getText(),
                 value: true,
                 isLiteral: true
@@ -373,14 +379,14 @@ const jsxAttributeSerializer: ISerializer<ts.JsxAttribute, IExpressionInferenceR
         }
         const initializer = node.initializer;
         if (ts.isStringLiteral(initializer)) {
-            return aProcessedExpression(IJSXAttribute, node.getText(), {
+            return aProcessedExpression(IJSXAttribute, node, env, {
                 name: node.name.getText(),
                 value: initializer.text,
                 isLiteral: true
             });
         } else {
             const res = generateDataLiteral(env, initializer.expression!);
-            return aProcessedExpression(IJSXAttribute, node.getText(), {
+            return aProcessedExpression(IJSXAttribute, node, env, {
                 ...res,
                 name: node.name.getText(),
             });
@@ -397,7 +403,7 @@ const jsxTextSerializer: ISerializer<ts.JsxText> = {
         return ts.isJsxText(node);
     },
     serialize: (env, node) =>  {
-        return aLiteralValue(node.getText().trim());
+        return aLiteralValue(node.getText().trim(), node, env);
     }
 };
 const jsxExpressionSerializer: ISerializer<ts.JsxExpression> = {
@@ -457,7 +463,7 @@ const reactNodeSerializer: ISerializer<ts.JsxElement | ts.JsxSelfClosingElement 
         if (children.length) {
             extra.children = children;
         }
-        return aProcessedExpression(IJSXNode, node.getText(), extra as IJSXNode);
+        return aProcessedExpression(IJSXNode, node, env, extra as IJSXNode);
     }
 };
 reactChildSerializers.push(reactNodeSerializer);
@@ -474,7 +480,7 @@ const functionSerializer: ISerializer<ts.ArrowFunction | ts.FunctionExpression, 
                 generateDataLiteral(env, statement.expression!).value
             );
         }
-        return aProcessedExpression(IFunction, node.getText(), {
+        return aProcessedExpression(IFunction, node, env, {
             returns: returnValues,
             arguments: node.parameters.map((param) => param.name.getText())
         });
@@ -513,12 +519,20 @@ const dataLiteralSerializers: Array<ISerializer<any>> = [
     parenthesisSerializer,
     functionSerializer
 ];
-export function generateDataLiteral(env: IExctractorEnv, node: ts.Node): ILiteralInferenceResult | IExpressionInferenceResult {
+export function generateDataLiteral<ENV extends IExctractorEnv>(env: ENV, node: ts.Node): ILiteralInferenceResult | IExpressionInferenceResult<any, ENV> {
     const serializer = dataLiteralSerializers.find((optionalSerializer) => optionalSerializer.isApplicable(node));
     if (serializer) {
+        if (env.includeTopMostExpression) {
+            const childEnv: ENV = {...(env as any), includeTopMostExpression: false};
+            const res = serializer.serialize(childEnv, node as any );
+            if (!res.isLiteral) {
+                res.expression = (node.getText() as any);
+            }
+            return res;
+        }
         return serializer.serialize(env, node as any );
     }
-    return anExpression(undefined, node.getText());
+    return anExpression(undefined);
 }
 
 function getIdFromExpression(env: IExctractorEnv, node: ts.Expression) {

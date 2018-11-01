@@ -28,7 +28,7 @@ export async function linkTest(sourceDir: IDirectoryContents, entityName: string
         return transform(prg.getTypeChecker(), sourceFile, file, projectPath, fs.path );
       }
     function getImport(importPath: string, ref: string, file: string) {
-        return getSchemaFromImport(importPath, ref, prg, fs.path, prg.getSourceFile(file));
+        return getSchemaFromImport(importPath, ref, prg, fs.path, prg.getSourceFile(file)!);
     }
     const extractor: IExtractor = {
         getSchema,

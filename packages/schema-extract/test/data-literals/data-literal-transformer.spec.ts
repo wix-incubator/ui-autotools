@@ -136,6 +136,21 @@ describe ('generate data literals', () => {
             }, node.getText()));
         });
 
+        it('should serialize a spread', async () => {
+            const {output, node} = await testSerialize(`
+                export const b = {
+                    'c-d':'gaga'
+                }
+                export const a = {...b};
+            `);
+            expect(output).to.eql(anExpression({
+                __spread0: {
+                    __serilizedType: 'reference-spread',
+                    $ref: '#b'
+                }
+            }, node.getText()));
+        });
+
         it('should serialize a reference to an import', async () => {
             const {output, node} = await testSerialize(`
                 import {b} from './other';
@@ -277,6 +292,21 @@ describe ('generate data literals', () => {
                     name: 'a',
                     isLiteral: true,
                     value: 'a'
+                }]
+            }, node.getText()));
+        });
+        it('should serialize jsx elements spread attributes', async () => {
+            const {output, node} = await testSerialize(`
+                import * as React from 'react';
+                const b = {a:'gaga'};
+                export const a = <div {...b}></div>;
+            `);
+            expect(output).to.eql(anExpression({
+                __serilizedType: 'jsx-node',
+                $ref: 'dom/div',
+                attributes: [{
+                    __serilizedType: 'reference-spread',
+                    $ref: '#b'
                 }]
             }, node.getText()));
         });

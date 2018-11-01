@@ -39,6 +39,14 @@ export interface IReferenceConstruct {
     innerPath?: any[];
 }
 
+export const IReferenceSpread = 'reference-spread';
+export const isReferenceSpread = isOfType<IReferenceSpread, typeof IReferenceSpread>(IReferenceSpread);
+export interface IReferenceSpread {
+    __serilizedType: typeof IReferenceSpread;
+    $ref: string;
+    innerPath?: any[];
+}
+
 export const IReference = 'reference';
 export const isReference = isOfType<IReference, typeof IReference>(IReference);
 export interface IReference {
@@ -154,6 +162,17 @@ const newExpressionSerializer: ISerializer<ts.NewExpression, IExpressionInferenc
         });
     }
 };
+const spreadExpressionSerializer: ISerializer<ts.JsxSpreadAttribute | ts.SpreadAssignment, IExpressionInferenceResult<IReferenceSpread>> = {
+    isApplicable: function is(node): node is ts.JsxSpreadAttribute | ts.SpreadAssignment {
+        return ts.isJsxSpreadAttribute(node) || ts.isSpreadAssignment(node);
+    },
+    serialize: (env, node) =>  {
+        const referencePath = getReferencePath(env, node.expression);
+        return aProcessedExpression(IReferenceSpread, node.getText(),  {
+            ...referencePath
+        });
+    }
+};
 
 const identifierSerializer: ISerializer<ts.Identifier, IExpressionInferenceResult<IReference>> = {
     isApplicable: function is(node): node is ts.Identifier {
@@ -199,11 +218,16 @@ const objectLiteralSerializer: ISerializer<ts.ObjectLiteralExpression> = {
     serialize: (env, node) =>  {
         const value: any = {};
         let isLiteral = true;
+        let spreadCounter = 0;
         for (const prop of node.properties) {
             if (ts.isPropertyAssignment(prop)) {
                 const innerRes = generateDataLiteral(env, prop.initializer);
                 isLiteral = isLiteral && innerRes.isLiteral;
                 value[prop.name!.getText()] = innerRes.value;
+            } else if (spreadExpressionSerializer.isApplicable(prop)) {
+                const innerRes = spreadExpressionSerializer.serialize(env, prop);
+                isLiteral = isLiteral && innerRes.isLiteral;
+                value['__spread' + spreadCounter++] = innerRes.value;
             }
         }
         return isLiteral ?  aLiteralValue(value) : anExpression(value, node.getText());
@@ -364,7 +388,8 @@ const jsxAttributeSerializer: ISerializer<ts.JsxAttribute, IExpressionInferenceR
     }
 };
 const attributeSerializers: Array<ISerializer<any>> = [
-    jsxAttributeSerializer
+    jsxAttributeSerializer,
+    spreadExpressionSerializer
 ];
 
 const jsxTextSerializer: ISerializer<ts.JsxText> = {

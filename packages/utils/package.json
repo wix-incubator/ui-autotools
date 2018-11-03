@@ -26,7 +26,7 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@stylable/node": "^0.1.13",
+    "@stylable/node": "^0.1.14",
     "html-webpack-plugin": "^3.2.0",
     "koa": "^2.6.1",
     "koa-webpack": "^5.1.0"

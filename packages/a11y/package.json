@@ -31,7 +31,7 @@
     "@ui-autotools/utils": "^1.0.10",
     "axe-core": "3.0.3",
     "chalk": "^2.4.1",
-    "puppeteer": "^1.9.0"
+    "puppeteer": "^1.10.0"
   },
   "peerDependencies": {
     "@ui-autotools/registry": "^2.0.0",

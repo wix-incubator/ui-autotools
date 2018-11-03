@@ -13,7 +13,7 @@
   "dependencies": {
     "@file-services/memory": "^0.2.3",
     "@file-services/typescript": "^0.2.4",
-    "@ui-autotools/schema-extract": "^1.0.12",
+    "@ui-autotools/schema-extract": "^1.0.14",
     "@ui-autotools/schema-views": "^0.0.2",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",

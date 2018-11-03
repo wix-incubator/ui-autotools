@@ -24,7 +24,6 @@
   "dependencies": {
     "@file-services/memory": "^0.2.3",
     "@file-services/typescript": "^0.2.4",
-    "@types/node": "^10.12.0",
     "@ui-autotools/utils": "^1.0.10",
     "chalk": "^2.4.1",
     "commander": "^2.19.0",

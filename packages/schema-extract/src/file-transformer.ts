@@ -10,7 +10,14 @@ export interface IEnv {
     pathUtil: IFileSystemPath;
 }
 
-export function transform(checker: ts.TypeChecker, sourceFile: ts.SourceFile, moduleId: string, projectPath: string, pathUtil: IFileSystemPath) {
+export function transform(
+    checker: ts.TypeChecker,
+    sourceFile: ts.SourceFile,
+    moduleId: string,
+    projectPath: string,
+    pathUtil: IFileSystemPath
+): ModuleSchema {
+
     const moduleSymbol = (sourceFile as any).symbol;
     const res: ModuleSchema = {
         $schema: 'http://json-schema.org/draft-06/schema#',

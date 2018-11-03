@@ -1,9 +1,8 @@
+import ts from 'typescript';
 import { createMemoryFs } from '@file-services/memory';
 import { createBaseHost, createLanguageServiceHost } from '@file-services/typescript';
 import { compilerOptions } from './constants';
 import { IDirectoryContents } from '@file-services/types';
-import * as ts from 'typescript';
-import { getRecipies } from './get-recipes';
 
 export async function createTsService(contents: IDirectoryContents, rootFiles: string[], includeRecipes: boolean = false) {
     const fs = createMemoryFs(contents);
@@ -22,8 +21,14 @@ export async function createTsService(contents: IDirectoryContents, rootFiles: s
         openFiles.delete(path);
     };
     const getOpenFiles = () => new Set(openFiles);
+
     if (includeRecipes) {
-        (await getRecipies()).map((recipe) => fs.populateDirectorySync('/', recipe));
+        const recipes = await Promise.all([
+            import(/* webpackChunkName: 'react-recipe' */ './recipes/react'),
+            import(/* webpackChunkName: 'typescript-recipe' */'./recipes/typescript')
+        ]);
+
+        recipes.map((recipe) => fs.populateDirectorySync('/', recipe));
     }
 
     const baseHost = createBaseHost(fs, '/');
@@ -43,5 +48,4 @@ export async function createTsService(contents: IDirectoryContents, rootFiles: s
         getOpenFiles,
         tsService
     };
-
 }

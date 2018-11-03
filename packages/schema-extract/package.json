@@ -27,8 +27,7 @@
     "@ui-autotools/utils": "^1.0.10",
     "chalk": "^2.4.1",
     "commander": "^2.19.0",
-    "glob": "^7.1.3",
-    "kissfs": "^0.7.1"
+    "glob": "^7.1.3"
   },
   "files": [
     "cjs",

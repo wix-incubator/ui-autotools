@@ -4,8 +4,8 @@ import { compilerOptions } from './constants';
 import { IDirectoryContents } from '@file-services/types';
 import * as ts from 'typescript';
 import { getRecipies } from './get-recipes';
-export async function createTsService(contents: IDirectoryContents, rootFiles: string[], includeRecipes: boolean = false) {
 
+export async function createTsService(contents: IDirectoryContents, rootFiles: string[], includeRecipes: boolean = false) {
     const fs = createMemoryFs(contents);
 
     const openFiles = new Set(rootFiles);

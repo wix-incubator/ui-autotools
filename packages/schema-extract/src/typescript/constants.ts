@@ -1,4 +1,5 @@
 import ts from 'typescript';
+
 export const compilerOptions: ts.CompilerOptions = {
     target: ts.ScriptTarget.ES2017,
     lib: [

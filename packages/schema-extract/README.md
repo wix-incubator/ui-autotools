@@ -3,12 +3,11 @@
 
 Schema extract transforms code files into [JSON-Schema](https://json-schema.org/) schemas. Schema extraction is a necessary step to create automated documentation for your code.
 
-It is composed of two parts, the **schema-extract** and **linker**.
+It is composed of two parts, the **ts transformer** and **linker**.
 
 
 ## Playground
-The `schema-extract` package has a playground that transforms your code to a schema as you type it.  
-To use the playground simply install `ui-autotools` and go to `/packages/schema-playground` and run `yarn start`.
+The `schema-extract` package has a playground that allows live editing of your code and transforms it to a schema and displays the results as you type it.
 
 ## Usage
 
@@ -105,7 +104,7 @@ Import the `transform` function from `@ui-autotools/schema-extract`. This functi
 
 The linker receives a file name and the name of an export in that file and returns the linked schema of that export.
 
-How is it any different than the `schema-extract`? When we transform a schema using the `schema-extract`, the result we get will only reference other types (Import or from the same file) using the $ref property.
+How is it any different than the `ts transformer`? When we transform a schema using the `ts transformer`, the result we get will only reference other types (Import or from the same file) using the $ref property.
 
 The linker flattens some of these types by linking them together.
 

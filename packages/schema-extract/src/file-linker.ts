@@ -2,7 +2,7 @@ import { Schema, IObjectFields, ClassSchemaId, ClassSchema, ModuleSchema, isRef,
 
 export interface IExtractor {
     getSchema: (f: string) => ModuleSchema;
-    getSchemaFromImport: (path: string, ref: string, file: string) => ModuleSchema | null;
+    getSchemaFromImport?: (path: string, ref: string, file: string) => ModuleSchema | null;
   }
 
 export class SchemaLinker {
@@ -74,7 +74,7 @@ export class SchemaLinker {
             return isRef(e) ? this.getRefEntity(e.$ref, paramsMap) : {refEntity: e, refEntityType: cleanRef};
         }
         let refEntity = this.schema.definitions[cleanRef] ? this.schema.definitions[cleanRef] : null;
-        if (!refEntity) {
+        if (!refEntity && this.extractor.getSchemaFromImport) {
             // If we are dealing with an import, the $ref will be 'module#type' so we break it into two parts for getSchemaFromImport
             const importSchema = this.extractor.getSchemaFromImport(ref.slice(0, poundIndex), ref.slice(poundIndex + 1), this.file);
             if (importSchema && importSchema.definitions) {

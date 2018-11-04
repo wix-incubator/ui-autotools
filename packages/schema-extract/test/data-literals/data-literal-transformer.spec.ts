@@ -678,22 +678,36 @@ describe ('generate data literals', () => {
                 const {output, node} = await testSerialize(`
                     import * as React from 'react';
                     export const b = 'hello world';
-                    export const a = <div>hello{b}</div>;
+                    export const a = <div>hello{b.c({c:'c'}).a()}</div>;
                 `, true);
                 expect(output).to.eql(anExpression({
                     __serializedType: 'jsx-node',
                     $ref: 'dom/div',
                     tagName: 'div',
-                    [nodeSymbol]: node,
                     children: [
                         'hello',
                         {
-                            __serializedType: 'reference',
+                            __serializedType: 'reference-call',
                             $ref: '#b',
-                            [nodeSymbol]: ((node as ts.JsxElement).children[1] as ts.JsxExpression).expression
+                            innerPath: [
+                                'c',
+                                {
+                                    __serializedType: 'reference-call',
+                                    args: [{
+                                        c: 'c'
+                                    }]
+                                },
+                                'a'
+                            ],
+                            args: [],
                         }
                     ]
                 }, node.getText()));
+                expect(output.value[nodeSymbol]).to.equal(node);
+                const funcCall = (node as any).children[1].expression;
+                expect(output.value.children[1][nodeSymbol]).to.equal(funcCall);
+                expect(output.value.children[1].innerPath[1][nodeSymbol]).to.equal(funcCall.expression.expression);
+                expect(output.value.children[1].innerPath[1].args[0][nodeSymbol]).to.equal(funcCall.expression.expression.arguments[0]);
                 expect(() => JSON.stringify(output)).not.to.throw();
             });
         });

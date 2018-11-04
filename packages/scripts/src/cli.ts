@@ -26,7 +26,7 @@ program
 .action((options) => {
   const metaGlob: string = options.files || defaultMetaGlob;
   importMetaFiles(projectPath, metaGlob);
-  ssrTest();
+  // ssrTest();
   hydrationTest(projectPath, metaGlob, webpackConfigPath);
 });
 

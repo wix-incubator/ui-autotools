@@ -31,6 +31,14 @@ export const eventListenerTest = (): void => {
 
         componentMetadata.simulations.forEach((simulation) => {
           it('component should unmount without leaving event listeners on the window or document', () => {
+            let counter = 0;
+            window.addEventListener = () => {
+              counter++;
+            };
+            window.removeEventListener = () => {
+              counter--;
+            };
+
             // Set root's HTML to the SSR component
             root.innerHTML = componentStrings[index];
             if (!componentMetadata.reactStrictModeCompliant) {
@@ -39,12 +47,10 @@ export const eventListenerTest = (): void => {
               hydrate(<React.StrictMode>{componentMetadata.simulationToJSX(simulation)}</React.StrictMode>, root);
             }
 
-            const test = getThing(document, window);
             ReactDOM.unmountComponentAtNode(root);
             index++;
-            // const changed = test(document, window);
 
-            expect(false).to.equal(false);
+            expect(counter).to.equal(0);
           });
         });
       });

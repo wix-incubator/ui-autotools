@@ -1,10 +1,94 @@
 # Schema Extract
 
 
-Schema extract transforms code files into [JSON-Schema](https://json-schema.org/) schemas. It is composed of two parts, the **schema-extract** and **linker**.
+Schema extract transforms code files into [JSON-Schema](https://json-schema.org/) schemas. Schema extraction is a necessary step to create automated documentation for your code.
+
+It is composed of two parts, the **schema-extract** and **linker**.
 
 
-## Schema-extract
+## Playground
+The `schema-extract` package has a playground that transforms your code to a schema as you type it.  
+To use the playground simply install `ui-autotools` and go to `/packages/schema-playground` and run `yarn start`.
+
+## Usage
+
+Import the `createLinker` function from `@ui-autotools/schema-extract`. This function receives a string array of file paths and returns an initalized linker class.
+To get the linked schema of a specific file invoke `linker.flatten(fileName)`:
+
+```
+    import {createLinker} from '@ui-autotools/schema-extract';
+    const files = [
+        'myProject/src/file-a.ts',
+        'myProject/src/file-b.ts'
+    ];
+    const linker = createLinker(files);
+    const linkedSchema = linker.flatten(files[0], 'IAnimal');
+
+```
+
+## Example
+
+Take a look at the following interface:
+```
+// file-a.ts
+    export interface IAnimal {
+        name: string;
+        hasTail: boolean;
+        makeNoise: (sound: ISound) => void;
+        isTamed?: 'YES' | 'NO';
+    }
+```
+If we run the command from the usage section it will be transformed to:
+```
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "/index.tsx",
+  "$ref": "common/module",
+  "properties": {},
+  "definitions": {
+    "IAnimal": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "hasTail": {
+          "type": "boolean"
+        },
+        "makeNoise": {
+          "$ref": "common/function",
+          "arguments": [
+            {
+              "$ref": "#ISound",
+              "name": "sound"
+            }
+          ],
+          "returns": {
+            "$ref": "common/undefined"
+          },
+          "requiredArguments": [
+            "sound"
+          ]
+        },
+        "isTamed": {
+          "type": "string",
+          "enum": [
+            "YES",
+            "NO"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "hasTail",
+        "makeNoise"
+      ],
+      "$ref": "common/interface"
+    }
+  }
+}
+```
+
+## TS Transformer
 
 Transforms a typescript source file into JSON-Schema. 
 
@@ -25,21 +109,6 @@ How is it any different than the `schema-extract`? When we transform a schema us
 
 The linker flattens some of these types by linking them together.
 
-#### Usage
-
-Import the `createLinker` function from `@ui-autotools/schema-extract`. This function receives a string array of file paths and returns an initalized linker class.
-To get the linked schema of a specific file invoke `linker.flatten(fileName)`:
-
-```
-    import {createLinker} from '@ui-autotools/schema-extract';
-    const files = [
-        'myProject/src/file-a.ts',
-        'myProject/src/file-b.ts'
-    ];
-    const linker = createLinker(files);
-    const linkedSchema = linker.flatten(files[0], 'myType');
-
-```
 #### Linking rules
 In order to avoid running into infinite loops, the linker does not link every member of every schema. It does link:
 * `extends` - Classes and interfaces that use the extends keyword. (However the linker will not link members of interfaces)

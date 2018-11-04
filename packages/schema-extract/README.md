@@ -10,12 +10,12 @@ Transforms a typescript source file into JSON-Schema.
 
 #### Usage
 
-Import the `transform` function from `@ui-autotools/schema-extract`. This function recives YYYYY arguments:
+Import the `transform` function from `@ui-autotools/schema-extract`. This function recives the following five arguments:
 * checker (`typescript.TypeChecker`) - a typescript checker connected to the desired files
 * sourceFile (`typescript.SourceFile`) - the typescript source of that we want to transform
 * modulePath (`string`) - The path to the module base directory
-* projectPath (`string`) - --------WHY????
-* path (`IFileSystemPath`) - --------
+* projectPath (`string`) - The name of the project the files are in (Will be removed in the future)
+* pathUtil (`IFileSystemPath`) - A path utility to be used to access directories and file. (You can use `path.posix`)
 
 ## Linker
 

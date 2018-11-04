@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import chalk from 'chalk';
 import {JSDOM} from 'jsdom';
-import {consoleLog, consoleError} from '@ui-autotools/utils';
+import {consoleLog} from '@ui-autotools/utils';
 import {parseSnapshotFilename} from '../generate-snapshots/filename-utils';
 import { IFileInfo } from '../generate-snapshots/build-base-files';
 
@@ -18,14 +18,6 @@ function getGridClientConfig(projectPath: string) {
   const projectName = require(path.join(projectPath, 'package.json')).name;
   if (!projectName) {
     throw new Error('The project should have a package.json file with a "name" field.');
-  }
-
-  if (!process.env.APPLITOOLS_API_KEY && !process.env.EYES_API_KEY) {
-    throw new Error('The environment variable "APPLITOOLS_API_KEY" needs to be defined.');
-  }
-
-  if (!process.env.APPLITOOLS_API_KEY) {
-    consoleError('Warning: falling back to using process.env.EYES_API_KEY, please set process.env.APPLITOOLS_API_KEY instead.');
   }
 
   const branchName = projectName + '/master';

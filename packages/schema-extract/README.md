@@ -117,6 +117,8 @@ In order to avoid running into infinite loops, the linker does not link every me
 
 #### Creating a custom linker
 
+(Note: **At the moment we don't export the SchemaLinker class**. We will either export it or add a function that receives an extractor and returns a linker)
+
 Using `createLinker` creates a typescript based linker, but the linker is not limited only to typescript. When creating a new linker class, the linker receives an extractor object:
 ```
     export interface IExtractor {
@@ -129,16 +131,14 @@ Using `createLinker` creates a typescript based linker, but the linker is not li
 
 `getSchemaFromImport` is used if we want to retrieve a type that is imported by the file we want to link.
 
-To use a different extractor with the liker, you just need to create a new linker class with the extractor and invoke flatten.
+To use a different extractor with the linker, you just need to create a new linker class with the extractor and invoke flatten.
 ```
     flatten(filePath: string, typeName: string): Schema
 ```
 The flatten function receives the path to file and the type inside of it we want to link.
 
-**TODO**: We need to decide how to export linker class
-
 ```
-    import {SchemaLinker} from '@ui-autotools/?????';
+    import {SchemaLinker} from '@ui-autotools/schema-extract/?????';
     import {myExtractor} from './secretStuff';
 
     function linkSchema(filePath, typeName) {

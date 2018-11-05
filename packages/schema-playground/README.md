@@ -7,7 +7,7 @@ The "schema extraction" process, which transforms source typescript files to JSO
 Currently **Schema Playground** is run locally by following these steps:
 
 1. Clone, install and build [ui-autotools](https://github.com/wix-incubator/ui-autotools) mono-repo project:<br>
-   ```node 
+   ```console 
     git clone git@github.com:wix-incubator/ui-autotools.git
     
     cd ui-autotools
@@ -17,7 +17,7 @@ Currently **Schema Playground** is run locally by following these steps:
     yarn build
    ```
 2. Start **Schema Playground**:
-   ```node
+   ```console
    cd packages/schema-playground
 
    yarn start

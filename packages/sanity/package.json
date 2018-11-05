@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/sanity",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -32,7 +32,7 @@
     "@ui-autotools/registry": "^2.0.3"
   },
   "dependencies": {
-    "@ui-autotools/utils": "^1.1.0",
+    "@ui-autotools/utils": "^1.1.1",
     "chai": "^4.2.0",
     "puppeteer": "^1.10.0",
     "sinon": "^7.1.1",

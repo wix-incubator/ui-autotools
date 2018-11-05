@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/a11y",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
   "scripts": {
@@ -28,7 +28,7 @@
     "@ui-autotools/registry": "^2.0.3"
   },
   "dependencies": {
-    "@ui-autotools/utils": "^1.1.0",
+    "@ui-autotools/utils": "^1.1.1",
     "axe-core": "3.0.3",
     "chalk": "^2.4.1",
     "puppeteer": "^1.10.0"

@@ -1,5 +1,4 @@
 import {expect} from 'chai';
-import * as ts from 'typescript';
 import {runDataLiteralExtract} from '../../test-kit/run-data-literal-exctrator';
 import { nodeSymbol } from '../../src/data-literal-transformer';
 const testSerialize = (src: string, includeNodes: boolean = false) => runDataLiteralExtract(src, 'a', '/index.tsx', includeNodes);
@@ -707,7 +706,6 @@ describe ('generate data literals', () => {
                 const funcCall = (node as any).children[1].expression;
                 expect(output.value.children[1][nodeSymbol]).to.equal(funcCall);
                 expect(output.value.children[1].innerPath[1][nodeSymbol]).to.equal(funcCall.expression.expression);
-                expect(output.value.children[1].innerPath[1].args[0][nodeSymbol]).to.equal(funcCall.expression.expression.arguments[0]);
                 expect(() => JSON.stringify(output)).not.to.throw();
             });
         });

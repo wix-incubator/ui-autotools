@@ -43,6 +43,9 @@ export const isFunction: SchemaPredicate = (schema) =>
   schema.$ref === 'common/function' ||
   schema.$ref === 'common/class_constructor';
 
+export const isInterface: SchemaPredicate = (schema) =>
+  schema.$ref === 'common/interface';
+
 export const isSimpleType: SchemaPredicate = (schema) =>
   isAny(schema)     || isNull(schema)   || isUndefined(schema) ||
   isBoolean(schema) || isNumber(schema) || isString(schema);

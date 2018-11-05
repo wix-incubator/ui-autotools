@@ -22,5 +22,9 @@
     "@stylable/webpack-plugin": "^0.1.14",
     "react": "^16.6.0",
     "react-dom": "^16.6.0"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "1348b53cf95dd7734c1080987903e54e4db40919"
 }

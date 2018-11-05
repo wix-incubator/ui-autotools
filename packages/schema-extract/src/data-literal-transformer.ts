@@ -528,10 +528,6 @@ const dataLiteralSerializers: Array<ISerializer<any>> = [
 ];
 
 function getReferencePath(env: IExctractorEnv, node: ts.Node): {$ref: string, innerPath ?: any[]; } {
-    const serializer = dataLiteralSerializers.find((optionalSerializer) => optionalSerializer.isApplicable(node));
-    if (serializer) {
-
-    }
     if (propertyAccessSerializer.isApplicable(node)) {
         const res = propertyAccessSerializer.serialize(env, node);
         return {

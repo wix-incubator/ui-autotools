@@ -1,6 +1,6 @@
 import ts from 'typescript';
 import {  resolveImportedIdentifier, IFileSystemPath} from './imported-identifier-resolver';
-
+export const nodeSymbol = Symbol('node');
 export interface IExctractorEnv extends Object {
     checker: ts.TypeChecker;
     pathUtil: IFileSystemPath;
@@ -16,13 +16,13 @@ export interface ILiteralInferenceResult<ENV extends IExctractorEnv = IExctracto
 
 export interface ISerializedNonLiteral<T extends string = string> {
     __serializedType: T;
-    node ?: ts.Node;
+    [nodeSymbol] ?: ts.Node;
 }
 
 export interface IExpressionInferenceResult<VALUE extends any, ENV extends IExctractorEnv = IExctractorEnv> {
     isLiteral: false;
     value: VALUE;
-    node: ENV['includeNode'] extends true ?  ts.Node : undefined ;
+    [nodeSymbol]: ENV['includeNode'] extends true ?  ts.Node : undefined ;
     expression: ENV['includeTopMostExpression'] extends true ? string : undefined;
 }
 
@@ -83,6 +83,7 @@ export interface IJSXNode extends ISerializedNonLiteral<typeof IJSXNode> {
     $ref: string;
     attributes?: IJSXAttribute[];
     children?: any[];
+    tagName: string;
 }
 
 export const IFunction = 'function';
@@ -104,8 +105,8 @@ function aLiteralValue<ENV extends IExctractorEnv, VALUE>(value: VALUE, node: ts
         isLiteral: true,
         value,
     };
-    if (env.includeNode === true) {
-        (res.value as any).node = (node as any);
+    if (env.includeNode === true && res.value instanceof Object) {
+        (res.value as any)[nodeSymbol] = (node as any);
     }
     return res as ILiteralInferenceResult<ENV, VALUE>;
 }
@@ -125,23 +126,12 @@ function aProcessedExpression<T extends string, ENV extends IExctractorEnv, VALU
         ...fields
     };
     if (env.includeNode === true) {
-        input.node = (node as any);
+        input[nodeSymbol] = (node as any);
     }
 
     const res = anExpression<ENV, ISerializedNonLiteral<T>>(input);
 
     return res as any;
-}
-
-function getReferencePath(env: IExctractorEnv, node: ts.Node): {$ref: string, innerPath ?: any[]; } {
-    if (propertyAccessSerializer.isApplicable(node)) {
-        const res = propertyAccessSerializer.serialize(env, node);
-        return {
-            $ref: res.value.$ref,
-            innerPath: res.value.innerPath
-        };
-    }
-    return {$ref: getIdFromExpression(env, node as any) };
 }
 
 const callExpressionSerializer: ISerializer<ts.CallExpression, IExpressionInferenceResult<IReferenceCall>> = {
@@ -150,12 +140,18 @@ const callExpressionSerializer: ISerializer<ts.CallExpression, IExpressionInfere
     },
     serialize: (env, node) =>  {
         const referencePath = getReferencePath(env, node.expression);
-        return aProcessedExpression(IReferenceCall, node, env, {
-            ...referencePath,
-            args: node.arguments.map((arg) => generateDataLiteral(env, arg).value)
+        return serializeCallArgs(env, node, {
+            ...referencePath
         });
     }
 };
+
+function serializeCallArgs(env: IExctractorEnv, node: ts.CallExpression, extra: object): IExpressionInferenceResult<IReferenceCall> {
+    return aProcessedExpression(IReferenceCall, node, env, {
+        args: node.arguments.map((arg) => generateDataLiteral(env, arg).value),
+        ...extra
+    }) as any;
+}
 const newExpressionSerializer: ISerializer<ts.NewExpression, IExpressionInferenceResult<IReferenceConstruct>> = {
     isApplicable: function is(node): node is ts.NewExpression {
         return ts.isNewExpression(node);
@@ -278,24 +274,32 @@ const objectBindingSerializer: ISerializer<ts.ObjectBindingPattern> = {
     }
 };
 
+// const supportedPropertyAccessors:Array<ISerializer<any>> = [
+//     callExpressionSerializer
+// ];
 const propertyAccessSerializer: ISerializer<ts.PropertyAccessExpression | ts.ElementAccessExpression> = {
     isApplicable: function is(node): node is ts.PropertyAccessExpression | ts.ElementAccessExpression {
         return ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node);
     },
     serialize: (env, node) =>  {
         let currentNode: ts.Node = node;
-        const expression: string[] = [];
+        const expression: any[] = [];
         do {
             if (ts.isPropertyAccessExpression(currentNode)) {
                 expression.push(currentNode.name.getText());
                 currentNode = currentNode.expression;
-            }
+            } else
             if (ts.isElementAccessExpression(currentNode)) {
                 const innerValue = generateDataLiteral(env, currentNode.argumentExpression);
                 expression.push(innerValue.value);
                 currentNode = currentNode.expression;
+            } else
+            if (ts.isCallExpression(currentNode)) {
+                const innerValue = serializeCallArgs(env, currentNode, {});
+                expression.push(innerValue.value);
+                currentNode = currentNode.expression;
             }
-        } while (ts.isPropertyAccessExpression(currentNode) || ts.isElementAccessExpression(currentNode));
+        } while (ts.isPropertyAccessExpression(currentNode) || ts.isElementAccessExpression(currentNode) || ts.isCallExpression(currentNode));
 
         const $ref = getIdFromExpression(env, currentNode as ts.Expression);
         return aProcessedExpression(IReference, node, env, {$ref, innerPath: expression.reverse()});
@@ -431,6 +435,8 @@ const reactNodeSerializer: ISerializer<ts.JsxElement | ts.JsxSelfClosingElement 
         const tagName = ts.isJsxFragment(startNode) ? FRAGMENT_REF :
                         startsWithLowerCase(startNode.tagName.getText()) ? 'dom/' + startNode.tagName.getText() :
                         getIdFromExpression(env, startNode.tagName);
+
+        const readableTagName = ts.isJsxFragment(startNode) ? 'fragment' : startNode.tagName.getText();
         const attributes: ts.NodeArray<ts.JsxAttributeLike> = ts.isJsxFragment(startNode) ? ([] as any) : startNode.attributes.properties;
         let children: any[] = [];
         const attributeOutputs = attributes.map((attribute) => {
@@ -455,7 +461,8 @@ const reactNodeSerializer: ISerializer<ts.JsxElement | ts.JsxSelfClosingElement 
         }
 
         const extra: Partial<IJSXNode> = {
-            $ref: tagName
+            $ref: tagName,
+            tagName: readableTagName
         };
         if (attributeOutputs.length) {
             extra.attributes = attributeOutputs;
@@ -519,6 +526,17 @@ const dataLiteralSerializers: Array<ISerializer<any>> = [
     parenthesisSerializer,
     functionSerializer
 ];
+
+function getReferencePath(env: IExctractorEnv, node: ts.Node): {$ref: string, innerPath ?: any[]; } {
+    if (propertyAccessSerializer.isApplicable(node)) {
+        const res = propertyAccessSerializer.serialize(env, node);
+        return {
+            $ref: res.value.$ref,
+            innerPath: res.value.innerPath
+        };
+    }
+    return {$ref: getIdFromExpression(env, node as any) };
+}
 export function generateDataLiteral<ENV extends IExctractorEnv>(env: ENV, node: ts.Node): ILiteralInferenceResult | IExpressionInferenceResult<any, ENV> {
     const serializer = dataLiteralSerializers.find((optionalSerializer) => optionalSerializer.isApplicable(node));
     if (serializer) {

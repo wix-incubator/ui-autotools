@@ -1,6 +1,6 @@
 import {expect} from 'chai';
-import * as ts from 'typescript';
 import {runDataLiteralExtract} from '../../test-kit/run-data-literal-exctrator';
+import { nodeSymbol } from '../../src/data-literal-transformer';
 const testSerialize = (src: string, includeNodes: boolean = false) => runDataLiteralExtract(src, 'a', '/index.tsx', includeNodes);
 const literal = (value: any) => ({value, isLiteral: true});
 const anExpression = (value: any, expression: string) => ({value, isLiteral: false, expression});
@@ -200,7 +200,7 @@ describe ('generate data literals', () => {
             }, node.getText()));
         });
 
-        it('should serialize a function call', async () => {
+        it('should serialize a function call with inner path', async () => {
             const {output, node} = await testSerialize(`
                 export const b = { func:()=>{} }
                 export const a = b.func("xxx", 555);
@@ -210,6 +210,30 @@ describe ('generate data literals', () => {
                 $ref: '#b',
                 innerPath: ['func'],
                 args: ['xxx', 555]
+            }, node.getText()));
+        });
+
+        it('should serialize a function call with chaining', async () => {
+            const {output, node} = await testSerialize(`
+                export const a = b.methodA('a').c.methodB("xxx", 555).methodC();
+            `);
+            expect(output).to.eql(anExpression({
+                __serializedType: 'reference-call',
+                $ref: '#b',
+                innerPath: [
+                    'methodA',
+                    {
+                        __serializedType: 'reference-call',
+                        args: ['a']
+                    },
+                    'c',
+                    'methodB',
+                    {
+                        __serializedType: 'reference-call',
+                        args: ['xxx', 555]
+                    },
+                    'methodC'],
+                args: []
             }, node.getText()));
         });
 
@@ -266,7 +290,8 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serializedType: 'jsx-node',
-                $ref: 'dom/div'
+                $ref: 'dom/div',
+                tagName: 'div'
             }, node.getText()));
         });
         it('should serialize jsx elements with reference tagname', async () => {
@@ -277,7 +302,8 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql(anExpression({
                 __serializedType: 'jsx-node',
-                $ref: '/button#Button'
+                $ref: '/button#Button',
+                tagName: 'Button'
             }, node.getText()));
         });
         it('should serialize jsx elements attributes', async () => {
@@ -288,6 +314,7 @@ describe ('generate data literals', () => {
             expect(output).to.eql(anExpression({
                 __serializedType: 'jsx-node',
                 $ref: 'dom/div',
+                tagName: 'div',
                 attributes: [{
                     __serializedType: 'jsx-attribute',
                     name: 'a',
@@ -305,6 +332,7 @@ describe ('generate data literals', () => {
             expect(output).to.eql(anExpression({
                 __serializedType: 'jsx-node',
                 $ref: 'dom/div',
+                tagName: 'div',
                 attributes: [{
                     __serializedType: 'reference-spread',
                     $ref: '#b'
@@ -319,6 +347,7 @@ describe ('generate data literals', () => {
             expect(output).to.eql(anExpression({
                 __serializedType: 'jsx-node',
                 $ref: 'dom/div',
+                tagName: 'div',
                 attributes: [{
                     __serializedType: 'jsx-attribute',
                     name: 'a',
@@ -336,6 +365,7 @@ describe ('generate data literals', () => {
             expect(output).to.eql(anExpression({
                 __serializedType: 'jsx-node',
                 $ref: 'dom/div',
+                tagName: 'div',
                 attributes: [{
                     __serializedType: 'jsx-attribute',
                     name: 'style',
@@ -352,6 +382,7 @@ describe ('generate data literals', () => {
             expect(output).to.eql(anExpression({
                 __serializedType: 'jsx-node',
                 $ref: 'dom/div',
+                tagName: 'div',
                 attributes: [{
                     __serializedType: 'jsx-attribute',
                     name: 'style',
@@ -392,6 +423,7 @@ describe ('generate data literals', () => {
                 expect(output).to.eql(anExpression({
                     __serializedType: 'jsx-node',
                     $ref: 'dom/div',
+                    tagName: 'div',
                     children: ['hello world']
                 }, node.getText()));
             });
@@ -403,9 +435,11 @@ describe ('generate data literals', () => {
                 expect(output).to.eql(anExpression({
                     __serializedType: 'jsx-node',
                     $ref: 'dom/div',
+                    tagName: 'div',
                     children: [
                         {
                             __serializedType: 'jsx-node',
+                            tagName: 'div',
                             $ref: 'dom/div',
                             attributes: [{
                                 __serializedType: 'jsx-attribute',
@@ -425,10 +459,12 @@ describe ('generate data literals', () => {
                 expect(output).to.eql(anExpression({
                     __serializedType: 'jsx-node',
                     $ref: 'dom/fragment',
+                    tagName: 'fragment',
                     children: [
                         {
                             __serializedType: 'jsx-node',
                             $ref: 'dom/div',
+                            tagName: 'div',
                             attributes: [{
                                 __serializedType: 'jsx-attribute',
                                 name: 'style',
@@ -449,6 +485,7 @@ describe ('generate data literals', () => {
                 expect(output).to.eql(anExpression({
                     __serializedType: 'jsx-node',
                     $ref: 'dom/div',
+                    tagName: 'div',
                     children: [
                         {
                             __serializedType: 'reference',
@@ -574,6 +611,7 @@ describe ('generate data literals', () => {
             expect(output).to.eql(anExpression({
                 __serializedType: 'jsx-node',
                 $ref: 'dom/div',
+                tagName: 'div',
                 children: [
                     {
                         __serializedType: 'reference-call',
@@ -586,6 +624,7 @@ describe ('generate data literals', () => {
                                 returns: [{
                                     __serializedType: 'jsx-node',
                                     $ref: 'dom/span',
+                                    tagName: 'span',
                                     children: [{
                                         __serializedType: 'reference',
                                         $ref: '#item'
@@ -608,6 +647,7 @@ describe ('generate data literals', () => {
             expect(output).to.eql(anExpression({
                 __serializedType: 'jsx-node',
                 $ref: 'dom/div',
+                tagName: 'div',
                 children: [
                     {
                         __serializedType: 'reference-call',
@@ -620,6 +660,7 @@ describe ('generate data literals', () => {
                                 returns: [{
                                     __serializedType: 'jsx-node',
                                     $ref: 'dom/span',
+                                    tagName: 'span',
                                     children: [{
                                         __serializedType: 'reference',
                                         $ref: '#item'
@@ -636,20 +677,36 @@ describe ('generate data literals', () => {
                 const {output, node} = await testSerialize(`
                     import * as React from 'react';
                     export const b = 'hello world';
-                    export const a = <div>{b}</div>;
+                    export const a = <div>hello{b.c({c:'c'}).a()}</div>;
                 `, true);
                 expect(output).to.eql(anExpression({
                     __serializedType: 'jsx-node',
                     $ref: 'dom/div',
-                    node,
+                    tagName: 'div',
                     children: [
+                        'hello',
                         {
-                            __serializedType: 'reference',
+                            __serializedType: 'reference-call',
                             $ref: '#b',
-                            node: ((node as ts.JsxElement).children[0] as ts.JsxExpression).expression
+                            innerPath: [
+                                'c',
+                                {
+                                    __serializedType: 'reference-call',
+                                    args: [{
+                                        c: 'c'
+                                    }]
+                                },
+                                'a'
+                            ],
+                            args: [],
                         }
                     ]
                 }, node.getText()));
+                expect(output.value[nodeSymbol]).to.equal(node);
+                const funcCall = (node as any).children[1].expression;
+                expect(output.value.children[1][nodeSymbol]).to.equal(funcCall);
+                expect(output.value.children[1].innerPath[1][nodeSymbol]).to.equal(funcCall.expression.expression);
+                expect(() => JSON.stringify(output)).not.to.throw();
             });
         });
     });

@@ -100,6 +100,21 @@ Import the `transform` function from `@ui-autotools/schema-extract`. This functi
 * projectPath (`string`) - The name of the project the files are in (Will be removed in the future)
 * pathUtil (`IFileSystemPath`) - A path utility to be used to access directories and file. (You can use `path.posix`)
 
+For example if we want to transform our own code:
+
+```
+    import path from 'path';
+    import compilerOptions from './utils';
+
+    const projectPath = '/Projects/MySecretProject/;
+    const fileName = projectPath + 'secret-stuff.ts'
+    // TS setup
+    const program = typescript.createProgram([fileName], compilerOptions);
+    const sourceFile = program.getSourceFile(fileName);
+
+    const schema = transform(program.getTypeChecker(), sourceFile, fileName, 'MySecretProject', path.posix);
+```
+
 ## Linker
 
 The linker receives a file name and the name of an export in that file and returns the linked schema of that export.
@@ -108,11 +123,63 @@ How is it any different than the `ts transformer`? When we transform a schema us
 
 The linker flattens some of these types by linking them together.
 
+#### Example
+Let's look at InterfaceB in the following code:
+```
+    export interface InterfaceA<T> {
+        something:T;
+    };
+    export interface InterfaceB extends InterfaceA<string> {
+        somethingElse: number
+    };
+```
+
+The schema created for this interface before linking will look like this:
+```
+    "InterfaceB": {
+        "$ref": "common/interface",
+        "properties": {
+            "somethingElse": {
+                "type": "number"
+            }
+        },
+        "required": ["somethingElse"],
+        "genericArguments": [{
+                "type": "string"
+            }],
+        "extends": {
+            "$ref": "#InterfaceA"
+        }
+    }
+```
+
+But we are missing some crucial information about InterfaceB. After linking this is how the schema looks:
+```
+    "InterfaceB": {
+        $ref: "common/interface",
+        properties: {
+            something: {
+                inheritedFrom: '#InterfaceA',
+                type: 'string'
+            },
+            somethingElse: {
+                type: 'number'
+            }
+        },
+        required: ['somethingElse', 'something']
+    };
+```
+
+
 #### Linking rules
 In order to avoid running into infinite loops, the linker does not link every member of every schema. It does link:
 * `extends` - Classes and interfaces that use the extends keyword. (However the linker will not link members of interfaces)
 * Generic types
 * Intersection types - We may need the linked schemas to intersect two or more different types.
+
+What won't be linked?
+* Imports - If you import a type from a different file, it will be represented as a reference: `$ref: "myProject/src/util#myFunction"`
+* References to other types - Any form of referencing a different type or interface like `type A = B` or `interface InterfaceA { type: InterfaceB }`. This also includes function using other types as arguments or return values.
 
 #### Creating a custom linker
 

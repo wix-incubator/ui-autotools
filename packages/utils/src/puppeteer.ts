@@ -26,9 +26,6 @@ export function logConsoleMessages(page: puppeteer.Page) {
 }
 
 async function loadTestPage(page: puppeteer.Page, testPageUrl: string, timeout: number) {
-  // This can keep the process from terminating for upto `timeout` if an error
-  // occurs on the page before page load event.
-  // Bug: https://github.com/GoogleChrome/puppeteer/issues/2721
   await page.evaluateOnNewDocument(patchConsole);
   await page.goto(testPageUrl, {timeout});
 

@@ -38,8 +38,8 @@ To run the tests, simply go to the `ui-autotools` folder and run `yarn start`. A
 
 ## TS Transformer
 Whether this is an issue or a new feature, we recommend that you first create a test to understand what the expected result should look like.  
-After creating a test, the TS transformer's entry point is the `transform` function in [file-transformer](packages/schema-extract/src/file-transformer.ts). It is somewhat built like a decision tree, a series of `if` statements followed by handling the chosen case.  
+After creating a test, the TS transformer's entry point is the `transform` function in [file-transformer](src/file-transformer.ts). It is somewhat built like a decision tree, a series of `if` statements followed by handling the chosen case.  
 
 ## Linker
 Same as TS Transformer contribution, we recommend adding a new test to understand what the expected result should look like.  
-The linker's entry point is the `flatten` method in [file-linker](packages/schema-extract/src/file-linker.ts), followed by the `link` method that chooses the correct handler to handle this type.  
+The linker's entry point is the `flatten` method in [file-linker](src/file-linker.ts), followed by the `link` method that chooses the correct handler to handle this type.  

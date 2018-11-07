@@ -14,10 +14,8 @@ export interface IState {
 export class Composite extends React.Component<IProps, IState> {
   public static displayName: string;
   public state: IState = {text: ''};
-  public listener() {
-    // tslint:disable-next-line:no-console
-    console.log('blah');
-  }
+  // tslint:disable-next-line:no-empty
+  public listener() {}
 
   public componentDidMount() {
     window.addEventListener('click', this.listener);

@@ -1,8 +1,7 @@
 {
   "name": "@ui-autotools/schema-playground",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "license": "MIT",
-  "private": true,
   "scripts": {
     "clean": "rimraf ./dist",
     "prebuild": "yarn clean",
@@ -13,11 +12,14 @@
   "dependencies": {
     "@file-services/memory": "^0.2.3",
     "@file-services/typescript": "^0.2.4",
-    "@ui-autotools/schema-extract": "^1.0.12",
-    "@ui-autotools/schema-views": "^0.0.2",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
+    "@ui-autotools/schema-extract": "^1.1.1",
+    "@ui-autotools/schema-views": "^0.1.1",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
     "sanitize.css": "^8.0.0",
     "tslib": "^1.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

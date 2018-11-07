@@ -9,7 +9,7 @@ describe('schema-extract - generic functions', () => {
         const functionIntializer = `(str)=>{
             return str
         }`;
-        const res = transformTest(`
+        const res = await transformTest(`
         export const declaredFunction: <T extends string>(str:T)=>T = ${functionIntializer};
 
         `, moduleId);
@@ -45,7 +45,7 @@ describe('schema-extract - generic functions', () => {
 
     it('should support generic functions with parameter deconstruct', async () => {
         const moduleId = 'functions';
-        const res = transformTest(`
+        const res = await transformTest(`
 
         export function declaredDeconstruct<T> ({x, y}: {x:T,y:T}):T { return x };
 
@@ -93,7 +93,7 @@ describe('schema-extract - generic functions', () => {
         const functionIntializer = `(str)=>{
             return str;
         }`;
-        const res = transformTest(`
+        const res = await transformTest(`
         export let functionWithRestParams:<T>(str:T, ...rest:T[])=>T = ${functionIntializer};
         `, moduleId);
 
@@ -133,7 +133,7 @@ describe('schema-extract - generic functions', () => {
 
     xit('should handle functions that return a promise', async () => {
         const moduleId = 'infered_functions';
-        const res = transformTest(`
+        const res = await transformTest(`
 
         export async function asyncFunction(str:string){
 

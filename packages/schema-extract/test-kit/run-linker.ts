@@ -1,22 +1,20 @@
-import ts from 'typescript';
-import { MemoryFileSystem, DirectoryContent } from 'kissfs';
-import { createHost } from '../src/isomorphc-typescript-host';
+import {createTsService } from '../src/typescript/createMemoryTsService';
+import { IDirectoryContents} from '@file-services/types';
 import {  Schema, ModuleSchema } from '../src/json-schema-types';
 import { SchemaLinker, IExtractor } from '../src/file-linker';
 import {transform, getSchemaFromImport} from '../src/file-transformer';
 
-export function linkTest(sourceDir: DirectoryContent, entityName: string, fileName: string): Schema {
-    const memFs = new MemoryFileSystem();
+export async function linkTest(sourceDir: IDirectoryContents, entityName: string, fileName: string): Promise<Schema> {
     const projectName = 'someProject';
     const projectPath = `/${projectName}`;
     const testedPath = projectPath + '/src/';
     const testedFile = testedPath + fileName;
-    MemoryFileSystem.addContent(memFs, {
+    const {tsService, fs} = await createTsService({
         [projectName]: {
             src: sourceDir,
         },
-    });
-    const prg = ts.createProgram([testedFile], {}, createHost(memFs));
+    }, [testedFile]);
+    const prg = tsService.getProgram()!;
     function getSchema(file: string): ModuleSchema {
         const sourceFile = prg.getSourceFile(file);
         if (!sourceFile) {
@@ -27,10 +25,10 @@ export function linkTest(sourceDir: DirectoryContent, entityName: string, fileNa
             properties: {},
         };
         }
-        return transform(prg.getTypeChecker(), sourceFile, file, '');
+        return transform(prg.getTypeChecker(), sourceFile, file, projectPath, fs.path );
       }
     function getImport(importPath: string, ref: string, file: string) {
-        return getSchemaFromImport(importPath, ref, prg, prg.getSourceFile(file));
+        return getSchemaFromImport(importPath, ref, prg, fs.path, prg.getSourceFile(file));
     }
     const extractor: IExtractor = {
         getSchema,

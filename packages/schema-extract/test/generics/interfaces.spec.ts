@@ -5,7 +5,7 @@ import {transformTest} from '../../test-kit/run-transform';
 describe('schema-extract - generic interface', () => {
     it('should support genric interface definition', async () => {
         const moduleId = 'interface-definition';
-        const res = transformTest(`
+        const res = await transformTest(`
         export interface MyInterface<T> {
             something:T;
         };
@@ -44,7 +44,7 @@ describe('schema-extract - generic interface', () => {
 
     it('should support generic arguments schema', async () => {
         const moduleId = 'interface-definition';
-        const res = transformTest(`
+        const res = await transformTest(`
         export interface MyInterface<T extends string>{
             something:T;
         };
@@ -87,7 +87,7 @@ describe('schema-extract - generic interface', () => {
 
     it('generic arguments should be passed deeply', async () => {
         const moduleId = 'interface-definition';
-        const res = transformTest(`
+        const res = await transformTest(`
         export interface MyInterface<T extends string>{
             something:{
                 deepKey:T
@@ -181,7 +181,7 @@ describe('schema-extract - generic interface', () => {
 
     it('should support generic imports', async () => {
         const moduleId = 'interface-definition';
-        const res = transformTest(`
+        const res = await transformTest(`
         import * as Event from 'event';
 
         export interface MyInterface {
@@ -226,7 +226,7 @@ describe('schema-extract - generic interface', () => {
 
     it('should support extending genric interfaces', async () => {
         const moduleId = 'interface-definition';
-        const res = transformTest(`
+        const res = await transformTest(`
         export interface TypeA<T> {
             something:T;
         };

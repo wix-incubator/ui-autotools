@@ -1,10 +1,11 @@
-import typescript from 'typescript';
-import {transform, getSchemaFromImport} from './file-transformer';
-import {SchemaLinker, IExtractor} from './file-linker';
+import path from 'path';
+import ts from 'typescript';
+import { transform, getSchemaFromImport } from './file-transformer';
+import { SchemaLinker, IExtractor } from './file-linker';
 import { ModuleSchema } from './json-schema-types';
 
 export function createLinker(files: string[]): SchemaLinker {
-  const program = typescript.createProgram(files, {});
+  const program = ts.createProgram(files, {});
   function getSchema(file: string): ModuleSchema {
     const sourceFile = program.getSourceFile(file);
     if (!sourceFile) {
@@ -13,16 +14,19 @@ export function createLinker(files: string[]): SchemaLinker {
         $id: file,
         $ref: 'common/module',
         properties: {},
-    };
+      };
     }
-    return transform(program.getTypeChecker(), sourceFile, file, '');
+    return transform(program.getTypeChecker(), sourceFile, file, '', path);
   }
+
   function getImport(importPath: string, ref: string, file: string): ModuleSchema | null {
-    return getSchemaFromImport(importPath, ref, program, program.getSourceFile(file));
+    return getSchemaFromImport(importPath, ref, program, path, program.getSourceFile(file));
   }
+
   const extractor: IExtractor = {
     getSchema,
     getSchemaFromImport: getImport
   };
+
   return new SchemaLinker(extractor);
 }

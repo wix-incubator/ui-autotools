@@ -1,12 +1,7 @@
 import * as ts from 'typescript';
-import * as path from 'path';
+export type IFileSystemPath = import ('@file-services/types').IFileSystem['path'];
 
-export interface IEnv {
-    modulePath: string;
-    projectPath: string;
-}
-
-export function resolveImportedIdentifier(node: ts.Node, modulePath: string, posix: typeof path.posix) {
+export function resolveImportedIdentifier(node: ts.Node, modulePath: string, posix: IFileSystemPath) {
     if (ts.isNamespaceImport(node)) {
         const target = node.parent!.parent!.moduleSpecifier.getText().slice(1, -1);
         return resolveImportPath(target, '', modulePath, posix);
@@ -16,12 +11,12 @@ export function resolveImportedIdentifier(node: ts.Node, modulePath: string, pos
 
     } else if (ts.isImportClause(node)) {
         const target = node.parent!.moduleSpecifier.getText().slice(1, -1);
-        return resolveImportPath(target,  '#' + node.getText(), modulePath, posix);
+        return resolveImportPath(target,  '#default', modulePath, posix);
     }
     return null;
 }
 
-export function resolveImportPath(relativeUrl: string, importInternal: string, modulePath: string, posix: typeof path.posix) {
+export function resolveImportPath(relativeUrl: string, importInternal: string, modulePath: string, posix: IFileSystemPath) {
     if (relativeUrl.startsWith('.') || relativeUrl.startsWith('/')) {
         const currentDir = posix.dirname(modulePath);
         const resolvedPath = posix.join(currentDir, relativeUrl);

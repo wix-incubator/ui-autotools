@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/utils",
-  "version": "1.0.10",
+  "version": "1.1.1",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -26,9 +26,9 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@stylable/node": "^0.1.13",
+    "@stylable/node": "^0.1.14",
     "html-webpack-plugin": "^3.2.0",
-    "koa": "^2.5.3",
+    "koa": "^2.6.1",
     "koa-webpack": "^5.1.0"
   },
   "peerDependencies": {
@@ -36,5 +36,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "gitHead": "1348b53cf95dd7734c1080987903e54e4db40919"
 }

@@ -5,7 +5,7 @@ import {transformTest} from '../test-kit/run-transform';
 describe('schema-extract - module', () => {
     it('should support different export types', async () => {
         const moduleId = 'export-types';
-        const res = transformTest(`
+        const res = await transformTest(`
                 export let a:string;
                 let b:string;
                 let c:number;
@@ -38,7 +38,7 @@ describe('schema-extract - module', () => {
 
     xit('should support one export mode', async () => {
         const moduleId = 'export-one';
-        const res = transformTest(`
+        const res = await transformTest(`
         let a:string = 'b';
         exports = a;
         `, moduleId);
@@ -55,7 +55,7 @@ describe('schema-extract - module', () => {
 
     it('should support imports', async () => {
         const moduleId = 'imports';
-        const res = transformTest(`
+        const res = await transformTest(`
         import { AClass } from './test-assets';
 
         export let a:AClass;
@@ -89,7 +89,7 @@ describe('schema-extract - module', () => {
 
     it('should support * as imports', async () => {
         const moduleId = 'imports';
-        const res = transformTest(`
+        const res = await transformTest(`
         import * as stuff  from './test-assets';
 
         export let a:stuff.AClass;
@@ -125,7 +125,7 @@ describe('schema-extract - module', () => {
 
     it('should support node modules import', async () => {
         const moduleId = 'imports';
-        const res = transformTest(`
+        const res = await transformTest(`
         import * as stuff  from 'third-party';
 
         export let a:stuff.AClass;
@@ -147,7 +147,7 @@ describe('schema-extract - module', () => {
 
     it('should support import export', async () => {
         const moduleId = 'imports';
-        const res = transformTest(`
+        const res = await transformTest(`
         export {AType} from './test-assets';
         `, moduleId);
 

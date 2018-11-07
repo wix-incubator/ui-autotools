@@ -15,18 +15,17 @@ module.exports = {
         rules: [
             {
                 test: /\.tsx?$/,
-                loader: '@ts-tools/webpack-loader',
+                exclude: /node_modules/,
+                loader: '@ts-tools/webpack-loader'
             },
-            // when parsing typescript, make sure webpack ignores the dynamic require() calls
-            // and doesn't polyfill different node globals (__dirname, etc)
-            // best way to get a typescript bundled without warnings
             {
-                include: require.resolve('typescript/lib/typescript.js'),
-                parser: {
-                    commonjs: false,
-                    node: false
-                }
-            },
+                test: /\.d\.ts$/,
+                include: /node_modules/,
+                loader: 'raw-loader'
+            }
+        ],
+        noParse: [
+            require.resolve('typescript/lib/typescript.js')
         ]
     },
     resolve: {

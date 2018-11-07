@@ -104,9 +104,12 @@ function createServer({middleware, host, port, log}: IServerOptions):
 }
 
 export async function serve(options: IServeOptions): Promise<IServer> {
+  // We're not using a random port by default because Chrome and Firefox
+  // block connections to some ports (e.g. 2049 - nfs, 6000 - X11) to prevent
+  // cross-protocol attacks.
   const webpackConfig = options.webpackConfig;
   const host = options.host || '127.0.0.1';
-  const port = options.port || 0;
+  const port = options.port || 0x420;
   const watch = options.watch || false;
 
   const log = new Log(watch);

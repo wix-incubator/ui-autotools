@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Registry, {getCompName} from '@ui-autotools/registry';
 import chai, {expect} from 'chai';
-import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import {hydrate} from 'react-dom';
 import {FloodEvents} from './flood-events';
@@ -12,10 +11,8 @@ chai.use(sinonChai);
 
 export const eventListenerTest = (): void => {
   describe('Event Listener test', () => {
-    let consoleSpy: sinon.SinonSpy;
-    let errorSpy: sinon.SinonSpy;
-    const root = document.getElementById('root') as HTMLElement;
     let index = 0;
+    const root = document.getElementById('root') as HTMLElement;
     const componentStrings = (window as any).components;
 
     Registry.metadata.components.forEach((componentMetadata, Comp) => {
@@ -25,16 +22,6 @@ export const eventListenerTest = (): void => {
           ReactDOM.unmountComponentAtNode(root);
         });
 
-        beforeEach(() => {
-          consoleSpy = sinon.spy(console, 'log');
-          errorSpy = sinon.spy(console, 'error');
-        });
-
-        afterEach(() => {
-          consoleSpy.restore();
-          errorSpy.restore();
-        });
-
         componentMetadata.simulations.forEach((simulation) => {
           it('component should unmount without leaving event listeners on the window, document, and body', () => {
             const {windowEe, documentEe, bodyEe} = overrideEventListeners();
@@ -42,14 +29,10 @@ export const eventListenerTest = (): void => {
 
             // Set root's HTML to the SSR component
             root.innerHTML = componentStrings[index];
-            if (!componentMetadata.reactStrictModeCompliant) {
-              hydrate(componentMetadata.simulationToJSX(simulation), root);
-            } else {
-              hydrate(<React.StrictMode>{componentMetadata.simulationToJSX(simulation)}</React.StrictMode>, root);
-            }
-
+            hydrate(componentMetadata.simulationToJSX(simulation), root);
             ReactDOM.unmountComponentAtNode(root);
             index++;
+
             const windowListeners = windowEe.getListeners(matchEverything);
             const documentListeners = documentEe.getListeners(matchEverything);
             const bodyListeners = bodyEe.getListeners(matchEverything);

@@ -39,7 +39,6 @@ export const hydrationTest = (): void => {
             }
             ReactDOM.unmountComponentAtNode(root);
             index++;
-
             // If args is not a primitive, it's not really of interest to us, since any React errors will be
             // strings. Therefore it's fine to print [object Object] in other cases
             const consoleArgs = consoleSpy.getCall(0) ? consoleSpy.getCall(0).args[0] : '';

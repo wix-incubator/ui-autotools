@@ -1,7 +1,7 @@
 # Schema Extract
 
 
-Schema extract transforms code files into [JSON-Schema](https://json-schema.org/) schemas. Schema extraction is a necessary step to create automated documentation for your code.
+Schema extract transforms all the types (Explicit or inferred) in your code files into [JSON-Schema](https://json-schema.org/) schemas. Schema extraction is a necessary step to create automated documentation for your code.
 
 It is composed of two parts, the **ts transformer** and **linker**.
 
@@ -10,16 +10,15 @@ It is composed of two parts, the **ts transformer** and **linker**.
 The [schema-playground](../schema-playground) is a playground that allows live editing of your code and transforms it to a schema and displays the results as you type it.
 
 ## Usage
-By default, the linker is connected to our TS transformer, it uses it to transforms the code and then link it together.  
-If you want to use the linker with a different extractor please see the [creating a custom linker section](#creating-a-custom-linker)
+By default, the linker is connected to our **TS transformer**, which uses it to transforms the code, extracts all the types in it and then link them together.
 
-Import the `createLinker` function from `@ui-autotools/schema-extract`. This function receives a string array of file paths and returns an initialized linker class.
+To use the Schema Extract project to extract type data from your files, import the `createLinker` function from `@ui-autotools/schema-extract`. This function receives a string array of file paths and returns an initialized linker class.
 
-To get the linked schema of a specific file invoke `linker.flatten`. It receives two arguments:
+After creating a linker, invoke `linker.flatten`. It receives two arguments and will return a linked schema of the entity we requested (In `exportName`):
 |Name|Type|Description|
 |-------------|----|-----------|
-|files|`string[]`|A array that contains that paths to the files we want to transform|
-|exportName|`string`|The exported entity we want to link|
+|file|`string`|The path to the file we want to transform|
+|exportName|`string`|The exported entity in that file, that we want to link|
 
 ```
     import {createLinker} from '@ui-autotools/schema-extract';
@@ -31,9 +30,8 @@ To get the linked schema of a specific file invoke `linker.flatten`. It receives
     const linkedSchema = linker.flatten(files[0], 'IAnimal');
 
 ```
-The linker will return a linked schema of the entity we requested (In `exportName`).
-
-**Note**: At the moment it is not possible to automatically link all the exports of a given file. You can do this by going over the exports of the file and invoking `flatten` for each one, but this may not be an efficient process.
+**Note:** If you want to use the linker with a different extractor please see the [creating a custom linker section](#creating-a-custom-linker).  
+Also, at the moment it is not possible to automatically link all the exports of a given file. You can do this by going over the exports of the file and invoking `flatten` for each one, but this may not be an efficient process.
 ## Result example
 
 To better understand how the transformation works, take a look at the following interface:

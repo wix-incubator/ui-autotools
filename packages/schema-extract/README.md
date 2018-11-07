@@ -1,7 +1,7 @@
 # Schema Extract
 
 
-Schema extract transforms all the types (Explicit or inferred) in your code files into [JSON-Schema](https://json-schema.org/) schemas. Schema extraction is a necessary step to create automated documentation for your code.
+Schema extract transforms all the types (explicit or inferred) in your code files into [JSON-Schema](https://json-schema.org/) schemas. Schema extraction is a necessary step to create automated documentation for your code.
 
 It is composed of two parts, the **ts transformer** and **linker**.
 
@@ -10,11 +10,10 @@ It is composed of two parts, the **ts transformer** and **linker**.
 The [schema-playground](../schema-playground) is a playground that allows live editing of your code and transforms it to a schema and displays the results as you type it.
 
 ## Usage
-By default, the linker is connected to our **TS transformer**, which uses it to transforms the code, extracts all the types in it and then link them together.
-
 To use the Schema Extract project to extract type data from your files, import the `createLinker` function from `@ui-autotools/schema-extract`. This function receives a string array of file paths and returns an initialized linker class.
 
-After creating a linker, invoke `linker.flatten`. It receives two arguments and will return a linked schema of the entity we requested (In `exportName`):
+After creating a linker, invoke `linker.flatten`. It receives two arguments and will return a linked schema of the entity we requested (in `exportName`):  
+
 |Name|Type|Description|
 |-------------|----|-----------|
 |file|`string`|The path to the file we want to transform|
@@ -98,7 +97,7 @@ You can play around with our [playground](../schema-playground) to see how your 
 
 The linker receives a file name and the name of an export in that file and returns the linked schema of that export.
 
-How is it any different than the `ts transformer`? When we transform a schema using the `ts transformer`, the result we get will only reference other types (Import or from the same file) using the $ref property.
+How is it any different than the `ts transformer`? When we transform a schema using the `ts transformer`, the result we get will only reference other types (import or from the same file) using the $ref property.
 
 The linker flattens some of these types by linking them together.
 
@@ -168,7 +167,7 @@ But we are missing some crucial information about InterfaceB. After linking this
 
 #### Linking rules
 In order to avoid running into infinite loops, the linker does not link every member of every schema. It does link:
-* `extends` - Classes and interfaces that use the extends keyword. (However the linker will not link members of interfaces)
+* `extends` - Classes and interfaces that use the extends keyword. (however the linker will not link members of interfaces)
 * Generic types
 * Intersection types - We may need the linked schemas to intersect two or more different types.
 
@@ -190,8 +189,8 @@ Import the `transform` function from `@ui-autotools/schema-extract`. This functi
 |checker|`typescript.TypeChecker`|A typescript checker connected to the desired files|
 |sourceFile|`typescript.SourceFile`|The typescript source of that we want to transform|
 |modulePath|`string`|The path to the module base directory|
-|projectPath|`string`|The name of the project the files are in (Will be removed in the future)|
-|pathUtil|`IFileSystemPath`|A path utility to be used to access directories and file. (You can use `path.posix`)|
+|projectPath|`string`|The name of the project the files are in (will be removed in the future)|
+|pathUtil|`IFileSystemPath`|A path utility to be used to access directories and file. (you can use `path.posix`)|
 
 For example if we want to transform our own code:
 
@@ -213,7 +212,7 @@ You can find the structure of schemas and the different types we support in [jso
 
 ## Creating a custom linker
 
-(Note: **At the moment we don't export the SchemaLinker class**. We will either export it or add a function that receives an extractor and returns a linker)
+**Note**: **At the moment we don't export the SchemaLinker class**. We will either export it or add a function that receives an extractor and returns a linker
 
 Using `createLinker` creates a typescript based linker, but the linker is not limited only to typescript. When creating a new linker class, the linker receives an extractor object:
 ```

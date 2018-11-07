@@ -5,7 +5,8 @@ import chai, {expect} from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import {hydrate} from 'react-dom';
-import {getThing} from './check-event-listeners';
+import {FloodEvents} from './flood-events';
+import {overrideEventListeners} from './override-event-listeners';
 
 chai.use(sinonChai);
 
@@ -19,6 +20,11 @@ export const eventListenerTest = (): void => {
 
     Registry.metadata.components.forEach((componentMetadata, Comp) => {
       describe(getCompName(Comp), () => {
+        before(() => {
+          ReactDOM.render(<FloodEvents />, root);
+          ReactDOM.unmountComponentAtNode(root);
+        });
+
         beforeEach(() => {
           consoleSpy = sinon.spy(console, 'log');
           errorSpy = sinon.spy(console, 'error');
@@ -30,14 +36,9 @@ export const eventListenerTest = (): void => {
         });
 
         componentMetadata.simulations.forEach((simulation) => {
-          it('component should unmount without leaving event listeners on the window or document', () => {
-            let counter = 0;
-            window.addEventListener = () => {
-              counter++;
-            };
-            window.removeEventListener = () => {
-              counter--;
-            };
+          it('component should unmount without leaving event listeners on the window, document, and body', () => {
+            const {windowEe, documentEe, bodyEe} = overrideEventListeners();
+            const matchEverything = /.*/;
 
             // Set root's HTML to the SSR component
             root.innerHTML = componentStrings[index];
@@ -49,8 +50,27 @@ export const eventListenerTest = (): void => {
 
             ReactDOM.unmountComponentAtNode(root);
             index++;
+            const windowListeners = windowEe.getListeners(matchEverything);
+            const documentListeners = documentEe.getListeners(matchEverything);
+            const bodyListeners = bodyEe.getListeners(matchEverything);
 
-            expect(counter).to.equal(0);
+            Object.entries(windowListeners).forEach((listener) => {
+              const listenerType = listener[0];
+              const listenerMethods = listener[1];
+              expect(listenerMethods.length, `${listenerMethods.length} ${listenerType} event${listenerMethods.length === 1 ? '' : 's'} was not removed from window.`).to.equal(0);
+            });
+
+            Object.entries(documentListeners).forEach((listener) => {
+              const listenerType = listener[0];
+              const listenerMethods = listener[1];
+              expect(listenerMethods.length, `${listenerMethods.length} ${listenerType} event${listenerMethods.length === 1 ? '' : 's'} was not removed from document.`).to.equal(0);
+            });
+
+            Object.entries(bodyListeners).forEach((listener) => {
+              const listenerType = listener[0];
+              const listenerMethods = listener[1];
+              expect(listenerMethods.length, `${listenerMethods.length} ${listenerType} event${listenerMethods.length === 1 ? '' : 's'} was not removed from body.`).to.equal(0);
+            });
           });
         });
       });

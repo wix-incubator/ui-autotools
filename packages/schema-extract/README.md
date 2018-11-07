@@ -7,12 +7,19 @@ It is composed of two parts, the **ts transformer** and **linker**.
 
 
 ## Playground
-The `schema-extract` package has a playground that allows live editing of your code and transforms it to a schema and displays the results as you type it.
+The [schema-playground](../schema-playground) is a playground that allows live editing of your code and transforms it to a schema and displays the results as you type it.
 
 ## Usage
+By default, the linker is connected to our TS transformer, it uses it to transforms the code and then link it together.  
+If you want to use the linker with a different extractor please see the [creating a custom linker section](#creating-a-custom-linker)
 
-Import the `createLinker` function from `@ui-autotools/schema-extract`. This function receives a string array of file paths and returns an initalized linker class.
-To get the linked schema of a specific file invoke `linker.flatten(fileName)`:
+Import the `createLinker` function from `@ui-autotools/schema-extract`. This function receives a string array of file paths and returns an initialized linker class.
+
+To get the linked schema of a specific file invoke `linker.flatten`. It receives two arguments:
+|Name|Type|Description|
+|-------------|----|-----------|
+|files|`string[]`|A array that contains that paths to the files we want to transform|
+|exportName|`string`|The exported entity we want to link|
 
 ```
     import {createLinker} from '@ui-autotools/schema-extract';
@@ -24,10 +31,12 @@ To get the linked schema of a specific file invoke `linker.flatten(fileName)`:
     const linkedSchema = linker.flatten(files[0], 'IAnimal');
 
 ```
+The linker will return a linked schema of the entity we requested (In `exportName`).
 
-## Example
+**Note**: At the moment it is not possible to automatically link all the exports of a given file. You can do this by going over the exports of the file and invoking `flatten` for each one, but this may not be an efficient process.
+## Result example
 
-Take a look at the following interface:
+To better understand how the transformation works, take a look at the following interface:
 ```
 // file-a.ts
     export interface IAnimal {
@@ -37,7 +46,7 @@ Take a look at the following interface:
         isTamed?: 'YES' | 'NO';
     }
 ```
-If we run the command from the usage section it will be transformed to:
+If we transform it using the TS transformer we will get the following schema:
 ```
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
@@ -86,38 +95,7 @@ If we run the command from the usage section it will be transformed to:
   }
 }
 ```
-
-## TS Transformer
-
-Transforms a typescript source file into JSON-Schema. 
-
-#### Usage
-
-Import the `transform` function from `@ui-autotools/schema-extract`. This function recives the following five arguments:
-
-|Name|Type|Description|
-|-------------|----|-----------|
-|checker|`typescript.TypeChecker`|A typescript checker connected to the desired files|
-|sourceFile|`typescript.SourceFile`|The typescript source of that we want to transform|
-|modulePath|`string`|The path to the module base directory|
-|projectPath|`string`|The name of the project the files are in (Will be removed in the future)|
-|pathUtil|`IFileSystemPath`|A path utility to be used to access directories and file. (You can use `path.posix`)|
-
-For example if we want to transform our own code:
-
-```
-    import path from 'path';
-    import compilerOptions from './utils';
-
-    const projectPath = '/Projects/MySecretProject/;
-    const fileName = projectPath + 'secret-stuff.ts'
-    // TS setup
-    const program = typescript.createProgram([fileName], compilerOptions);
-    const sourceFile = program.getSourceFile(fileName);
-
-    const schema = transform(program.getTypeChecker(), sourceFile, fileName, 'MySecretProject', path.posix);
-```
-
+You can play around with our [playground](../schema-playground) to see how your code will be transformed.
 ## Linker
 
 The linker receives a file name and the name of an export in that file and returns the linked schema of that export.
@@ -136,27 +114,43 @@ Let's look at InterfaceB in the following code:
         somethingElse: number
     };
 ```
+If we use the TS transformer to transform this file we will get the following schema:
 
-The schema created for this interface before linking will look like this:
 ```
-    "InterfaceB": {
-        "$ref": "common/interface",
-        "properties": {
-            "somethingElse": {
-                "type": "number"
-            }
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$id": "/index.tsx",
+    "$ref": "common/module",
+    "properties": {},
+    "definitions": {
+        "InterfaceA": {
+            "$ref": "common/interface",
+            "properties": {
+                "something": {"$ref": "#InterfaceA!T"}
+            },
+            "required": ["something"],
+            "genericParams": [
+                {"name": "T"}
+            ]
         },
-        "required": ["somethingElse"],
-        "genericArguments": [{
-                "type": "string"
-            }],
-        "extends": {
-            "$ref": "#InterfaceA"
+        "InterfaceB": {
+            "$ref": "common/interface",
+            "properties": {
+                "somethingElse": {"type": "number"}
+            },
+            "required": ["somethingElse"],
+            "genericArguments": [
+                {"type": "string"}
+            ],
+            "extends": {
+                "$ref": "#InterfaceA"
+            }
         }
     }
+}
 ```
 
-But we are missing some crucial information about InterfaceB. After linking this is how the schema looks:
+But we are missing some crucial information about InterfaceB. After linking this is how the schema for InterfaceB will look like:
 ```
     "InterfaceB": {
         $ref: "common/interface",
@@ -184,7 +178,42 @@ What won't be linked?
 * Imports - If you import a type from a different file, it will be represented as a reference: `$ref: "myProject/src/util#myFunction"`
 * References to other types - Any form of referencing a different type or interface like `type A = B` or `interface InterfaceA { type: InterfaceB }`. This also includes function using other types as arguments or return values.
 
-#### Creating a custom linker
+
+## TS Transformer
+
+Transforms a typescript source file into a non linked JSON-Schema. By default, the linker is using this transformer and unless you want a non linked schema, there is no need to use this transformer.
+
+#### Usage
+
+Import the `transform` function from `@ui-autotools/schema-extract`. This function receives the following five arguments:
+
+|Name|Type|Description|
+|-------------|----|-----------|
+|checker|`typescript.TypeChecker`|A typescript checker connected to the desired files|
+|sourceFile|`typescript.SourceFile`|The typescript source of that we want to transform|
+|modulePath|`string`|The path to the module base directory|
+|projectPath|`string`|The name of the project the files are in (Will be removed in the future)|
+|pathUtil|`IFileSystemPath`|A path utility to be used to access directories and file. (You can use `path.posix`)|
+
+For example if we want to transform our own code:
+
+```
+    import path from 'path';
+    import compilerOptions from './utils';
+
+    const projectPath = '/Projects/MySecretProject/;
+    const fileName = projectPath + 'secret-stuff.ts'
+    // TS setup
+    const program = typescript.createProgram([fileName], compilerOptions);
+    const sourceFile = program.getSourceFile(fileName);
+
+    const schema = transform(program.getTypeChecker(), sourceFile, fileName, 'MySecretProject', path.posix);
+```
+
+#### Schema structure & types
+You can find the structure of schemas and the different types we support in [json-schema-types](src/json-schema-types.ts)
+
+## Creating a custom linker
 
 (Note: **At the moment we don't export the SchemaLinker class**. We will either export it or add a function that receives an extractor and returns a linker)
 

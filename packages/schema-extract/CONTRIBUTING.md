@@ -36,6 +36,13 @@ You can find all of our tests in the `test` folder, and they are pretty straight
 
 To run the tests, simply go to the `ui-autotools` folder and run `yarn start`. A new browser window will open and it will display all the tests.
 
+#### Identifying where to add your code
+The `schema-extract` is composed of two parts, the TS transformer and linker, and if you want to add a new feature (Or fix an existing one) you may need to add code to one of them or both.
+
+If the issue is not related to linking (For example adding support to a new type) then you will need to add it to the TS transformer (And linker if relevant), however if it is a linking issue, you don't need to deal with the TS transformer.
+
+You can also use the [schema-playground](../schema-playground) to see the results of the TS transformer. This could help you understand where the issue is.
+
 ## TS Transformer
 Whether this is an issue or a new feature, we recommend that you first create a test to understand what the expected result should look like.  
 After creating a test, the TS transformer's entry point is the `transform` function in [file-transformer](src/file-transformer.ts). It is somewhat built like a decision tree, a series of `if` statements followed by handling the chosen case.  

@@ -27,3 +27,13 @@ html, body {
 .playground-pane + .playground-pane {
     border-left: 1px solid #ccc;
 }
+
+.source-code-pane {
+    display: flex;
+    flex-direction: column;
+}
+
+.source-code-pane > textarea {
+    margin-top: 1em;
+    flex-grow: 1;
+}

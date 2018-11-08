@@ -1,101 +1,121 @@
 import ts from 'typescript';
 import React from 'react';
-import { IFileSystem } from '@file-services/types';
-import { IBaseHost } from '@file-services/typescript';
-import { transform } from '@ui-autotools/schema-extract';
+import {IFileSystem} from '@file-services/types';
+import {IBaseHost} from '@file-services/typescript';
+import {transform} from '@ui-autotools/schema-extract';
+import { extractSchema as extractStylableSchema } from '@stylable/json-schema';
 import {BaseView as BaseSchemaView, defaultSchemaViewRegistry} from '@ui-autotools/schema-views/src';
 
 import 'sanitize.css';
 import './playground.css';
 
 export interface IPlaygroundProps {
-    fs: IFileSystem;
-    baseHost: IBaseHost;
-    languageService: ts.LanguageService;
-    filePath: string;
+  fs: IFileSystem;
+  baseHost: IBaseHost;
+  languageService: ts.LanguageService;
+  filePaths: {[key: string]: string};
 }
 
 export interface IPlaygroundState {
-    transpiledOutput: string;
-    schema: object;
+  fileType: string;
+  schema: object;
 }
 
 export class Playground extends React.PureComponent<IPlaygroundProps, IPlaygroundState> {
-    public state = {
-        transpiledOutput: '',
-        schema: {}
-    };
+  public state = {
+    fileType: 'typescript',
+    schema: {}
+  };
 
-    public componentDidMount() {
-        this.transpileFile();
+  public componentDidMount() {
+    this.updateSchema();
+  }
+
+  public render() {
+    const {fs} = this.props;
+    const filePath = this.getFilePath();
+
+    return (
+      <div className="playground">
+        <div className="playground-pane source-code-pane">
+          <select
+            value={this.state.fileType}
+            onChange={this.handleFileTypeChange}
+          >
+            <option value="typescript">TypeScript</option>
+            <option value="stylable">Stylable</option>
+          </select>
+          <textarea
+            spellCheck={false}
+            value={fs.readFileSync(filePath)}
+            onChange={this.handleSourceCodeChange}
+          />
+        </div>
+        <textarea
+          className="playground-pane schema-pane"
+          spellCheck={false}
+          value={JSON.stringify(this.state.schema, null, 2)}
+          readOnly={true}
+        />
+        <div className="playground-pane view-pane">
+          <BaseSchemaView
+            schema={this.state.schema}
+            schemaRegistry={new Map()}
+            viewRegistry={defaultSchemaViewRegistry}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  private getFilePath() {
+    return this.props.filePaths[this.state.fileType];
+  }
+
+  private handleFileTypeChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
+    this.setState({fileType: e.target.value});
+    requestAnimationFrame(() => this.updateSchema());
+  }
+
+  private handleSourceCodeChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+    const {fs} = this.props;
+    fs.writeFileSync(this.getFilePath(), e.target.value);
+    this.forceUpdate();
+    requestAnimationFrame(() => this.updateSchema());
+  }
+
+  private updateSchema() {
+    if (this.state.fileType === 'typescript') {
+      this.setState({schema: this.extractTypescriptSchema()});
     }
-
-    public render() {
-        const { filePath, fs: { readFileSync } } = this.props;
-
-        return (
-            <div className="playground">
-                <textarea
-                    className="playground-pane source-code-pane"
-                    spellCheck={false}
-                    value={readFileSync(filePath)}
-                    onChange={this.onInputChange}
-                />
-                <textarea
-                    className="playground-pane schema-pane"
-                    spellCheck={false}
-                    value={JSON.stringify(this.state.schema, null, 2)}
-                    readOnly={true}
-                />
-                <div className="playground-pane view-pane">
-                    <BaseSchemaView
-                        schema={this.state.schema}
-                        schemaRegistry={new Map()}
-                        viewRegistry={defaultSchemaViewRegistry}
-                    />
-                </div>
-            </div>
-        );
+    if (this.state.fileType === 'stylable') {
+      this.setState({schema: this.extractStylableSchema()});
     }
+  }
 
-    private transpileFile() {
-        const transpiledOutput = this.getTranspiledCode();
-        const program = this.props.languageService.getProgram();
-        const typeChecker = program && program.getTypeChecker();
-        const sourceFile = program && program.getSourceFile(this.props.filePath);
-        if (typeChecker && sourceFile) {
-            const moduleSchema = transform(typeChecker, sourceFile, this.props.filePath, '/', this.props.fs.path);
-            const schema = moduleSchema.properties && moduleSchema.properties.default ?
-                moduleSchema.properties.default : moduleSchema;
-            this.setState({ transpiledOutput, schema });
-        } else {
-            this.setState({ transpiledOutput });
-        }
-    }
+  private extractTypescriptSchema() {
+    const filePath = this.getFilePath();
+    const program = this.props.languageService.getProgram()!;
+    const typeChecker = program.getTypeChecker()!;
+    const sourceFile = program.getSourceFile(filePath)!;
+    const moduleSchema = transform(
+      typeChecker, sourceFile, filePath, '/', this.props.fs.path
+    );
+    const schema = (moduleSchema.properties && moduleSchema.properties.default) ?
+      moduleSchema.properties.default : moduleSchema;
+    return schema;
+  }
 
-    private onInputChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-        this.props.fs.writeFileSync(this.props.filePath, e.target.value);
-        this.forceUpdate();
-        requestAnimationFrame(() => this.transpileFile());
-    }
+  private extractStylableSchema() {
+    const {fs} = this.props;
+    const filePath = this.getFilePath();
+    const fileContents = fs.readFileSync(filePath);
 
-    private getTranspiledCode(): string {
-        const { languageService, filePath } = this.props;
-        const { outputFiles } = languageService.getEmitOutput(filePath);
-        const [jsFile] = outputFiles.filter((outputFile) => outputFile.name);
-
-        if (!jsFile) {
-            throw new Error('Cannot find transpiled .js file');
-        }
-        return jsFile.text;
-    }
-
-    // private getFormattedDiagnostics(): string {
-    //     const { baseHost, languageService, filePath } = this.props;
-    //     const diagnostics = [
-    //         ...languageService.getSyntacticDiagnostics(filePath),
-    //         ...languageService.getSemanticDiagnostics(filePath)
-    //     ];
-    //     return ts.formatDiagnostics(diagnostics, baseHost);
-    // }
+    return extractStylableSchema(
+      fileContents,
+      filePath,
+      '/',
+      fs.path
+    );
+  }
 }

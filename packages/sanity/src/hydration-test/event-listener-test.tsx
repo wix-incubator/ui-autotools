@@ -9,9 +9,17 @@ import {overrideEventListeners} from './override-event-listeners';
 
 chai.use(sinonChai);
 
+function assertNoListeners(listeners: {[event: string]: any}, context: string) {
+  Object.entries(listeners).forEach((listener) => {
+    const listenerType = listener[0];
+    const listenerMethods = listener[1];
+    expect(listenerMethods.length, `${listenerMethods.length} ${listenerType} event${listenerMethods.length === 1 ? '' : 's'} was not removed from ${context}.`).to.equal(0);
+  });
+}
+
 /**
  * Event Listener Test
- * 
+ *
  */
 
 export const eventListenerTest = (): void => {
@@ -38,27 +46,9 @@ export const eventListenerTest = (): void => {
             ReactDOM.unmountComponentAtNode(root);
             index++;
 
-            const windowListeners = windowEe.getListeners(matchEverything);
-            const documentListeners = documentEe.getListeners(matchEverything);
-            const bodyListeners = bodyEe.getListeners(matchEverything);
-
-            Object.entries(windowListeners).forEach((listener) => {
-              const listenerType = listener[0];
-              const listenerMethods = listener[1];
-              expect(listenerMethods.length, `${listenerMethods.length} ${listenerType} event${listenerMethods.length === 1 ? '' : 's'} was not removed from window.`).to.equal(0);
-            });
-
-            Object.entries(documentListeners).forEach((listener) => {
-              const listenerType = listener[0];
-              const listenerMethods = listener[1];
-              expect(listenerMethods.length, `${listenerMethods.length} ${listenerType} event${listenerMethods.length === 1 ? '' : 's'} was not removed from document.`).to.equal(0);
-            });
-
-            Object.entries(bodyListeners).forEach((listener) => {
-              const listenerType = listener[0];
-              const listenerMethods = listener[1];
-              expect(listenerMethods.length, `${listenerMethods.length} ${listenerType} event${listenerMethods.length === 1 ? '' : 's'} was not removed from body.`).to.equal(0);
-            });
+            assertNoListeners(windowEe.getListeners(matchEverything), 'window');
+            assertNoListeners(documentEe.getListeners(matchEverything), 'document');
+            assertNoListeners(bodyEe.getListeners(matchEverything), 'body');
           });
         });
       });

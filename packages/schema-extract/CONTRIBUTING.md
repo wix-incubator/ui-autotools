@@ -47,6 +47,14 @@ You can also use the [schema-playground](../schema-playground) to see the result
 Whether this is an issue or a new feature, we recommend that you first create a test to understand what the expected result should look like.  
 After creating a test, the TS transformer's entry point is the `transform` function in [file-transformer](src/file-transformer.ts). It is somewhat built like a decision tree, a series of `if` statements followed by handling the chosen case.  
 
+#### Working with the Typescript AST
+Understanding how Typescript "works" on your code, and how the TS AST looks like can help a lot with contributing to the TS transformer. Here are a few tools that we think can help you:
+* [Typescript wiki](https://github.com/Microsoft/TypeScript/wiki)
+    * For a more high level design: [Architectural Overview](https://github.com/Microsoft/TypeScript/wiki/Architectural-Overview)
+    * Also some more advanced stuff like [Using the Compiler API](https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API) or [Using the Language Service API](https://github.com/Microsoft/TypeScript/wiki/Using-the-Language-Service-API)
+* [AST Explorer](https://astexplorer.net/) - You can use it to create the Typescript AST and locate where each part of your code is in said tree.
+* [Typescript AST viewer](https://ts-ast-viewer.com/) - Creates the TS AST
+
 ## Linker
 Same as TS Transformer contribution, we recommend adding a new test to understand what the expected result should look like.  
 The linker's entry point is the `flatten` method in [file-linker](src/file-linker.ts), followed by the `link` method that chooses the correct handler to handle this type.  

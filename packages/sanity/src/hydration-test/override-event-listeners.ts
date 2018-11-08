@@ -1,46 +1,39 @@
 import {ListenerList, Listener} from './listener';
 
+interface ILogger {listeners: ListenerList; detach: () => void; }
+
 interface IEventEmitterSet {
-  windowEe: ListenerList;
-  documentEe: ListenerList;
-  bodyEe: ListenerList;
-  reset: () => void;
+  windowLogger: ILogger;
+  documentLogger: ILogger;
+  bodyLogger: ILogger;
 }
 
-function setup(eventEmitter: ListenerList, context: any) {
-  const oldAddEventListener = context.addEventListener;
-  const oldRemoveEventListener = context.removeEventListener;
+function attachEventListenerLogger(target: any): ILogger {
+  const {addEventListener, removeEventListener} = target;
+  const listeners = new ListenerList();
 
-  context.addEventListener = (...args: any[]) => {
-    oldAddEventListener.apply(context, args);
-    eventEmitter.add(new Listener(...args));
+  const detach = () => {
+    target.addEventListener = addEventListener;
+    target.removeEventListener = removeEventListener;
   };
 
-  context.removeEventListener = (...args: any[]) => {
-    oldRemoveEventListener.apply(context, args);
-    eventEmitter.remove(new Listener(...args));
+  target.addEventListener = (...args: any[]) => {
+    addEventListener.apply(target, args);
+    listeners.add(new Listener(...args));
   };
 
-  return () => {
-    context.addEventListener = oldAddEventListener;
-    context.removeEventListener = oldRemoveEventListener;
+  target.removeEventListener = (...args: any[]) => {
+    removeEventListener.apply(target, args);
+    listeners.remove(new Listener(...args));
   };
+
+  return {listeners, detach};
 }
 
 export function overrideEventListeners(): IEventEmitterSet {
-  const windowEe = new ListenerList();
-  const documentEe = new ListenerList();
-  const bodyEe = new ListenerList();
+  const windowLogger = attachEventListenerLogger(window);
+  const documentLogger = attachEventListenerLogger(document);
+  const bodyLogger = attachEventListenerLogger(document.body);
 
-  const resetWindow = setup(windowEe, window);
-  const resetDocument = setup(documentEe, document);
-  const resetBody = setup(bodyEe, document.body);
-
-  const reset = () => {
-    resetWindow();
-    resetDocument();
-    resetBody();
-  };
-
-  return {windowEe, documentEe, bodyEe, reset};
+  return {windowLogger, documentLogger, bodyLogger};
 }

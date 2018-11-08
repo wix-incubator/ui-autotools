@@ -119,6 +119,10 @@ Runs over every simulation and asserts the following:
 
 Sanity uses puppeteer to test client-side hydration. Results are printed in the terminal.
 
+#### Event Checking
+
+Sanity ensures that any events added to window, document, or body during a component's lifecycle are removed once the component has unmounted. This helps prevent easy-to-miss memory leaks.
+
 #### Usage
 
 ```shell

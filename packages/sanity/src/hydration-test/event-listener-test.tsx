@@ -27,6 +27,7 @@ export const eventListenerTest = (): void => {
     let index = 0;
     const root = document.getElementById('root') as HTMLElement;
     const componentStrings = (window as any).components;
+    const matchEverything = /.*/;
 
     Registry.metadata.components.forEach((componentMetadata, Comp) => {
       describe(getCompName(Comp), () => {
@@ -38,7 +39,6 @@ export const eventListenerTest = (): void => {
         componentMetadata.simulations.forEach((simulation) => {
           it('component should unmount without leaving event listeners on the window, document, and body', () => {
             const {windowEe, documentEe, bodyEe} = overrideEventListeners();
-            const matchEverything = /.*/;
 
             // Set root's HTML to the SSR component
             root.innerHTML = componentStrings[index];

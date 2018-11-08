@@ -8,7 +8,7 @@ export class UnaccessibleButton extends React.Component<{}, IState> {
 
   public render() {
     return (
-      <button onClick={this.onClick}>
+      <button>
         Unaccessible Click {this.state.count}
       </button>
     );

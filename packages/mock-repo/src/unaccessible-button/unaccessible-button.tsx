@@ -1,17 +1,22 @@
 import * as React from 'react';
 
-interface IState {
-  count: string;
+interface IUnaccessibleButtonState {
+  clicked: boolean;
 }
 
-export class UnaccessibleButton extends React.Component<{}, IState> {
+export class UnaccessibleButton extends React.Component<{}, IUnaccessibleButtonState> {
+  public state = { clicked: false };
 
   public render() {
     return (
-      <button>
-        Unaccessible Click {this.state.count}
+      <button id="saveChanges" aria-label="" onClick={this.onClick}>
+        Save as
       </button>
     );
+  }
+
+  private onClick = () => {
+    this.setState({clicked: !this.state.clicked});
   }
 
 }

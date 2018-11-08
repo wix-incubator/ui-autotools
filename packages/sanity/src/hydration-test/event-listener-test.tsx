@@ -29,6 +29,7 @@ function assertNoListeners(listeners: {[event: string]: any}, context: string) {
 export const eventListenerTest = (): void => {
   describe('Event Listener test', () => {
     let index = 0;
+    let eventReset: () => void;
     const root = document.getElementById('root') as HTMLElement;
     const componentStrings = (window as any).components;
     const matchEverything = /.*/;
@@ -51,9 +52,14 @@ export const eventListenerTest = (): void => {
           ReactDOM.unmountComponentAtNode(root);
         });
 
+        afterEach(() => {
+          eventReset();
+        });
+
         componentMetadata.simulations.forEach((simulation) => {
           it('component should unmount without leaving event listeners on the window, document, and body', () => {
-            const {windowEe, documentEe, bodyEe} = overrideEventListeners();
+            const {windowEe, documentEe, bodyEe, reset} = overrideEventListeners();
+            eventReset = reset;
 
             root.innerHTML = componentStrings[index];
             hydrate(componentMetadata.simulationToJSX(simulation), root);

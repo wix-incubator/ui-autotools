@@ -4,6 +4,7 @@ interface IEventEmitterSet {
   windowEe: EventEmitter;
   documentEe: EventEmitter;
   bodyEe: EventEmitter;
+  reset: () => void;
 }
 
 function setup(eventEmitter: EventEmitter, context: any) {
@@ -11,13 +12,18 @@ function setup(eventEmitter: EventEmitter, context: any) {
   const oldRemoveEventListener = context.removeEventListener;
 
   context.addEventListener = (...args: any[]) => {
-    oldAddEventListener.apply(null, args);
+    oldAddEventListener.apply(context, args);
     eventEmitter.addListener(args[0], args[1]);
   };
 
   context.removeEventListener = (...args: any[]) => {
-    oldRemoveEventListener.apply(null, args);
+    oldRemoveEventListener.apply(context, args);
     eventEmitter.removeListener(args[0], args[1]);
+  };
+
+  return () => {
+    context.addEventListener = oldAddEventListener;
+    context.removeEventListener = oldRemoveEventListener;
   };
 }
 
@@ -26,9 +32,15 @@ export function overrideEventListeners(): IEventEmitterSet {
   const documentEe = new EventEmitter();
   const bodyEe = new EventEmitter();
 
-  setup(windowEe, window);
-  setup(documentEe, document);
-  setup(bodyEe, document.body);
+  const resetWindow = setup(windowEe, window);
+  const resetDocument = setup(documentEe, document);
+  const resetBody = setup(bodyEe, document.body);
 
-  return {windowEe, documentEe, bodyEe};
+  const reset = () => {
+    resetWindow();
+    resetDocument();
+    resetBody();
+  };
+
+  return {windowEe, documentEe, bodyEe, reset};
 }

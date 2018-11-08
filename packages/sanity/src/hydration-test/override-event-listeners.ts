@@ -1,24 +1,24 @@
-import EventEmitter from 'wolfy87-eventemitter';
+import {ListenerList, Listener} from './listener';
 
 interface IEventEmitterSet {
-  windowEe: EventEmitter;
-  documentEe: EventEmitter;
-  bodyEe: EventEmitter;
+  windowEe: ListenerList;
+  documentEe: ListenerList;
+  bodyEe: ListenerList;
   reset: () => void;
 }
 
-function setup(eventEmitter: EventEmitter, context: any) {
+function setup(eventEmitter: ListenerList, context: any) {
   const oldAddEventListener = context.addEventListener;
   const oldRemoveEventListener = context.removeEventListener;
 
   context.addEventListener = (...args: any[]) => {
     oldAddEventListener.apply(context, args);
-    eventEmitter.addListener(args[0], args[1]);
+    eventEmitter.add(new Listener(...args));
   };
 
   context.removeEventListener = (...args: any[]) => {
     oldRemoveEventListener.apply(context, args);
-    eventEmitter.removeListener(args[0], args[1]);
+    eventEmitter.remove(new Listener(...args));
   };
 
   return () => {
@@ -28,9 +28,9 @@ function setup(eventEmitter: EventEmitter, context: any) {
 }
 
 export function overrideEventListeners(): IEventEmitterSet {
-  const windowEe = new EventEmitter();
-  const documentEe = new EventEmitter();
-  const bodyEe = new EventEmitter();
+  const windowEe = new ListenerList();
+  const documentEe = new ListenerList();
+  const bodyEe = new ListenerList();
 
   const resetWindow = setup(windowEe, window);
   const resetDocument = setup(documentEe, document);

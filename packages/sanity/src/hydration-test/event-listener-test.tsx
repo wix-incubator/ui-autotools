@@ -32,7 +32,6 @@ export const eventListenerTest = (): void => {
     let eventReset: () => void;
     const root = document.getElementById('root') as HTMLElement;
     const componentStrings = (window as any).components;
-    const matchEverything = /.*/;
 
     Registry.metadata.components.forEach((componentMetadata, Comp) => {
       describe(getCompName(Comp), () => {
@@ -66,9 +65,9 @@ export const eventListenerTest = (): void => {
             ReactDOM.unmountComponentAtNode(root);
             index++;
 
-            assertNoListeners(windowEe.getListeners(matchEverything), 'window');
-            assertNoListeners(documentEe.getListeners(matchEverything), 'document');
-            assertNoListeners(bodyEe.getListeners(matchEverything), 'body');
+            assertNoListeners(windowEe.getAll(), 'window');
+            assertNoListeners(documentEe.getAll(), 'document');
+            assertNoListeners(bodyEe.getAll(), 'body');
           });
         });
       });

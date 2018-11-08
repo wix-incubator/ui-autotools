@@ -6,46 +6,29 @@ interface IEventEmitterSet {
   bodyEe: EventEmitter;
 }
 
+function setup(eventEmitter: EventEmitter, context: any) {
+  const oldAddEventListener = context.addEventListener;
+  const oldRemoveEventListener = context.removeEventListener;
+
+  context.addEventListener = (...args: any[]) => {
+    oldAddEventListener.apply(null, args);
+    eventEmitter.addListener(args[0], args[1]);
+  };
+
+  context.removeEventListener = (...args: any[]) => {
+    oldRemoveEventListener.apply(null, args);
+    eventEmitter.removeListener(args[0], args[1]);
+  };
+}
+
 export function overrideEventListeners(): IEventEmitterSet {
   const windowEe = new EventEmitter();
   const documentEe = new EventEmitter();
   const bodyEe = new EventEmitter();
 
-  const oldWindowEventListener = window.addEventListener;
-  window.addEventListener = (...args: any[]) => {
-    oldWindowEventListener.apply(null, args);
-    windowEe.addListener(args[0], args[1]);
-  };
-
-  const oldWindowRemoveEventListener = window.removeEventListener;
-  window.removeEventListener = (...args: any[]) => {
-    oldWindowRemoveEventListener.apply(null, args);
-    windowEe.removeListener(args[0], args[1]);
-  };
-
-  const oldDocumentEventListener = document.addEventListener;
-  document.addEventListener = (...args: any[]) => {
-    oldDocumentEventListener.apply(null, args);
-    documentEe.addListener(args[0], args[1]);
-  };
-
-  const oldDocumentRemoveEventListener = document.removeEventListener;
-  document.removeEventListener = (...args: any[]) => {
-    oldDocumentRemoveEventListener.apply(null, args);
-    documentEe.removeListener(args[0], args[1]);
-  };
-
-  const oldBodyAddEventListener = document.body.addEventListener;
-  document.body.addEventListener = (...args: any[]) => {
-    oldBodyAddEventListener.apply(null, args);
-    bodyEe.addListener(args[0], args[1]);
-  };
-
-  const oldBodyRemoveEventListener = document.body.removeEventListener;
-  document.body.removeEventListener = (...args: any[]) => {
-    oldBodyRemoveEventListener.apply(null, args);
-    bodyEe.removeListener(args[0], args[1]);
-  };
+  setup(windowEe, window);
+  setup(documentEe, document);
+  setup(bodyEe, document.body);
 
   return {windowEe, documentEe, bodyEe};
 }

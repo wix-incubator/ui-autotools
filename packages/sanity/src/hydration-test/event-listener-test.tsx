@@ -4,10 +4,15 @@ import Registry, {getCompName} from '@ui-autotools/registry';
 import chai, {expect} from 'chai';
 import sinonChai from 'sinon-chai';
 import {hydrate} from 'react-dom';
-import {FloodEvents} from './flood-events';
+import {AllEvents} from './all-events';
 import {overrideEventListeners} from './override-event-listeners';
 
 chai.use(sinonChai);
+
+/**
+ * Event Listener Test
+ * 
+ */
 
 export const eventListenerTest = (): void => {
   describe('Event Listener test', () => {
@@ -18,7 +23,7 @@ export const eventListenerTest = (): void => {
     Registry.metadata.components.forEach((componentMetadata, Comp) => {
       describe(getCompName(Comp), () => {
         before(() => {
-          ReactDOM.render(<FloodEvents />, root);
+          ReactDOM.render(<AllEvents />, root);
           ReactDOM.unmountComponentAtNode(root);
         });
 

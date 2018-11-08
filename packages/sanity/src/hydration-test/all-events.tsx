@@ -1,6 +1,6 @@
 import React from 'react';
 
-export class FloodEvents extends React.Component {
+export class AllEvents extends React.Component {
   // tslint:disable-next-line:no-empty
   public noop = () => {};
 

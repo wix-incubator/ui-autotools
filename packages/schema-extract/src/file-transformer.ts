@@ -44,9 +44,9 @@ export function transform(
             res.properties![exportObj.getName()] = describeFunction(node, checker, env).schema;
         } else if (ts.isClassDeclaration(node)) {
             res.definitions = res.definitions || {};
-            const classDefInitions = describeClass(node, checker, env).schema;
+            const classDefinitions = describeClass(node, checker, env).schema;
             const className = exportObj.getName();
-            res.definitions[className] = classDefInitions;
+            res.definitions[className] = classDefinitions;
             res.properties![className] = {
                 $ref: '#typeof ' + className,
             };

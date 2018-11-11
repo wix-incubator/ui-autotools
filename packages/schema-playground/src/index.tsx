@@ -4,7 +4,13 @@ import ReactDOM from 'react-dom';
 import { createMemoryFs } from '@file-services/memory';
 import { createBaseHost, createLanguageServiceHost } from '@file-services/typescript';
 import { Playground } from './playground';
-import { sampleFilePath, sampleFile, compilerOptions } from './constants';
+import {
+    sampleTypescriptFilePath,
+    sampleTypescriptFile,
+    sampleStylableFilePath,
+    sampleStylableFile,
+    compilerOptions
+} from './constants';
 
 async function main() {
     const fs = createMemoryFs();
@@ -19,13 +25,14 @@ async function main() {
     fs.populateDirectorySync('/', typescriptRecipe);
     fs.populateDirectorySync('/', reactRecipe);
 
-    // add initial sample file
-    fs.writeFileSync(sampleFilePath, sampleFile);
+    // add initial sample files
+    fs.writeFileSync(sampleTypescriptFilePath, sampleTypescriptFile);
+    fs.writeFileSync(sampleStylableFilePath, sampleStylableFile);
 
     // initialize hosts
     const baseHost = createBaseHost(fs, '/');
     const languageServiceHost = createLanguageServiceHost(
-        fs, baseHost, [sampleFilePath], compilerOptions, '/node_modules/typescript/lib'
+        fs, baseHost, [sampleTypescriptFilePath], compilerOptions, '/node_modules/typescript/lib'
     );
 
     // initialize language service
@@ -40,7 +47,10 @@ async function main() {
             baseHost={baseHost}
             fs={fs}
             languageService={languageService}
-            filePath={sampleFilePath}
+            filePaths={{
+                typescript: sampleTypescriptFilePath,
+                stylable: sampleStylableFilePath
+            }}
         />
     ), container);
 }

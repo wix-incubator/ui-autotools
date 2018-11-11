@@ -726,6 +726,13 @@
   resolved "https://registry.yarnpkg.com/@stylable/runtime/-/runtime-0.1.9.tgz#6873cc8ff9212118c417fde1849763ee344734b2"
   integrity sha512-JVg3fbRp11Hq5fqUTVKlUsxuBJepvbBuOYiNkgf/R+6mg6ei5rFKljuSVOis2EjgyGD9T2DdFEpsP+Cfz0Yh9w==
 
+"@stylable/schema-extract@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@stylable/schema-extract/-/schema-extract-0.1.1.tgz#bab97482d7ab1d8fd281d71e85cc7333990991f9"
+  integrity sha512-8SREZtdDcy2w8RZdtanVXFqlck27/o78/2QouYs+NfeUkd+GFEf10NR3Rnd0OOGPxM+E2skSEeOR++evfhcmIQ==
+  dependencies:
+    "@stylable/core" "^0.1.13"
+
 "@stylable/webpack-extensions@^0.1.17":
   version "0.1.17"
   resolved "https://registry.yarnpkg.com/@stylable/webpack-extensions/-/webpack-extensions-0.1.17.tgz#057763c2e294400ce8321feda5834785f382ffaf"

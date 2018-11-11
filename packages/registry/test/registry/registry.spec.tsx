@@ -1,5 +1,5 @@
 import React from 'react';
-import {TestComp, CopyCatTestComp, InvalidNameComp, AccessibleComp} from '../fixtures/component-fixtures';
+import {TestComp, CopyCatTestComp, InvalidNameComp} from '../fixtures/component-fixtures';
 import Registry, {ComponentMetadata} from '../../src';
 import {expect} from 'chai';
 
@@ -34,10 +34,6 @@ describe('Registry', () => {
 
     it('throws if a component name is not valid', () => {
       expect(() => Registry.getComponentMetadata(InvalidNameComp)).to.throw();
-    });
-
-    it('returns default value equals to true for a11yCompliant', () => {
-      expect(Registry.getComponentMetadata(AccessibleComp).a11yCompliant).to.equal(true);
     });
   });
 

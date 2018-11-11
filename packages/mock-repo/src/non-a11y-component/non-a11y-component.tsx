@@ -1,12 +1,10 @@
-import * as React from 'react';
+import React from 'react';
 
-export class NonA11yComponent extends React.Component<{}> {
+export class NonA11yComponent extends React.Component {
 
   public render() {
     return (
-      <button id="saveChanges" role="NOT AN ARIA ROLE">
-        Save as
-      </button>
+      <button role="NOT AN ARIA ROLE" />
     );
   }
 }

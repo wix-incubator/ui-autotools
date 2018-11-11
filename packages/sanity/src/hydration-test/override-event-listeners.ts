@@ -8,7 +8,7 @@ interface IEventEmitterSet {
   bodyLogger: ILogger;
 }
 
-function attachEventListenerLogger(target: any): ILogger {
+function attachEventListenerLogger(target: EventTarget): ILogger {
   const {addEventListener, removeEventListener} = target;
   const listeners = new ListenerList();
 

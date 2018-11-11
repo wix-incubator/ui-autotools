@@ -16,7 +16,7 @@ export class Comp extends Component<IProps> {
 export const sampleStFilePath = '/index.st.css';
 export const sampleStFile = `
 .root {
-  -st-states: checked, disabled;
+  -st-states: checked, disabled, size(enum(small, medium, large));
 }
 
 .root:disabled {

@@ -3,7 +3,7 @@ import React from 'react';
 import {IFileSystem} from '@file-services/types';
 import {IBaseHost} from '@file-services/typescript';
 import {transform} from '@ui-autotools/schema-extract';
-import { extractSchema as extractStylableSchema } from '@stylable/json-schema';
+import {extractSchema as extractStylableSchema} from '@stylable/schema-extract';
 import {BaseView as BaseSchemaView, defaultSchemaViewRegistry} from '@ui-autotools/schema-views/src';
 
 import 'sanitize.css';

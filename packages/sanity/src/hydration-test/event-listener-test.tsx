@@ -5,14 +5,20 @@ import chai, {expect} from 'chai';
 import sinonChai from 'sinon-chai';
 import {hydrate} from 'react-dom';
 import {AllEvents} from './all-events';
-import {overrideEventListeners} from './override-event-listeners';
+import {attachEventListenerLogger} from './override-event-listeners';
+import {Listener} from './listener';
 
 chai.use(sinonChai);
 
-function assertNoListeners(listeners: {[event: string]: any}, eventTarget: string) {
-  Object.entries(listeners).forEach(([type, handlers]) => {
-    expect(handlers.length, `${handlers.length} ${type} event${handlers.length === 1 ? '' : 's'} was not removed from ${eventTarget}.`).to.equal(0);
-  });
+function assertNoListeners(listeners: Listener[], eventTarget: string) {
+  const errors: string[] = [];
+  if (listeners.length) {
+    Object.entries(listeners).forEach(([_, handlers]) => {
+      errors.push(`A ${handlers.type} event was not removed from ${eventTarget}.`);
+    });
+  }
+
+  return errors;
 }
 
 /**
@@ -50,20 +56,27 @@ export const eventListenerTest = (): void => {
 
         componentMetadata.simulations.forEach((simulation) => {
           it('component should unmount without leaving event listeners on the window, document, and body', () => {
-            const {windowLogger, documentLogger, bodyLogger} = overrideEventListeners();
+            const windowLogger = attachEventListenerLogger(window);
+            const documentLogger = attachEventListenerLogger(document);
+            const bodyLogger = attachEventListenerLogger(document.body);
 
             root.innerHTML = componentStrings[index];
             hydrate(componentMetadata.simulationToJSX(simulation), root);
             ReactDOM.unmountComponentAtNode(root);
             index++;
 
-            assertNoListeners(windowLogger.listeners.getAll(), 'window');
-            assertNoListeners(documentLogger.listeners.getAll(), 'document');
-            assertNoListeners(bodyLogger.listeners.getAll(), 'body');
+            const errors: string[] = [];
+            errors.push(...assertNoListeners(windowLogger.listeners.getAll(), 'window'));
+            errors.push(...assertNoListeners(documentLogger.listeners.getAll(), 'document'));
+            errors.push(...assertNoListeners(bodyLogger.listeners.getAll(), 'body'));
 
             windowLogger.detach();
             documentLogger.detach();
             bodyLogger.detach();
+
+            if (errors.length) {
+              throw Error(errors.join('\n'));
+            }
           });
         });
       });

@@ -13,7 +13,7 @@ export interface IState {
 
 export class Composite extends React.Component<IProps, IState> {
   public static displayName: string;
-  public state: IState = {text: ''};
+  public state: IState = { text: '' };
   public listener() { return; }
 
   public componentDidMount() {

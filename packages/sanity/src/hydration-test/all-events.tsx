@@ -1,8 +1,7 @@
 import React from 'react';
 
 export class AllEvents extends React.Component {
-  // tslint:disable-next-line:no-empty
-  public noop = () => {};
+  public noop = () => null;
 
   public render() {
     return (

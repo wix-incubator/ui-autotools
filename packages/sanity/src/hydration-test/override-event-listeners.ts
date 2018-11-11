@@ -1,11 +1,8 @@
 import {ListenerList, Listener} from './listener';
 
-interface ILogger {listeners: ListenerList; detach: () => void; }
-
-interface IEventEmitterSet {
-  windowLogger: ILogger;
-  documentLogger: ILogger;
-  bodyLogger: ILogger;
+interface ILogger {
+  listeners: ListenerList;
+  detach: () => void;
 }
 
 function attachEventListenerLogger(target: any): ILogger {
@@ -30,7 +27,7 @@ function attachEventListenerLogger(target: any): ILogger {
   return {listeners, detach};
 }
 
-export function overrideEventListeners(): IEventEmitterSet {
+export function overrideEventListeners() {
   const windowLogger = attachEventListenerLogger(window);
   const documentLogger = attachEventListenerLogger(document);
   const bodyLogger = attachEventListenerLogger(document.body);

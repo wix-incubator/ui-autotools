@@ -9,11 +9,9 @@ import {overrideEventListeners} from './override-event-listeners';
 
 chai.use(sinonChai);
 
-function assertNoListeners(listeners: {[event: string]: any}, context: string) {
-  Object.entries(listeners).forEach((listener) => {
-    const listenerType = listener[0];
-    const listenerMethods = listener[1];
-    expect(listenerMethods.length, `${listenerMethods.length} ${listenerType} event${listenerMethods.length === 1 ? '' : 's'} was not removed from ${context}.`).to.equal(0);
+function assertNoListeners(listeners: {[event: string]: any}, eventTarget: string) {
+  Object.entries(listeners).forEach(([type, handlers]) => {
+    expect(handlers.length, `${handlers.length} ${type} event${handlers.length === 1 ? '' : 's'} was not removed from ${eventTarget}.`).to.equal(0);
   });
 }
 
@@ -29,7 +27,6 @@ function assertNoListeners(listeners: {[event: string]: any}, context: string) {
 export const eventListenerTest = (): void => {
   describe('Event Listener test', () => {
     let index = 0;
-    let eventReset: () => void;
     const root = document.getElementById('root') as HTMLElement;
     const componentStrings = (window as any).components;
 
@@ -51,23 +48,22 @@ export const eventListenerTest = (): void => {
           ReactDOM.unmountComponentAtNode(root);
         });
 
-        afterEach(() => {
-          eventReset();
-        });
-
         componentMetadata.simulations.forEach((simulation) => {
           it('component should unmount without leaving event listeners on the window, document, and body', () => {
-            const {windowEe, documentEe, bodyEe, reset} = overrideEventListeners();
-            eventReset = reset;
+            const {windowLogger, documentLogger, bodyLogger} = overrideEventListeners();
 
             root.innerHTML = componentStrings[index];
             hydrate(componentMetadata.simulationToJSX(simulation), root);
             ReactDOM.unmountComponentAtNode(root);
             index++;
 
-            assertNoListeners(windowEe.getAll(), 'window');
-            assertNoListeners(documentEe.getAll(), 'document');
-            assertNoListeners(bodyEe.getAll(), 'body');
+            assertNoListeners(windowLogger.listeners.getAll(), 'window');
+            assertNoListeners(documentLogger.listeners.getAll(), 'document');
+            assertNoListeners(bodyLogger.listeners.getAll(), 'body');
+
+            windowLogger.detach();
+            documentLogger.detach();
+            bodyLogger.detach();
           });
         });
       });

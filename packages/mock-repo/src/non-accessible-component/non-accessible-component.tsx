@@ -1,6 +1,6 @@
 import React from 'react';
 
-export class NonA11yComponent extends React.Component {
+export class NonAccessibleComponent extends React.Component {
 
   public render() {
     return (

@@ -1,6 +1,6 @@
 import Registry from '../../src';
 import {expect} from 'chai';
-import {TestComp} from '../fixtures/component-fixtures'; // UnaccessibleComp
+import {TestComp} from '../fixtures/component-fixtures';
 
 const testSim = {
   title: 'testSim',

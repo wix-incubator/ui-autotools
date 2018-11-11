@@ -10,7 +10,7 @@ import {Listener} from './listener';
 
 chai.use(sinonChai);
 
-function assertNoListeners(listeners: Listener[], eventTarget: string) {
+function leftoverListenerErrors(listeners: Listener[], eventTarget: string) {
   const errors: string[] = [];
   if (listeners.length) {
     Object.entries(listeners).forEach(([_, handlers]) => {
@@ -66,9 +66,9 @@ export const eventListenerTest = (): void => {
             index++;
 
             const errors: string[] = [];
-            errors.push(...assertNoListeners(windowLogger.listeners.getAll(), 'window'));
-            errors.push(...assertNoListeners(documentLogger.listeners.getAll(), 'document'));
-            errors.push(...assertNoListeners(bodyLogger.listeners.getAll(), 'body'));
+            errors.concat(leftoverListenerErrors(windowLogger.listeners.getAll(), 'window'));
+            errors.concat(leftoverListenerErrors(documentLogger.listeners.getAll(), 'document'));
+            errors.concat(leftoverListenerErrors(bodyLogger.listeners.getAll(), 'body'));
 
             windowLogger.detach();
             documentLogger.detach();

@@ -213,6 +213,26 @@ const numericLiteralSerializer: ISerializer<ts.NumericLiteral> = {
     }
 };
 
+const nullLiteralSerializer: ISerializer<ts.NullLiteral> = {
+    isApplicable: function is(node): node is ts.NullLiteral {
+        return ts.SyntaxKind.NullKeyword === node.kind;
+    },
+    serialize: (env, node) =>  {
+        return  aLiteralValue(null, node, env);
+    }
+};
+
+const undefinedLiteralSerializer: ISerializer<ts.Node> = {
+    isApplicable: function is(node): node is ts.Node {
+        if (ts.isIdentifier(node)) {
+            return ts.SyntaxKind.UndefinedKeyword === node.originalKeywordKind;
+        }
+        return ts.SyntaxKind.UndefinedKeyword === node.kind;
+    },
+    serialize: (env, node) =>  {
+        return  aLiteralValue(undefined, node, env);
+    }
+};
 const objectLiteralSerializer: ISerializer<ts.ObjectLiteralExpression> = {
     isApplicable: function is(node): node is ts.ObjectLiteralExpression {
         return ts.isObjectLiteralExpression(node);
@@ -230,6 +250,10 @@ const objectLiteralSerializer: ISerializer<ts.ObjectLiteralExpression> = {
                 const innerRes = spreadExpressionSerializer.serialize(env, prop);
                 isLiteral = isLiteral && innerRes.isLiteral;
                 value['__spread' + spreadCounter++] = innerRes.value;
+            } else if (functionSerializer.isApplicable(prop)) {
+                const innerRes = functionSerializer.serialize(env, prop);
+                isLiteral = isLiteral && innerRes.isLiteral;
+                value[prop.name!.getText()] = innerRes.value;
             }
         }
         return isLiteral ?  aLiteralValue(value, node, env) : anExpression(value);
@@ -407,7 +431,7 @@ const jsxTextSerializer: ISerializer<ts.JsxText> = {
         return ts.isJsxText(node);
     },
     serialize: (env, node) =>  {
-        return aLiteralValue(node.getText().trim(), node, env);
+        return aLiteralValue(node.getText(), node, env);
     }
 };
 const jsxExpressionSerializer: ISerializer<ts.JsxExpression> = {
@@ -474,9 +498,9 @@ const reactNodeSerializer: ISerializer<ts.JsxElement | ts.JsxSelfClosingElement 
     }
 };
 reactChildSerializers.push(reactNodeSerializer);
-const functionSerializer: ISerializer<ts.ArrowFunction | ts.FunctionExpression, IExpressionInferenceResult<IFunction>> = {
-    isApplicable: function is(node): node is ts.ArrowFunction | ts.FunctionExpression {
-        return ts.isArrowFunction(node) || ts.isFunctionExpression(node);
+const functionSerializer: ISerializer<ts.ArrowFunction | ts.FunctionExpression | ts.MethodDeclaration, IExpressionInferenceResult<IFunction>> = {
+    isApplicable: function is(node): node is ts.ArrowFunction | ts.FunctionExpression | ts.MethodDeclaration {
+        return ts.isArrowFunction(node) || ts.isFunctionExpression(node) || ts.isMethodDeclaration(node);
     },
     serialize: (env, node) =>  {
         let returnValues: any[] = [];
@@ -509,6 +533,8 @@ export function findReturnStatements(node: ts.Node): ts.ReturnStatement[] {
     return res;
 }
 const dataLiteralSerializers: Array<ISerializer<any>> = [
+    nullLiteralSerializer,
+    undefinedLiteralSerializer,
     stringLiteralSerializer,
     numericLiteralSerializer,
     booleanLiteralSerializer,

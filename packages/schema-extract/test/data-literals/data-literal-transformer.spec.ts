@@ -25,7 +25,18 @@ describe ('generate data literals', () => {
             `);
             expect(output).to.eql( literal(true));
         });
-
+        it('should serialize null', async () => {
+            const {output} = await testSerialize(`
+                export const a = null;
+            `);
+            expect(output).to.eql( literal(null));
+        });
+        it('should serialize undefined', async () => {
+            const {output} = await testSerialize(`
+                export const a = undefined;
+            `);
+            expect(output).to.eql( literal(undefined));
+        });
     });
 
     describe('objects', () => {
@@ -323,6 +334,43 @@ describe ('generate data literals', () => {
                 }]
             }, node.getText()));
         });
+        it('should not trim jsx attributes', async () => {
+            const {output, node} = await testSerialize(`
+                import * as React from 'react';
+                export const a = <div a=" a "></div>;
+            `);
+            expect(output).to.eql(anExpression({
+                __serializedType: 'jsx-node',
+                $ref: 'dom/div',
+                tagName: 'div',
+                attributes: [{
+                    __serializedType: 'jsx-attribute',
+                    name: 'a',
+                    isLiteral: true,
+                    value: ' a '
+                }]
+            }, node.getText()));
+        });
+        it('should support references in attributes', async () => {
+            const {output, node} = await testSerialize(`
+                import * as React from 'react';
+                export const a = <div a={ a }></div>;
+            `);
+            expect(output).to.eql(anExpression({
+                __serializedType: 'jsx-node',
+                $ref: 'dom/div',
+                tagName: 'div',
+                attributes: [{
+                    name: 'a',
+                    value: {
+                        __serializedType: 'reference',
+                        $ref: '#a',
+                    },
+                    isLiteral: false,
+                    __serializedType: 'jsx-attribute'
+                }]
+            }, node.getText()));
+        });
         it('should serialize jsx elements spread attributes', async () => {
             const {output, node} = await testSerialize(`
                 import * as React from 'react';
@@ -425,6 +473,24 @@ describe ('generate data literals', () => {
                     $ref: 'dom/div',
                     tagName: 'div',
                     children: ['hello world']
+                }, node.getText()));
+            });
+            it('should serialize not trim jsx text', async () => {
+                const text = `
+                    hello
+
+
+
+                `;
+                const {output, node} = await testSerialize(`
+                    import * as React from 'react';
+                    export const a = <div>${text}</div>;
+                `);
+                expect(output).to.eql(anExpression({
+                    __serializedType: 'jsx-node',
+                    $ref: 'dom/div',
+                    tagName: 'div',
+                    children: [text.trimLeft()]
                 }, node.getText()));
             });
             it('should serialize jsx children', async () => {
@@ -670,6 +736,31 @@ describe ('generate data literals', () => {
                         ]
                     }
                 ]
+            }, node.getText()));
+        });
+        it('should serialize methods', async () => {
+            const {output, node} = await testSerialize(`
+                import * as React from 'react';
+                export const a = {
+                    a( item ){
+                        return <span>{item}</span>
+                    }
+                };
+            `);
+            expect(output).to.eql(anExpression({
+                a: {
+                __serializedType: 'function',
+                arguments: ['item'],
+                returns: [{
+                    __serializedType: 'jsx-node',
+                    $ref: 'dom/span',
+                    tagName: 'span',
+                    children: [{
+                        __serializedType: 'reference',
+                        $ref: '#item'
+                    }]
+                }]
+                }
             }, node.getText()));
         });
         describe('ENV', () => {

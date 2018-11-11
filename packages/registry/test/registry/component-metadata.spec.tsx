@@ -1,6 +1,6 @@
 import Registry from '../../src';
 import {expect} from 'chai';
-import {TestComp, AccessibleComp} from '../fixtures/component-fixtures';
+import {TestComp} from '../fixtures/component-fixtures';
 
 const testSim = {
   title: 'testSim',
@@ -61,7 +61,7 @@ describe('Component Metadata', () => {
 
   describe('A11y metadata', () => {
     it('returns default value equals to true for a11yCompliant', () => {
-      expect(Registry.getComponentMetadata(AccessibleComp).a11yCompliant).to.equal(true);
+      expect(Registry.getComponentMetadata(TestComp).a11yCompliant).to.equal(true);
     });
   });
 });

@@ -26,6 +26,7 @@ Common CLI parameters:
     - hydration in the client works as intended
     - the component has no errors in <React.StrictMode />
     - nothing was printed to the console
+    - events were removed after component unmounts
 - `a11y` - accessibility test:
     - checks component render result for accessibility using axe-core
 - `snap` - tool for generating and testing component snapshots, that:
@@ -114,8 +115,13 @@ Runs over every simulation and asserts the following:
 - hydration in the client works as intended (no errors in the console)
 - the component has no errors while rendering with <React.StrictMode />
 - nothing was printed to the console
+- that any events which were added during render are removed after the component is unmounted
 
 Sanity uses puppeteer to test client-side hydration. Results are printed in the terminal.
+
+#### Event Checking
+
+Sanity ensures that any events added to window, document, or body during a component's lifecycle are removed once the component has unmounted. This helps prevent easy-to-miss memory leaks.
 
 #### Usage
 

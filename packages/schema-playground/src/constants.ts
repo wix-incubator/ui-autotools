@@ -1,7 +1,7 @@
 import ts from 'typescript';
 
-export const sampleTsFilePath = '/index.tsx';
-export const sampleTsFile = `
+export const sampleTypescriptFilePath = '/index.tsx';
+export const sampleTypescriptFile = `
 import {Component} from 'react';
 
 export interface IProps { }
@@ -13,8 +13,8 @@ export class Comp extends Component<IProps> {
 }
 `.trimLeft();
 
-export const sampleStFilePath = '/index.st.css';
-export const sampleStFile = `
+export const sampleStylableFilePath = '/index.st.css';
+export const sampleStylableFile = `
 .root {
   -st-states: checked, disabled, size(enum(small, medium, large));
 }

@@ -18,10 +18,10 @@
     "lint": "tslint -p src"
   },
   "dependencies": {
-    "@stylable/core": "^0.1.12",
-    "@stylable/webpack-plugin": "^0.1.14",
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0"
+    "@stylable/core": "^0.1.13",
+    "@stylable/webpack-plugin": "^0.1.15",
+    "react": "^16.6.1",
+    "react-dom": "^16.6.1"
   },
   "publishConfig": {
     "access": "public"

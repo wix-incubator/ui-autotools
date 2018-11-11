@@ -3,7 +3,7 @@ import { Schema, ClassSchemaId } from '../../src/json-schema-types';
 import {linkTest} from '../../test-kit/run-linker';
 
 describe('schema-linker - generic types', () => {
-    it('should flatten genric type definition', async () => {
+    it('should flatten generic type definition', async () => {
         const fileName = 'index.ts';
         const res = await linkTest({[fileName]: `
         export type MyType<T, W> = {
@@ -29,7 +29,7 @@ describe('schema-linker - generic types', () => {
         expect(res).to.eql(expected);
     });
 
-    it('should deep flatten genric type definition', async () => {
+    it('should deep flatten generic type definition', async () => {
         const fileName = 'index.ts';
         const res = await linkTest({[fileName]: `
         export type MyType<T> = {
@@ -59,7 +59,7 @@ describe('schema-linker - generic types', () => {
         expect(res).to.eql(expected);
     });
 
-    it('should deep flatten genric class definition', async () => {
+    it('should deep flatten generic class definition', async () => {
         const fileName = 'index.ts';
         const res = await linkTest({[fileName]: `
         export class A<T>{

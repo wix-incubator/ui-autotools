@@ -14,8 +14,8 @@
     "@file-services/typescript": "^0.2.4",
     "@ui-autotools/schema-extract": "^1.1.1",
     "@ui-autotools/schema-views": "^0.1.1",
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0",
+    "react": "^16.6.1",
+    "react-dom": "^16.6.1",
     "sanitize.css": "^8.0.0",
     "tslib": "^1.9.3"
   },

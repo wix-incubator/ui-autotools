@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export class UnaccessibleButton extends React.Component<{}> {
+export class NonA11yComponent extends React.Component<{}> {
 
   public render() {
     return (

@@ -26,6 +26,6 @@ export function DefaultNameComp() {
   return <h1>I'm just going with my default name, not trying to be special or nothin'</h1>;
 }
 
-export function UnaccessibleComp() {
-  return <h1 role="button">I'm Uneccessible</h1>;
+export function AccessibleComp() {
+  return <h1 role="button">I'm Accessible</h1>;
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import {TestComp, CopyCatTestComp, InvalidNameComp, UnaccessibleComp} from '../fixtures/component-fixtures';
+import {TestComp, CopyCatTestComp, InvalidNameComp, AccessibleComp} from '../fixtures/component-fixtures';
 import Registry, {ComponentMetadata} from '../../src';
 import {expect} from 'chai';
 
@@ -37,7 +37,7 @@ describe('Registry', () => {
     });
 
     it('returns default value equals to true for a11yCompliant', () => {
-      expect(Registry.getComponentMetadata(UnaccessibleComp).a11yCompliant).to.equal(true);
+      expect(Registry.getComponentMetadata(AccessibleComp).a11yCompliant).to.equal(true);
     });
   });
 

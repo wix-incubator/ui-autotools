@@ -497,9 +497,6 @@ describe ('generate data literals', () => {
                 const {output, node} = await testSerialize(`
                     import * as React from 'react';
                     export const a = <div><div style={{height:'100px'}}></div></div>;
-                    export const b = <div>
-                        <div style={{height:'100px'}}></div>
-                    </div>;
                 `);
                 expect(output).to.eql(anExpression({
                     __serializedType: 'jsx-node',

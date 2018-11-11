@@ -58,12 +58,4 @@ describe('Component Metadata', () => {
       expect(myCompMetadata.styles.get(testStyle)).to.equal(testStyleMetadata);
     });
   });
-
-  // describe('a11yCompliant', () => {
-  //   it('Skips a11y tests for the component', () => {
-  //     const myCompMetadata = Registry.getComponentMetadata(UnaccessibleComp);
-  //     myCompMetadata.changeA11yCompliant = true;
-  //     expect(myCompMetadata.a11yCompliant).to.equal(true);
-  //   });
-  // });
 });

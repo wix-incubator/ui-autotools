@@ -36,8 +36,8 @@ describe('Registry', () => {
       expect(() => Registry.getComponentMetadata(InvalidNameComp)).to.throw();
     });
 
-    it('returns default value equals to false for a11yCompliant', () => {
-      expect(Registry.getComponentMetadata(UnaccessibleComp).a11yCompliant).to.equal(false);
+    it('returns default value equals to true for a11yCompliant', () => {
+      expect(Registry.getComponentMetadata(UnaccessibleComp).a11yCompliant).to.equal(true);
     });
   });
 

@@ -29,5 +29,3 @@ export function DefaultNameComp() {
 export function UnaccessibleComp() {
   return <h1 role="button">I'm Uneccessible</h1>;
 }
-
-InvalidNameComp.displayName = 'UnaccessibleComp';

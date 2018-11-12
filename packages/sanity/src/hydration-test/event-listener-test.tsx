@@ -11,14 +11,7 @@ import {Listener} from './listener';
 chai.use(sinonChai);
 
 function leftoverListenerErrors(listeners: Listener[], eventTarget: string) {
-  const errors: string[] = [];
-  if (listeners.length) {
-    Object.entries(listeners).forEach(([_, handlers]) => {
-      errors.push(`A ${handlers.type} event was not removed from ${eventTarget}.`);
-    });
-  }
-
-  return errors;
+  return listeners.map(({type}) => `A ${type} event was not removed from ${eventTarget}.`);
 }
 
 /**
@@ -65,10 +58,11 @@ export const eventListenerTest = (): void => {
             ReactDOM.unmountComponentAtNode(root);
             index++;
 
-            const errors: string[] = [];
-            errors.concat(leftoverListenerErrors(windowLogger.listeners.getAll(), 'window'));
-            errors.concat(leftoverListenerErrors(documentLogger.listeners.getAll(), 'document'));
-            errors.concat(leftoverListenerErrors(bodyLogger.listeners.getAll(), 'body'));
+            const errors = [
+              ...leftoverListenerErrors(windowLogger.listeners.getAll(), 'window'),
+              ...leftoverListenerErrors(documentLogger.listeners.getAll(), 'document'),
+              ...leftoverListenerErrors(bodyLogger.listeners.getAll(), 'body')
+            ];
 
             windowLogger.detach();
             documentLogger.detach();

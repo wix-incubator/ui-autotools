@@ -9,6 +9,7 @@ export class ComponentMetadata<Props, State> implements IComponentMetadata<Props
   public path: string = '';
   public exportName: string = '';
   public baseStylePath: string = '';
+  public a11yCompliant: boolean = true;
 
   public constructor(public component: React.ComponentType<Props>) {}
 

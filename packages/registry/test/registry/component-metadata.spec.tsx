@@ -58,4 +58,10 @@ describe('Component Metadata', () => {
       expect(myCompMetadata.styles.get(testStyle)).to.equal(testStyleMetadata);
     });
   });
+
+  describe('A11y metadata', () => {
+    it('returns default value equals to true for a11yCompliant', () => {
+      expect(Registry.getComponentMetadata(TestComp).a11yCompliant).to.equal(true);
+    });
+  });
 });

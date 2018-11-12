@@ -18,12 +18,14 @@ export interface IResult {
 function createTestsFromSimulations(reactRoot: HTMLElement) {
   const tests: ITest[] = [];
   for (const [Comp, meta] of Registry.metadata.components.entries()) {
-    for (const sim of meta.simulations) {
-      tests.push({
-        title: getCompName(Comp) + ' ' + sim.title,
-        render:  (container: HTMLElement) => ReactDOM.render(<Comp {...sim.props} />, container),
-        cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot)
-      });
+    if (meta.a11yCompliant) {
+      for (const sim of meta.simulations) {
+        tests.push({
+          title: getCompName(Comp) + ' ' + sim.title,
+          render:  (container: HTMLElement) => ReactDOM.render(<Comp {...sim.props} />, container),
+          cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot)
+        });
+      }
     }
   }
   return tests;

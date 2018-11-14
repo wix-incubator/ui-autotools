@@ -15,8 +15,8 @@
     "@ui-autotools/schema-extract": "^1.1.1",
     "@ui-autotools/schema-views": "^0.1.1",
     "@stylable/schema-extract": "^0.1.1",
-    "react": "^16.6.1",
-    "react-dom": "^16.6.1",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
     "sanitize.css": "^8.0.0",
     "tslib": "^1.9.3"
   },

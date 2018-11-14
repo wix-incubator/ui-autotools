@@ -8,8 +8,8 @@
     "clean": "lerna run clean --stream --parallel",
     "build": "lerna run build --stream",
     "build:watch": "lerna run --parallel build:watch",
-    "pretest": "run-p lint build",
-    "lint": "lerna run lint --stream && node -r @ts-tools/node scripts/json-linter",
+    "pretest": "run-s lint build",
+    "lint": "lerna run lint --stream --parallel && node -r @ts-tools/node scripts/json-linter",
     "test": "lerna run test --stream --parallel",
     "start": "yarn workspace @ui-autotools/schema-extract start"
   },

@@ -103,7 +103,7 @@ arguments:
 
 | name | Type | description |
 |-------|------|-----------------|
-| type | "Component" / "SFC" / "JSX" |  |
+| type | "Component" / "FunctionComponent" / "JSX" |  |
 
 
 #### addSimulation

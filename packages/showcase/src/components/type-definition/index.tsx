@@ -181,6 +181,6 @@ const renderType: TypeRenderer = (schema) => {
   return renderUnknown(schema);
 };
 
-export const TypeDefinition: React.SFC<{schema: Schema}> = (props) => {
+export const TypeDefinition: React.FunctionComponent<{schema: Schema}> = (props) => {
   return <>{renderType(props.schema)}</>;
 };

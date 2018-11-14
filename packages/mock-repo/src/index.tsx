@@ -5,7 +5,7 @@ import {Modal} from './modal/modal';
 import {PostRenderHook} from './post-render-hook/post-render-hook';
 import {UnsafeLifecycle} from './unsafe-lifecycle/unsafe-lifecycle';
 
-const App: React.SFC = () => {
+const App: React.FunctionComponent = () => {
   return (
     <div>
       <div>

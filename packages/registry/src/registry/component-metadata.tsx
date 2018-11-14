@@ -32,7 +32,7 @@ export class ComponentMetadata<Props, State> implements IComponentMetadata<Props
   public simulationToJSX(simulation: ISimulation<Props, State>) {
     const Comp = this.component;
     if (simulation.state) {
-      // Assume that if someone added state to a simulation, the component they're adding it for is NOT an SFC
+      // Assume that if someone added state to a simulation, the component they're adding it for is NOT a FunctionComponent
       return getCompWithState(Comp as React.ComponentClass<any>, simulation);
     } else {
       return <Comp {...simulation.props} />;

@@ -6,7 +6,7 @@ import {isVoid} from '../../schema-predicates';
 import {BaseView} from '../base';
 import style from './type.st.css';
 
-export const FunctionTypeView: React.SFC<ISchemaViewProps> = (props) => {
+export const FunctionTypeView: React.FunctionComponent<ISchemaViewProps> = (props) => {
   const {schema} = props;
   const restArg = schema.restArgument;
   const required = schema.requiredArguments || [];

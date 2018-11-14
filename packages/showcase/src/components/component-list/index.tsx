@@ -6,7 +6,7 @@ interface IProps {
   currentComponent?: string;
 }
 
-export const ComponentList: React.SFC<IProps>  = (props) => {
+export const ComponentList: React.FunctionComponent<IProps>  = (props) => {
   const {components, currentComponent} = props;
   return (
     <div {...style('root', {}, props)}>

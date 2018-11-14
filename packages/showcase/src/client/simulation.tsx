@@ -25,7 +25,7 @@ interface IStyledSimulationProps {
   styleName: string;
 }
 
-const StyledSimulation: React.SFC<IStyledSimulationProps> = (props) => {
+const StyledSimulation: React.FunctionComponent<IStyledSimulationProps> = (props) => {
   const Comp = findComponent(props.componentName);
   if (!Comp) {
     return <div>Error: component not found "{props.componentName}"</div>;

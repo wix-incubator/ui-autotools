@@ -4,7 +4,7 @@ import {isSimpleType} from '../../schema-predicates';
 import {ISchemaViewProps} from '../../schema-view';
 import style from './type.st.css';
 
-export const ArrayTypeView: React.SFC<ISchemaViewProps> = (props) => {
+export const ArrayTypeView: React.FunctionComponent<ISchemaViewProps> = (props) => {
   const itemSchema = props.schema.items;
 
   const itemJsx = (

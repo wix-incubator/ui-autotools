@@ -7,13 +7,13 @@ interface IProps {
   text?: string;
 }
 
-const TestComp: React.SFC<IProps> = (props: IProps) => {
+const TestComp: React.FunctionComponent<IProps> = (props: IProps) => {
   return <h1>Hey {props.text} person</h1>;
 };
 
 TestComp.displayName = 'TestComp';
 
-const FailingTestComp: React.SFC = () => {
+const FailingTestComp: React.FunctionComponent = () => {
   const accessDocument = () => {
     document.createElement('div');
   };

@@ -4,19 +4,19 @@ interface ITestProps {
   text: string;
 }
 
-export const TestComp: React.SFC<ITestProps> = (props: ITestProps) => {
+export const TestComp: React.FunctionComponent<ITestProps> = (props: ITestProps) => {
   return <h1>Hey {props.text} person</h1>;
 };
 
 TestComp.displayName = 'TestComp';
 
-export const CopyCatTestComp: React.SFC<ITestProps> = (props: ITestProps) => {
+export const CopyCatTestComp: React.FunctionComponent<ITestProps> = (props: ITestProps) => {
   return <h1>Hey {props.text} person</h1>;
 };
 
 CopyCatTestComp.displayName = 'TestComp';
 
-export const InvalidNameComp: React.SFC = () => {
+export const InvalidNameComp: React.FunctionComponent = () => {
   return <h1>Heyperson</h1>;
 };
 

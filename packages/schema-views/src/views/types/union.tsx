@@ -6,7 +6,7 @@ import {Schema} from '../../schema';
 import {BaseView} from '../base';
 import style from './type.st.css';
 
-export const UnionTypeView: React.SFC<ISchemaViewProps> = (props) => {
+export const UnionTypeView: React.FunctionComponent<ISchemaViewProps> = (props) => {
   const {schema} = props;
 
   const parts = isPrimitiveUnion(schema) ?

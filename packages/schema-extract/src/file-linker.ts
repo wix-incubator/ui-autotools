@@ -32,7 +32,7 @@ export class SchemaLinker {
         return this.link(entity);
     }
 
-    private link(entity: Schema, paramsMap?: Map<string, Schema>): Schema {
+    public link(entity: Schema, paramsMap?: Map<string, Schema>): Schema {
         if (!entity) {
             return {$ref: UnknownId};
         }

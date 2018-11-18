@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/mock-repo",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "private": true,
   "author": "Wix.com",
   "license": "BSD-3-Clause",
@@ -22,8 +22,8 @@
     "sanity": "yarn autotools sanity"
   },
   "dependencies": {
-    "@ui-autotools/registry": "^2.0.3",
-    "@ui-autotools/scripts": "^2.1.1",
+    "@ui-autotools/registry": "^2.1.0",
+    "@ui-autotools/scripts": "^2.2.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3"
   }

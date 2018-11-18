@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/snap",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -28,14 +28,14 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "@ui-autotools/registry": "^2.0.3",
-    "@ui-autotools/test-kit": "^1.0.2"
+    "@ui-autotools/registry": "^2.1.0",
+    "@ui-autotools/test-kit": "^1.0.3"
   },
   "dependencies": {
     "@applitools/visual-grid-client": "^5.5.3",
     "@stylable/webpack-extensions": "^0.1.17",
     "@stylable/webpack-plugin": "^0.1.15",
-    "@ui-autotools/utils": "^1.1.1",
+    "@ui-autotools/utils": "^1.1.2",
     "chalk": "^2.4.1",
     "create-temp-directory": "^1.0.1",
     "dotenv": "^6.1.0",

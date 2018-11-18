@@ -6,8 +6,9 @@ import chalk from 'chalk';
 import {JSDOM} from 'jsdom';
 import {consoleLog} from '@ui-autotools/utils';
 import {parseSnapshotFilename} from '../generate-snapshots/filename-utils';
-import { IFileInfo } from '../generate-snapshots/build-base-files';
+import {IFileInfo} from '../generate-snapshots/build-base-files';
 import {setApplitoolsId} from './set-batch-id';
+import {getBranchName} from './get-current-branch-name';
 
 interface ITestResult {
   status: 'error' | 'new' | 'modified' | 'unmodified';
@@ -23,7 +24,7 @@ function getGridClientConfig(projectPath: string) {
 
   setApplitoolsId();
 
-  const branchName = projectName + '/master';
+  const branchName = projectName + '/' + getBranchName();
   const viewportWidth = 800;
   const viewportHeight = 600;
 

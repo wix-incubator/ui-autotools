@@ -60,8 +60,8 @@ describe('Component Metadata', () => {
   });
 
   describe('A11y metadata', () => {
-    it('returns default value equals to true for a11yCompliant', () => {
-      expect(Registry.getComponentMetadata(TestComp).a11yCompliant).to.equal(true);
+    it('returns default value equals to false for nonA11yCompliant', () => {
+      expect(Registry.getComponentMetadata(TestComp).nonA11yCompliant).to.equal(false);
     });
   });
 });

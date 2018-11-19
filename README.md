@@ -101,6 +101,13 @@ const meta = Registry.getComponentMetadata(compWithUnsafeLifecycle);
 meta.reactStrictModeCompliant = false;
 ```
 
+Components are assumed by default to be [axe-core](https://github.com/dequelabs/axe-core) compliant. If your component is not axe-core compliant, set the `nonA11yCompliant` flag in the metadata to true, e.g:
+
+```ts
+const meta = Registry.getComponentMetadata(nonAccessibleComp);
+meta.nonA11yCompliant = true;
+```
+
 ## CLI Tools
 
 ### Universal Options

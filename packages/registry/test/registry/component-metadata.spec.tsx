@@ -59,9 +59,17 @@ describe('Component Metadata', () => {
     });
   });
 
-  describe('A11y metadata', () => {
-    it('returns default value equals to false for nonA11yCompliant', () => {
+  describe('Compliancy flags', () => {
+    it('defaults to false for nonA11yCompliant', () => {
       expect(Registry.getComponentMetadata(TestComp).nonA11yCompliant).to.equal(false);
+    });
+
+    it('defaults to false for nonReactStrictModeCompliant', () => {
+      expect(Registry.getComponentMetadata(TestComp).nonReactStrictModeCompliant).to.equal(false);
+    });
+
+    it('defaults to false for nonEventListenerTestCompliant', () => {
+      expect(Registry.getComponentMetadata(TestComp).nonEventListenerTestCompliant).to.equal(false);
     });
   });
 });

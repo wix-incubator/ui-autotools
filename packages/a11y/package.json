@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@ui-autotools/utils": "^1.1.2",
-    "axe-core": "3.1.2",
+    "axe-core": "^3.1.2",
     "chalk": "^2.4.1",
     "puppeteer": "^1.10.0"
   },

@@ -26,8 +26,5 @@
     "@ui-autotools/scripts": "^2.2.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3"
-  },
-  "devDependencies": {
-    "is-ci": "^1.2.1"
   }
 }

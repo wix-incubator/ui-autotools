@@ -18,7 +18,7 @@ export interface IResult {
 function createTestsFromSimulations(reactRoot: HTMLElement) {
   const tests: ITest[] = [];
   for (const [Comp, meta] of Registry.metadata.components.entries()) {
-    if (meta.nonA11yCompliant) {
+    if (!meta.nonA11yCompliant) {
       for (const sim of meta.simulations) {
         tests.push({
           title: getCompName(Comp) + ' ' + sim.title,

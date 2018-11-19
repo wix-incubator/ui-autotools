@@ -8,4 +8,4 @@ nonAccessibleComponent
     props: {},
   });
 
-nonAccessibleComponent.a11yCompliant = false;
+nonAccessibleComponent.nonA11yCompliant = true;

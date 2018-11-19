@@ -8,4 +8,4 @@ meta.addSim({
   props: {}
 });
 
-meta.reactStrictModeCompliant = false;
+meta.nonReactStrictModeCompliant = true;

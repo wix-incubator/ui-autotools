@@ -98,7 +98,7 @@ Components are assumed by default to be React Strict Mode compliant (meaning tha
 
 ```ts
 const meta = Registry.getComponentMetadata(compWithUnsafeLifecycle);
-meta.reactStrictModeCompliant = false;
+meta.nonReactStrictModeCompliant = false;
 ```
 
 Components are assumed by default to be [axe-core](https://github.com/dequelabs/axe-core) compliant. If your component is not axe-core compliant, set the `nonA11yCompliant` flag in the metadata to true, e.g:

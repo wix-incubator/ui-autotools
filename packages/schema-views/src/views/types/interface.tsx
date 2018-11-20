@@ -8,6 +8,9 @@ import style from './type.st.css';
 const renderObjectKey = (key: string) =>
   isValidJsIdentifier(key) ? key : JSON.stringify(key);
 
+const openingBrace = '{';
+const closingBrace = '}';
+
 export const InterfaceTypeView: React.SFC<ISchemaViewProps> = (props) => {
   const {schema} = props;
 
@@ -30,7 +33,7 @@ export const InterfaceTypeView: React.SFC<ISchemaViewProps> = (props) => {
 
   return (
     <div {...style('root', {category: 'interface'}, props)}>
-      {'{'}{intersperse(entries, ', ')}{'}'}
+      {openingBrace}{intersperse(entries, ', ')}{closingBrace}
     </div>
   );
 };

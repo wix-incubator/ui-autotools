@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {IComponentMetadata, ISimulation, IStyleMetadata, IExportInfo} from './types';
 import {isValidSimulationTitle, getCompWithState} from '../utils';
 

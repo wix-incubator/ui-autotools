@@ -26,5 +26,5 @@ export function setApplitoolsId() {
   } catch (e) {
     batchId = process.env.BUILD_VCS_NUMBER;
   }
-  process.env.APPLITOOLS_BATCH_ID = batchId;
+  process.env.APPLITOOLS_BATCH_ID = process.env.APPLITOOLS_BATCH_ID ? process.env.APPLITOOLS_BATCH_ID : batchId;
 }

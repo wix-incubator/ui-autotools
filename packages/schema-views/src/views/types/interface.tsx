@@ -8,7 +8,10 @@ import style from './type.st.css';
 const renderObjectKey = (key: string) =>
   isValidJsIdentifier(key) ? key : JSON.stringify(key);
 
-export const ObjectTypeView: React.FunctionComponent<ISchemaViewProps> = (props) => {
+const openingBrace = '{';
+const closingBrace = '}';
+
+export const InterfaceTypeView: React.SFC<ISchemaViewProps> = (props) => {
   const {schema} = props;
 
   const required: string[] = schema.required || [];
@@ -29,8 +32,8 @@ export const ObjectTypeView: React.FunctionComponent<ISchemaViewProps> = (props)
     });
 
   return (
-    <div {...style('root', {category: 'object'}, props)}>
-      {'{'}{intersperse(entries, ', ')}{'}'}
+    <div {...style('root', {category: 'interface'}, props)}>
+      {openingBrace}{intersperse(entries, ', ')}{closingBrace}
     </div>
   );
 };

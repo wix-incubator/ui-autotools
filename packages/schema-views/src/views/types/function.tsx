@@ -22,6 +22,7 @@ export const FunctionTypeView: React.FunctionComponent<ISchemaViewProps> = (prop
 
   const args = schema.arguments.map((arg: Schema) => {
     const optional = required.includes(arg.name) ? '' : '?';
+    const defaultValue = arg.default;
     return [
       arg.name + optional + ': ',
       (
@@ -30,7 +31,8 @@ export const FunctionTypeView: React.FunctionComponent<ISchemaViewProps> = (prop
           viewRegistry={props.viewRegistry}
           schema={arg}
         />
-      )
+      ),
+      defaultValue ? ` = ${defaultValue}` : ''
     ];
   });
 

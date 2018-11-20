@@ -8,6 +8,7 @@ export {FunctionTypeView} from './types/function';
 export {NullTypeView} from './types/null';
 export {NumberTypeView} from './types/number';
 export {ObjectTypeView} from './types/object';
+export {InterfaceTypeView} from './types/interface';
 export {StringTypeView} from './types/string';
 export {UndefinedTypeView} from './types/undefined';
 export {UnionTypeView} from './types/union';

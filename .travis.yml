@@ -18,4 +18,4 @@ before_install:
   - export PATH=$HOME/.yarn/bin:$PATH
 
 script:
-- export APPLITOOLS_BATCH_ID=`echo ${TRAVIS_PULL_REQUEST_SHA:=$TRAVIS_COMMIT}`
+- echo ${TRAVIS_PULL_REQUEST_SHA:=$TRAVIS_COMMIT}

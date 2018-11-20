@@ -8,8 +8,7 @@
     "build": "webpack --progress --mode production --devtool false",
     "start": "webpack-dev-server --progress --open",
     "start:server": "node server.js",
-    "test": "true",
-    "untest": "mocha -r @ts-tools/node \"test/**/*.spec.ts?(x)\""
+    "test": "mocha -r @ts-tools/node \"test/**/*.spec.ts?(x)\""
   },
   "dependencies": {
     "@file-services/memory": "^0.2.3",

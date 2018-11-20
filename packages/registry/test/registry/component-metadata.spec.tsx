@@ -59,7 +59,7 @@ describe('Component Metadata', () => {
     });
   });
 
-  describe('Compliancy flags', () => {
+  describe('Opt-out flags', () => {
     it('defaults to false for nonA11yCompliant', () => {
       expect(Registry.getComponentMetadata(TestComp).nonA11yCompliant).to.equal(false);
     });

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {ISimulation} from '../registry';
 
 export function getCompWithState(Comp: React.ComponentClass<any>, simulation: ISimulation<any, any>): JSX.Element {

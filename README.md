@@ -98,7 +98,22 @@ Components are assumed by default to be React Strict Mode compliant (meaning tha
 
 ```ts
 const meta = Registry.getComponentMetadata(compWithUnsafeLifecycle);
-meta.reactStrictModeCompliant = false;
+meta.nonReactStrictModeCompliant = true;
+```
+
+Components are assumed by default to be [axe-core](https://github.com/dequelabs/axe-core) compliant. If your component is not axe-core compliant, set the `nonA11yCompliant` flag in the metadata to true, e.g:
+
+```ts
+const meta = Registry.getComponentMetadata(nonAccessibleComp);
+meta.nonA11yCompliant = true;
+```
+
+
+One of the tests that sanity runs checks that all events were removed after a component unmounts. If you wish to skip this test, set the `nonEventListenerTestCompliant` flag in the metadata to true.
+
+```ts
+const meta = Registry.getComponentMetadata(nonEventListenerTestCompliant);
+meta.nonEventListenerTestCompliant = true;
 ```
 
 ## CLI Tools

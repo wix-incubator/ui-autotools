@@ -17,8 +17,9 @@ export interface IComponentMetadata<Props, State> {
   addSim: (sim: ISimulation<Props, State>) => void;
   addStyle: (style: any, description: IStyleMetadata) => void;
   simulationToJSX: (sim: ISimulation<Props, State>) => JSX.Element;
-  reactStrictModeCompliant: boolean;
-  a11yCompliant: boolean;
+  nonReactStrictModeCompliant: boolean;
+  nonA11yCompliant: boolean;
+  nonEventListenerTestCompliant: boolean;
 }
 
 export interface IExportInfo {

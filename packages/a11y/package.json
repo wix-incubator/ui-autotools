@@ -29,12 +29,12 @@
   },
   "dependencies": {
     "@ui-autotools/utils": "^1.1.2",
-    "axe-core": "3.0.3",
+    "axe-core": "^3.1.2",
     "chalk": "^2.4.1",
     "puppeteer": "^1.10.0"
   },
   "peerDependencies": {
-    "@ui-autotools/registry": "^2.0.0",
+    "@ui-autotools/registry": ">=2.1.0",
     "react": ">=16",
     "react-dom": ">=16"
   },

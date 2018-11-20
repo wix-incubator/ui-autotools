@@ -5,11 +5,12 @@ import {isValidSimulationTitle, getCompWithState} from '../utils';
 export class ComponentMetadata<Props, State> implements IComponentMetadata<Props, State> {
   public simulations: Array<ISimulation<Props, State>> = []; // Initialize with "empty" simulation
   public styles: Map<any, IStyleMetadata> = new Map<any, IStyleMetadata>();
-  public reactStrictModeCompliant: boolean = true;
+  public nonReactStrictModeCompliant: boolean = false;
+  public nonA11yCompliant: boolean = false;
+  public nonEventListenerTestCompliant: boolean = false;
   public path: string = '';
   public exportName: string = '';
   public baseStylePath: string = '';
-  public a11yCompliant: boolean = true;
 
   public constructor(public component: React.ComponentType<Props>) {}
 

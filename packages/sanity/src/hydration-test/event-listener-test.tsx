@@ -30,50 +30,56 @@ export const eventListenerTest = (): void => {
     const componentStrings = (window as any).components;
 
     Registry.metadata.components.forEach((componentMetadata, Comp) => {
-      describe(getCompName(Comp), () => {
-        /**
-         * When a React component adds an event listener in its render function (a la <div onClick={this.myOnClick} />),
-         * React does not add an event listener to the rendered node. Instead, React calls document.addEventListener and
-         * adds a single click event which it then uses to decide which components to call with a synthetic event if
-         * relevant. When the component is unmounted, this listener on the document remains, as React may use it for
-         * other components. This makes it difficult to know whether a component called document.addEventListener manually
-         * and then forgot to remove the listener during unmount, or whether they just used the jsx event syntax properly.
-         * To discern between these two cases, we render a component before testing which has a jsx event for every single
-         * React-supported event. This way, React will never call document.addEventListener during rendering of the components
-         * we want to test, and we can be sure that any remaining events are leftover.
-         */
-        before(() => {
-          ReactDOM.render(<AllEvents />, root);
-          ReactDOM.unmountComponentAtNode(root);
-        });
-
-        componentMetadata.simulations.forEach((simulation) => {
-          it('component should unmount without leaving event listeners on the window, document, and body', () => {
-            const windowLogger = attachEventListenerLogger(window);
-            const documentLogger = attachEventListenerLogger(document);
-            const bodyLogger = attachEventListenerLogger(document.body);
-
-            root.innerHTML = componentStrings[index];
-            hydrate(componentMetadata.simulationToJSX(simulation), root);
+      const componentName = getCompName(Comp);
+      if (!componentMetadata.nonEventListenerTestCompliant) {
+        describe(componentName, () => {
+          /**
+           * When a React component adds an event listener in its render function (a la <div onClick={this.myOnClick} />),
+           * React does not add an event listener to the rendered node. Instead, React calls document.addEventListener and
+           * adds a single click event which it then uses to decide which components to call with a synthetic event if
+           * relevant. When the component is unmounted, this listener on the document remains, as React may use it for
+           * other components. This makes it difficult to know whether a component called document.addEventListener manually
+           * and then forgot to remove the listener during unmount, or whether they just used the jsx event syntax properly.
+           * To discern between these two cases, we render a component before testing which has a jsx event for every single
+           * React-supported event. This way, React will never call document.addEventListener during rendering of the components
+           * we want to test, and we can be sure that any remaining events are leftover.
+           */
+          before(() => {
+            ReactDOM.render(<AllEvents />, root);
             ReactDOM.unmountComponentAtNode(root);
-            index++;
+          });
 
-            const errors = [
-              ...leftoverListenerErrors(windowLogger.listeners.getAll(), 'window'),
-              ...leftoverListenerErrors(documentLogger.listeners.getAll(), 'document'),
-              ...leftoverListenerErrors(bodyLogger.listeners.getAll(), 'body')
-            ];
+          componentMetadata.simulations.forEach((simulation) => {
+            it('component should unmount without leaving event listeners on the window, document, and body', () => {
+              const windowLogger = attachEventListenerLogger(window);
+              const documentLogger = attachEventListenerLogger(document);
+              const bodyLogger = attachEventListenerLogger(document.body);
 
-            windowLogger.detach();
-            documentLogger.detach();
-            bodyLogger.detach();
+              root.innerHTML = componentStrings[index];
+              hydrate(componentMetadata.simulationToJSX(simulation), root);
+              ReactDOM.unmountComponentAtNode(root);
+              index++;
 
-            if (errors.length) {
-              throw Error(errors.join('\n'));
-            }
+              const errors = [
+                ...leftoverListenerErrors(windowLogger.listeners.getAll(), 'window'),
+                ...leftoverListenerErrors(documentLogger.listeners.getAll(), 'document'),
+                ...leftoverListenerErrors(bodyLogger.listeners.getAll(), 'body')
+              ];
+
+              windowLogger.detach();
+              documentLogger.detach();
+              bodyLogger.detach();
+
+              if (errors.length) {
+                throw Error(errors.join('\n'));
+              }
+            });
           });
         });
-      });
+      } else {
+        // tslint:disable-next-line:no-console
+        console.log(`Skipping event listener test for Component: "${componentName}". The "nonEventListenerCheckCompliant" flag was set to true in the metadata.`);
+      }
     });
   });
 };

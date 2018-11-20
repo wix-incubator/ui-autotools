@@ -19,6 +19,7 @@ export interface IComponentMetadata<Props, State> {
   simulationToJSX: (sim: ISimulation<Props, State>) => JSX.Element;
   nonReactStrictModeCompliant: boolean;
   nonA11yCompliant: boolean;
+  nonEventListenerTestCompliant: boolean;
 }
 
 export interface IExportInfo {

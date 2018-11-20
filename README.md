@@ -108,6 +108,14 @@ const meta = Registry.getComponentMetadata(nonAccessibleComp);
 meta.nonA11yCompliant = true;
 ```
 
+
+One of the tests that sanity runs checks that all events were removed after a component unmounts. If you wish to skip this test, set the `nonEventListenerTestCompliant` flag in the metadata to true.
+
+```ts
+const meta = Registry.getComponentMetadata(nonEventListenerTestCompliant);
+meta.nonEventListenerTestCompliant = true;
+```
+
 ## CLI Tools
 
 ### Universal Options

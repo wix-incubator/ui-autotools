@@ -6,10 +6,11 @@ export class ComponentMetadata<Props, State> implements IComponentMetadata<Props
   public simulations: Array<ISimulation<Props, State>> = []; // Initialize with "empty" simulation
   public styles: Map<any, IStyleMetadata> = new Map<any, IStyleMetadata>();
   public nonReactStrictModeCompliant: boolean = false;
+  public nonA11yCompliant: boolean = false;
+  public nonEventListenerTestCompliant: boolean = false;
   public path: string = '';
   public exportName: string = '';
   public baseStylePath: string = '';
-  public nonA11yCompliant: boolean = false;
 
   public constructor(public component: React.ComponentType<Props>) {}
 

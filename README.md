@@ -108,6 +108,14 @@ const meta = Registry.getComponentMetadata(nonAccessibleComp);
 meta.nonA11yCompliant = true;
 ```
 
+
+One of the tests that the sanity suite runs over components is the event listener test, to check if a component has left event listeners in the browser after being unmounted. If you wish to skip this test, set the `nonEventListenerTestCompliant` flag in the metadata to true.
+
+```ts
+const meta = Registry.getComponentMetadata(nonEventListenerTestCompliant);
+meta.nonEventListenerTestCompliant = true;
+```
+
 ## CLI Tools
 
 ### Universal Options

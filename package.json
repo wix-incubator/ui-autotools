@@ -10,7 +10,7 @@
     "build:watch": "lerna run --parallel build:watch",
     "pretest": "run-s lint build",
     "lint": "lerna run lint --stream --parallel && node -r @ts-tools/node scripts/json-linter",
-    "test": "lerna run test --stream --parallel",
+    "test": "lerna run test --stream",
     "start": "yarn workspace @ui-autotools/schema-extract start"
   },
   "devDependencies": {
@@ -51,6 +51,7 @@
     "glob": "^7.1.3",
     "html-webpack-plugin": "4.0.0-beta.4",
     "is-ci": "^1.2.1",
+    "jsdom": "^13.0.0",
     "lerna": "^3.4.3",
     "mocha": "^5.2.0",
     "mocha-loader": "^2.0.0",

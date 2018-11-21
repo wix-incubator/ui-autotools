@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/test-kit",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
   "scripts": {
@@ -25,10 +25,10 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@ui-autotools/registry": "^2.1.0"
+    "@ui-autotools/registry": "^3.0.0"
   },
   "peerDependencies": {
-    "@ui-autotools/registry": "^2.0.0",
+    "@ui-autotools/registry": ">=3.0.0",
     "react": ">=16",
     "react-dom": ">=16"
   },

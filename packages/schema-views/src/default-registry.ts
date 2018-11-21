@@ -8,6 +8,7 @@ registry.registerView(views.FallbackTypeView, predicates.catchAll);
 registry.registerView(views.FunctionTypeView, predicates.isFunction);
 registry.registerView(views.UnionTypeView, predicates.isUnion);
 registry.registerView(views.ObjectTypeView, predicates.isObject);
+registry.registerView(views.InterfaceTypeView, predicates.isInterface);
 registry.registerView(views.ArrayTypeView, predicates.isArray);
 registry.registerView(views.StringTypeView, predicates.isString);
 registry.registerView(views.NumberTypeView, predicates.isNumber);

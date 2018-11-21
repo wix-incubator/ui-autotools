@@ -39,7 +39,7 @@
     "@ui-autotools/registry": "^3.0.0"
   },
   "peerDependencies": {
-    "@ui-autotools/registry": "^2.0.0",
+    "@ui-autotools/registry": ">=3.0.0",
     "mocha": ">=5",
     "react": ">=16",
     "react-dom": ">=16"

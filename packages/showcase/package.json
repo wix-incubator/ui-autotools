@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/showcase",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -27,7 +27,7 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "@ui-autotools/registry": "^2.1.0"
+    "@ui-autotools/registry": "^3.0.0"
   },
   "dependencies": {
     "@stylable/core": "^0.1.13",

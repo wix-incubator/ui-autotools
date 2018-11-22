@@ -9,15 +9,28 @@ import {a11yTest, impactLevels} from '@ui-autotools/a11y';
 import {buildWebsite, startWebsite} from '@ui-autotools/showcase';
 import ssrTest from './ssr-test/mocha-wrapper';
 import {importMetaFiles} from './import-meta-files';
-import {registerRequireHooks} from '@ui-autotools/utils';
+import {getUserConfig, registerRequireHooks} from '@ui-autotools/utils';
 
 dotenv.config();
-registerRequireHooks();
 
 const program = new Command();
 const projectPath = process.cwd();
 const defaultMetaGlob = 'src/**/*.meta.ts?(x)';
+
 const webpackConfigPath = path.join(projectPath, '.autotools/webpack.config.js');
+const userConfigPath = path.join(projectPath, '.autotools/config.js');
+
+const config = getUserConfig(userConfigPath);
+
+// Setup user config
+if (config.setup) {
+  config.setup();
+}
+
+// Setup default require hooks if needed
+if (config.initializeRequireHooks) {
+  registerRequireHooks();
+}
 
 program
 .command('sanity')

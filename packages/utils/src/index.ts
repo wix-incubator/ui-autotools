@@ -3,6 +3,7 @@ export {WebpackConfigurator} from './webpack';
 export {waitForPageError, logConsoleMessages, runTestsInPuppeteer} from './puppeteer';
 export * from './console';
 export * from './get-project-name';
+export * from './get-user-config';
 export * from './http';
 export * from './raw-asset-webpack-plugin';
 export {registerRequireHooks} from './require-hooks/require-hooks';

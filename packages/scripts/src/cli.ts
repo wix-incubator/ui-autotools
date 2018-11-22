@@ -53,7 +53,7 @@ program
   const metaGlob: string = options.files || defaultMetaGlob;
   try {
     importMetaFiles(projectPath, metaGlob);
-    await eyesTest(projectPath, options.replace);
+    await eyesTest(projectPath, options.skipOnMissingKey);
   } catch (error) {
     process.exitCode = 1;
     if (error) {

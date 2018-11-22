@@ -66,7 +66,7 @@ export class Log {
 
   public compilationError(error: Error) {
     process.stderr.write(chalk.red('Compilation failed.\n'));
-    process.stderr.write(error.toString());
+    process.stderr.write(error.toString() + '\n');
   }
 
   public serverListening = (url: string) => {

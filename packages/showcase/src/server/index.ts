@@ -215,7 +215,7 @@ export async function buildWebsite(
       throw websiteStats.toString();
     }
   } catch (e) {
-    process.stderr.write(e);
+    process.stderr.write(e + '\n');
     process.exit(1);
   }
 }

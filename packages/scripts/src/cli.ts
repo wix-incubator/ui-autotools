@@ -9,7 +9,7 @@ import {a11yTest, impactLevels} from '@ui-autotools/a11y';
 import {buildWebsite, startWebsite} from '@ui-autotools/showcase';
 import ssrTest from './ssr-test/mocha-wrapper';
 import {importMetaFiles} from './import-meta-files';
-import {registerRequireHooks} from '@ui-autotools/utils';
+import {registerRequireHooks, consoleError} from '@ui-autotools/utils';
 
 dotenv.config();
 registerRequireHooks();
@@ -57,6 +57,7 @@ program
   } catch (error) {
     process.exitCode = 1;
     if (error) {
+      consoleError(error);
       process.stderr.write(error.toString());
     }
   }

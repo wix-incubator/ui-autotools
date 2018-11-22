@@ -1,4 +1,3 @@
-import {execSync} from 'child_process';
 import {spawn} from 'child_process';
 import isCI from 'is-ci';
 

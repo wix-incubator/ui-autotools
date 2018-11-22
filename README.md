@@ -166,7 +166,7 @@ autotools snap --files ./components/**/*.meta.ts
 
 #### Options
 
-- `skip-if-missing-key`: set this flag if you want to skip testing when `process.env.EYES_API_KEY` or `process.env.APPLITOOLS_API_KEY` variables are not set. By default, snap will fail if either of these keys are not set. Example usage: `snap --skip-if-missing-key`, or, `snap -s`.
+- `skip-on-missing-key`: set this flag if you want to skip testing when `process.env.EYES_API_KEY` or `process.env.APPLITOOLS_API_KEY` variables are not set. By default, snap will fail if either of these keys are not set. Example usage: `snap --skip-on-missing-key`, or, `snap -s`.
 
 ### Showcase
 

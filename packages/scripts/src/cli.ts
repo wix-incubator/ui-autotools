@@ -53,11 +53,12 @@ program
   const metaGlob: string = options.files || defaultMetaGlob;
   try {
     importMetaFiles(projectPath, metaGlob);
-    await eyesTest(projectPath, options.replace);
+    await eyesTest(projectPath, options.skipOnMissingKey);
   } catch (error) {
     process.exitCode = 1;
     if (error) {
-      process.stderr.write(error.toString());
+      // Without a new-line, the error will not show on certain node versions
+      process.stderr.write(error.toString() + '\n');
     }
   }
 });

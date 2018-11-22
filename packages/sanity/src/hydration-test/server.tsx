@@ -49,7 +49,7 @@ export async function hydrationTest(
   } catch (error) {
     process.exitCode = 1;
     if (error) {
-      process.stderr.write(error.toString());
+      process.stderr.write(error.toString() + '\n');
     }
   } finally {
     if (server) {

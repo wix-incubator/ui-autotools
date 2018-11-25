@@ -16,6 +16,8 @@
     "@stylable/schema-extract": "^0.1.1",
     "@ui-autotools/schema-extract": "^2.0.1",
     "@ui-autotools/schema-views": "^0.1.3",
+    "monaco-editor": "^0.15.5",
+    "monaco-editor-webpack-plugin": "^1.6.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "sanitize.css": "^8.0.0",

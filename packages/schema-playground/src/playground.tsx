@@ -5,6 +5,7 @@ import {IBaseHost} from '@file-services/typescript';
 import {transform} from '@ui-autotools/schema-extract';
 import {extractSchema as extractStylableSchema} from '@stylable/schema-extract';
 import {BaseView as BaseSchemaView, defaultSchemaViewRegistry} from '@ui-autotools/schema-views/src';
+import {Editor} from './editor';
 
 import 'sanitize.css';
 import './playground.css';
@@ -45,9 +46,10 @@ export class Playground extends React.PureComponent<IPlaygroundProps, IPlaygroun
             <option value="typescript">TypeScript</option>
             <option value="stylable">Stylable</option>
           </select>
-          <textarea
-            spellCheck={false}
-            value={fs.readFileSync(filePath)}
+          <Editor
+            className="source-code-editor"
+            fs={fs}
+            filePath={filePath}
             onChange={this.handleSourceCodeChange}
           />
         </div>
@@ -77,9 +79,8 @@ export class Playground extends React.PureComponent<IPlaygroundProps, IPlaygroun
     requestAnimationFrame(() => this.updateSchema());
   }
 
-  private handleSourceCodeChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-    const {fs} = this.props;
-    fs.writeFileSync(this.getFilePath(), e.target.value);
+  private handleSourceCodeChange = (newValue: string) => {
+    this.props.fs.writeFileSync(this.getFilePath(), newValue);
     this.forceUpdate();
     requestAnimationFrame(() => this.updateSchema());
   }

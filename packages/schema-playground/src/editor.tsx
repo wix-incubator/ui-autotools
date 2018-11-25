@@ -63,7 +63,8 @@ export class Editor extends React.PureComponent<IEditorProps> {
 
     languages.typescript.typescriptDefaults.setCompilerOptions({
       jsx: languages.typescript.JsxEmit.React,
-      allowSyntheticDefaultImports: true
+      allowSyntheticDefaultImports: true,
+      esModuleInterop: true
     });
 
     this.editor = editor.create(this.domNode.current!, editorOptions);

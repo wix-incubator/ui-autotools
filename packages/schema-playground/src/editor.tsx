@@ -30,14 +30,41 @@ function createFileModel(fs: IFileSystem, filePath: string) {
   );
 }
 
+function* recursiveFileList(fs: IFileSystem, startPath: string): IterableIterator<string> {
+  const files = fs.readdirSync(startPath);
+  for (const file of files) {
+    const fullPath = fs.path.join(startPath, file);
+    if (fs.directoryExistsSync(fullPath)) {
+      yield* recursiveFileList(fs, fullPath);
+    } else {
+      yield fullPath;
+    }
+  }
+}
+
+function registerTypeDefinitions(fs: IFileSystem) {
+  for (const filePath of recursiveFileList(fs, '/')) {
+    if (filePath.endsWith('.d.ts')) {
+      languages.typescript.typescriptDefaults.addExtraLib(
+        fs.readFileSync(filePath),
+        'file://' + filePath
+      );
+    }
+  }
+}
+
 export class Editor extends React.PureComponent<IEditorProps> {
   private domNode = React.createRef<HTMLDivElement>();
   private editor?: editor.IStandaloneCodeEditor;
   private resizeRequestId: number = 0;
 
   public componentDidMount() {
+    registerTypeDefinitions(this.props.fs);
+
     languages.typescript.typescriptDefaults.setCompilerOptions({
-      jsx: languages.typescript.JsxEmit.React
+      jsx: languages.typescript.JsxEmit.React,
+      allowSyntheticDefaultImports: true,
+      esModuleInterop: true
     });
 
     this.editor = editor.create(this.domNode.current!, editorOptions);

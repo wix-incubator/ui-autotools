@@ -4,7 +4,7 @@ import isCI from 'is-ci';
 if (isCI) {
   // tslint:disable-next-line:no-console
   console.log('Running snap on CI.');
-  const snap = spawn('yarn snap');
+  const snap = spawn('npm run snap');
   snap.stdout.on('data', (data: any) => { process.stdout.write(data.toString()); });
   snap.stderr.on('data', (data: any) => { process.stdout.write(data.toString()); });
   // tslint:disable-next-line:no-console

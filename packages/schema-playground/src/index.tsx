@@ -5,6 +5,7 @@ import { createMemoryFs } from '@file-services/memory';
 import { createBaseHost, createLanguageServiceHost } from '@file-services/typescript';
 import { Playground } from './playground';
 import { compilerOptions } from './compiler-options';
+import * as Session from './session';
 import {
     sampleTypescriptFilePath,
     sampleTypescriptFile,
@@ -26,8 +27,14 @@ async function main() {
     fs.populateDirectorySync('/', reactRecipe);
 
     // add initial sample files
-    fs.writeFileSync(sampleTypescriptFilePath, sampleTypescriptFile);
-    fs.writeFileSync(sampleStylableFilePath, sampleStylableFile);
+    fs.writeFileSync(
+        sampleTypescriptFilePath,
+        Session.loadFile(sampleTypescriptFilePath) || sampleTypescriptFile
+    );
+    fs.writeFileSync(
+        sampleStylableFilePath,
+        Session.loadFile(sampleStylableFilePath) || sampleStylableFile
+    );
 
     // initialize hosts
     const baseHost = createBaseHost(fs, '/');

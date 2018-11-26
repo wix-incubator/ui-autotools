@@ -1,5 +1,6 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const StylableWebpackPlugin = require('@stylable/webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const StylableWebpackPlugin = require('@stylable/webpack-plugin');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = (_env, {mode = 'development', devtool = 'source-map'}) => {
     return {
@@ -41,10 +42,10 @@ module.exports = (_env, {mode = 'development', devtool = 'source-map'}) => {
             new HtmlWebpackPlugin({
                 title: 'Schema Playground'
             }),
-            // new require('monaco-editor-webpack-plugin')({
-            //     languages: ['css', 'javascript', 'typescript', 'html'],
-            //     output: 'workers'
-            // })
+            new MonacoWebpackPlugin({
+                languages: ['css', 'javascript', 'typescript', 'html'],
+                output: 'workers'
+            })
             // new require('webpack-bundle-analyzer').BundleAnalyzerPlugin()
         ],
         performance: {

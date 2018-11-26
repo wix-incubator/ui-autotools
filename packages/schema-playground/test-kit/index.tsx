@@ -8,7 +8,7 @@ import ts from 'typescript';
 import {createMemoryFs} from '@file-services/memory';
 import {createBaseHost, createLanguageServiceHost} from '@file-services/typescript';
 import {transform} from '@ui-autotools/schema-extract';
-import {compilerOptions} from '../src/constants';
+import {compilerOptions} from '../src/compiler-options';
 import {typescriptRecipe} from '../src/recipes/typescript';
 import {reactRecipe} from '../src/recipes/react';
 import {BaseView, defaultSchemaViewRegistry} from '@ui-autotools/schema-views/src';

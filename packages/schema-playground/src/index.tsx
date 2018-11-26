@@ -4,13 +4,13 @@ import ReactDOM from 'react-dom';
 import { createMemoryFs } from '@file-services/memory';
 import { createBaseHost, createLanguageServiceHost } from '@file-services/typescript';
 import { Playground } from './playground';
+import { compilerOptions } from './compiler-options';
 import {
     sampleTypescriptFilePath,
     sampleTypescriptFile,
     sampleStylableFilePath,
-    sampleStylableFile,
-    compilerOptions
-} from './constants';
+    sampleStylableFile
+} from './code-samples';
 
 async function main() {
     const fs = createMemoryFs();

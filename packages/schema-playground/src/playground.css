@@ -21,7 +21,7 @@ html, body {
     overflow: auto;
     border: 0;
     padding: 1em;
-    font: 13px/1.3 Consolas, Menlo, monospace;
+    font: 11px/1.3 Menlo, Monaco, Consolas, monospace;
 }
 
 .playground-pane + .playground-pane {
@@ -33,7 +33,8 @@ html, body {
     flex-direction: column;
 }
 
-.source-code-pane > textarea {
+.source-code-pane > .source-code-editor {
     margin-top: 1em;
+    overflow: hidden;
     flex-grow: 1;
 }

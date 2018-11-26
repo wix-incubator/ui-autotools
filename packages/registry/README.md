@@ -1,6 +1,9 @@
-# Metadata registry
+# Metadata Registry
 
-allows creating/retriving code metdata descriptions.
+The Metadata Registry is the entry point for most of `ui-autotools` features. The general purpose of this registry is to "enroll" a new component (or fetch a previously enrolled component) and provide relevant information about it.
+
+General usage information and set of features provided by `ui-autotools` [here](https://github.com/wix-incubator/ui-autotools)
+
 
 ## API
 

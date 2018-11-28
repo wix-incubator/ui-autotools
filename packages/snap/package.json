@@ -33,8 +33,8 @@
   },
   "dependencies": {
     "@applitools/visual-grid-client": "^5.5.3",
-    "@stylable/webpack-extensions": "^0.1.17",
-    "@stylable/webpack-plugin": "^0.1.15",
+    "@stylable/webpack-extensions": "^0.1.19",
+    "@stylable/webpack-plugin": "^0.1.18",
     "@ui-autotools/utils": "^1.1.3",
     "chalk": "^2.4.1",
     "create-temp-directory": "^1.0.1",

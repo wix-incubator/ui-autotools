@@ -1,18 +1,13 @@
-#!/usr/bin/env node
 import {Command} from 'commander';
 import {a11yTest, impactLevels} from './';
-import dotenv from 'dotenv';
 import path from 'path';
 import glob from 'glob';
-import {registerRequireHooks} from '@ui-autotools/utils';
+import { cliInit, defaultMetaGlob, getDefaultWebpackConfigPath } from '@ui-autotools/utils';
 
-dotenv.config();
-registerRequireHooks();
-
+cliInit();
 const program = new Command();
 const projectPath = process.cwd();
-const defaultMetaGlob = 'src/**/*.meta.ts?(x)';
-const webpackConfigPath = path.join(projectPath, '.autotools/webpack.config.js');
+const webpackConfigPath = getDefaultWebpackConfigPath(projectPath);
 
 program
 .description('run accessibility tests on components with metadata files that match the given pattern')

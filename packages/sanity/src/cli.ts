@@ -1,19 +1,14 @@
-#!/usr/bin/env node
-import path from 'path';
+
 import glob from 'glob';
-import dotenv from 'dotenv';
 import { Command } from 'commander';
 import { hydrationTest } from './';
 import ssrTest from './ssr-test/mocha-wrapper';
-import { registerRequireHooks } from '@ui-autotools/utils';
+import { cliInit, defaultMetaGlob, getDefaultWebpackConfigPath } from '@ui-autotools/utils';
 
-dotenv.config();
-registerRequireHooks();
-
+cliInit();
 const program = new Command();
 const projectPath = process.cwd();
-const defaultMetaGlob = 'src/**/*.meta.ts?(x)';
-const webpackConfigPath = path.join(projectPath, '.autotools/webpack.config.js');
+const webpackConfigPath = getDefaultWebpackConfigPath(projectPath);
 
 program
     .description('run sanity checks on all components with a metadata description')

@@ -1,16 +1,11 @@
-#!/usr/bin/env node
 import glob from 'glob';
-import dotenv from 'dotenv';
 import {Command} from 'commander';
 import {eyesTest} from './';
-import {registerRequireHooks} from '@ui-autotools/utils';
+import { cliInit, defaultMetaGlob } from '@ui-autotools/utils';
 
-dotenv.config();
-registerRequireHooks();
-
+cliInit();
 const program = new Command();
 const projectPath = process.cwd();
-const defaultMetaGlob = 'src/**/*.meta.ts?(x)';
 
 program
 .description('compare components to the expected appearance using Applitools Eyes')

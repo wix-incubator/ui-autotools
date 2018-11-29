@@ -22,6 +22,8 @@
     "sanity": "yarn autotools sanity"
   },
   "dependencies": {
+    "@ui-autotools/a11y": "^2.0.1",
+    "@ui-autotools/sanity": "^2.0.1",
     "@ui-autotools/registry": "^3.0.0",
     "@ui-autotools/scripts": "^3.0.3",
     "react": "^16.6.3",

@@ -117,7 +117,9 @@ meta.nonEventListenerTestCompliant = true;
 ```
 
 ## CLI Tools
+We have created a package that contains all of the commands to run our tools. If you only want to use some of our packages, you can install each package you want and it comes with its own command.
 
+**Note**: You cannot use `showcase` separately from the other packages at the moment. You will have to install the scripts packages to run it.
 ### Universal Options
 
 - `files`: glob pattern used to match metadata files. Defaults to `src/**/*.meta.ts?(x)`
@@ -139,9 +141,13 @@ Sanity uses puppeteer to test client-side hydration. Results are printed in the 
 Sanity ensures that any events added to window, document, or body during a component's lifecycle are removed once the component has unmounted. This helps prevent easy-to-miss memory leaks.
 
 #### Usage
-
+If you are using the `scripts` package simply run the following command:
 ```shell
 autotools sanity --files ./components/**/*.meta.ts
+```
+If you want to use just the `sanity` package use this instead:
+```shell
+autotools-sanity --files ./components/**/*.meta.ts
 ```
 
 ### A11Y
@@ -149,9 +155,13 @@ autotools sanity --files ./components/**/*.meta.ts
 Asserts that components are compatable with axe-core. Allows for varying levels of error impact (one of `minor`, `moderate`, `serious`, or `critical`). Specifying a level of impact specifies *that* level and *above* (so specifying `moderate` would target `moderate`, `serious`, and `critical`).
 
 #### Usage
-
+If you are using the `scripts` package simply run the following command:
 ```shell
 autotools a11y --files ./components/**/*.meta.ts --impact minor
+```
+If you want to use just the `a11y` package use this instead:
+```shell
+autotools-a11y --files ./components/**/*.meta.ts --impact minor
 ```
 
 ### Snap
@@ -159,7 +169,11 @@ autotools a11y --files ./components/**/*.meta.ts --impact minor
 Renders components, takes screenshots, and then sends screenshots to Applitools Eyes to run comparisons. This tool requires that the `process.env.EYES_API_KEY` value is set to your private API key.
 
 #### Usage
-
+If you are using the `scripts` package simply run the following command:
+```shell
+autotools snap --files ./components/**/*.meta.ts
+```
+If you want to use just the `snap` package use this instead:
 ```shell
 autotools snap --files ./components/**/*.meta.ts
 ```

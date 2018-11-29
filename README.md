@@ -172,7 +172,7 @@ npm i --save-dev @ui-autotools/snap
 ```
 then run the following command:
 ```shell
-autotools snap --files ./components/**/*.meta.ts
+autotools-snap --files ./components/**/*.meta.ts
 ```
 
 #### Options

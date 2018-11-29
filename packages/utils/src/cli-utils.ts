@@ -8,6 +8,6 @@ export function cliInit(): void {
 }
 
 export const defaultMetaGlob = 'src/**/*.meta.ts?(x)';
-export function getDefaultWebpackConfigPath(projectPath: string): string {
+export function getWebpackConfigPath(projectPath: string): string {
     return path.join(projectPath, '.autotools/webpack.config.js');
 }

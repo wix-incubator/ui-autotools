@@ -2,12 +2,12 @@ import {Command} from 'commander';
 import {a11yTest, impactLevels} from './';
 import path from 'path';
 import glob from 'glob';
-import { cliInit, defaultMetaGlob, getDefaultWebpackConfigPath } from '@ui-autotools/utils';
+import { cliInit, defaultMetaGlob, getWebpackConfigPath } from '@ui-autotools/utils';
 
 cliInit();
 const program = new Command();
 const projectPath = process.cwd();
-const webpackConfigPath = getDefaultWebpackConfigPath(projectPath);
+const webpackConfigPath = getWebpackConfigPath(projectPath);
 
 program
 .description('run accessibility tests on components with metadata files that match the given pattern')

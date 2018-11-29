@@ -3,12 +3,12 @@ import glob from 'glob';
 import { Command } from 'commander';
 import { hydrationTest } from './';
 import ssrTest from './ssr-test/mocha-wrapper';
-import { cliInit, defaultMetaGlob, getDefaultWebpackConfigPath } from '@ui-autotools/utils';
+import { cliInit, defaultMetaGlob, getWebpackConfigPath } from '@ui-autotools/utils';
 
 cliInit();
 const program = new Command();
 const projectPath = process.cwd();
-const webpackConfigPath = getDefaultWebpackConfigPath(projectPath);
+const webpackConfigPath = getWebpackConfigPath(projectPath);
 
 program
     .description('run sanity checks on all components with a metadata description')

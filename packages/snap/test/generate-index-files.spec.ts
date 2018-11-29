@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import {expect} from 'chai';
 import {MockRegistry} from '@ui-autotools/test-kit';
 import {generateIndexFileData} from '../src/generate-snapshots/build-base-files';
 

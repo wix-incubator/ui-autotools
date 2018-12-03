@@ -8,3 +8,4 @@ export * from './raw-asset-webpack-plugin';
 export {registerRequireHooks} from './require-hooks/require-hooks';
 export {compilerOptions} from './typescript/constants';
 export {createTsService} from './typescript/createMemoryTsService';
+export * from './cli-utils';

@@ -17,13 +17,15 @@
     "lint:src": "tslint -p src",
     "lint:test": "tslint -p test",
     "test": "mocha -r @ts-tools/node \"./test/node/**/*.node-spec.ts?(x)\" --watch-extensions ts,tsx && yarn sanity && yarn a11y",
-    "snap": "yarn autotools snap",
-    "a11y": "yarn autotools a11y",
-    "sanity": "yarn autotools sanity"
+    "snap": "yarn autotools-snap",
+    "a11y": "yarn autotools-a11y",
+    "sanity": "yarn autotools-sanity"
   },
   "dependencies": {
+    "@ui-autotools/a11y": "^2.0.1",
+    "@ui-autotools/sanity": "^2.0.1",
+    "@ui-autotools/snap": "^2.0.1",
     "@ui-autotools/registry": "^3.0.0",
-    "@ui-autotools/scripts": "^3.0.3",
     "react": "^16.6.3",
     "react-dom": "^16.6.3"
   }

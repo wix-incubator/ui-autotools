@@ -117,7 +117,6 @@ meta.nonEventListenerTestCompliant = true;
 ```
 
 ## CLI Tools
-
 ### Universal Options
 
 - `files`: glob pattern used to match metadata files. Defaults to `src/**/*.meta.ts?(x)`
@@ -139,9 +138,13 @@ Sanity uses puppeteer to test client-side hydration. Results are printed in the 
 Sanity ensures that any events added to window, document, or body during a component's lifecycle are removed once the component has unmounted. This helps prevent easy-to-miss memory leaks.
 
 #### Usage
-
+First install the package 
 ```shell
-autotools sanity --files ./components/**/*.meta.ts
+npm i --save-dev @ui-autotools/sanity
+```
+then run the following command:
+```shell
+autotools-sanity --files ./components/**/*.meta.ts
 ```
 
 ### A11Y
@@ -149,9 +152,13 @@ autotools sanity --files ./components/**/*.meta.ts
 Asserts that components are compatable with axe-core. Allows for varying levels of error impact (one of `minor`, `moderate`, `serious`, or `critical`). Specifying a level of impact specifies *that* level and *above* (so specifying `moderate` would target `moderate`, `serious`, and `critical`).
 
 #### Usage
-
+First install the package 
 ```shell
-autotools a11y --files ./components/**/*.meta.ts --impact minor
+npm i --save-dev @ui-autotools/a11y
+```
+then run the following command:
+```shell
+autotools-a11y --files ./components/**/*.meta.ts --impact minor
 ```
 
 ### Snap
@@ -159,9 +166,13 @@ autotools a11y --files ./components/**/*.meta.ts --impact minor
 Renders components, takes screenshots, and then sends screenshots to Applitools Eyes to run comparisons. This tool requires that the `process.env.EYES_API_KEY` value is set to your private API key.
 
 #### Usage
-
+First install the package 
 ```shell
-autotools snap --files ./components/**/*.meta.ts
+npm i --save-dev @ui-autotools/snap
+```
+then run the following command:
+```shell
+autotools-snap --files ./components/**/*.meta.ts
 ```
 
 #### Options

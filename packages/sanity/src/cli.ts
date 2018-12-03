@@ -1,0 +1,24 @@
+
+import glob from 'glob';
+import { Command } from 'commander';
+import { hydrationTest } from './';
+import ssrTest from './ssr-test/mocha-wrapper';
+import { cliInit, defaultMetaGlob, getWebpackConfigPath } from '@ui-autotools/utils';
+
+cliInit();
+const program = new Command();
+const projectPath = process.cwd();
+const webpackConfigPath = getWebpackConfigPath(projectPath);
+
+program
+    .description('run sanity checks on all components with a metadata description')
+    .option('-f, --files [pattern]', 'Grep file')
+    .action((options) => {
+        const metaGlob: string = options.files || defaultMetaGlob;
+        // This code is duplicated and used in snap as well. We may want to find a way to share it
+        glob.sync(metaGlob, { absolute: true, cwd: projectPath }).forEach(require);
+        ssrTest();
+        hydrationTest(projectPath, metaGlob, webpackConfigPath);
+    });
+
+program.parse(process.argv);

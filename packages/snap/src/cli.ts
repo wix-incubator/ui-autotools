@@ -14,6 +14,7 @@ program
 .action(async (options) => {
   const metaGlob: string = options.files || defaultMetaGlob;
   try {
+    // This code is duplicated and used in sanity as well. We may want to find a way to share it
     glob.sync(metaGlob, {absolute: true, cwd: projectPath}).forEach(require);
     await eyesTest(projectPath, options.skipOnMissingKey);
   } catch (error) {

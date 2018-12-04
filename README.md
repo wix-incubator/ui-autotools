@@ -192,3 +192,9 @@ To build a static website:
 ```shell
 autotools showcase --files src/**/*.meta.ts --output build/website
 ```
+
+## User config
+`@ui-autotools` assumes that your code is using [Typescript](http://typescriptlang.org) or [Stylable](https://stylable.io/), and therefor automatically requires hooks to hanlde such files (`.ts`, `.st.css` etc.). If however you are not using these or you are using different hooks, we support requiring your own hooks.  
+In the root of your project, inside the `.autotools` folder, create a new file named `node-require-hooks.js`, require your hooks and invoke them and `@ui-autotools` will use your config file.  
+
+**Note:** If you are using your own config file, keep in mind that `@ui-autotools` will **not use its default config file**.

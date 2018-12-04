@@ -9,7 +9,7 @@ import {a11yTest, impactLevels} from '@ui-autotools/a11y';
 import {buildWebsite, startWebsite} from '@ui-autotools/showcase';
 import ssrTest from './ssr-test/mocha-wrapper';
 import {importMetaFiles} from './import-meta-files';
-import {registerRequireHooks} from '@ui-autotools/utils';
+import {registerRequireHooks} from '@ui-autotools/node-utils';
 
 dotenv.config();
 registerRequireHooks();

@@ -1,7 +1,6 @@
 import glob from 'glob';
 import { Command } from 'commander';
 import { eyesTest } from './';
-// import { defaultMetaGlob } from '@ui-autotools/utils';
 import { cliInit, defaultMetaGlob } from '@ui-autotools/node-utils';
 
 const projectPath = process.cwd();

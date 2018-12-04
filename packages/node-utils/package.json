@@ -24,13 +24,6 @@
   "repository": "git@github.com:wix-incubator/ui-autotools.git",
   "author": "Wix.com",
   "license": "BSD-3-Clause",
-  "dependencies": {
-    "@stylable/node": "^0.1.18",
-    "html-webpack-plugin": "4.0.0-beta.4"
-  },
-  "peerDependencies": {
-    "webpack": ">=4"
-  },
   "publishConfig": {
     "access": "public"
   },

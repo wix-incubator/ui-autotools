@@ -2,7 +2,6 @@ import { Command } from 'commander';
 import { a11yTest, impactLevels } from './';
 import path from 'path';
 import glob from 'glob';
-// import { defaultMetaGlob, getWebpackConfigPath } from '@ui-autotools/utils';
 import { cliInit, defaultMetaGlob, getWebpackConfigPath } from '@ui-autotools/node-utils';
 
 const projectPath = process.cwd();

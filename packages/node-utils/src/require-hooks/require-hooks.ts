@@ -3,8 +3,7 @@ import path from 'path';
 
 export const userConfigPath = '.autotools/node-require-hooks.js';
 
-export function registerRequireHooks() {
-  const projectPath = process.cwd();
+export function registerRequireHooks(projectPath: string) {
   const requirePath = path.join(projectPath, userConfigPath);
   if (fs.existsSync(requirePath)) {
     require(requirePath);

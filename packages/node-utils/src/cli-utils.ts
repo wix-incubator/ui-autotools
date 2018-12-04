@@ -2,9 +2,9 @@ import dotenv from 'dotenv';
 import { registerRequireHooks } from './';
 import path from 'path';
 
-export function cliInit(): void {
+export function cliInit(projectPath: string): void {
     dotenv.config();
-    registerRequireHooks();
+    registerRequireHooks(projectPath);
 }
 
 export const defaultMetaGlob = 'src/**/*.meta.ts?(x)';

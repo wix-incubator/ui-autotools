@@ -5,9 +5,9 @@ import glob from 'glob';
 // import { defaultMetaGlob, getWebpackConfigPath } from '@ui-autotools/utils';
 import { cliInit, defaultMetaGlob, getWebpackConfigPath } from '@ui-autotools/node-utils';
 
-cliInit();
-const program = new Command();
 const projectPath = process.cwd();
+cliInit(projectPath);
+const program = new Command();
 const webpackConfigPath = getWebpackConfigPath(projectPath);
 
 program

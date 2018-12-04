@@ -4,9 +4,9 @@ import { eyesTest } from './';
 // import { defaultMetaGlob } from '@ui-autotools/utils';
 import { cliInit, defaultMetaGlob } from '@ui-autotools/node-utils';
 
-cliInit();
-const program = new Command();
 const projectPath = process.cwd();
+cliInit(projectPath);
+const program = new Command();
 
 program
   .description('compare components to the expected appearance using Applitools Eyes')

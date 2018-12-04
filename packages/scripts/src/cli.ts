@@ -11,11 +11,11 @@ import ssrTest from './ssr-test/mocha-wrapper';
 import {importMetaFiles} from './import-meta-files';
 import {registerRequireHooks} from '@ui-autotools/node-utils';
 
+const projectPath = process.cwd();
 dotenv.config();
-registerRequireHooks();
+registerRequireHooks(projectPath);
 
 const program = new Command();
-const projectPath = process.cwd();
 const defaultMetaGlob = 'src/**/*.meta.ts?(x)';
 const webpackConfigPath = path.join(projectPath, '.autotools/webpack.config.js');
 

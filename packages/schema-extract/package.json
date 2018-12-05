@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/schema-extract",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -24,7 +24,7 @@
   "dependencies": {
     "@file-services/memory": "^0.2.3",
     "@file-services/typescript": "^0.2.4",
-    "@ui-autotools/utils": "^1.1.3",
+    "@ui-autotools/utils": "^1.1.4",
     "chalk": "^2.4.1",
     "commander": "^2.19.0",
     "glob": "^7.1.3"

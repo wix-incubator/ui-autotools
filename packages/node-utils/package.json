@@ -1,8 +1,9 @@
 {
-  "name": "@ui-autotools/a11y",
-  "version": "2.1.0",
+  "name": "@ui-autotools/node-utils",
+  "version": "1.0.0",
   "main": "cjs/index.js",
-  "types": "cjs/index.d.ts",
+  "module": "esm/index.js",
+  "types": "esm/index.d.ts",
   "scripts": {
     "clean": "rimraf ./cjs ./esm",
     "build": "run-p build:cjs build:esm",
@@ -14,36 +15,15 @@
     "lint": "tslint -p src"
   },
   "files": [
-    "bin",
     "cjs",
-    "esm",
-    "templates"
+    "esm"
   ],
   "engines": {
     "node": ">=8"
   },
-  "repository": "git@github.com:wix/ui-autotools.git",
+  "repository": "git@github.com:wix-incubator/ui-autotools.git",
   "author": "Wix.com",
   "license": "BSD-3-Clause",
-  "devDependencies": {
-    "@ui-autotools/registry": "^3.0.0"
-  },
-  "bin": {
-    "autotools-a11y": "bin/cli.js"
-  },
-  "dependencies": {
-    "@ui-autotools/utils": "^1.1.4",
-    "@ui-autotools/node-utils": "^1.0.0",
-    "axe-core": "^3.1.2",
-    "chalk": "^2.4.1",
-    "commander": "^2.19.0",
-    "puppeteer": "^1.10.0"
-  },
-  "peerDependencies": {
-    "@ui-autotools/registry": ">=3.0.0",
-    "react": ">=16",
-    "react-dom": ">=16"
-  },
   "publishConfig": {
     "access": "public"
   },

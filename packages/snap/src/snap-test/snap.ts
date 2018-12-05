@@ -25,8 +25,8 @@ function getGridClientConfig(projectPath: string) {
   setApplitoolsId();
 
   const branchName = projectName + '/' + getBranchName();
-  const viewportWidth = 800;
-  const viewportHeight = 600;
+  const viewportWidth = 1050;
+  const viewportHeight = 1075;
 
   return {
     appName: projectName,

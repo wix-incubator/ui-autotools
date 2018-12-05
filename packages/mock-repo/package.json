@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/mock-repo",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "private": true,
   "author": "Wix.com",
   "license": "BSD-3-Clause",
@@ -17,13 +17,15 @@
     "lint:src": "tslint -p src",
     "lint:test": "tslint -p test",
     "test": "mocha -r @ts-tools/node \"./test/node/**/*.node-spec.ts?(x)\" --watch-extensions ts,tsx && yarn sanity && yarn a11y && node -r @ts-tools/node ./run-snap-on-ci.ts",
-    "snap": "yarn autotools snap",
-    "a11y": "yarn autotools a11y",
-    "sanity": "yarn autotools sanity"
+    "snap": "yarn autotools-snap",
+    "a11y": "yarn autotools-a11y",
+    "sanity": "yarn autotools-sanity"
   },
   "dependencies": {
+    "@ui-autotools/a11y": "^2.1.0",
     "@ui-autotools/registry": "^3.0.0",
-    "@ui-autotools/scripts": "^3.0.3",
+    "@ui-autotools/sanity": "^2.1.0",
+    "@ui-autotools/snap": "^2.1.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3"
   }

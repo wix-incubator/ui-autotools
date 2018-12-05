@@ -6,6 +6,7 @@ import {transform} from '@ui-autotools/schema-extract';
 import {extractSchema as extractStylableSchema} from '@stylable/schema-extract';
 import {BaseView as BaseSchemaView, defaultSchemaViewRegistry} from '@ui-autotools/schema-views/src';
 import {Editor} from './editor';
+import * as Session from './session';
 
 import 'sanitize.css';
 import './playground.css';
@@ -24,7 +25,7 @@ export interface IPlaygroundState {
 
 export class Playground extends React.PureComponent<IPlaygroundProps, IPlaygroundState> {
   public state = {
-    fileType: 'typescript',
+    fileType: Session.loadSetting('fileType') || 'typescript',
     schema: {}
   };
 
@@ -75,12 +76,16 @@ export class Playground extends React.PureComponent<IPlaygroundProps, IPlaygroun
   }
 
   private handleFileTypeChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
-    this.setState({fileType: e.target.value});
+    const fileType = e.target.value;
+    this.setState({fileType});
+    Session.saveSetting('fileType', fileType);
     requestAnimationFrame(() => this.updateSchema());
   }
 
   private handleSourceCodeChange = (newValue: string) => {
-    this.props.fs.writeFileSync(this.getFilePath(), newValue);
+    const filePath = this.getFilePath();
+    this.props.fs.writeFileSync(filePath, newValue);
+    Session.saveFile(filePath, newValue);
     this.forceUpdate();
     requestAnimationFrame(() => this.updateSchema());
   }

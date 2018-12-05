@@ -1,6 +1,4 @@
-import '@ts-tools/node';
-import {attachHook} from '@stylable/node';
-
 export function registerRequireHooks() {
-  attachHook({});
+  require('@ts-tools/node');
+  require('@stylable/node/register');
 }

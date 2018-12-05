@@ -22,9 +22,9 @@ export interface IEditorProps {
   onChange: (newValue: string) => void;
 }
 
-function createFileModel(fs: IFileSystem, filePath: string) {
+function createFileModel(filePath: string, fileContents: string) {
   return editor.createModel(
-    fs.readFileSync(filePath),
+    fileContents,
     undefined,
     Uri.parse('file://' + filePath)
   );
@@ -68,7 +68,10 @@ export class Editor extends React.PureComponent<IEditorProps> {
     });
 
     this.editor = editor.create(this.domNode.current!, editorOptions);
-    this.editor.setModel(createFileModel(this.props.fs, this.props.filePath));
+    this.editor!.setModel(createFileModel(
+      this.props.filePath,
+      this.props.fs.readFileSync(this.props.filePath)
+    ));
     this.editor.onDidChangeModelContent(this.handleChange);
 
     window.addEventListener('resize', this.handleResize);
@@ -82,7 +85,10 @@ export class Editor extends React.PureComponent<IEditorProps> {
 
   public componentDidUpdate() {
     this.editor!.getModel()!.dispose();
-    this.editor!.setModel(createFileModel(this.props.fs, this.props.filePath));
+    this.editor!.setModel(createFileModel(
+      this.props.filePath,
+      this.props.fs.readFileSync(this.props.filePath)
+    ));
   }
 
   public render() {

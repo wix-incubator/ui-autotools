@@ -27,7 +27,7 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "@ts-tools/node": "^0.7.2",
-    "@ui-autotools/node-utils": "^1.1.4",
+    "@ui-autotools/node-utils": "^1.0.0",
     "@ui-autotools/a11y": "^2.1.0",
     "@ui-autotools/sanity": "^2.1.0",
     "@ui-autotools/showcase": "^2.0.2",

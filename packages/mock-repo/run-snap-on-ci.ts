@@ -1,12 +1,17 @@
-import {spawn} from 'child_process';
+import {exec} from 'child_process';
 import isCI from 'is-ci';
 
 if (isCI) {
   // tslint:disable-next-line:no-console
   console.log('Running snap on CI.');
-  const snap = spawn('yarn', ['autotools', 'snap'], {cwd: './packages/mock-repo'});
-  snap.stdout.on('data', (data: any) => { process.stdout.write(data.toString()); });
-  snap.stderr.on('data', (data: any) => { process.stdout.write(data.toString()); });
-    // tslint:disable-next-line:no-console
-  snap.on('close', (code: number) => { console.log('Finished running snap with code ' + code); });
+  exec('yarn autotools-snap', (err, stdout, stderr) => {
+    if (err) {
+      // tslint:disable-next-line:no-console
+      console.error('Error in autotools-snap: ', err);
+      return;
+    }
+
+    process.stdout.write(stdout.toString());
+    process.stderr.write(stderr.toString());
+  });
 }

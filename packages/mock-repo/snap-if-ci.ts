@@ -1,7 +1,7 @@
 import isCI from 'is-ci';
 import {exec} from 'child_process';
 
-if (!isCI) {
+if (isCI) {
   exec('yarn autotools snap', (err, stdout, stderr) => {
     if (err) {
       // tslint:disable-next-line:no-console

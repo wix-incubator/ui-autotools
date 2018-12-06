@@ -1,12 +1,25 @@
-import fs from 'fs';
+import {directoryExists, mkdir} from 'proper-fs';
+import {promisify} from 'util';
+import rimraf from 'rimraf';
 import path from 'path';
 
-export function createAutotoolsFolder(projectPath: string): string {
-  const autotoolsFolder = path.join(projectPath, '.autotools', 'tmp');
+const rmdir = promisify(rimraf);
 
-  if (!fs.existsSync(autotoolsFolder)) {
-    fs.mkdirSync(autotoolsFolder);
+export interface ITempFolder {
+  path: string;
+  destroy: () => void;
+}
+
+export async function createTempFolder(projectPath: string): Promise<ITempFolder> {
+  const tempFolder = path.join(projectPath, '.autotools', 'tmp');
+
+  if (!await directoryExists(tempFolder)) {
+    await mkdir(tempFolder);
   }
 
-  return autotoolsFolder;
+  const destroy = async () => {
+    await rmdir(tempFolder);
+  };
+
+  return {path: tempFolder, destroy};
 }

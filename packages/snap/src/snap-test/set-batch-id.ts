@@ -1,29 +1,12 @@
-import {execSync} from 'child_process';
-
-const PULL_REQUEST_PARENT_HASH_INDEX = 2;
-const HEAD_HASH_INDEX = 0;
-
-function getHeadHash() {
-  return execSync('git rev-parse --verify HEAD').toString();
-}
-
-function getParentsHashArray() {
-  const headCommitHash = getHeadHash();
-  return execSync(`git rev-list --parents -n 1 ${headCommitHash}`).toString().split(' ');
-}
-
-function getPRHeadHash() {
-  const parentsHashArr = getParentsHashArray();
-  const isPullRequest = parentsHashArr.length === 3;
-  const parentHashIndex = isPullRequest ? PULL_REQUEST_PARENT_HASH_INDEX : HEAD_HASH_INDEX;
-  return parentsHashArr[parentHashIndex].trim();
-}
+import {getPRHeadHash} from '@ui-autotools/node-utils';
 
 export function setApplitoolsBatchId() {
   let batchId;
   try {
     batchId = getPRHeadHash();
   } catch (e) {
+    // Set batchID to the teamcity environment variable indicating the
+    // latest VCS revision included in the build for the root identified
     batchId = process.env.BUILD_VCS_NUMBER;
   }
 

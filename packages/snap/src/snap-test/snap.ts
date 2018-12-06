@@ -8,7 +8,7 @@ import {consoleLog} from '@ui-autotools/utils';
 import {parseSnapshotFilename} from '../generate-snapshots/filename-utils';
 import {IFileInfo} from '../generate-snapshots/build-base-files';
 import {setApplitoolsBatchId} from './set-batch-id';
-import {getBranchName} from './get-current-branch-name';
+import {getBranchName} from '@ui-autotools/node-utils';
 
 interface ITestResult {
   status: 'error' | 'new' | 'modified' | 'unmodified';

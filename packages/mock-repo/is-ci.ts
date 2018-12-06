@@ -1,7 +1,14 @@
 import isCI from 'is-ci';
+import {exec} from 'child_process';
 
 if (isCI) {
-  process.exit(0);
-} else {
-  process.exit(1);
+  exec('yarn autotools snap', (err, stdout, stderr) => {
+    if (err) {
+      // tslint:disable-next-line:no-console
+      console.error(err);
+    }
+
+    process.stdout.write(stdout);
+    process.stderr.write(stderr);
+  });
 }

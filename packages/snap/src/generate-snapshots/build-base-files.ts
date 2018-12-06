@@ -2,7 +2,7 @@ import path from 'path';
 import {generateSnapshotFilename, generateData} from './filename-utils';
 import {IRegistry} from '@ui-autotools/registry';
 import {consoleLog} from '@ui-autotools/utils';
-import {createAutotoolsFolder} from './create-autotools-folder';
+import {createTempFolder, ITempFolder} from './create-autotools-folder';
 import {writeDataToFs} from './write-data-to-fs';
 
 export interface IFileInfo {
@@ -48,11 +48,11 @@ export function generateIndexFileData(Registry: IRegistry, autotoolsFolder: stri
   return files;
 }
 
-export const buildBaseFiles = (projectPath: string, Registry: IRegistry): IFileInfo[] => {
+export const buildBaseFiles = async (projectPath: string, Registry: IRegistry): Promise<{files: IFileInfo[], baseFilesDir: ITempFolder}> => {
   consoleLog('Building base files...');
-  const autotoolsFolder = createAutotoolsFolder(projectPath);
-  const files = generateIndexFileData(Registry, autotoolsFolder);
+  const baseFilesDir = await createTempFolder(projectPath);
+  const files = generateIndexFileData(Registry, baseFilesDir.path);
   writeDataToFs(files);
 
-  return files;
+  return {files, baseFilesDir};
 };

@@ -1,29 +1,31 @@
 {
-  "name": "@ui-autotools/schema-views",
-  "version": "0.1.4",
+  "name": "@ui-autotools/node-utils",
+  "version": "1.0.0",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
-  "author": "Wix.com",
-  "license": "BSD-3-Clause",
   "scripts": {
     "clean": "rimraf ./cjs ./esm",
-    "build": "run-s build:cjs build:esm build:stylable",
+    "build": "run-p build:cjs build:esm",
+    "build:watch": "run-p build:cjs-watch build:esm-watch",
     "build:cjs": "tsc -p src --outDir cjs --module commonjs",
     "build:esm": "tsc -p src --outDir esm --module esnext",
-    "build:watch": "run-p build:cjs-watch build:esm-watch",
     "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
     "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext",
-    "build:stylable": "stc --srcDir src --outDir esm",
     "lint": "tslint -p src"
   },
-  "dependencies": {
-    "@stylable/core": "^0.1.15",
-    "@stylable/webpack-plugin": "^0.1.18",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3"
+  "files": [
+    "cjs",
+    "esm"
+  ],
+  "engines": {
+    "node": ">=8"
   },
+  "repository": "git@github.com:wix-incubator/ui-autotools.git",
+  "author": "Wix.com",
+  "license": "BSD-3-Clause",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "gitHead": "1348b53cf95dd7734c1080987903e54e4db40919"
 }

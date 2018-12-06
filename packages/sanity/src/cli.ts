@@ -3,11 +3,11 @@ import glob from 'glob';
 import { Command } from 'commander';
 import { hydrationTest } from './';
 import ssrTest from './ssr-test/mocha-wrapper';
-import { cliInit, defaultMetaGlob, getWebpackConfigPath } from '@ui-autotools/utils';
+import { cliInit, defaultMetaGlob, getWebpackConfigPath } from '@ui-autotools/node-utils';
 
-cliInit();
-const program = new Command();
 const projectPath = process.cwd();
+cliInit(projectPath);
+const program = new Command();
 const webpackConfigPath = getWebpackConfigPath(projectPath);
 
 program

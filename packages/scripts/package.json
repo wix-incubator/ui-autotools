@@ -27,11 +27,11 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "@ts-tools/node": "^0.7.2",
+    "@ui-autotools/node-utils": "^1.0.0",
     "@ui-autotools/a11y": "^2.1.0",
     "@ui-autotools/sanity": "^2.1.0",
     "@ui-autotools/showcase": "^2.0.2",
     "@ui-autotools/snap": "^2.1.0",
-    "@ui-autotools/utils": "^1.1.4",
     "commander": "^2.19.0",
     "glob": "^7.1.3"
   },
@@ -46,6 +46,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "gitHead": "1348b53cf95dd7734c1080987903e54e4db40919"
+  }
 }

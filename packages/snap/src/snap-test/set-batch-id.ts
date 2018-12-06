@@ -19,12 +19,13 @@ function getPRHeadHash() {
   return parentsHashArr[parentHashIndex].trim();
 }
 
-export function setApplitoolsId() {
+export function setApplitoolsBatchId() {
   let batchId;
   try {
     batchId = getPRHeadHash();
   } catch (e) {
     batchId = process.env.BUILD_VCS_NUMBER;
   }
-  process.env.APPLITOOLS_BATCH_ID = batchId;
+
+  return batchId;
 }

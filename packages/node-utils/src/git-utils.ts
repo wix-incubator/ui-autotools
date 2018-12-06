@@ -17,6 +17,7 @@ export function getParentsHashArray() {
   return execSync(`git rev-list --parents -n 1 ${headCommitHash}`).toString().split(' ');
 }
 
+// This code is not understood and is magical. Use or refactor with caution
 export function getPRHeadHash() {
   const parentsHashArr = getParentsHashArray();
   const isPullRequest = parentsHashArr.length === 3;

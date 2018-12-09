@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/snap",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -39,8 +39,8 @@
     "@applitools/visual-grid-client": "^5.5.3",
     "@stylable/webpack-extensions": "^0.1.19",
     "@stylable/webpack-plugin": "^0.1.18",
-    "@ui-autotools/node-utils": "^1.0.0",
-    "@ui-autotools/utils": "^1.1.4",
+    "@ui-autotools/node-utils": "^1.1.0",
+    "@ui-autotools/utils": "^1.2.0",
     "chalk": "^2.4.1",
     "commander": "^2.19.0",
     "create-temp-directory": "^1.0.1",

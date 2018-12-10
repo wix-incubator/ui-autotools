@@ -26,10 +26,11 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@stylable/node": "^0.1.18",
+    "chalk": "^2.4.1",
     "html-webpack-plugin": "4.0.0-beta.4",
     "koa": "^2.6.2",
-    "koa-webpack": "^5.1.1"
+    "koa-webpack": "^5.1.1",
+    "puppeteer": "^1.11.0"
   },
   "peerDependencies": {
     "webpack": ">=4"

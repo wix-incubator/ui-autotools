@@ -761,7 +761,7 @@
     find-config "^1.0.0"
     webpack-sources "^1.3.0"
 
-"@ts-tools/node@^0.7.2":
+"@ts-tools/node@^0.7.2", "@ts-tools/node@^0.7.4":
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/@ts-tools/node/-/node-0.7.4.tgz#cf0a3429656e6f293f4f60d5f1f97094e1610384"
   integrity sha512-ZR4zg/QYPqvkcn+6dVAMaVQNhCXloKV8+pDfzFcX/MbUz1XjENvm03s7id2V7phtbWME5pR+GM2dBvzkIEFaPg==
@@ -2951,7 +2951,7 @@ dot-prop@^4.1.1, dot-prop@^4.2.0:
   dependencies:
     is-obj "^1.0.0"
 
-dotenv@^6.1.0:
+dotenv@^6.1.0, dotenv@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-6.2.0.tgz#941c0410535d942c8becf28d3f357dbd9d476064"
   integrity sha512-HygQCKUBSFl8wKQZBSemMywRWcEDNidvNbjGVyZu3nbZ8qq9ubiPoGLMdRDpfSrpkkm9BXYFkpKxxFX38o/76w==
@@ -6317,7 +6317,7 @@ prop-types@^15.6.2:
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
 
-proper-fs@^1.0.1:
+proper-fs@^1.0.1, proper-fs@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/proper-fs/-/proper-fs-1.1.0.tgz#f8020f664839e7df264017b12bd98ef99cece076"
   integrity sha512-DUnqLCQgPSN4EOuqzLJgK7COuGnx8APtMEjkGAgBd/nwWAQDdIU9/2epvZ3bcHZJaPkZWB5Rs2dx4irCNMNSgg==

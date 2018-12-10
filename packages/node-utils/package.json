@@ -27,5 +27,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "1348b53cf95dd7734c1080987903e54e4db40919"
+  "dependencies": {
+    "@ts-tools/node": "^0.7.4",
+    "dotenv": "^6.2.0"
+  }
 }

@@ -5,5 +5,3 @@ export * from './console';
 export * from './get-project-name';
 export * from './http';
 export * from './raw-asset-webpack-plugin';
-export {compilerOptions} from './typescript/constants';
-export {createTsService} from './typescript/createMemoryTsService';

@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/snap",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",

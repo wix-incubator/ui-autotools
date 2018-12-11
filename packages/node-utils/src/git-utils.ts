@@ -1,10 +1,11 @@
 import {execSync} from 'child_process';
 
+const branchNameCommand = 'git rev-parse --abbrev-ref HEAD';
 const PULL_REQUEST_PARENT_HASH_INDEX = 2;
 const HEAD_HASH_INDEX = 0;
 
 export function getBranchName() {
-  return execSync('git rev-parse --abbrev-ref HEAD').toString();
+  return execSync(branchNameCommand).toString();
 }
 
 export function getHeadHash() {

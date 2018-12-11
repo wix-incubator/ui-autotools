@@ -7,6 +7,8 @@ import {JSDOM} from 'jsdom';
 import {consoleLog} from '@ui-autotools/utils';
 import {parseSnapshotFilename} from '../generate-snapshots/filename-utils';
 import {IFileInfo} from '../generate-snapshots/build-base-files';
+import {setApplitoolsBatchId} from './set-batch-id';
+import {getBranchName} from '@ui-autotools/node-utils';
 
 interface ITestResult {
   status: 'error' | 'new' | 'modified' | 'unmodified';
@@ -20,7 +22,9 @@ function getGridClientConfig(projectPath: string) {
     throw new Error('The project should have a package.json file with a "name" field.');
   }
 
-  const branchName = projectName + '/master';
+  const batchId = setApplitoolsBatchId();
+
+  const branchName = projectName + '/' + getBranchName();
   const viewportWidth = 1050;
   const viewportHeight = 1075;
 
@@ -28,6 +32,7 @@ function getGridClientConfig(projectPath: string) {
     appName: projectName,
     apiKey: process.env.APPLITOOLS_API_KEY || process.env.EYES_API_KEY,
     branchName,
+    batchId,
     batchName: projectName,
     browser: {
       name: 'chrome',

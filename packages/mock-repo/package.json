@@ -16,7 +16,7 @@
     "lint": "run-p lint:src lint:test",
     "lint:src": "tslint -p src",
     "lint:test": "tslint -p test",
-    "test": "mocha -r @ts-tools/node \"./test/node/**/*.node-spec.ts?(x)\" --watch-extensions ts,tsx && yarn sanity && yarn a11y && yarn snap-if-ci",
+    "test": "yarn snap-if-ci",
     "snap": "yarn autotools-snap",
     "snap-if-ci": "node -r @ts-tools/node ./snap-if-ci.ts",
     "a11y": "yarn autotools-a11y",

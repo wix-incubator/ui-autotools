@@ -19,11 +19,17 @@
   },
   "dependencies": {
     "@stylable/core": "^0.1.15",
-    "@stylable/webpack-plugin": "^0.1.18",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3"
+    "@stylable/webpack-plugin": "^0.1.18"
+  },
+  "peerDependencies": {
+    "react": "^16.6.3"
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "files": [
+    "src",
+    "cjs",
+    "esm"
+  ]
 }

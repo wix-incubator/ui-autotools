@@ -7,6 +7,7 @@ export interface ISchemaViewProps {
   schemaRegistry: SchemaRegistry;
   viewRegistry: SchemaViewRegistry;
   className?: string;
+  variant?: string;
 }
 
 export type SchemaView = React.ComponentType<ISchemaViewProps>;

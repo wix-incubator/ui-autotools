@@ -49,3 +49,6 @@ export const isInterface: SchemaPredicate = (schema) =>
 export const isSimpleType: SchemaPredicate = (schema) =>
   isAny(schema)     || isNull(schema)   || isUndefined(schema) ||
   isBoolean(schema) || isNumber(schema) || isString(schema);
+
+export const isModule: SchemaPredicate = (schema) =>
+  schema.$ref === 'common/module';

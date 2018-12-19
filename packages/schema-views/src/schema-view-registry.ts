@@ -2,16 +2,16 @@ import {Schema} from './schema';
 import {SchemaView} from './schema-view';
 import {SchemaPredicate} from './schema-predicates';
 
-interface IViewRegistration<TVariant extends string> {
+interface IViewRegistration {
   view: SchemaView;
   predicate: SchemaPredicate;
-  variant?: TVariant;
+  variant?: string;
 }
 
-export class SchemaViewRegistry<TVariant extends string> {
-  private views: Array<IViewRegistration<TVariant>> = [];
+export class SchemaViewRegistry {
+  private views: IViewRegistration[] = [];
 
-  public registerView(view: SchemaView, predicate: SchemaPredicate, variant?: TVariant): void {
+  public registerView(view: SchemaView, predicate: SchemaPredicate, variant?: string): void {
     this.views.unshift({view, predicate, variant});
   }
 

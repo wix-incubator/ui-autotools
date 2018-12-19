@@ -9,7 +9,7 @@ import style from './type.st.css';
 export const FunctionTypeView: React.FunctionComponent<ISchemaViewProps> = (props) => {
   const {schema} = props;
   const required = schema.requiredArguments || [];
-  const args = schema.arguments.map((arg: Schema, index:number) => {
+  const args = schema.arguments.map((arg: Schema, index: number) => {
     const optional = required.includes(arg.name) ? '' : '?';
     const argName = arg.name + optional;
     return [
@@ -38,12 +38,12 @@ export const FunctionTypeView: React.FunctionComponent<ISchemaViewProps> = (prop
         />
       )
     ]);
-  }  
+  }
   const commaSeparatedArgs = React.Children.toArray(intersperse(args, ', '));
   return (
     <div {...style('root', {category: 'function'}, props)}>
       ({commaSeparatedArgs}) => {
-        isVoid(schema.returns) ? 'void' : 
+        isVoid(schema.returns) ? 'void' :
           (<BaseView
             schemaRegistry={props.schemaRegistry}
             viewRegistry={props.viewRegistry}
@@ -51,4 +51,4 @@ export const FunctionTypeView: React.FunctionComponent<ISchemaViewProps> = (prop
           />)}
     </div>
   );
-}
+};

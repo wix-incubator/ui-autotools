@@ -2,7 +2,7 @@ import {SchemaViewRegistry} from './schema-view-registry';
 import * as predicates from './schema-predicates';
 import * as views from './views';
 
-const registry = new SchemaViewRegistry();
+const registry = new SchemaViewRegistry<'expanded'>();
 
 registry.registerView(views.FallbackTypeView, predicates.catchAll);
 registry.registerView(views.FunctionTypeView, predicates.isFunction);

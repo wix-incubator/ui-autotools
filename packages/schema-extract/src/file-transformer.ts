@@ -785,7 +785,7 @@ function serializeType(t: ts.Type, rootNode: ts.Node, env: IEnv, circularSet?: S
                 const arg = describeVariableDeclaration(pNode, env);
                 arg.schema.name = pName;
                 const tags = ts.getJSDocParameterTags(pNode);
-                const tag = (tags && tags.length) ? (tags.map((t) => t.comment)).join('') : '';
+                const tag = (tags && tags.length) ? (tags.map((pTag) => pTag.comment)).join('') : '';
                 if (tag) {
                     arg.schema.description = tag;
                 }

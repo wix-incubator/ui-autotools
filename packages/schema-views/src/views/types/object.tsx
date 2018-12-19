@@ -3,6 +3,7 @@ import {intersperse} from '../../utils';
 import {BaseView} from '../base';
 import {ISchemaViewProps} from '../../schema-view';
 import {isValidJsIdentifier} from '../../utils';
+import {Schema} from '../../schema';
 import style from './type.st.css';
 
 const renderObjectKey = (key: string) =>
@@ -12,9 +13,10 @@ export const ObjectTypeView: React.FunctionComponent<ISchemaViewProps> = (props)
   const {schema} = props;
 
   const required: string[] = schema.required || [];
+  const properties: Schema[] = schema.properties || [];
 
   const entries: React.ReactNode[] =
-    Object.entries(schema.properties).map(([propName, propSchema]) => {
+    Object.entries(properties).map(([propName, propSchema]) => {
       const optional = required.includes(propName) ? '' : '?';
       return (
         <React.Fragment key={propName}>

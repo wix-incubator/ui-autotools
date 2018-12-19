@@ -1,6 +1,6 @@
 import React from 'react';
-import {ISchemaViewProps} from '../schema-view';
-import { BaseView } from './base';
+import {ISchemaViewProps} from '../../schema-view';
+import { BaseView } from '../base';
 
 export const ModuleView: React.FunctionComponent<ISchemaViewProps> = (props) => {
   const definitions = {...props.schema.properties, ...props.schema.definitions};
@@ -11,6 +11,7 @@ export const ModuleView: React.FunctionComponent<ISchemaViewProps> = (props) => 
         schema={defSchema}
         schemaRegistry={props.schemaRegistry}
         viewRegistry={props.viewRegistry}
+        variant="expanded"
       />
     </div>
   ));

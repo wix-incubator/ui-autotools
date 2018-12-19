@@ -311,6 +311,39 @@ describe('schema-extract - functions', () => {
         expect(res).to.eql(expected);
     });
 
+    it('should support arrow functions', async () => {
+        const moduleId = 'functions';
+        const res = await transformTest(`
+        export const add = (x:number, y:number) => x+y;
+        `, moduleId);
+        const expected: ModuleSchema<'object'> = {
+            $schema: 'http://json-schema.org/draft-06/schema#',
+            $id: '/src/' + moduleId,
+            $ref: ModuleSchemaId,
+            properties: {
+                add: {
+                    $ref: FunctionSchemaId,
+                    arguments: [
+                        {
+                            type: 'number',
+                            name: 'x',
+                        },
+                        {
+                            type: 'number',
+                            name: 'y',
+                        }
+                    ],
+                    requiredArguments: ['x', 'y'],
+                    returns: {
+                        type: 'number'
+                    },
+                    initializer: '(x:number, y:number) => x+y'
+                },
+            },
+        };
+        expect(res).to.eql(expected);
+    });
+
     it('should support infered function return type (non primitive import)', async () => {
         const moduleId = 'infered_functions';
         const res = await transformTest(`

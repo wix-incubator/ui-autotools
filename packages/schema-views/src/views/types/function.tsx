@@ -12,11 +12,19 @@ export const FunctionTypeView: React.FunctionComponent<ISchemaViewProps> = (prop
   const args = schema.arguments.map((arg: Schema, index:number) => {
     const optional = required.includes(arg.name) ? '' : '?';
     const argName = arg.name + optional;
-    return <>{argName}: <BaseView
-      schemaRegistry={props.schemaRegistry}
-      viewRegistry={props.viewRegistry}
-      schema={arg}
-    /></>
+    return [
+      argName + ':',
+      (
+        <BaseView
+          schemaRegistry={props.schemaRegistry}
+          viewRegistry={props.viewRegistry}
+          schema={arg}
+        />
+      ),
+      arg.hasOwnProperty('default') ? ` = ${JSON.stringify(arg.default)}` : (
+        arg.hasOwnProperty('initializer') ? ` = ${arg.initializer}` : ''
+      )
+    ];
   });
   const restArg = schema.restArgument;
   if (restArg) {
@@ -31,7 +39,7 @@ export const FunctionTypeView: React.FunctionComponent<ISchemaViewProps> = (prop
       )
     ]);
   }  
-  const commaSeparatedArgs = intersperse(args, ', ');
+  const commaSeparatedArgs = React.Children.toArray(intersperse(args, ', '));
   return (
     <div {...style('root', {category: 'function'}, props)}>
       ({commaSeparatedArgs}) => {

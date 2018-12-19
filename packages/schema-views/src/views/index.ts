@@ -13,4 +13,5 @@ export {StringTypeView} from './types/string';
 export {UndefinedTypeView} from './types/undefined';
 export {UnionTypeView} from './types/union';
 
-export {ModuleView} from './module';
+export {ModuleView} from './expanded/module';
+export {InterfaceView} from './expanded/interface';

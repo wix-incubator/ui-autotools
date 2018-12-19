@@ -18,5 +18,6 @@ registry.registerView(views.NullTypeView, predicates.isNull);
 registry.registerView(views.AnyTypeView, predicates.isAny);
 
 registry.registerView(views.ModuleView, predicates.isModule);
+registry.registerView(views.InterfaceView, predicates.isInterface, 'expanded');
 
 export const defaultSchemaViewRegistry = registry;

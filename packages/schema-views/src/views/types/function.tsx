@@ -13,7 +13,7 @@ export const FunctionTypeView: React.FunctionComponent<ISchemaViewProps> = (prop
     const optional = required.includes(arg.name) ? '' : '?';
     const argName = arg.name + optional;
     return [
-      argName + ':',
+      argName + ': ',
       (
         <BaseView
           schemaRegistry={props.schemaRegistry}

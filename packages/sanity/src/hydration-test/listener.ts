@@ -6,7 +6,7 @@ export class Listener {
   public capture: boolean;
   public passive: boolean;
 
-  constructor(public type?: string, public handler?: () => void, options?: any) {
+  constructor(public type?: string, public handler?: EventListener, options?: any) {
     this.capture = Boolean(isObject(options) ? options.capture : options);
     this.passive = Boolean(isObject(options) ? options.passive : false);
   }

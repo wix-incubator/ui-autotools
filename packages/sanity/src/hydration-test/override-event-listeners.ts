@@ -14,12 +14,12 @@ export function attachEventListenerLogger(target: EventTarget): ILogger {
     target.removeEventListener = removeEventListener;
   };
 
-  target.addEventListener = (...args: any[]) => {
+  target.addEventListener = (...args: [string, EventListener]) => {
     addEventListener.apply(target, args);
     listeners.add(new Listener(...args));
   };
 
-  target.removeEventListener = (...args: any[]) => {
+  target.removeEventListener = (...args: [string, EventListener]) => {
     removeEventListener.apply(target, args);
     listeners.remove(new Listener(...args));
   };

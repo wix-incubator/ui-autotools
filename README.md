@@ -116,6 +116,13 @@ const meta = Registry.getComponentMetadata(nonEventListenerTestCompliant);
 meta.nonEventListenerTestCompliant = true;
 ```
 
+In some cases you may want to cancel our hydration tests (React is escaping style attributes and that may cause the test to fail). If you wish to skip this test, set the `nonHydrationTestCompliant` flag in the metadata to true.
+
+```ts
+const meta = Registry.getComponentMetadata(nonHydrationTestCompliant);
+meta.nonHydrationTestCompliant = true;
+```
+
 ## CLI Tools
 ### Universal Options
 

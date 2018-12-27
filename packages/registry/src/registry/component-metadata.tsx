@@ -8,6 +8,7 @@ export class ComponentMetadata<Props, State> implements IComponentMetadata<Props
   public nonReactStrictModeCompliant: boolean = false;
   public nonA11yCompliant: boolean = false;
   public nonEventListenerTestCompliant: boolean = false;
+  public nonHydrationTestCompliant: boolean = false;
   public path: string = '';
   public exportName: string = '';
   public baseStylePath: string = '';

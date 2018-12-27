@@ -97,14 +97,16 @@ myComponentMetadata.addStyle(theme1, {
 Components are assumed by default to be React Strict Mode compliant (meaning that they follow the guidelines described [here](https://reactjs.org/docs/strict-mode.html)). However, if your component is *not* React Strict Mode compliant, you can set a flag in metadata to disable rendering in strict mode, e.g.:
 
 ```ts
-const meta = Registry.getComponentMetadata(compWithUnsafeLifecycle);
+// MyComponent.meta.ts file
+const meta = Registry.getComponentMetadata(MyComponent);
 meta.nonReactStrictModeCompliant = true;
 ```
 
 Components are assumed by default to be [axe-core](https://github.com/dequelabs/axe-core) compliant. If your component is not axe-core compliant, set the `nonA11yCompliant` flag in the metadata to true, e.g:
 
 ```ts
-const meta = Registry.getComponentMetadata(nonAccessibleComp);
+// MyComponent.meta.ts file
+const meta = Registry.getComponentMetadata(MyComponent);
 meta.nonA11yCompliant = true;
 ```
 
@@ -112,8 +114,17 @@ meta.nonA11yCompliant = true;
 One of the tests that sanity runs checks that all events were removed after a component unmounts. If you wish to skip this test, set the `nonEventListenerTestCompliant` flag in the metadata to true.
 
 ```ts
-const meta = Registry.getComponentMetadata(nonEventListenerTestCompliant);
+// MyComponent.meta.ts file
+const meta = Registry.getComponentMetadata(MyComponent);
 meta.nonEventListenerTestCompliant = true;
+```
+
+In some cases you may want to cancel our hydration tests (React is escaping style attributes and that may cause the test to fail). If you wish to skip this test, set the `nonHydrationTestCompliant` flag in the metadata to true.
+
+```ts
+// MyComponent.meta.ts file
+const meta = Registry.getComponentMetadata(MyComponent);
+meta.nonHydrationTestCompliant = true;
 ```
 
 ## CLI Tools

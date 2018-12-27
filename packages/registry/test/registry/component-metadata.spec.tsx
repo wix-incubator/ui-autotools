@@ -71,5 +71,9 @@ describe('Component Metadata', () => {
     it('defaults to false for nonEventListenerTestCompliant', () => {
       expect(Registry.getComponentMetadata(TestComp).nonEventListenerTestCompliant).to.equal(false);
     });
+
+    it('defaults to false for nonHydrationTestCompliant', () => {
+      expect(Registry.getComponentMetadata(TestComp).nonHydrationTestCompliant).to.equal(false);
+    });
   });
 });

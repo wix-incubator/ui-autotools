@@ -20,6 +20,7 @@ export interface IComponentMetadata<Props, State> {
   nonReactStrictModeCompliant: boolean;
   nonA11yCompliant: boolean;
   nonEventListenerTestCompliant: boolean;
+  nonHydrationTestCompliant: boolean;
 }
 
 export interface IExportInfo {

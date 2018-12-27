@@ -4,7 +4,8 @@ import Registry, {getCompName} from '@ui-autotools/registry';
 import chai, {expect} from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import {hydrate} from 'react-dom';
+
+const hydrate = ReactDOM.hydrate || ReactDOM.render;
 
 chai.use(sinonChai);
 
@@ -30,7 +31,8 @@ export const hydrationTest = (): void => {
 
         if (!componentMetadata.nonHydrationTestCompliant) {
           componentMetadata.simulations.forEach((simulation) => {
-            it(`should hydrate component: "${getCompName(Comp)}" in strict mode, with props of simulation: "${simulation.title}" without errors`, () => {
+            const testMessage = `should ${ReactDOM.hydrate ? 'hydrate' : 'render'} component: "${getCompName(Comp)}"${componentMetadata.nonReactStrictModeCompliant ? '' : ' in strict mode'}, with props of simulation: "${simulation.title}" without errors`;
+            it(testMessage, () => {
               // Set root's HTML to the SSR component
               root.innerHTML = componentStrings[index];
               if (componentMetadata.nonReactStrictModeCompliant) {

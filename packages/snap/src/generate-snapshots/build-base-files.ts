@@ -37,7 +37,7 @@ export function generateIndexFileData(Registry: IRegistry, autotoolsFolder: stri
         } else {
           // We only want to render the base style if there are no other style variants
           const basename = generateSnapshotFilename(compName, simulationName, i);
-          const filepath = path.join(autotoolsFolder, basename, '.snapshot.ts');
+          const filepath = path.join(autotoolsFolder, basename + '.snapshot.ts');
           const data = generateData(compName, compPath);
           files.push({basename, filepath, data});
         }

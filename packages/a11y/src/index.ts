@@ -1,6 +1,6 @@
 import path from 'path';
 import puppeteer from 'puppeteer';
-import {WebpackConfigurator, serve, IServer, waitForPageError, consoleError} from '@ui-autotools/utils';
+import {WebpackConfigurator, serve, IServer, waitForPageError, consoleError, consoleLog} from '@ui-autotools/utils';
 import { IResult } from './browser/run';
 import axe from 'axe-core';
 import chalk from 'chalk';
@@ -45,6 +45,7 @@ function formatResults(results: IResult[], impact: axe.ImpactValue): string {
 export async function a11yTest(entry: string | string[], impact: axe.ImpactValue, webpackConfigPath: string) {
   let server: IServer | null = null;
   let browser: puppeteer.Browser | null = null;
+  consoleLog('Running a11y test...');
   try {
     server = await serve({webpackConfig: getWebpackConfig(entry, webpackConfigPath)});
     browser = await puppeteer.launch();
@@ -62,6 +63,7 @@ export async function a11yTest(entry: string | string[], impact: axe.ImpactValue
       process.exitCode = 1;
       consoleError(message);
     }
+    consoleLog('Done.');
   } catch (error) {
     consoleError(error.toString());
     process.exitCode = 1;

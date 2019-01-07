@@ -5,7 +5,7 @@ import React from 'react';
 import {HTMLSnapshotPlugin} from '@stylable/webpack-extensions';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {getCompName, IComponentMetadata, IRegistry} from '@ui-autotools/registry';
-import {consoleLog} from '@ui-autotools/utils';
+import {consoleLog, consoleWarn} from '@ui-autotools/utils';
 import {dedent} from './dedent';
 import {parseSnapshotFilename} from './filename-utils';
 import { IFileInfo } from './build-base-files';
@@ -114,11 +114,16 @@ async function buildSingleFile(fileName: string, filePath: string, directory: st
   const compiler = webpack(mergedConfig);
 
   return new Promise((resolve, reject) => {
-    compiler.run((err) => {
+    compiler.run((err, stats) => {
       if (err) {
         reject(err);
       } else {
         resolve();
+      }
+      if (stats.hasErrors()) {
+        throw new Error(stats.toString());
+      } else if (stats.hasWarnings()) {
+        consoleWarn(stats.toString());
       }
     });
   });

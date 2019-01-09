@@ -83,6 +83,10 @@ export class SchemaLinker {
                     cleanRef = refEntity.$ref.slice(refEntity.$ref.indexOf('#') + 1);
                     refEntity = importSchema.definitions[cleanRef];
                 }
+                if ((isInterfaceSchema(refEntity) || isClassSchema(refEntity)) && refEntity.extends) {
+                    refEntity.extends.$ref = refEntity.extends.$ref!.replace('#', `${ref.slice(0, poundIndex)}#`);
+                    refEntity = this.link(refEntity);
+                }
             }
         }
 

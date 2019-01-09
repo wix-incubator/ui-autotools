@@ -28,7 +28,7 @@ describe('schema-linker - imports', () => {
         expect(res).to.eql(expected);
     });
 
-    it('should work :)', async () => {
+    it('should link 3 levels of inherited interfaces when the two top interfaces are not in the main file', async () => {
         const fileName = 'index.ts';
         const res = await linkTest({
             [fileName]: `

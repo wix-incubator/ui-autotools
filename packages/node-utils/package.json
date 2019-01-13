@@ -28,8 +28,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@stylable/node": "^0.1.21",
-    "@ts-tools/node": "^0.8.2",
+    "@stylable/node": "^1.0.0",
+    "@ts-tools/node": "^0.8.3",
     "dotenv": "^6.2.0"
   }
 }

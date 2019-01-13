@@ -11,9 +11,9 @@
     "test": "mocha -r @ts-tools/node \"test/**/*.spec.ts?(x)\""
   },
   "dependencies": {
-    "@file-services/memory": "^0.4.2",
-    "@file-services/typescript": "^0.4.2",
-    "@stylable/schema-extract": "^0.1.6",
+    "@file-services/memory": "^0.4.5",
+    "@file-services/typescript": "^0.4.4",
+    "@stylable/schema-extract": "^1.0.0",
     "@ui-autotools/schema-extract": "^2.4.0",
     "@ui-autotools/schema-views": "^0.3.0",
     "monaco-editor": "^0.15.6",

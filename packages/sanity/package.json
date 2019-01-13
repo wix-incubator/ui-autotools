@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/sanity",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -36,8 +36,8 @@
     "autotools-sanity": "bin/cli.js"
   },
   "dependencies": {
-    "@ui-autotools/node-utils": "^1.4.0",
-    "@ui-autotools/utils": "^1.5.0",
+    "@ui-autotools/node-utils": "^1.4.1",
+    "@ui-autotools/utils": "^1.5.1",
     "chai": "^4.2.0",
     "commander": "^2.19.0",
     "glob": "^7.1.3",

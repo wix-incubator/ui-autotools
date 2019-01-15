@@ -98,6 +98,9 @@ export class SchemaLinker {
             return this.getRefEntity(refEntity.$ref, paramsMap);
         }
         refEntity.definedAt = refEntity.definedAt || '#' + cleanRef;
+
+        // There is something weird happening with interfaces and this is why we need !refEntity.genericParams
+        // We probably need to change something in linkInterface or move this logic there
         if ((isInterfaceSchema(refEntity) || isClassSchema(refEntity)) && refEntity.extends && !refEntity.genericParams) {
             refEntity = this.link(refEntity, paramsMap);
         }

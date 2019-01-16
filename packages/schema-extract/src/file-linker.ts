@@ -137,7 +137,11 @@ export class SchemaLinker {
                 throw new Error('Invalid intersection');
             }
             if (Object.keys(res).length === 0) {
-                res = option;
+                if (!option.$allOf) {
+                    res = option;
+                } else {
+                    res = this.handleIntersection(option.$allOf, paramsMap);
+                }
                 continue;
             }
             if (res.type && option.type && res.type !== option.type) {
@@ -145,6 +149,11 @@ export class SchemaLinker {
             }
             if ((isObjectSchema(option) || isInterfaceSchema(option)) && (isInterfaceSchema(res) || isObjectSchema(res))) {
                 res = this.mergeObjects(res, option, paramsMap);
+                continue;
+            }
+            if (option.$allOf) {
+                res = this.mergeObjects(res, this.handleIntersection(option.$allOf, paramsMap), paramsMap);
+                continue;
             }
         }
         return res;

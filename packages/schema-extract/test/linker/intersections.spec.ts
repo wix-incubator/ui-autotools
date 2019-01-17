@@ -162,4 +162,37 @@ describe('schema-linker - intersections', () => {
         };
         expect(res).to.eql(expected);
     });
+    it('should flatten intersections inside an intersection', async () => {
+        const fileName = 'index.ts';
+        const res = await linkTest({[fileName]: `
+        export interface I1 {
+            one:string;
+        };
+        export interface I2 {
+            two:string;
+        };
+        export type T1 = {three: number} & I1
+        export type A = T1;
+        export type B = A & I2;
+        `}, 'B', fileName);
+
+        const expected: Schema<'object'> = {
+            type: 'object',
+            properties: {
+                one: {
+                    definedAt: '#I1',
+                    type: 'string'
+                },
+                two: {
+                    definedAt: '#I2',
+                    type: 'string'
+                },
+                three: {
+                    type: 'number'
+                }
+            },
+            required: ['three', 'one', 'two']
+        };
+        expect(res).to.eql(expected);
+    });
 });

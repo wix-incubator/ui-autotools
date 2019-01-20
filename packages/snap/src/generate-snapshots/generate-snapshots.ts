@@ -137,9 +137,3 @@ export const generateSnapshots = async (projectDir: string, tempDirectory: strin
     await buildSingleFile(file.basename, file.filepath, tempDirectory, webpackConfig, Registry);
   }
 };
-
-export interface IFileInfo {
-  basename: string;
-  filepath: string;
-  data: string;
-}

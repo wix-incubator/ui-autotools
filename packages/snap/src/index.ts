@@ -1,5 +1,6 @@
 import {buildBaseFiles} from './generate-snapshots/build-base-files';
-import {generateSnapshots, generateSnapshots2} from './generate-snapshots/generate-snapshots';
+import {generateSnapshots} from './generate-snapshots/generate-snapshots';
+import {generateSnapshots2} from './generate-snapshots/bundle-snapshots';
 import {runEyes} from './snap-test/snap';
 import {createTempDirectory} from 'create-temp-directory';
 import {eyesKeyExists} from './snap-test/eyes-key-exists';

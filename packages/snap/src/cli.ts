@@ -1,6 +1,6 @@
 import glob from 'glob';
 import { Command } from 'commander';
-import { eyesTest2 } from './';
+import { eyesTest, eyesTest2 } from './';
 import { cliInit, defaultMetaGlob } from '@ui-autotools/node-utils';
 
 const projectPath = process.cwd();
@@ -11,12 +11,17 @@ program
   .description('compare components to the expected appearance using Applitools Eyes')
   .option('-f, --files [pattern]', 'metadata file pattern')
   .option('-s, --skip-on-missing-key [boolean]', 'if flag is set, skip tests when no EYES or APPLITOOLS API key present')
+  .option('-x --experiment [boolean]', 'POC')
   .action(async (options) => {
     const metaGlob: string = options.files || defaultMetaGlob;
     try {
       // This code is duplicated and used in sanity as well. We may want to find a way to share it
       glob.sync(metaGlob, { absolute: true, cwd: projectPath }).forEach(require);
-      await eyesTest2(projectPath, options.skipOnMissingKey);
+      if (options.experiment) {
+        await eyesTest2(projectPath, options.skipOnMissingKey);
+      } else {
+        await eyesTest(projectPath, options.skipOnMissingKey);
+      }
     } catch (error) {
       process.exitCode = 1;
       if (error) {

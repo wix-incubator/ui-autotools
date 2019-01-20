@@ -21,6 +21,8 @@ export interface IComponentMetadata<Props, State> {
   nonA11yCompliant: boolean;
   nonEventListenerTestCompliant: boolean;
   nonHydrationTestCompliant: boolean;
+  cssPath?: string;
+  compPath?: string;
 }
 
 export interface IExportInfo {

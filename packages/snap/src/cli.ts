@@ -1,6 +1,6 @@
 import glob from 'glob';
 import { Command } from 'commander';
-import { eyesTest } from './';
+import { eyesTest2 } from './';
 import { cliInit, defaultMetaGlob } from '@ui-autotools/node-utils';
 
 const projectPath = process.cwd();
@@ -16,7 +16,7 @@ program
     try {
       // This code is duplicated and used in sanity as well. We may want to find a way to share it
       glob.sync(metaGlob, { absolute: true, cwd: projectPath }).forEach(require);
-      await eyesTest(projectPath, options.skipOnMissingKey);
+      await eyesTest2(projectPath, options.skipOnMissingKey);
     } catch (error) {
       process.exitCode = 1;
       if (error) {

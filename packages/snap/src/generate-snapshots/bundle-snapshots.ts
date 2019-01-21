@@ -23,6 +23,7 @@ export const generateSnapshots2 = async (projectDir: string, tempDirectory: stri
                 for (let i = 0; i < simIndex; i++) {
                     const simulationName = componentMetadata.simulations[i].title;
                     const basename = generateSnapshotFilename(compName, simulationName, i);
+                    // This snapshot.snapshot.html seems like a bug but it's like that in the normal snap...?
                     const filepath = path.join(tempDirectory, basename + '.snapshot.snapshot.html');
                     const data = createHtml(projectDir, componentMetadata, componentMetadata.simulations[i].props);
                     files.push({ basename, filepath, data });

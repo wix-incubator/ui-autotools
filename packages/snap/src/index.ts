@@ -5,7 +5,7 @@ import {runEyes} from './snap-test/snap';
 import {createTempDirectory} from 'create-temp-directory';
 import {eyesKeyExists} from './snap-test/eyes-key-exists';
 import Registry from '@ui-autotools/registry';
-import { consoleLog } from '@ui-autotools/utils';
+import { consoleLog, consoleError } from '@ui-autotools/utils';
 
 export async function eyesTest(projectPath: string, skipOnMissingKey: boolean) {
   if (eyesKeyExists()) {
@@ -26,6 +26,10 @@ export async function eyesTest2(projectPath: string, skipOnMissingKey: boolean) 
   if (eyesKeyExists()) {
     const tmpDir = await createTempDirectory();
     const files = await generateSnapshots2(projectPath, tmpDir.path, Registry);
+    if (files.length === 0) {
+      // Maybe a better message
+      consoleError('No files were found.');
+    }
     await runEyes(projectPath, tmpDir.path, files);
     await tmpDir.remove();
   } else if (skipOnMissingKey) {

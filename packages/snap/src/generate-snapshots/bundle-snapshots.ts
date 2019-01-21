@@ -3,7 +3,7 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { generateSnapshotFilename } from './filename-utils';
 import { writeDataToFs } from './write-data-to-fs';
-import { consoleLog } from '@ui-autotools/utils';
+import { consoleLog, consoleWarn } from '@ui-autotools/utils';
 import { IFileInfo } from './build-base-files';
 import { IComponentMetadata, IRegistry } from '@ui-autotools/registry';
 
@@ -15,6 +15,11 @@ export const generateSnapshots2 = async (projectDir: string, tempDirectory: stri
         const compName = componentMetadata.exportName;
 
         if (compName) {
+            if (!componentMetadata.compPath) {
+                // Maybe we don't need to warn?
+                consoleWarn(`Component ${compName} has no path`);
+                return;
+            }
             for (let i = 0; i < simIndex; i++) {
                 const simulationName = componentMetadata.simulations[i].title;
                 const basename = generateSnapshotFilename(compName, simulationName, i);
@@ -31,7 +36,7 @@ export const generateSnapshots2 = async (projectDir: string, tempDirectory: stri
 
 const createHtml = (projectDir: string, compMetadata: IComponentMetadata<any, any>, props: any) => {
     if (!compMetadata.compPath) {
-        throw new Error(`Component ${compMetadata.exportName} has no path`);
+        throw new Error(`Cannot create html for ${compMetadata.exportName}. Missing component path`);
     }
     const comp = require(path.join(projectDir, compMetadata.compPath)).default;
     const cssLink = compMetadata.cssPath ? `<link rel="stylesheet" type="text/css" href="${path.join(projectDir, compMetadata.cssPath)}.css">` : '';

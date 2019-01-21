@@ -18,14 +18,15 @@ export const generateSnapshots2 = async (projectDir: string, tempDirectory: stri
             if (!componentMetadata.compPath) {
                 // Maybe we don't need to warn?
                 consoleWarn(`Component ${compName} has no path`);
-                return;
-            }
-            for (let i = 0; i < simIndex; i++) {
-                const simulationName = componentMetadata.simulations[i].title;
-                const basename = generateSnapshotFilename(compName, simulationName, i);
-                const filepath = path.join(tempDirectory, basename + '.snapshot.ts');
-                const data = createHtml(projectDir, componentMetadata, componentMetadata.simulations[i].props);
-                files.push({ basename, filepath, data });
+
+            } else {
+                for (let i = 0; i < simIndex; i++) {
+                    const simulationName = componentMetadata.simulations[i].title;
+                    const basename = generateSnapshotFilename(compName, simulationName, i);
+                    const filepath = path.join(tempDirectory, basename + '.snapshot.snapshot.html');
+                    const data = createHtml(projectDir, componentMetadata, componentMetadata.simulations[i].props);
+                    files.push({ basename, filepath, data });
+                }
             }
         }
     });

@@ -40,6 +40,8 @@ const createHtml = (projectDir: string, compMetadata: IComponentMetadata<any, an
     if (!compMetadata.compPath) {
         throw new Error(`Cannot create html for ${compMetadata.exportName}. Missing component path`);
     }
+    // We need to figure a way to handle but default or named exports. Maybe with export name?
+    // This is set to take default value since WSR uses default exports
     const comp = require(path.join(projectDir, compMetadata.compPath)).default;
     const cssLink = compMetadata.cssPath ? `<link rel="stylesheet" type="text/css" href="${path.join(projectDir, compMetadata.cssPath)}.css">` : '';
     const componentString = renderToStaticMarkup(React.createElement(comp, props));

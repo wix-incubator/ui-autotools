@@ -8,7 +8,7 @@ export function registerRequireHooks(projectPath: string) {
   if (fs.existsSync(requirePath)) {
     require(requirePath);
   } else {
-    require('@ts-tools/node');
+    require('@ts-tools/node/r');
     require('@stylable/node/register');
   }
 }

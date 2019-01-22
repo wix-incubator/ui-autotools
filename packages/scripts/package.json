@@ -13,7 +13,7 @@
     "lint": "run-p lint:src lint:test",
     "lint:src": "tslint -p src",
     "lint:test": "tslint -p test",
-    "test": "mocha -r @ts-tools/node \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
+    "test": "mocha -r @ts-tools/node/r \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
   },
   "files": [
     "cjs",
@@ -26,7 +26,7 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@ts-tools/node": "^0.8.3",
+    "@ts-tools/node": "^0.9.0",
     "@ui-autotools/a11y": "^2.5.1",
     "@ui-autotools/node-utils": "^1.4.1",
     "@ui-autotools/sanity": "^2.6.1",

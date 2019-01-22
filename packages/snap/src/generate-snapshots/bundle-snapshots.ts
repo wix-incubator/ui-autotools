@@ -7,9 +7,9 @@ import { consoleLog, consoleWarn } from '@ui-autotools/utils';
 import { IFileInfo } from './build-base-files';
 import { IComponentMetadata, IRegistry } from '@ui-autotools/registry';
 
-export const generateSnapshots2 = async (projectDir: string, tempDirectory: string, Registry: IRegistry) => {
+export const generateSnapshotsFromBundle = async (projectDir: string, tempDirectory: string, Registry: IRegistry) => {
     const files: IFileInfo[] = [];
-    consoleLog('Generating snapshots...');
+    consoleLog('Generating snapshots from bundle...');
     Registry.metadata.components.forEach((componentMetadata) => {
         const simIndex = componentMetadata.simulations.length;
         const compName = componentMetadata.exportName;
@@ -26,7 +26,8 @@ export const generateSnapshots2 = async (projectDir: string, tempDirectory: stri
                     // This snapshot.snapshot.html seems like a bug but it's like that in the normal snap...?
                     const filepath = path.join(tempDirectory, basename + '.snapshot.snapshot.html');
                     const data = createHtml(projectDir, componentMetadata, componentMetadata.simulations[i].props);
-                    files.push({ basename, filepath, data });
+                    const cssPath = componentMetadata.cssPath ? path.join(projectDir, componentMetadata.cssPath) : undefined;
+                    files.push({ basename, filepath, data, cssPath });
                 }
             }
         }
@@ -43,7 +44,7 @@ const createHtml = (projectDir: string, compMetadata: IComponentMetadata<any, an
     // We need to figure a way to handle but default or named exports. Maybe with export name?
     // This is set to take default value since WSR uses default exports
     const comp = require(path.join(projectDir, compMetadata.compPath)).default;
-    const cssLink = compMetadata.cssPath ? `<link rel="stylesheet" type="text/css" href="${path.join(projectDir, compMetadata.cssPath)}.css">` : '';
+    const cssLink = compMetadata.cssPath ? `<link rel="stylesheet" type="text/css" href="${path.join(projectDir, compMetadata.cssPath)}">` : '';
     const componentString = renderToStaticMarkup(React.createElement(comp, props));
 
     return `<!DOCTYPE html>

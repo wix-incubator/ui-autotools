@@ -9,6 +9,7 @@ export interface IFileInfo {
   basename: string;
   filepath: string;
   data: string;
+  cssPath?: string;
 }
 
 const stylePathPrefix = '../../'; // We're two folders deep in .autotools

@@ -1,6 +1,6 @@
 import {buildBaseFiles} from './generate-snapshots/build-base-files';
 import {generateSnapshots} from './generate-snapshots/generate-snapshots';
-import {generateSnapshots2} from './generate-snapshots/bundle-snapshots';
+import {generateSnapshotsFromBundle} from './generate-snapshots/bundle-snapshots';
 import {runEyes} from './snap-test/snap';
 import {createTempDirectory} from 'create-temp-directory';
 import {eyesKeyExists} from './snap-test/eyes-key-exists';
@@ -22,10 +22,10 @@ export async function eyesTest(projectPath: string, skipOnMissingKey: boolean) {
   }
 }
 
-export async function eyesTest2(projectPath: string, skipOnMissingKey: boolean) {
+export async function eyesTestFromBundle(projectPath: string, skipOnMissingKey: boolean) {
   if (eyesKeyExists()) {
     const tmpDir = await createTempDirectory();
-    const files = await generateSnapshots2(projectPath, tmpDir.path, Registry);
+    const files = await generateSnapshotsFromBundle(projectPath, tmpDir.path, Registry);
     if (files.length === 0) {
       // Maybe a better message
       consoleError('No files were found.');

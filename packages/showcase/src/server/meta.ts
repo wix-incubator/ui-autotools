@@ -1,4 +1,4 @@
-import '@ts-tools/node';
+import '@ts-tools/node/r';
 import React from 'react';
 import path from 'path';
 import glob from 'glob';

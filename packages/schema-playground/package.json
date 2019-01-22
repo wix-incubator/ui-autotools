@@ -8,12 +8,12 @@
     "build": "webpack --progress --mode production --devtool false",
     "start": "webpack-dev-server --progress --open",
     "start:server": "node server.js",
-    "test": "mocha -r @ts-tools/node \"test/**/*.spec.ts?(x)\""
+    "test": "mocha -r @ts-tools/node/r \"test/**/*.spec.ts?(x)\""
   },
   "dependencies": {
     "@file-services/memory": "^0.4.5",
     "@file-services/typescript": "^0.4.4",
-    "@stylable/schema-extract": "^1.0.0",
+    "@stylable/schema-extract": "^1.0.2",
     "@ui-autotools/schema-extract": "^2.4.1",
     "@ui-autotools/schema-views": "^0.3.1",
     "monaco-editor": "^0.15.6",

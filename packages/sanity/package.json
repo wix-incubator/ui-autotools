@@ -15,7 +15,7 @@
     "lint": "run-p lint:src lint:test",
     "lint:src": "tslint -p src",
     "lint:test": "tslint -p test",
-    "test": "mocha -r @ts-tools/node \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
+    "test": "mocha -r @ts-tools/node/r \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
   },
   "files": [
     "bin",
@@ -41,9 +41,9 @@
     "chai": "^4.2.0",
     "commander": "^2.19.0",
     "glob": "^7.1.3",
-    "sinon": "^7.2.2",
+    "sinon": "^7.2.3",
     "sinon-chai": "^3.3.0",
-    "webpack": "^4.28.4"
+    "webpack": "^4.29.0"
   },
   "peerDependencies": {
     "@ui-autotools/registry": ">=3.0.0",

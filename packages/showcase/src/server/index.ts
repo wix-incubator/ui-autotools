@@ -1,4 +1,4 @@
-import '@ts-tools/node';
+import '@ts-tools/node/r';
 import path from 'path';
 import {promisify} from 'util';
 import glob from 'glob';

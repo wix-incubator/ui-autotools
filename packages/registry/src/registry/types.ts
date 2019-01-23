@@ -6,6 +6,11 @@ export interface IRegistry<AssetMap = any> {
   clear: () => void;
 }
 
+export interface ICompiledComponent {
+  cssPath?: string;
+  compPath: string;
+}
+
 export interface IComponentMetadata<Props, State> {
   component: ComponentType<Props> | ComponentClass<Props, State>;
   exportedFrom: (compInfo: IExportInfo) => void;
@@ -21,8 +26,7 @@ export interface IComponentMetadata<Props, State> {
   nonA11yCompliant: boolean;
   nonEventListenerTestCompliant: boolean;
   nonHydrationTestCompliant: boolean;
-  cssPath?: string;
-  compPath?: string;
+  compiledComponent?: ICompiledComponent;
 }
 
 export interface IExportInfo {

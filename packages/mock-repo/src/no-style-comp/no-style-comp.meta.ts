@@ -9,5 +9,5 @@ metadata.addSim({
     }
 });
 
+metadata.compiledComponent = { compPath: '/cjs/no-style-comp/no-style-comp'};
 metadata.exportName = 'NoStyleComp';
-metadata.compPath = '/cjs/no-style-comp/no-style-comp';

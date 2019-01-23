@@ -15,7 +15,8 @@ export const generateSnapshotsFromBundle = async (projectDir: string, tempDirect
         const compName = componentMetadata.exportName;
 
         if (compName) {
-            if (!componentMetadata.compPath) {
+            const compiledComp = componentMetadata.compiledComponent;
+            if (!compiledComp || !compiledComp.compPath) {
                 // Maybe we don't need to warn?
                 consoleWarn(`Component ${compName} has no path`);
 
@@ -26,7 +27,7 @@ export const generateSnapshotsFromBundle = async (projectDir: string, tempDirect
                     // This snapshot.snapshot.html seems like a bug but it's like that in the normal snap...?
                     const filepath = path.join(tempDirectory, basename + '.snapshot.snapshot.html');
                     const data = createHtml(projectDir, componentMetadata, componentMetadata.simulations[i].props);
-                    const cssPath = componentMetadata.cssPath ? path.join(projectDir, componentMetadata.cssPath) : undefined;
+                    const cssPath = compiledComp.cssPath ? path.join(projectDir, compiledComp.cssPath) : undefined;
                     files.push({ basename, filepath, data, cssPath });
                 }
             }
@@ -38,13 +39,14 @@ export const generateSnapshotsFromBundle = async (projectDir: string, tempDirect
 };
 
 const createHtml = (projectDir: string, compMetadata: IComponentMetadata<any, any>, props: any) => {
-    if (!compMetadata.compPath) {
+    const compiledComp = compMetadata.compiledComponent!;
+    if (!compiledComp.compPath) {
         throw new Error(`Cannot create html for ${compMetadata.exportName}. Missing component path`);
     }
     // We need to figure a way to handle but default or named exports. Maybe with export name?
     // This is set to take default value since WSR uses default exports
-    const comp = require(path.join(projectDir, compMetadata.compPath)).default;
-    const cssLink = compMetadata.cssPath ? `<link rel="stylesheet" type="text/css" href="${path.join(projectDir, compMetadata.cssPath)}">` : '';
+    const comp = require(path.join(projectDir, compiledComp.compPath)).default;
+    const cssLink = compiledComp.cssPath ? `<link rel="stylesheet" type="text/css" href="${path.join(projectDir, compiledComp.cssPath)}">` : '';
     const componentString = renderToStaticMarkup(React.createElement(comp, props));
 
     return `<!DOCTYPE html>

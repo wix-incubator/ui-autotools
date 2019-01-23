@@ -10,5 +10,4 @@ metadata.addSim({
 });
 
 metadata.exportName = 'CssComp';
-metadata.compPath = '/cjs/css-comp/css-comp';
-metadata.cssPath = '/src/css-comp/css-comp.css';
+metadata.compiledComponent = { compPath: '/cjs/css-comp/css-comp', cssPath: '/src/css-comp/css-comp.css'};

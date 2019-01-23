@@ -9,6 +9,7 @@ export interface IFileInfo {
   basename: string;
   filepath: string;
   data: string;
+  cssPath?: string;
 }
 
 const stylePathPrefix = '../../'; // We're two folders deep in .autotools
@@ -20,10 +21,14 @@ export function generateIndexFileData(Registry: IRegistry, autotoolsFolder: stri
   Registry.metadata.components.forEach((componentMetadata) => {
     const simIndex = componentMetadata.simulations.length;
     const styles = componentMetadata.styles;
-    const compPath =  path.join(compPathPrefix, componentMetadata.path);
+
+    // See below comment
+    const compPath =  componentMetadata.path ? path.join(compPathPrefix, componentMetadata.path) : '';
     const compName = componentMetadata.exportName;
 
-    if (compName) {
+    // If a comp doesn't have a path but has an exportName everything crashes
+    // for now I added this but we need a real solution. Probably.
+    if (compName && compPath) {
       for (let i = 0; i < simIndex; i++) {
         const simulationName = componentMetadata.simulations[i].title;
         if (styles.size) {

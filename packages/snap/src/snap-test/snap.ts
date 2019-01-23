@@ -46,11 +46,25 @@ interface IResource {
 function getStaticResources(cssFiles: IFileInfo[], resourceDir: string): {[url: string]: IResource} {
   const resources: {[url: string]: IResource} = {};
   for (const cssFile of cssFiles) {
-    resources[cssFile.basename] = {
-      url: cssFile.basename + '.css',
-      type: 'text/css',
-      value: fs.readFileSync(path.join(resourceDir, cssFile.basename + '.css'))
-    };
+    if (cssFile.cssPath) {
+      if (fs.existsSync(cssFile.cssPath)) {
+        resources[cssFile.basename] = {
+          url: cssFile.cssPath,
+          type: 'text/css',
+          value: fs.readFileSync(cssFile.cssPath)
+        };
+      }
+    } else {
+      const fileUrl = cssFile.basename + '.css';
+      const filePath = path.join(resourceDir, fileUrl);
+      if (fs.existsSync(filePath)) {
+        resources[cssFile.basename] = {
+          url: fileUrl,
+          type: 'text/css',
+          value: fs.readFileSync(filePath)
+        };
+      }
+    }
   }
   return resources;
 }
@@ -106,7 +120,7 @@ function getTestResult(testResult: Promise<any>): Promise<ITestResult> {
   );
 }
 
-async function runTest(gridClient: any, gridClientConfig: any, testName: string, html: string, resources: {[url: string]: IResource}) {
+async function runTest(gridClient: any, gridClientConfig: any, testName: string, html: string, resources?: {[url: string]: IResource}) {
   const dom = new JSDOM(html).window.document;
 
   const {checkWindow, close} = await gridClient.openEyes({

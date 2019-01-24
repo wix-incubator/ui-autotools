@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/showcase",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -27,14 +27,14 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "@ui-autotools/registry": "^3.2.0"
+    "@ui-autotools/registry": "^3.3.0"
   },
   "dependencies": {
     "@stylable/core": "^1.0.2",
     "@stylable/webpack-plugin": "^1.0.5",
     "@ts-tools/node": "^0.9.0",
     "@ts-tools/webpack-loader": "^0.8.4",
-    "@ui-autotools/schema-extract": "^2.4.1",
+    "@ui-autotools/schema-extract": "^2.5.0",
     "@ui-autotools/utils": "^1.5.1",
     "chalk": "^2.4.2",
     "glob": "^7.1.3",

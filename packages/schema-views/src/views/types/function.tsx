@@ -8,23 +8,12 @@ import style from './type.st.css';
 
 export const FunctionTypeView: React.FunctionComponent<ISchemaViewProps> = (props) => {
   const {schema} = props;
-  const restArg = schema.restArgument;
   const required = schema.requiredArguments || [];
-  const returnTypeJsx = isVoid(schema.returns) ?
-    'void' :
-    (
-      <BaseView
-        schemaRegistry={props.schemaRegistry}
-        viewRegistry={props.viewRegistry}
-        schema={schema.returns}
-      />
-    );
-
-  const args = schema.arguments.map((arg: Schema) => {
+  const args = schema.arguments.map((arg: Schema, index: number) => {
     const optional = required.includes(arg.name) ? '' : '?';
-    const defaultValue = arg.default;
+    const argName = arg.name + optional;
     return [
-      arg.name + optional + ': ',
+      argName + ': ',
       (
         <BaseView
           schemaRegistry={props.schemaRegistry}
@@ -32,10 +21,12 @@ export const FunctionTypeView: React.FunctionComponent<ISchemaViewProps> = (prop
           schema={arg}
         />
       ),
-      defaultValue ? ` = ${defaultValue}` : ''
+      arg.hasOwnProperty('default') ? ` = ${JSON.stringify(arg.default)}` : (
+        arg.hasOwnProperty('initializer') ? ` = ${arg.initializer}` : ''
+      )
     ];
   });
-
+  const restArg = schema.restArgument;
   if (restArg) {
     args.push([
       `...${restArg.name}: `,
@@ -48,12 +39,16 @@ export const FunctionTypeView: React.FunctionComponent<ISchemaViewProps> = (prop
       )
     ]);
   }
-
   const commaSeparatedArgs = React.Children.toArray(intersperse(args, ', '));
-
   return (
     <div {...style('root', {category: 'function'}, props)}>
-      ({commaSeparatedArgs}) => {returnTypeJsx}
+      ({commaSeparatedArgs}) => {
+        isVoid(schema.returns) ? 'void' :
+          (<BaseView
+            schemaRegistry={props.schemaRegistry}
+            viewRegistry={props.viewRegistry}
+            schema={schema.returns}
+          />)}
     </div>
   );
 };

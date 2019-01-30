@@ -41,9 +41,10 @@ export function generateIndexFileData(Registry: IRegistry, autotoolsFolder: stri
           });
         } else {
           // We only want to render the base style if there are no other style variants
+          const stylePath = path.join(stylePathPrefix, componentMetadata.baseStylePath);
           const basename = generateSnapshotFilename(compName, simulationName, i);
           const filepath = path.join(autotoolsFolder, basename + '.snapshot.ts');
-          const data = generateData(compName, compPath);
+          const data = generateData(compName, compPath, stylePath);
           files.push({basename, filepath, data});
         }
       }

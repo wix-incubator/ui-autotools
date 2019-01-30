@@ -9,7 +9,7 @@ import {
   ModuleSchema as PartialModuleSchema,
   IObjectFields,
   Schema
-} from '@ui-autotools/schema-extract';
+} from '@wix/typescript-schema-extract';
 
 export type ModuleSchema = PartialModuleSchema & IObjectFields;
 

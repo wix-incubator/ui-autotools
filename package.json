@@ -10,8 +10,7 @@
     "build:watch": "lerna run --parallel build:watch",
     "pretest": "run-s lint build",
     "lint": "lerna run lint --stream --parallel && node -r @ts-tools/node/r scripts/json-linter",
-    "test": "lerna run test --stream",
-    "start": "yarn workspace @ui-autotools/schema-extract start"
+    "test": "lerna run test --stream"
   },
   "devDependencies": {
     "@stylable/cli": "^1.2.5",

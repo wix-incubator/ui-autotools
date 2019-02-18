@@ -15,7 +15,7 @@ const Registry: IRegistry = {
     }
 
     if (!isValidComponentName(newCompName)) {
-      throw new Error('Component names must be alphanumeric.');
+      throw new Error('Component names (displayName | name) are allowed to have only alphanumeric characters or dots.');
     }
 
     if (!this.metadata.components.has(comp)) {

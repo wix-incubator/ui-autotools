@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/a11y",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
   "scripts": {
@@ -26,7 +26,7 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "@ui-autotools/registry": "^3.3.0"
+    "@ui-autotools/registry": "^3.4.0"
   },
   "bin": {
     "autotools-a11y": "bin/cli.js"

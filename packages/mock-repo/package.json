@@ -27,7 +27,7 @@
     "@ui-autotools/registry": "^3.4.0",
     "@ui-autotools/sanity": "^2.8.0",
     "@ui-autotools/snap": "^2.8.0",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0"
+    "react": "^16.8.2",
+    "react-dom": "^16.8.2"
   }
 }

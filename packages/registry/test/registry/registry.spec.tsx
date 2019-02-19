@@ -21,6 +21,29 @@ describe('Registry', () => {
       expect(mySecondCompMetadata).to.equal(myCompMetadata);
     });
 
+    describe('comp id', () => {
+      it('throws if component has no resolved id and does not register the component', () => {
+        expect(() => Registry.getComponentMetadata(() => <h1>Hey I have no name </h1>)).to.throw();
+        expect(Registry.metadata.components.size).to.equal(0);
+      });
+
+      it('throws if a component has an id which already exists', () => {
+        const CompWithId = () => {
+          return <h1>Hey person</h1>;
+        };
+        CompWithId.displayName = 'CompWithId';
+
+        const CompWithSameId = () => {
+          return <h1>Hey person</h1>;
+        };
+        CompWithSameId.displayName = 'CompWithId';
+
+        Registry.getComponentMetadata(CompWithId);
+
+        expect(() => Registry.getComponentMetadata(CompWithSameId)).to.throw();
+      });
+    });
+
     it('throws if component does not have a "name" or a "displayName" property and does not register the component', () => {
       expect(() => Registry.getComponentMetadata(() => <h1>Hey I have no name </h1>)).to.throw();
       expect(Registry.metadata.components.size).to.equal(0);

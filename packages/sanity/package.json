@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/sanity",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -30,7 +30,7 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "@ui-autotools/registry": "^3.3.0"
+    "@ui-autotools/registry": "^3.4.0"
   },
   "bin": {
     "autotools-sanity": "bin/cli.js"
@@ -43,7 +43,7 @@
     "glob": "^7.1.3",
     "sinon": "^7.2.3",
     "sinon-chai": "^3.3.0",
-    "webpack": "^4.29.0"
+    "webpack": "^4.29.5"
   },
   "peerDependencies": {
     "@ui-autotools/registry": ">=3.0.0",

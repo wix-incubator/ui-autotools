@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import {filterLogicModule} from '../src/generate-snapshots/generate-snapshots';
+import {filterLogicModule} from '../src/plugins/stylable-plugin/generate-snapshots';
 
 const snapshot = 'thing.snapshot.ts';
 const mockModule = {

@@ -28,5 +28,11 @@ describe('Verification Methods', () => {
 
       expect(isValidComponentName(badString)).to.equal(false);
     });
+
+    it('should return valid for a name with a dot', () => {
+      const validString = 'Shamefully.Named';
+
+      expect(isValidComponentName(validString)).to.equal(true);
+    });
   });
 });

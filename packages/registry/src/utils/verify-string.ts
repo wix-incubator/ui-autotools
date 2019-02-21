@@ -5,7 +5,7 @@ export function isValidSimulationTitle(stringToVerify: string): boolean {
 }
 
 export function isValidComponentName(stringToVerify: string): boolean {
-  const verificationExpression =  /^[a-zA-Z]+$/; // Match only letters
+  const verificationExpression =  /^[a-zA-Z\.]+$/; // Match only letters & dot
 
   return verificationExpression.test(stringToVerify);
 }

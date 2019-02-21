@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IComponentMetadata, ISimulation, IStyleMetadata, IExportInfo} from './types';
+import {IComponentMetadata, ISimulation, IStyleMetadata, IExportInfo, IStaticResource} from './types';
 import {isValidSimulationTitle, getCompWithState} from '../utils';
 
 export class ComponentMetadata<Props, State> implements IComponentMetadata<Props, State> {
@@ -9,9 +9,9 @@ export class ComponentMetadata<Props, State> implements IComponentMetadata<Props
   public nonA11yCompliant: boolean = false;
   public nonEventListenerTestCompliant: boolean = false;
   public nonHydrationTestCompliant: boolean = false;
-  public path: string = '';
-  public exportName: string = '';
-  public baseStylePath: string = '';
+  public exportInfo: IExportInfo | null = null;
+  public staticResources: IStaticResource[] = [];
+  public customFields: {[key: string]: any} = {};
 
   public constructor(public component: React.ComponentType<Props>) {}
 
@@ -41,10 +41,7 @@ export class ComponentMetadata<Props, State> implements IComponentMetadata<Props
     }
   }
 
-  public exportedFrom(compInfo: IExportInfo) {
-    const {path, exportName, baseStylePath} = compInfo;
-    this.path = path;
-    this.exportName = exportName;
-    this.baseStylePath = baseStylePath;
+  public addCustomField(key: string, field: any) {
+    this.customFields[key] = field;
   }
 }

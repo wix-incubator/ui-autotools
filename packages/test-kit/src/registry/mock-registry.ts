@@ -41,11 +41,11 @@ const mockData: IMockData = {
   ]
 };
 
-mockMetadata.exportedFrom({
+mockMetadata.exportInfo = {
   baseStylePath: 'src/registry/fixtures/base-style.st.css',
   exportName: 'MockComp',
   path: 'src/registry/fixtures/mock-comp'
-});
+};
 
 mockMetadata.addSim({
   title: 'mock simulation',

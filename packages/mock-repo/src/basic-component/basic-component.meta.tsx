@@ -4,11 +4,11 @@ import {BasicComponent} from './basic-component';
 
 const metadata = Registry.getComponentMetadata(BasicComponent);
 
-metadata.exportedFrom({
+metadata.exportInfo = {
   path: 'src/basic-component/basic-component',
   exportName: 'BasicComponent',
   baseStylePath: 'src/basic-component/basic-component.st.css'
-});
+};
 
 metadata.addSim({
   title: 'firstSim',

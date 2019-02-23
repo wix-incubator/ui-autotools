@@ -4,52 +4,34 @@ import webpack from 'webpack';
 import React from 'react';
 import {HTMLSnapshotPlugin} from '@stylable/webpack-extensions';
 import {renderToStaticMarkup} from 'react-dom/server';
-import {getCompName, IComponentMetadata, IRegistry} from '@ui-autotools/registry';
-import {consoleLog, consoleWarn} from '@ui-autotools/utils';
-import {dedent} from './dedent';
-import {parseSnapshotFilename} from './filename-utils';
-import { IFileInfo } from './build-base-files';
+import {consoleWarn} from '@ui-autotools/utils';
+import { ISimSnapInfo, createHtml } from '../..';
 
-function findComponentByName(name: string, Registry: IRegistry): IComponentMetadata<any, any> | void {
-    // We only have to do this because we currently map the component definitions to their metadata,
-    // not the names. So we have no way to get component metadata by name. And at this point in the build
-    // process, the component definition returned by webpack has been modified from the original, so we can't
-    // get the metadata with it
-  for (const component of Registry.metadata.components) {
-    const metadata = component[1];
-    if (getCompName(metadata.component) === name) {
-      return metadata;
-    }
-  }
+export interface IFileInfo {
+  basename: string;
+  filepath: string;
 }
 
-export function render(fileName: string, Registry: IRegistry, compiledFile: any, sourceFile: any) {
-  const compMetadata = findComponentByName(compiledFile.default.name, Registry);
+export function render(fileName: string, snapInfo: ISimSnapInfo, returnHtml: (html: string) => void, compiledFile: any, _sourceFile: any) {
+  const compMetadata = snapInfo.componentMetadata;
 
   if (!compMetadata) {
     throw new Error(`Could not find component metadata for ${compiledFile.default.name}`);
   }
 
-  const {simIndex} = parseSnapshotFilename(sourceFile.id);
-  const Comp = compMetadata.simulationToJSX(compMetadata.simulations[simIndex]);
+  if (!compMetadata.exportInfo) {
+    throw new Error(`Cannot generate snapshot for "${compiledFile.default.name}" without exportInfo in its metadata.`);
+  }
+
+  const Comp = compMetadata.simulationToJSX(snapInfo.simulation);
   const styledElement = React.cloneElement(Comp, {className: compiledFile.default.style.root});
   const cssLink = `<link rel="stylesheet" type="text/css" href="${fileName}.css">`;
   const componentString = renderToStaticMarkup(styledElement);
 
-  const template = `<!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>${compMetadata.exportName}</title>
-    ${cssLink}
-  </head>
-  <body>
-    ${componentString}
-  </body>
-  </html>`;
-  return dedent(template);
+  const html = createHtml(componentString, [cssLink], compMetadata.exportInfo.exportName);
+
+  returnHtml(html);
+  return ''; // Must return a string, but we don't actually use the HTML snapshot file in the end
 }
 
 /**
@@ -85,7 +67,7 @@ export function filterLogicModule(stylableModule: any) {
   return views[0];
 }
 
-async function buildSingleFile(fileName: string, filePath: string, directory: string, config: any, Registry: IRegistry) {
+async function buildSingleFile(fileName: string, filePath: string, directory: string, config: any, snapInfo: ISimSnapInfo, returnHtml: (html: string) => void) {
   const snapshotConfig = {
     entry: {
       [fileName]: filePath
@@ -103,7 +85,7 @@ async function buildSingleFile(fileName: string, filePath: string, directory: st
         filename: '[name].css'
       }),
       new HTMLSnapshotPlugin({
-        render: render.bind(null, fileName, Registry),
+        render: render.bind(null, fileName, snapInfo, returnHtml),
         getLogicModule: filterLogicModule
     })
     ]
@@ -120,20 +102,19 @@ async function buildSingleFile(fileName: string, filePath: string, directory: st
       } else {
         resolve();
       }
-      if (stats.hasErrors()) {
+      if (stats && stats.hasErrors()) {
         throw new Error(stats.toString());
-      } else if (stats.hasWarnings()) {
+      } else if (stats && stats.hasWarnings()) {
         consoleWarn(stats.toString());
       }
     });
   });
 }
 
-export const generateSnapshots = async (projectDir: string, tempDirectory: string, Registry: IRegistry, files: IFileInfo[]) => {
+export const generateSnapshots = async (projectDir: string, tempDirectory: string, files: IFileInfo[], snapInfo: ISimSnapInfo, returnHtml: (html: string) => void) => {
   const webpackConfig = require(path.join(projectDir, '.autotools/webpack.config.js'));
 
-  consoleLog('Generating snapshots...');
   for (const file of files) {
-    await buildSingleFile(file.basename, file.filepath, tempDirectory, webpackConfig, Registry);
+    await buildSingleFile(file.basename, file.filepath, tempDirectory, webpackConfig, snapInfo, returnHtml);
   }
 };

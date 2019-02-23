@@ -1,14 +1,13 @@
 export interface IFileParts {
   compName: string;
-  simIndex: number;
   simName: string;
   styleIndex?: number;
   styleName?: string;
 }
 
-export function generateSnapshotFilename(componentName: string, simName: string, simIndex: number, styleName?: string): string {
+export function generateSnapshotFilename(componentName: string, simName: string, styleName?: string): string {
   const variantString = styleName ? `@${styleName}` : '';
-  return `${componentName}@${simIndex}@${simName}${variantString}`;
+  return `${componentName}@${simName}${variantString}`;
 }
 
 export function generateData(componentName: string, componentPath: string, stylePath?: string): string {
@@ -23,7 +22,7 @@ export default {comp: ${componentName}, name: '${componentName}'${styleExport}};
 }
 
 export function parseSnapshotFilename(file: string): IFileParts {
-  const [compName, simIndex, simName, styleName] = file.split('@');
+  const [compName, simName, styleName] = file.split('@');
 
-  return {compName, simIndex: parseInt(simIndex, 10), simName, styleName};
+  return {compName, simName, styleName};
 }

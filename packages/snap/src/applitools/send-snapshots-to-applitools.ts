@@ -1,17 +1,21 @@
 const {makeVisualGridClient, makeGetConfig, TestResults, TestFailedError} = require('@applitools/visual-grid-client');
 const {domNodesToCdt} = require('@applitools/visual-grid-client/browser');
 import path from 'path';
-import fs from 'fs';
 import chalk from 'chalk';
 import {JSDOM} from 'jsdom';
-import {consoleLog} from '@ui-autotools/utils';
-import {parseSnapshotFilename} from '../generate-snapshots/filename-utils';
-import {IFileInfo} from '../generate-snapshots/build-base-files';
+import {consoleLog, consoleError} from '@ui-autotools/utils';
+import {ISnapshot, ISnapResource} from '../types';
 
 interface ITestResult {
   status: 'error' | 'new' | 'modified' | 'unmodified';
   url?: string;
   error?: any;
+}
+
+interface IFormattedResource {
+  url: string;
+  type: string;
+  value: Buffer;
 }
 
 function getGridClientConfig(projectPath: string) {
@@ -37,42 +41,16 @@ function getGridClientConfig(projectPath: string) {
   };
 }
 
-interface IResource {
-  url: string;
-  type: string;
-  value: Buffer;
-}
-
-function getStaticResources(cssFiles: IFileInfo[], resourceDir: string): {[url: string]: IResource} {
-  const resources: {[url: string]: IResource} = {};
-  for (const cssFile of cssFiles) {
-    if (cssFile.cssPath) {
-      if (fs.existsSync(cssFile.cssPath)) {
-        resources[cssFile.basename] = {
-          url: cssFile.cssPath,
-          type: 'text/css',
-          value: fs.readFileSync(cssFile.cssPath)
-        };
-      }
-    } else {
-      const fileUrl = cssFile.basename + '.css';
-      const filePath = path.join(resourceDir, fileUrl);
-      if (fs.existsSync(filePath)) {
-        resources[cssFile.basename] = {
-          url: fileUrl,
-          type: 'text/css',
-          value: fs.readFileSync(filePath)
-        };
-      }
-    }
+function formatResources(resources: ISnapResource[]): {[url: string]: IFormattedResource} {
+  const formattedResources: {[url: string]: IFormattedResource} = {};
+  for (const resource of resources) {
+      formattedResources[resource.url] = {
+        url: resource.url,
+        type: resource.mimeType,
+        value: resource.data
+      };
   }
-  return resources;
-}
-
-function formatName(filename: string) {
-  const {compName, simName, styleName} = parseSnapshotFilename(filename);
-
-  return styleName ? `${compName}: ${simName}. Style: ${styleName}.` : `${compName}: ${simName}.`;
+  return formattedResources;
 }
 
 function logEyesResult(name: string, {status, url, error}: ITestResult) {
@@ -88,7 +66,7 @@ function logEyesResult(name: string, {status, url, error}: ITestResult) {
   consoleLog(`${statusMessage} ${name} ${formattedUrl}`);
 
   if (isError) {
-    consoleLog(error);
+    consoleError(error);
   }
 }
 
@@ -120,7 +98,7 @@ function getTestResult(testResult: Promise<any>): Promise<ITestResult> {
   );
 }
 
-async function runTest(gridClient: any, gridClientConfig: any, testName: string, html: string, resources?: {[url: string]: IResource}) {
+async function runTest(gridClient: any, gridClientConfig: any, testName: string, html: string, resources?: {[url: string]: IFormattedResource}) {
   const dom = new JSDOM(html).window.document;
 
   const {checkWindow, close} = await gridClient.openEyes({
@@ -138,32 +116,30 @@ async function runTest(gridClient: any, gridClientConfig: any, testName: string,
   return close();
 }
 
-export async function runEyes(projectPath: string, tempDirectory: string, files: IFileInfo[]) {
+export async function runEyes(projectPath: string, snapshots: ISnapshot[]) {
   const config = getGridClientConfig(projectPath);
-  const resources = getStaticResources(files, tempDirectory);
   const gridClient = makeVisualGridClient(makeGetConfig());
 
   const resultPromises = [];
   consoleLog('Sending snapshots to Applitools...');
 
-  for (const file of files) {
-    const html = fs.readFileSync(path.join(tempDirectory, file.basename + '.snapshot.snapshot.html'), 'utf-8');
-    const testName = formatName(file.basename);
+  for (const snapshot of snapshots) {
+    const resources = snapshot.staticResources ? formatResources(snapshot.staticResources) : undefined;
 
     const result = getTestResult(runTest(
       gridClient,
       config,
-      testName,
-      html,
+      snapshot.testName,
+      snapshot.html,
       resources
     ));
 
     result.then((res: ITestResult) => {
       if (res.status === 'error' || res.status === 'modified') {
         process.exitCode = 1;
-        logEyesResult(testName, res);
+        logEyesResult(snapshot.testName, res);
       } else {
-        logEyesResult(testName, res);
+        logEyesResult(snapshot.testName, res);
       }
     });
 

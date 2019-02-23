@@ -6,11 +6,11 @@ import style2 from './variant2.st.css';
 
 const metadata = Registry.getComponentMetadata(Composite);
 
-metadata.exportedFrom({
+metadata.exportInfo = {
   path: 'src/composite/composite',
   exportName: 'Composite',
   baseStylePath: 'src/composite/composite.st.css'
-});
+};
 
 metadata.addSim({
   title: 'compositeSim',

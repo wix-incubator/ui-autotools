@@ -49,11 +49,13 @@ program
 .description('compare components to the expected appearance using Applitools Eyes')
 .option('-f, --files [pattern]', 'metadata file pattern')
 .option('-s, --skip-on-missing-key [boolean]', 'if flag is set, skip tests when no EYES or APPLITOOLS API key present')
+.option('-c, --config, config file name')
 .action(async (options) => {
   const metaGlob: string = options.files || defaultMetaGlob;
   try {
-    importMetaFiles(projectPath, metaGlob);
-    await eyesTest(projectPath, options.skipOnMissingKey);
+    // This code is duplicated and used in sanity as well. We may want to find a way to share it
+    glob.sync(metaGlob, { absolute: true, cwd: projectPath }).forEach(require);
+    await eyesTest(projectPath, options.skipOnMissingKey, options.config);
   } catch (error) {
     process.exitCode = 1;
     if (error) {

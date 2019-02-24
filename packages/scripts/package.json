@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/scripts",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
   "bin": {
@@ -31,7 +31,7 @@
     "@ui-autotools/node-utils": "^1.5.1",
     "@ui-autotools/sanity": "^2.8.1",
     "@ui-autotools/showcase": "^2.7.1",
-    "@ui-autotools/snap": "^3.0.0",
+    "@ui-autotools/snap": "^3.0.1",
     "commander": "^2.19.0",
     "dotenv": "^6.2.0",
     "glob": "^7.1.3"

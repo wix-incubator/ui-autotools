@@ -1,4 +1,4 @@
-[# ui-autotools
+# ui-autotools
 
 [![Build Status](https://travis-ci.org/wix-incubator/ui-autotools.svg?branch=master)](https://travis-ci.org/wix-incubator/ui-autotools)
 

@@ -51,7 +51,7 @@
     "webpack": "^4.29.5"
   },
   "peerDependencies": {
-    "@ui-autotools/registry": ">=3.0.0",
+    "@ui-autotools/registry": ">=4.0.0",
     "react": ">=16",
     "react-dom": ">=16"
   },

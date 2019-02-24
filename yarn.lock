@@ -2,10 +2,17 @@
 # yarn lockfile v1
 
 
-"@applitools/eyes-common@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-common/-/eyes-common-1.2.4.tgz#423cf30358dd260b3d2e4c24c966431bce4774f9"
-  integrity sha512-5OEW4LIUb6ov21uWkkgKxMMyYyMomHq4pj/2PhFD1GFEzZfBfCWuM8cam4S0RgOwU4UKMNmV64Jm/XgXcd+lmw==
+"@applitools/dom-snapshot@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-1.0.6.tgz#16fdd3f7d03ac69511834e740798897e2ffbb525"
+  integrity sha512-7QiMdbp8b7j+1JhkP79asZubGZDuWwUM51byZVUNlSSH0f1nadDHIY4lU/7GA871r+SvPV1kvZvEwxk2/pUG5g==
+  dependencies:
+    "@applitools/functional-commons" "^1.0.33"
+
+"@applitools/eyes-common@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-common/-/eyes-common-1.3.0.tgz#8acfffe3ff4a75e50d454785e01d3f92d5012c08"
+  integrity sha512-d2hdgUyhGE6RDXfViVX+M7IwCze3zlmGu6i/h++RAT28Pm7gq8DRtrShbb+Yn578s/7WpKvh7s3HcPxMAx1Ovw==
   dependencies:
     cosmiconfig "^5.0.7"
     dateformat "^3.0.3"
@@ -13,21 +20,21 @@
     png-async "^0.9.3"
     stack-trace "^0.0.10"
 
-"@applitools/eyes-sdk-core@^4.1.0":
-  version "4.7.2"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-4.7.2.tgz#bed6e98cc95d987b57455da62712d9df418a7413"
-  integrity sha512-xeumFaiy7du4SP4LjvaQeXUjJHlLSUiDBBK+pD+aAAQvkDWZO0PWhoDp2sMocmU6oN5QWX67qssaZXjlmsh2zQ==
+"@applitools/eyes-sdk-core@^4.8.0":
+  version "4.8.0"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-4.8.0.tgz#90b0fdf87494225648d1b4df4389b08f06ad0644"
+  integrity sha512-bWi+xmBvXpPd54WTy3fm5qv1myaMpDZBOdIORwWBXPfmnwluYkKzgbj9YrRo6F1aJjXZ0CqtIkfGealnkyeSiA==
   dependencies:
-    "@applitools/eyes-common" "^1.2.4"
+    "@applitools/eyes-common" "^1.3.0"
     axios "^0.18.0"
     es6-promise-pool "^2.5.0"
 
-"@applitools/functional-commons@^1.0.19", "@applitools/functional-commons@^1.0.33":
+"@applitools/functional-commons@^1.0.33":
   version "1.0.39"
   resolved "https://registry.yarnpkg.com/@applitools/functional-commons/-/functional-commons-1.0.39.tgz#c73208a17125ba1719c609495a42baf3521ff5fa"
   integrity sha512-yX5kFPCs968NYemgWlYpHW4WuleQ2FN/KT1LMJBwAlUkMgN41w1r2XD2/egXpi8rPYq6ehqfk2fzT/FOFwS5aw==
 
-"@applitools/http-commons@^1.1.1":
+"@applitools/http-commons@^1.2.3":
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/@applitools/http-commons/-/http-commons-1.2.5.tgz#1a7b0bf58241ad07d822b08276c6a32cf484010f"
   integrity sha512-wc8mwyZTnr4NIdxyqVtwZCIAOhO2OsfYwx3jcXHj+4fyjWZxie5qw0KBFWQUxqUCJabtEOXCN7E/ghNS3sKCxA==
@@ -39,6 +46,14 @@
     lodash.merge "^4.6.1"
     node-fetch "^2.3.0"
 
+"@applitools/isomorphic-fetch@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@applitools/isomorphic-fetch/-/isomorphic-fetch-3.0.0.tgz#3a3a838954b8b8bb89f1078e4f82b8c6bccaa884"
+  integrity sha512-7rutaN/2M5wYjOIOTKS/Zuc1Na90fJNEAqvo/jCxt7nSD1kYscHV3aCk9t7RD59gmzLMvUTIxFbjl4RUMV8qfg==
+  dependencies:
+    node-fetch "^2.3.0"
+    whatwg-fetch ">=0.10.0"
+
 "@applitools/monitoring-commons@^1.0.8":
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/@applitools/monitoring-commons/-/monitoring-commons-1.0.8.tgz#ae1ffda333a359274461351ba11a7fa7bc73e06b"
@@ -46,22 +61,22 @@
   dependencies:
     debug "^4.1.0"
 
-"@applitools/visual-grid-client@^5.5.3":
-  version "5.5.3"
-  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-5.5.3.tgz#534b7b9025cfd984499c2141ebaf0943c3ed3f92"
-  integrity sha512-Mx4CFqVRuDXayv5s/OJH1XPfqD6SA8fcVuWq4tYu9rnCAeoO016N1nlTpoCK4wSvVmOnw+pHyeCxUJvnUvSPgw==
+"@applitools/visual-grid-client@^12.0.0":
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-12.0.0.tgz#9f1dcd1889264ad3e0019392739f4d009285ca45"
+  integrity sha512-7bqWbIPAjGmO0j9hykIFkObcNkh3wI5owi6zZAoBiiZuN8ZGD9VYICgDgWMbjKVUiZcQi6Jd/fmQ0N1vzHl3/A==
   dependencies:
-    "@applitools/eyes-sdk-core" "^4.1.0"
-    "@applitools/functional-commons" "^1.0.19"
-    "@applitools/http-commons" "^1.1.1"
-    cosmiconfig "^5.0.6"
+    "@applitools/eyes-common" "^1.3.0"
+    "@applitools/eyes-sdk-core" "^4.8.0"
+    "@applitools/functional-commons" "^1.0.33"
+    "@applitools/http-commons" "^1.2.3"
+    "@applitools/isomorphic-fetch" "^3.0.0"
     cssom "git+https://github.com/amitzur/CSSOM.git#925260ff2c8f8387cf76df4d5776a06044a644c8"
     he "^1.2.0"
     lodash.mapkeys "^4.6.0"
     lodash.mapvalues "^4.6.0"
-    mime-types "^2.1.20"
+    mime-types "^2.1.21"
     mkdirp "^0.5.1"
-    node-fetch "^2.2.0"
     throat "^4.1.0"
 
 "@file-services/memory@^0.4.5":
@@ -2561,7 +2576,7 @@ core-util-is@1.0.2, core-util-is@~1.0.0:
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
 
-cosmiconfig@^5.0.2, cosmiconfig@^5.0.6, cosmiconfig@^5.0.7:
+cosmiconfig@^5.0.2, cosmiconfig@^5.0.7:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-5.1.0.tgz#6c5c35e97f37f985061cdf653f114784231185cf"
   integrity sha512-kCNPvthka8gvLtzAxQXvWo4FxqRB+ftRZyPZNuab5ngvM9Y7yw7hbEysglptLgpkGX9nAOKTBVkHUAe8xtYR6Q==
@@ -5438,7 +5453,7 @@ miller-rabin@^4.0.0:
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.38.0.tgz#1a2aab16da9eb167b49c6e4df2d9c68d63d8e2ad"
   integrity sha512-bqVioMFFzc2awcdJZIzR3HjZFX20QhilVS7hytkKrv7xFAn8bM1gzc/FOX2awLISvWe0PV8ptFKcon+wZ5qYkg==
 
-mime-types@^2.1.12, mime-types@^2.1.18, mime-types@^2.1.20, mime-types@~2.1.17, mime-types@~2.1.18, mime-types@~2.1.19:
+mime-types@^2.1.12, mime-types@^2.1.18, mime-types@^2.1.21, mime-types@~2.1.17, mime-types@~2.1.18, mime-types@~2.1.19:
   version "2.1.22"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.22.tgz#fe6b355a190926ab7698c9a0556a11199b2199bd"
   integrity sha512-aGl6TZGnhm/li6F7yx82bJiBZwgiEa4Hf6CNr8YO+r5UHr53tSTYZb102zyU50DOWWKeOv0uQLRL0/9EiKWCog==
@@ -5716,7 +5731,7 @@ node-fetch-npm@^2.0.2:
     json-parse-better-errors "^1.0.0"
     safe-buffer "^5.1.1"
 
-node-fetch@^2.2.0, node-fetch@^2.3.0:
+node-fetch@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.3.0.tgz#1a1d940bbfb916a1d3e0219f037e89e71f8c5fa5"
   integrity sha512-MOd8pV3fxENbryESLgVIeaGKrdl+uaYhCSSVkjeOb/31/njTpcis5aWfdqgNlHIrKOLRbMnfPINPOML2CIFeXA==
@@ -8621,6 +8636,11 @@ whatwg-encoding@^1.0.1, whatwg-encoding@^1.0.5:
   integrity sha512-b5lim54JOPN9HtzvK9HFXvBma/rnfFeqsic0hSpjtDbVxR3dJKLc+KB4V6GgiGOvl7CY/KNh8rxSo9DKQrnUEw==
   dependencies:
     iconv-lite "0.4.24"
+
+whatwg-fetch@>=0.10.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.0.0.tgz#fc804e458cc460009b1a2b966bc8817d2578aefb"
+  integrity sha512-9GSJUgz1D4MfyKU7KRqwOjXCXTqWdFNvEr7eUBYchQiVc744mqK/MzXPNR2WsPkmkOa4ywfg8C2n8h+13Bey1Q==
 
 whatwg-mimetype@^2.2.0, whatwg-mimetype@^2.3.0:
   version "2.3.0"

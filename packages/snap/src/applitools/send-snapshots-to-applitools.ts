@@ -1,5 +1,5 @@
-const {makeVisualGridClient, makeGetConfig, TestResults, TestFailedError} = require('@applitools/visual-grid-client');
-const {domNodesToCdt} = require('@applitools/visual-grid-client/browser');
+const {makeVisualGridClient, TestResults, TestFailedError} = require('@applitools/visual-grid-client');
+const domNodesToCdt = require('@applitools/dom-snapshot/src/browser/domNodesToCdt');
 import path from 'path';
 import chalk from 'chalk';
 import {JSDOM} from 'jsdom';
@@ -118,7 +118,7 @@ async function runTest(gridClient: any, gridClientConfig: any, testName: string,
 
 export async function runEyes(projectPath: string, snapshots: ISnapshot[]) {
   const config = getGridClientConfig(projectPath);
-  const gridClient = makeVisualGridClient(makeGetConfig());
+  const gridClient = makeVisualGridClient(config);
 
   const resultPromises = [];
   consoleLog('Sending snapshots to Applitools...');

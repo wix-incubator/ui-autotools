@@ -113,7 +113,7 @@ async function runTest(gridClient: any, gridClientConfig: any, testName: string,
     resourceContents: resources
   });
 
-  return close();
+  return close(false); // call with false so that any "test modified" errors are resolved rather than rejected
 }
 
 export async function runEyes(projectPath: string, snapshots: ISnapshot[]) {

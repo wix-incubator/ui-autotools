@@ -37,9 +37,9 @@
   },
   "dependencies": {
     "@applitools/dom-snapshot": "^1.0.7",
-    "@applitools/visual-grid-client": "^12.0.2",
-    "@stylable/webpack-extensions": "^1.0.3",
-    "@stylable/webpack-plugin": "^1.1.0",
+    "@applitools/visual-grid-client": "^12.1.2",
+    "@stylable/webpack-extensions": "^1.0.4",
+    "@stylable/webpack-plugin": "^1.1.1",
     "@ui-autotools/node-utils": "^1.5.1",
     "@ui-autotools/utils": "^1.5.2",
     "chalk": "^2.4.2",
@@ -49,7 +49,7 @@
     "jsdom": "^13.2.0",
     "proper-fs": "^1.1.2",
     "rimraf": "^2.6.3",
-    "webpack": "^4.29.5"
+    "webpack": "^4.29.6"
   },
   "peerDependencies": {
     "@ui-autotools/registry": ">=4.0.0",

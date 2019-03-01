@@ -28,7 +28,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@stylable/node": "^1.0.3",
+    "@stylable/node": "^1.0.4",
     "@ts-tools/node": "^0.9.3",
     "dotenv": "^6.2.0"
   }

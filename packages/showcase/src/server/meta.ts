@@ -4,18 +4,11 @@ import path from 'path';
 import glob from 'glob';
 import Registry, {getCompName} from '@ui-autotools/registry';
 import {IComponentMetadata, IMetadata} from '@ui-autotools/registry';
-import {
-  createLinker,
-  ModuleSchema as PartialModuleSchema,
-  IObjectFields,
-  Schema
-} from '@wix/typescript-schema-extract';
-
-export type ModuleSchema = PartialModuleSchema & IObjectFields;
+import {createLinker, IModuleSchema, ICodeSchema } from '@wix/typescript-schema-extract';
 
 export interface IModuleSchemaWithFilename {
   file: string;
-  schema: ModuleSchema;
+  schema: IModuleSchema;
 }
 
 export type ModuleSchemasByFilename = Map<string, IModuleSchemaWithFilename>;
@@ -23,7 +16,7 @@ export type ModuleSchemasByFilename = Map<string, IModuleSchemaWithFilename>;
 export interface IExportSourceAndSchema {
   file: string;
   name: string;
-  schema: Schema<any>;
+  schema: ICodeSchema;
 }
 
 export interface IMetadataAndSchemas {

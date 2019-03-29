@@ -1,9 +1,10 @@
 import React from 'react';
+import { ICodeSchema, IFunctionSchema, SchemaTypes } from '@wix/typescript-schema-extract';
 import style from './props-table.st.css';
 import {TypeDefinition} from '../type-definition';
 
 export interface IPropsTableProps {
-  componentSchema: any;
+  componentSchema: ICodeSchema;
 }
 
 export class PropsTable extends React.Component<IPropsTableProps> {
@@ -42,20 +43,18 @@ export class PropsTable extends React.Component<IPropsTableProps> {
 interface IProp {
   name: string;
   description: string;
-  schema: any;
+  schema: SchemaTypes;
   isRequired: boolean;
 }
 
-function getPropTypes(componentSchema: any): IProp[] {
-  const propsInterface = (
-    componentSchema.$ref === 'common/function' ?
-      componentSchema.arguments[0] :
-      componentSchema.properties.props
-  );
+function getPropTypes(componentSchema: ICodeSchema): IProp[] {
+  const propsInterface = componentSchema.$ref === 'common/function' ?
+      (componentSchema as IFunctionSchema).arguments[0] :
+      componentSchema.properties && componentSchema.properties.props || {};
 
   const required = new Set(propsInterface.required || []);
   const props = Object.entries(propsInterface.properties || {});
-  return Array.from(props).map(([name, schema]: [string, any]) => ({
+  return Array.from(props).map(([name, schema]) => ({
       schema,
       name,
       description: schema.description ? schema.description.trim() : '',

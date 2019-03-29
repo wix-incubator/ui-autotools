@@ -57,11 +57,12 @@ const url = new URL(location ? location.href : '');
 const root = document.createElement('div');
 document.body.appendChild(root);
 
-ReactDOM.render(
+ReactDOM.render((
   <StyledSimulation
     componentName={url.searchParams.get('component') || ''}
     simulationName={url.searchParams.get('simulation') || ''}
     styleName={url.searchParams.get('style') || ''}
-  />,
+  />
+  ),
   root
 );

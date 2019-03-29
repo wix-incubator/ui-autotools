@@ -20,14 +20,15 @@
     "snap": "yarn autotools-snap",
     "snap-if-ci": "node -r @ts-tools/node/r ./snap-if-ci.ts",
     "a11y": "yarn autotools-a11y",
-    "sanity": "yarn autotools-sanity"
+    "sanity": "yarn autotools-sanity",
+    "showcase": "autotools showcase --files src/**/*.meta.ts"
   },
   "dependencies": {
     "@ui-autotools/a11y": "^2.7.1",
     "@ui-autotools/registry": "^4.0.0",
     "@ui-autotools/sanity": "^2.8.2",
     "@ui-autotools/snap": "^3.0.2",
-    "react": "^16.8.3",
-    "react-dom": "^16.8.3"
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   }
 }

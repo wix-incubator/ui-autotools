@@ -11,8 +11,8 @@ chai.use(sinonChai);
 
 export const hydrationTest = (): void => {
   describe('Hydration test', () => {
-    let consoleSpy: sinon.SinonSpy;
-    let errorSpy: sinon.SinonSpy;
+    let consoleSpy: sinon.SinonSpy<Parameters<Console['log']>, ReturnType<Console['log']>>;
+    let errorSpy: sinon.SinonSpy<Parameters<Console['error']>, ReturnType<Console['error']>>;
     const root = document.getElementById('root') as HTMLElement;
     let index = 0;
     const componentStrings = (window as any).components;

@@ -32,7 +32,7 @@
     "@ui-autotools/sanity": "^2.8.2",
     "@ui-autotools/showcase": "^2.7.2",
     "@ui-autotools/snap": "^3.0.2",
-    "commander": "^2.19.0",
+    "commander": "^2.20.0",
     "dotenv": "^7.0.0",
     "glob": "^7.1.3"
   },

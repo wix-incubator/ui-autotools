@@ -36,8 +36,8 @@
     "autotools-snap": "bin/cli.js"
   },
   "dependencies": {
-    "@applitools/dom-snapshot": "^1.0.7",
-    "@applitools/visual-grid-client": "^12.6.0",
+    "@applitools/dom-snapshot": "^1.1.1",
+    "@applitools/visual-grid-client": "^12.6.2",
     "@stylable/webpack-extensions": "^1.0.6",
     "@stylable/webpack-plugin": "^1.1.4",
     "@ui-autotools/node-utils": "^1.5.1",

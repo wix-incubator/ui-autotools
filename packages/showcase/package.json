@@ -41,7 +41,7 @@
     "html-webpack-plugin": "^4.0.0-beta.5",
     "koa": "^2.7.0",
     "koa-webpack": "^5.2.2",
-    "webpack": "^4.29.6"
+    "webpack": "^4.30.0"
   },
   "peerDependencies": {
     "@ui-autotools/registry": ">=3.0.0",

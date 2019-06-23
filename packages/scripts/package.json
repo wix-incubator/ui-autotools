@@ -26,7 +26,7 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@ts-tools/node": "^0.9.7",
+    "@ts-tools/node": "^0.9.8",
     "@ui-autotools/a11y": "^2.7.1",
     "@ui-autotools/node-utils": "^1.5.1",
     "@ui-autotools/sanity": "^2.8.2",

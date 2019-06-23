@@ -84,7 +84,7 @@ function createMiddleware({compiler, watch}: IMiddlewareOptions) {
 }
 
 function createServer({middleware, host, port, log}: IServerOptions):
-  {server: IServer, serverPromise: Promise<{}>} {
+  {server: IServer, serverPromise: Promise<unknown>} {
   const server = new Koa().use(middleware).listen({host, port});
   const getUrl = () => getServerUrl(server);
   const close = () => {

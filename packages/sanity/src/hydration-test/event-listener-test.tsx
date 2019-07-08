@@ -3,10 +3,11 @@ import ReactDOM from 'react-dom';
 import Registry, {getCompName} from '@ui-autotools/registry';
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
-import {hydrate} from 'react-dom';
 import {AllEvents} from './all-events';
 import {attachEventListenerLogger} from './override-event-listeners';
 import {Listener} from './listener';
+
+const hydrate = ReactDOM.hydrate || ReactDOM.render;
 
 chai.use(sinonChai);
 

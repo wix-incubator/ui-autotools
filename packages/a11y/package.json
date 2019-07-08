@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/a11y",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
   "scripts": {
@@ -32,8 +32,8 @@
     "autotools-a11y": "bin/cli.js"
   },
   "dependencies": {
-    "@ui-autotools/node-utils": "^1.5.1",
-    "@ui-autotools/utils": "^1.5.2",
+    "@ui-autotools/node-utils": "^1.5.2",
+    "@ui-autotools/utils": "^1.5.3",
     "axe-core": "^3.2.2",
     "chalk": "^2.4.2",
     "commander": "^2.20.0",

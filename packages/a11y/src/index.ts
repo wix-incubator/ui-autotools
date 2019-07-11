@@ -33,7 +33,7 @@ function formatResults(results: IResult[], impact: axe.ImpactValue): {message: s
     } else if (res.result) {
       if (res.result.violations.length) {
         res.result.violations.forEach((violation) => {
-          if (impactLevels.indexOf(violation.impact) >= impactLevels.indexOf(impact)) {
+          if (violation.impact && impactLevels.indexOf(violation.impact) >= impactLevels.indexOf(impact)) {
             hasError = true;
             violation.nodes.forEach((node) => {
               const selector = node.target.join(' > ');

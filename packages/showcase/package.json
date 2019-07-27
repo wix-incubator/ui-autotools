@@ -38,10 +38,10 @@
     "@wix/typescript-schema-extract": "^1.0.3",
     "chalk": "^2.4.2",
     "glob": "^7.1.4",
-    "html-webpack-plugin": "^4.0.0-beta.5",
+    "html-webpack-plugin": "^4.0.0-beta.8",
     "koa": "^2.7.0",
-    "koa-webpack": "^5.2.3",
-    "webpack": "^4.35.3"
+    "koa-webpack": "^5.2.4",
+    "webpack": "^4.38.0"
   },
   "peerDependencies": {
     "@ui-autotools/registry": ">=3.0.0",

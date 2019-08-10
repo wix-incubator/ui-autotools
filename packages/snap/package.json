@@ -36,20 +36,20 @@
     "autotools-snap": "bin/cli.js"
   },
   "dependencies": {
-    "@applitools/dom-snapshot": "^1.4.4",
-    "@applitools/visual-grid-client": "^12.18.3",
+    "@applitools/dom-snapshot": "^2.0.1",
+    "@applitools/visual-grid-client": "^12.21.0",
     "@stylable/webpack-extensions": "^1.0.6",
     "@stylable/webpack-plugin": "^1.1.4",
     "@ui-autotools/node-utils": "^1.5.2",
     "@ui-autotools/utils": "^1.5.3",
     "chalk": "^2.4.2",
-    "commander": "^2.20.0",
+    "commander": "^3.0.0",
     "create-temp-directory": "^1.0.2",
     "glob": "^7.1.4",
     "jsdom": "^15.1.1",
     "proper-fs": "^1.1.2",
     "rimraf": "^2.6.3",
-    "webpack": "^4.38.0"
+    "webpack": "^4.39.1"
   },
   "peerDependencies": {
     "@ui-autotools/registry": ">=4.0.0",

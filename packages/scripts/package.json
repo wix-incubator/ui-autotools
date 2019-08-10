@@ -26,13 +26,13 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@ts-tools/node": "^0.9.8",
+    "@ts-tools/node": "^0.9.10",
     "@ui-autotools/a11y": "^2.7.2",
     "@ui-autotools/node-utils": "^1.5.2",
     "@ui-autotools/sanity": "^2.8.3",
     "@ui-autotools/showcase": "^2.7.3",
     "@ui-autotools/snap": "^3.0.3",
-    "commander": "^2.20.0",
+    "commander": "^3.0.0",
     "dotenv": "^8.0.0",
     "glob": "^7.1.4"
   },

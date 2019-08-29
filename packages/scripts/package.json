@@ -33,7 +33,7 @@
     "@ui-autotools/showcase": "^2.7.3",
     "@ui-autotools/snap": "^3.0.3",
     "commander": "^3.0.0",
-    "dotenv": "^8.0.0",
+    "dotenv": "^8.1.0",
     "glob": "^7.1.4"
   },
   "devDependencies": {

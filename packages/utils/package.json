@@ -28,7 +28,7 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "html-webpack-plugin": "^4.0.0-beta.8",
-    "koa": "^2.7.0",
+    "koa": "^2.8.1",
     "koa-webpack": "^5.2.4",
     "puppeteer": "^1.19.0"
   },

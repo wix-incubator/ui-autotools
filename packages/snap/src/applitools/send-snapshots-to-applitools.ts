@@ -2,7 +2,7 @@ const {makeVisualGridClient, TestResults, TestFailedError} = require('@applitool
 const domNodesToCdt = require('@applitools/dom-snapshot/src/browser/domNodesToCdt');
 import path from 'path';
 import chalk from 'chalk';
-import {JSDOM} from 'jsdom';
+import {JSDOM, DOMWindow} from 'jsdom';
 import {consoleLog, consoleError} from '@ui-autotools/utils';
 import {ISnapshot, ISnapResource} from '../types';
 
@@ -98,17 +98,31 @@ function getTestResult(testResult: Promise<any>): Promise<ITestResult> {
   );
 }
 
+declare global {
+  namespace NodeJS {
+    // tslint:disable-next-line: interface-name
+    interface Global {
+      Node: DOMWindow['Node'];
+    }
+  }
+}
+
 async function runTest(gridClient: any, gridClientConfig: any, testName: string, html: string, resources?: {[url: string]: IFormattedResource}) {
-  const dom = new JSDOM(html).window.document;
+  const {window} = new JSDOM(html);
 
   const {checkWindow, close} = await gridClient.openEyes({
     ...gridClientConfig,
     testName,
   });
 
+  // hack to get domNodesToCdt working
+  if (typeof Node === 'undefined') {
+    global.Node = window.Node;
+  }
+
   await checkWindow({
     url: 'http://localhost/html/index.html',
-    cdt: domNodesToCdt(dom),
+    cdt: domNodesToCdt(window.document),
     sizeMode: 'viewport',
     resourceContents: resources
   });

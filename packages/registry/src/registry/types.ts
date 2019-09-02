@@ -1,5 +1,4 @@
 import { ComponentType, ComponentClass } from 'react';
-import axe from 'axe-core';
 
 export interface IRegistry<AssetMap = any> {
   metadata: IMetadata;
@@ -18,7 +17,7 @@ export interface IComponentMetadata<Props, State> {
   simulationToJSX: (sim: ISimulation<Props, State>) => JSX.Element;
   nonReactStrictModeCompliant: boolean;
   nonA11yCompliant: boolean;
-  impact: axe.ImpactValue;
+  impact: 'minor' | 'moderate' | 'serious' | 'critical';
   nonEventListenerTestCompliant: boolean;
   nonHydrationTestCompliant: boolean;
   exportInfo: IExportInfo | null;

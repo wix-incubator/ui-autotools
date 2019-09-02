@@ -15,7 +15,7 @@
     "noFallthroughCasesInSwitch": true,
 
     "moduleResolution": "node",
-    "types": ["axe-core"],
+    "types": [],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   }

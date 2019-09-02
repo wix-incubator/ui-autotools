@@ -1,16 +1,27 @@
 import path from 'path';
 import puppeteer from 'puppeteer';
-import {WebpackConfigurator, serve, IServer, waitForPageError, consoleError, consoleLog} from '@ui-autotools/utils';
+import {
+  WebpackConfigurator,
+  serve,
+  IServer,
+  waitForPageError,
+  consoleError,
+  consoleLog
+} from '@ui-autotools/utils';
 import { IResult } from './browser/run';
 import axe from 'axe-core';
 import chalk from 'chalk';
 
 const ownPath = path.resolve(__dirname, '..');
-export const impactLevels: axe.ImpactValue[] = ['minor', 'moderate', 'serious', 'critical'];
+export const impactLevels: axe.ImpactValue[] = [
+  'minor',
+  'moderate',
+  'serious',
+  'critical'
+];
 
 function getWebpackConfig(entry: string | string[], webpackConfigPath: string) {
-  return WebpackConfigurator
-    .load(webpackConfigPath)
+  return WebpackConfigurator.load(webpackConfigPath)
     .setEntry('meta', entry)
     .addEntry('meta', path.join(ownPath, 'esm/browser/run'))
     .addHtml({
@@ -21,7 +32,10 @@ function getWebpackConfig(entry: string | string[], webpackConfigPath: string) {
     .getConfig();
 }
 
-function formatResults(results: IResult[], impact: axe.ImpactValue): {message: string, hasError: boolean} {
+function formatResults(
+  results: IResult[],
+  impact: axe.ImpactValue
+): { message: string; hasError: boolean } {
   const msg: string[] = [];
   let hasError = false;
   let index = 0;
@@ -33,12 +47,20 @@ function formatResults(results: IResult[], impact: axe.ImpactValue): {message: s
     } else if (res.result) {
       if (res.result.violations.length) {
         res.result.violations.forEach((violation) => {
-          if (violation.impact && impactLevels.indexOf(violation.impact) >= impactLevels.indexOf(impact)) {
+          const impactLevel = res.impact ? res.impact : impact;
+
+          if (
+            violation.impact &&
+            impactLevels.indexOf(violation.impact) >=
+              impactLevels.indexOf(impactLevel)
+          ) {
             hasError = true;
             violation.nodes.forEach((node) => {
               const selector = node.target.join(' > ');
-              const compName = (`${res.comp} - ${selector}`);
-              msg[index] += `\n  ${chalk.red(compName)}: (Impact: ${violation.impact})\n  ${node.failureSummary}`;
+              const compName = `${res.comp} - ${selector}`;
+              msg[index] += `\n  ${chalk.red(compName)}: (Impact: ${
+                violation.impact
+              })\n  ${node.failureSummary}`;
             });
           } else {
             msg[index] += ' No errors found.';
@@ -50,15 +72,21 @@ function formatResults(results: IResult[], impact: axe.ImpactValue): {message: s
     }
     index++;
   });
-  return {message: msg.join('\n'), hasError};
+  return { message: msg.join('\n'), hasError };
 }
 
-export async function a11yTest(entry: string | string[], impact: axe.ImpactValue, webpackConfigPath: string) {
+export async function a11yTest(
+  entry: string | string[],
+  impact: axe.ImpactValue,
+  webpackConfigPath: string
+) {
   let server: IServer | null = null;
   let browser: puppeteer.Browser | null = null;
   consoleLog('Running a11y test...');
   try {
-    server = await serve({webpackConfig: getWebpackConfig(entry, webpackConfigPath)});
+    server = await serve({
+      webpackConfig: getWebpackConfig(entry, webpackConfigPath)
+    });
     browser = await puppeteer.launch();
     const page = await browser.newPage();
     const getResults = new Promise<any[]>((resolve) =>
@@ -69,7 +97,7 @@ export async function a11yTest(entry: string | string[], impact: axe.ImpactValue
     });
     await page.goto(server.getUrl());
     const results = await Promise.race([waitForPageError(page), getResults]);
-    const {message, hasError} = formatResults(results, impact);
+    const { message, hasError } = formatResults(results, impact);
     if (hasError) {
       process.exitCode = 1;
       consoleError(message);
@@ -82,7 +110,7 @@ export async function a11yTest(entry: string | string[], impact: axe.ImpactValue
   } finally {
     if (browser) {
       try {
-       browser!.close();
+        browser!.close();
       } catch (_) {
         // Ignore the error since we're already handling an exception.
       }

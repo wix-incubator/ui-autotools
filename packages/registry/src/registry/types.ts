@@ -1,8 +1,11 @@
 import { ComponentType, ComponentClass } from 'react';
+import axe from 'axe-core';
 
 export interface IRegistry<AssetMap = any> {
   metadata: IMetadata;
-  getComponentMetadata: <Props, State = {}> (comp: ComponentType<Props> | ComponentClass<Props, State>) => IComponentMetadata<Props, State>;
+  getComponentMetadata: <Props, State = {}>(
+    comp: ComponentType<Props> | ComponentClass<Props, State>
+  ) => IComponentMetadata<Props, State>;
   clear: () => void;
 }
 
@@ -15,12 +18,13 @@ export interface IComponentMetadata<Props, State> {
   simulationToJSX: (sim: ISimulation<Props, State>) => JSX.Element;
   nonReactStrictModeCompliant: boolean;
   nonA11yCompliant: boolean;
+  impact: axe.ImpactValue;
   nonEventListenerTestCompliant: boolean;
   nonHydrationTestCompliant: boolean;
   exportInfo: IExportInfo | null;
   staticResources: IStaticResource[];
   addCustomField: (key: string, field: any) => void;
-  customFields: {[key: string]: any};
+  customFields: { [key: string]: any };
 }
 
 export interface IExportInfo {
@@ -36,7 +40,10 @@ export interface IStaticResource {
 }
 
 export interface IMetadata {
-  components: Map<ComponentType<any> | ComponentClass<any, any>, IComponentMetadata<any, any>>;
+  components: Map<
+    ComponentType<any> | ComponentClass<any, any>,
+    IComponentMetadata<any, any>
+  >;
 }
 
 export interface IStyleMetadata {

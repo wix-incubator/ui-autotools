@@ -2,10 +2,7 @@
   "compilerOptions": {
     "target": "es2017",
     "module": "esnext",
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "lib": ["es2017", "dom"],
     "jsx": "react",
     "declaration": true,
     "declarationMap": true,
@@ -18,7 +15,7 @@
     "noFallthroughCasesInSwitch": true,
 
     "moduleResolution": "node",
-    "types": [],
+    "types": ["axe-core"],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   }

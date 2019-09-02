@@ -27,7 +27,7 @@ function createTestsFromSimulations(reactRoot: HTMLElement) {
           render: (container: HTMLElement) =>
             ReactDOM.render(<Comp {...sim.props} />, container),
           cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot),
-          impact: meta.impact ? meta.impact : undefined
+          impact: meta.impact
         });
       }
     }

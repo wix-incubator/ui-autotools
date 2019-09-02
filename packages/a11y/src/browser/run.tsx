@@ -1,18 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Registry, {getCompName} from '@ui-autotools/registry';
+import Registry, { getCompName } from '@ui-autotools/registry';
 import axe from 'axe-core';
 
 interface ITest {
   title: string;
   render: (container: HTMLElement) => void;
   cleanup: () => void;
+  impact?: axe.ImpactValue;
 }
 
 export interface IResult {
   comp: string;
   result?: axe.AxeResults;
   error?: Error;
+  impact?: axe.ImpactValue | undefined;
 }
 
 function createTestsFromSimulations(reactRoot: HTMLElement) {
@@ -22,8 +24,10 @@ function createTestsFromSimulations(reactRoot: HTMLElement) {
       for (const sim of meta.simulations) {
         tests.push({
           title: getCompName(Comp) + ' ' + sim.title,
-          render:  (container: HTMLElement) => ReactDOM.render(<Comp {...sim.props} />, container),
-          cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot)
+          render: (container: HTMLElement) =>
+            ReactDOM.render(<Comp {...sim.props} />, container),
+          cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot),
+          impact: meta.impact
         });
       }
     }
@@ -38,10 +42,10 @@ async function test(rootElement: HTMLElement) {
     try {
       await t.render(rootElement);
       const result = await axe.run(rootElement);
-      results.push({comp: t.title, result});
+      results.push({ comp: t.title, result });
       await t.cleanup();
     } catch (error) {
-      results.push({comp: t.title, error});
+      results.push({ comp: t.title, error, impact: t.impact });
     }
   }
   (window as any).puppeteerReportResults(results);

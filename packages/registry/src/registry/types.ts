@@ -17,13 +17,13 @@ export interface IComponentMetadata<Props, State> {
   simulationToJSX: (sim: ISimulation<Props, State>) => JSX.Element;
   nonReactStrictModeCompliant: boolean;
   nonA11yCompliant: boolean;
-  impact: 'minor' | 'moderate' | 'serious' | 'critical';
   nonEventListenerTestCompliant: boolean;
   nonHydrationTestCompliant: boolean;
   exportInfo: IExportInfo | null;
   staticResources: IStaticResource[];
   addCustomField: (key: string, field: any) => void;
   customFields: { [key: string]: any };
+  impact?: 'minor' | 'moderate' | 'serious' | 'critical';
 }
 
 export interface IExportInfo {

@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/snap",
-  "version": "3.0.4",
+  "version": "3.0.5-alpha.0",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -30,7 +30,7 @@
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@ui-autotools/registry": "^4.1.0",
-    "@ui-autotools/test-kit": "^2.4.2"
+    "@ui-autotools/test-kit": "^2.4.3-alpha.0"
   },
   "bin": {
     "autotools-snap": "bin/cli.js"
@@ -40,7 +40,7 @@
     "@applitools/visual-grid-client": "^12.21.0",
     "@stylable/webpack-extensions": "2.3.1-alpha.0",
     "@stylable/webpack-plugin": "2.3.1-alpha.0",
-    "@ui-autotools/node-utils": "^1.5.3",
+    "@ui-autotools/node-utils": "^1.5.4-alpha.0",
     "@ui-autotools/utils": "^1.5.4",
     "chalk": "^2.4.2",
     "commander": "^3.0.0",

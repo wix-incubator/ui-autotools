@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/mock-repo",
-  "version": "1.10.5",
+  "version": "1.10.6-alpha.0",
   "private": true,
   "author": "Wix.com",
   "license": "BSD-3-Clause",
@@ -24,10 +24,10 @@
     "showcase": "autotools showcase --files src/**/*.meta.ts"
   },
   "dependencies": {
-    "@ui-autotools/a11y": "^2.7.3",
+    "@ui-autotools/a11y": "^2.7.4-alpha.0",
     "@ui-autotools/registry": "^4.1.0",
-    "@ui-autotools/sanity": "^2.8.4",
-    "@ui-autotools/snap": "^3.0.4",
+    "@ui-autotools/sanity": "^2.8.5-alpha.0",
+    "@ui-autotools/snap": "^3.0.5-alpha.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
   }

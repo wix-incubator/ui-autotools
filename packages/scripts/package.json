@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/scripts",
-  "version": "4.0.4",
+  "version": "4.0.5-alpha.0",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
   "bin": {
@@ -27,11 +27,11 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "@ts-tools/node": "^0.9.10",
-    "@ui-autotools/a11y": "^2.7.3",
-    "@ui-autotools/node-utils": "^1.5.3",
-    "@ui-autotools/sanity": "^2.8.4",
-    "@ui-autotools/showcase": "^2.7.4",
-    "@ui-autotools/snap": "^3.0.4",
+    "@ui-autotools/a11y": "^2.7.4-alpha.0",
+    "@ui-autotools/node-utils": "^1.5.4-alpha.0",
+    "@ui-autotools/sanity": "^2.8.5-alpha.0",
+    "@ui-autotools/showcase": "^2.7.5-alpha.0",
+    "@ui-autotools/snap": "^3.0.5-alpha.0",
     "commander": "^3.0.0",
     "dotenv": "^8.0.0",
     "glob": "^7.1.4"

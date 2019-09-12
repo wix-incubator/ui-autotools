@@ -9,6 +9,6 @@ export function registerRequireHooks(projectPath: string) {
     require(requirePath);
   } else {
     require('@ts-tools/node/r');
-    require('@stylable/node/register');
+    require('@stylable/node').attachHook({ legacyRuntime: true });
   }
 }

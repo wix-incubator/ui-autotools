@@ -13,8 +13,8 @@
     "test": "lerna run test --stream"
   },
   "devDependencies": {
-    "@stylable/cli": "^1.2.10",
-    "@stylable/core": "^1.0.6",
+    "@stylable/cli": "2.3.1-alpha.0",
+    "@stylable/core": "2.3.1-alpha.0",
     "@ts-tools/node": "^0.9.10",
     "@ts-tools/webpack-loader": "^0.8.14",
     "@types/chai": "^4.2.0",

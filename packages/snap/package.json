@@ -13,8 +13,8 @@
     "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
     "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext",
     "lint": "tslint -p src",
-    "test": "mocha -r @ts-tools/node/r -r @stylable/node/register \"./test/**/*.spec.ts?(x)\"",
-    "test:watch": "mocha -r @ts-tools/node/r -r @stylable/node/register \"./test/**/*.spec.ts?(x)\" --watch --watch-extensions ts,tsx"
+    "test": "mocha -r @ts-tools/node/r -r ./stylable-hook.js \"./test/**/*.spec.ts?(x)\"",
+    "test:watch": "mocha -r @ts-tools/node/r -r ./stylable-hook.js \"./test/**/*.spec.ts?(x)\" --watch --watch-extensions ts,tsx"
   },
   "files": [
     "bin",
@@ -38,8 +38,8 @@
   "dependencies": {
     "@applitools/dom-snapshot": "^2.0.1",
     "@applitools/visual-grid-client": "^12.21.0",
-    "@stylable/webpack-extensions": "^1.0.6",
-    "@stylable/webpack-plugin": "^1.1.4",
+    "@stylable/webpack-extensions": "2.3.1-alpha.0",
+    "@stylable/webpack-plugin": "2.3.1-alpha.0",
     "@ui-autotools/node-utils": "^1.5.3",
     "@ui-autotools/utils": "^1.5.4",
     "chalk": "^2.4.2",

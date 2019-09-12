@@ -17,7 +17,7 @@ import {
   getComponentNamesFromMetadata
 } from './meta';
 import {getClientData} from './client-data';
-const StylableWebpackPlugin = require('@stylable/webpack-plugin');
+const { StylableWebpackPlugin } = require('@stylable/webpack-plugin');
 
 interface IProjectOptions {
   projectPath: string;
@@ -88,7 +88,7 @@ function getWebsiteWebpackConfig(
       ]
     },
     plugins: [
-      new StylableWebpackPlugin(),
+      new StylableWebpackPlugin({ legacyRuntime: true }),
       new RawAssetWebpackPlugin({
         filename: 'components.json',
         data: JSON.stringify(clientData)

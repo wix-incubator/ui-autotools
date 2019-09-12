@@ -1,6 +1,6 @@
 const path = require('path');
 const packagePath = path.resolve(__dirname, '..');
-const StylableWebpackPlugin = require('@stylable/webpack-plugin');
+const { StylableWebpackPlugin } = require('@stylable/webpack-plugin');
 
 module.exports = {
   context: packagePath,
@@ -23,6 +23,8 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
   },
   plugins: [
-    new StylableWebpackPlugin()
+    new StylableWebpackPlugin({
+      legacyRuntime: true
+    })
   ]
 };

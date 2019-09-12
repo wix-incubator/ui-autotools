@@ -1,4 +1,4 @@
-const StylableWebpackPlugin = require('@stylable/webpack-plugin');
+const { StylableWebpackPlugin } = require('@stylable/webpack-plugin');
 
 module.exports = {
   devtool: 'source-map',
@@ -25,6 +25,8 @@ module.exports = {
     disableHostCheck: true,
   },
   plugins: [
-    new StylableWebpackPlugin()
+    new StylableWebpackPlugin({
+      legacyRuntime: true
+    })
   ]
 };

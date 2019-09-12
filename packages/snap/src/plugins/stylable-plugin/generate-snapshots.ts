@@ -1,4 +1,4 @@
-const StylableWebpackPlugin = require('@stylable/webpack-plugin');
+const { StylableWebpackPlugin } = require('@stylable/webpack-plugin');
 import path from 'path';
 import webpack from 'webpack';
 import React from 'react';
@@ -82,7 +82,8 @@ async function buildSingleFile(fileName: string, filePath: string, directory: st
       new StylableWebpackPlugin({
         outputCSS: true,
         path: directory,
-        filename: '[name].css'
+        filename: '[name].css',
+        legacyRuntime: true
       }),
       new HTMLSnapshotPlugin({
         render: render.bind(null, fileName, snapInfo, returnHtml),

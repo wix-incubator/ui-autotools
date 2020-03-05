@@ -10,7 +10,7 @@ export interface IRegistry<AssetMap = any> {
 
 export interface IComponentMetadata<Props, State> {
   component: ComponentType<Props> | ComponentClass<Props, State>;
-  simulations: Array<ISimulation<Props, State>>;
+  simulations: ISimulation<Props, State>[];
   styles: Map<any, IStyleMetadata>;
   addSim: (sim: ISimulation<Props, State>) => void;
   addStyle: (style: any, description: IStyleMetadata) => void;

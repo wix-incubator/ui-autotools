@@ -19,6 +19,7 @@ export class MethodTable extends React.Component<IMethodTableProps> {
             <th className={style.header}>Description</th>
           </tr>
           {methods.map(({name, description, schema}) =>
+            (
             <tr key={name}>
               <td className={style.methodName}>{name}</td>
               <td className={style.methodType}>
@@ -28,6 +29,7 @@ export class MethodTable extends React.Component<IMethodTableProps> {
                 {description}
               </td>
             </tr>
+            )
           )}
         </tbody>
       </table>
@@ -64,7 +66,7 @@ function getMethods(componentSchema: any): IMethod[] {
     return [];
   }
 
-  const properties: Array<[string, any]> =
+  const properties: [string, any][] =
     Object.entries(componentSchema.properties || {});
 
   return properties

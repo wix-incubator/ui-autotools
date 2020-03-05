@@ -21,6 +21,7 @@ export class PropsTable extends React.Component<IPropsTableProps> {
             <th className={style.header}>Description</th>
           </tr>
           {properties.map(({name, description, schema, isRequired}) =>
+            (
             <tr key={name}>
               <td className={style.propName}>{name}</td>
               <td className={style.propType}>
@@ -33,6 +34,7 @@ export class PropsTable extends React.Component<IPropsTableProps> {
                 {description}
               </td>
             </tr>
+            )
           )}
         </tbody>
       </table>

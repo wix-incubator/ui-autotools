@@ -14,6 +14,7 @@ export const ComponentList: React.FunctionComponent<IProps>  = (props) => {
         Components
       </div>
       {components.map((name) =>
+        (
         <a
           key={name}
           href={`/components/${name}/`}
@@ -21,6 +22,7 @@ export const ComponentList: React.FunctionComponent<IProps>  = (props) => {
         >
           {name}
         </a>
+        )
       )}
     </div>
   );

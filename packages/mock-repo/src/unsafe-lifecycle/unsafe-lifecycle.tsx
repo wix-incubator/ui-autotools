@@ -21,10 +21,10 @@ export interface IProps {
    */
   alwaysUndefined?: undefined;
   numberArray?: number[];
-  mixedArray?: Array<number | string>;
-  sillyArray?: Array<3>;
-  object?: {str: string, num?: number, food: IFood, array: Array<1 | 2>};
-  category?: 'aaa' | 'bbb' | 'ccc' | string[] | 12 | Array<1 | 2> | false;
+  mixedArray?: number[] | string[];
+  sillyArray?: 3[];
+  object?: {str: string, num?: number, food: IFood, array: 1[] | 2[]};
+  category?: 'aaa' | 'bbb' | 'ccc' | string[] | 12 | 1[] | 2[] | false;
   children?: React.ReactNode;
   food?: IFood;
   rps?: RPS;

@@ -12,7 +12,7 @@ interface IMockData {
   baseStylePath: string;
   exportName: string;
   path: string;
-  simulations: Array<ISimulation<any, any>>;
+  simulations: ISimulation<any, any>[];
   styles: IStyle[];
 }
 

@@ -3,7 +3,7 @@ import {IComponentMetadata, ISimulation, IStyleMetadata, IExportInfo, IStaticRes
 import {isValidSimulationTitle, getCompWithState} from '../utils';
 
 export class ComponentMetadata<Props, State> implements IComponentMetadata<Props, State> {
-  public simulations: Array<ISimulation<Props, State>> = []; // Initialize with "empty" simulation
+  public simulations: ISimulation<Props, State>[] = []; // Initialize with "empty" simulation
   public styles: Map<any, IStyleMetadata> = new Map<any, IStyleMetadata>();
   public nonReactStrictModeCompliant: boolean = false;
   public nonA11yCompliant: boolean = false;

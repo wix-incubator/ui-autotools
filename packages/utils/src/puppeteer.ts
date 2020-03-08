@@ -44,9 +44,9 @@ async function failIfTestsStall(page: puppeteer.Page, timeout: number) {
 
   while (true) {
     await sleep(timeout);
-    const newVal = await page.evaluate('mochaStatus.numCompletedTests');
+    const newVal = await page.evaluate('mochaStatus.numCompletedTests') as number;
     if (newVal > numCompletedTests) {
-      numCompletedTests = newVal;
+      numCompletedTests = newVal; 
     } else {
       throw new Error(`Tests are stuck for ${timeout}ms`);
     }

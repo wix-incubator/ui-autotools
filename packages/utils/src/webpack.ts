@@ -51,7 +51,7 @@ export class WebpackConfigurator {
   }
 
   public addHtml(html: HtmlWebpackPlugin.Options): this {
-    this.addPlugin(new HtmlWebpackPlugin(html));
+    this.addPlugin(new HtmlWebpackPlugin(html) as any);
     return this;
   }
 

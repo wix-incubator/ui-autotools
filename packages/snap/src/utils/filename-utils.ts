@@ -11,7 +11,7 @@ export function generateSnapshotFilename(componentName: string, simName: string,
 }
 
 export function generateData(componentName: string, componentPath: string, stylePath?: string): string {
-  const styleImport = stylePath ? `import style from '${stylePath}';\n` : '';
+  const styleImport = stylePath ? `import {style} from '${stylePath}';\n` : '';
   const styleExport = stylePath ? ', style' : '';
 
   const data = `${styleImport}import {${componentName}} from '${componentPath}';

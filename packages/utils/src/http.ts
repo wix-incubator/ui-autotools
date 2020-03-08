@@ -7,7 +7,7 @@ export function getServerUrl(server: http.Server): string {
     address :
     url.format({
       protocol: 'http',
-      hostname: address.address,
-      port: address.port
+      hostname: address?.address,
+      port: address?.port
     });
 }

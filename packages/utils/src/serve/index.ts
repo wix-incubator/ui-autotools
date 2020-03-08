@@ -65,7 +65,8 @@ function createCompiler({webpackConfig, log, watch}: ICompilerOptions) {
 
 function createMiddleware({compiler, watch}: IMiddlewareOptions) {
   return koaWebpack({
-    compiler,
+    // Not good. Type incompatability
+    compiler: compiler as any,
     devMiddleware: {
       publicPath: '/',
       logLevel: 'silent',

@@ -46,9 +46,7 @@ export const hydrationTest = (): void => {
               // strings. Therefore it's fine to print [object Object] in other cases
               const consoleArgs = consoleSpy.getCall(0) ? consoleSpy.getCall(0).args[0] : '';
               const errorArgs = errorSpy.getCall(0) ? errorSpy.getCall(0).args[0] : '';
-                // tslint:disable-next-line:no-unused-expression
               expect(consoleSpy, `console was called with:\n ${consoleArgs}`).to.not.be.called;
-                // tslint:disable-next-line:no-unused-expression
               expect(errorSpy, `console error was called with:\n ${errorArgs}`).to.not.be.called;
             });
           });

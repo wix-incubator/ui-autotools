@@ -10,8 +10,7 @@
     "build:cjs": "tsc -p src --outDir cjs --module commonjs && stc --srcDir=src --outDir=cjs",
     "build:esm": "tsc -p src --outDir esm --module esnext && stc --srcDir=src --outDir=esm",
     "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
-    "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext",
-    "lint": "tslint -p src"
+    "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext"
   },
   "files": [
     "cjs",
@@ -19,7 +18,7 @@
     "templates"
   ],
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "repository": "git@github.com:wix/ui-autotools.git",
   "author": "Wix.com",

@@ -10,19 +10,16 @@
     "build:watch": "run-p build:cjs-watch build:esm-watch",
     "build:cjs": "tsc -p src --outDir cjs --module commonjs",
     "build:esm": "tsc -p src --outDir esm --module esnext",
-    "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
-    "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext",
-    "lint": "run-p lint:src lint:test",
-    "lint:src": "tslint -p src",
-    "lint:test": "tslint -p test",
-    "test": "mocha -r @ts-tools/node/r \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
+    "build:cjs-watch": "yarn build:cjs -w",
+    "build:esm-watch": "yarn build:esm -w",
+    "test": "mocha \"test/**/*.spec.ts?(x)\""
   },
   "files": [
     "cjs",
     "esm"
   ],
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "peerDependencies": {
     "react": ">=16",

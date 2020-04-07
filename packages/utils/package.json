@@ -11,8 +11,7 @@
     "build:cjs": "tsc -p src --outDir cjs --module commonjs",
     "build:esm": "tsc -p src --outDir esm --module esnext",
     "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
-    "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext",
-    "lint": "tslint -p src"
+    "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext"
   },
   "files": [
     "cjs",
@@ -20,16 +19,16 @@
     "patch-console.js"
   ],
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "repository": "git@github.com:wix-incubator/ui-autotools.git",
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "chalk": "^2.4.2",
-    "html-webpack-plugin": "^4.0.0-beta.8",
-    "koa": "^2.7.0",
-    "koa-webpack": "^5.2.4",
+    "chalk": "^4.0.0",
+    "html-webpack-plugin": "^4.0.4",
+    "koa": "^2.11.0",
+    "koa-webpack": "^5.3.0",
     "puppeteer": "^1.19.0"
   },
   "peerDependencies": {

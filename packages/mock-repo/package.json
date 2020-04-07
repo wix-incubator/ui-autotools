@@ -11,12 +11,9 @@
     "build:cjs": "tsc -p src --outDir cjs --module commonjs",
     "build:esm": "tsc -p src --outDir esm --module esnext",
     "build:watch": "run-p build:cjs-watch build:esm-watch",
-    "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
-    "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext",
-    "lint": "run-p lint:src lint:test",
-    "lint:src": "tslint -p src",
-    "lint:test": "tslint -p test",
-    "test": "mocha -r @ts-tools/node/r \"./test/node/**/*.node-spec.ts?(x)\" --watch-extensions ts,tsx && yarn sanity && yarn a11y && yarn snap-if-ci",
+    "build:cjs-watch": "yarn build:cjs -w",
+    "build:esm-watch": "yarn build:esm -w",
+    "test": "mocha \"./test/node/**/*.node-spec.ts?(x)\" && yarn sanity && yarn a11y && yarn snap-if-ci",
     "snap": "yarn autotools-snap",
     "snap-if-ci": "node -r @ts-tools/node/r ./snap-if-ci.ts",
     "a11y": "yarn autotools-a11y",
@@ -24,12 +21,12 @@
     "showcase": "autotools showcase --files src/**/*.meta.ts"
   },
   "dependencies": {
-    "@stylable/webpack-plugin": "^1.1.4",
+    "@stylable/webpack-plugin": "^1.3.0",
     "@ui-autotools/a11y": "^2.7.3",
     "@ui-autotools/registry": "^4.1.0",
     "@ui-autotools/sanity": "^2.8.4",
     "@ui-autotools/snap": "^3.0.4",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   }
 }

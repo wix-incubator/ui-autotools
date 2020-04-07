@@ -10,12 +10,9 @@
     "build:cjs": "tsc -p src --outDir cjs --module commonjs",
     "build:esm": "tsc -p src --outDir esm --module esnext",
     "build:watch": "run-p build:cjs-watch build:esm-watch",
-    "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
-    "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext",
-    "lint": "run-p lint:src lint:test",
-    "lint:src": "tslint -p src",
-    "lint:test": "tslint -p test",
-    "test": "mocha -r @ts-tools/node/r \"test/**/*.spec.ts?(x)\" --watch-extensions ts,tsx"
+    "build:cjs-watch": "yarn build:cjs -w",
+    "build:esm-watch": "yarn build:esm -w",
+    "test": "mocha \"test/**/*.spec.ts?(x)\""
   },
   "files": [
     "bin",
@@ -24,7 +21,7 @@
     "templates"
   ],
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "repository": "git@github.com:wix-incubator/ui-autotools.git",
   "author": "Wix.com",
@@ -39,11 +36,11 @@
     "@ui-autotools/node-utils": "^1.5.3",
     "@ui-autotools/utils": "^1.5.4",
     "chai": "^4.2.0",
-    "commander": "^3.0.0",
-    "glob": "^7.1.4",
-    "sinon": "^7.4.1",
-    "sinon-chai": "^3.3.0",
-    "webpack": "^4.39.1"
+    "commander": "^5.0.0",
+    "glob": "^7.1.6",
+    "sinon": "^9.0.1",
+    "sinon-chai": "^3.5.0",
+    "webpack": "^4.42.1"
   },
   "peerDependencies": {
     "@ui-autotools/registry": ">=3.0.0",

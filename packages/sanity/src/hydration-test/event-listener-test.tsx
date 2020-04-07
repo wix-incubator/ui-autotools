@@ -78,7 +78,6 @@ export const eventListenerTest = (): void => {
           });
         });
       } else {
-        // tslint:disable-next-line:no-console
         console.log(`Skipping event listener test for Component: "${componentName}". The "nonEventListenerCheckCompliant" flag was set to true in the metadata.`);
       }
     });

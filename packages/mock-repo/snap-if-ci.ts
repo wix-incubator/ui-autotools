@@ -1,13 +1,9 @@
 import isCI from 'is-ci';
-import {exec} from 'child_process';
+import {spawnSync} from 'child_process';
 
 if (isCI) {
-  exec('yarn autotools-snap', (err, stdout, stderr) => {
-    if (err) {
-      process.exitCode = (err as any).status;
-    }
-
-    process.stdout.write(stdout);
-    process.stderr.write(stderr);
-  });
+  const {status} = spawnSync('yarn', ['autotools-snap'], {stdio:'inherit', shell: true})
+  if (status) {
+    process.exitCode = status;
+  }
 }

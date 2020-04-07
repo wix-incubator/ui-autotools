@@ -10,8 +10,8 @@
     "build:watch": "run-p build:cjs-watch build:esm-watch",
     "build:cjs": "tsc -p src --outDir cjs --module commonjs",
     "build:esm": "tsc -p src --outDir esm --module esnext",
-    "build:cjs-watch": "tsc --watch -p src --outDir cjs --module commonjs",
-    "build:esm-watch": "tsc --watch -p src --outDir esm --module esnext"
+    "build:cjs-watch": "yarn build:cjs -w",
+    "build:esm-watch": "yarn build:esm -w"
   },
   "files": [
     "cjs",

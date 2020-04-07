@@ -1,3 +1,4 @@
+const {Logger} = require('@applitools/eyes-common');
 const {makeVisualGridClient, TestResults, TestFailedError} = require('@applitools/visual-grid-client');
 const domNodesToCdt = require('@applitools/dom-snapshot/src/browser/domNodesToCdt');
 import path from 'path';
@@ -23,16 +24,17 @@ function getGridClientConfig(projectPath: string) {
   if (!projectName) {
     throw new Error('The project should have a package.json file with a "name" field.');
   }
-
-  const branchName = projectName + '/master';
+  const showLogs = false;
+  const branch = projectName + '/master';
   const viewportWidth = 1050;
   const viewportHeight = 1075;
 
   return {
     appName: projectName,
     apiKey: process.env.APPLITOOLS_API_KEY || process.env.EYES_API_KEY,
-    branchName,
+    branch,
     batchName: projectName,
+    logger: new Logger(showLogs, 'visual-grid-client'),
     browser: {
       name: 'chrome',
       width: viewportWidth,

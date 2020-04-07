@@ -29,8 +29,6 @@ Common CLI parameters:
     - events were removed after component unmounts
 - `a11y` - accessibility test:
     - checks component render result for accessibility using axe-core
-- `snap` - tool for generating and testing component snapshots, that:
-    - renders components, takes screenshots, and sends them to Applitools Eyes to run comparisons
 - `showcase` - generates a static website with component documentation, APIs and demos
 
 We encourge anyone to add tools to this repo that utilize metadata. Please open pull requests for any tools and issues with half baked dreams :) .
@@ -49,15 +47,6 @@ import theme1 from './theme1.st.css';
 // If the component hasn't been described before, this method adds a metadata entry for the component,
 // and returns the newly created metadata
 const myComponentMetadata = Registry.getComponentMetadata(MyComp);
-
-// You can add resources (currently only used by Snap)
-myComponentMetadata.staticResources = [
-    {
-        path: 'src/my-comp/my-comp.css',
-        url: 'my-comp.css',
-        mimeType: 'text/css'
-    }
-];
 
 // Simulations are configurations of component props and state
 myComponentMetadata.addSim({
@@ -87,23 +76,6 @@ myComponentMetadata.addSim({
     }
 });
 
-// You can also add resources to simulations (currently only used by Snap)
-myComponentMetadata.addSim({
-    title: 'image_sim',
-    props: {
-        src: './test-image.jpg'
-    },
-    staticResources: [
-        {
-            mimeType: 'image/jpeg',
-            url: 'test-image.jpg',
-            path: 'src/my-comp/test-image.jpg'
-        }
-    ]
-});
-
-// If you want to use the "snap" tool, this method must be called. Currently, the snap
-// tool relies on Stylable
 myComponentMetadata.exportInfo = {
   path: 'src/my-comp/my-comp',                          // the path to your component, relative to the root, and without file extension
   exportName: 'MyComp',                                 // the name under which you export your component
@@ -196,142 +168,6 @@ then run the following command:
 autotools-a11y --files ./components/**/*.meta.ts --impact minor
 ```
 
-### Snap
-
-Snap makes screenshot testing components easy. Snap has two main steps:
-
-1. Generate snapshots from metadata (snapshots are static renders of your component - just HTML, CSS, and resources such as images and fonts).
-2. Send those snapshots to [Applitools Visual Grid](https://applitools.com/visualgrid), and print the results to the console.
-
-**Why not just use something like Puppeteer to take screenshots? Why go through the hassle of generating "snapshots"?**
-
-Testing with snapshots has two main benefits:
-
-- **They're faster.** Since Applitools' Visual Grid runs tests in parallel, it doesn't matter if you're running 40 or 400 tests, they'll take about the same time to complete
-- **You can test locally.** With screenshot testing, screenshots can only be taken on CI because of the variables associated with inconsistent platforms (things render differently on different operating systems). With snapshots, it doesn't matter where you generate them, so it's possible to get instant feedback rather than waiting for CI to finish running. 
-
-*Note: Snap requires that the `process.env.EYES_API_KEY` value is set to your private API key.*
-
-#### Usage and Configuration
-Install:
-
-```shell
-npm i --save-dev @ui-autotools/snap
-```
-Snap needs to be configured before it will do anything. Configuration is as easy as:
-
-1. Adding a `snap.config.js` file under your `.autotools/` folder, which should be in the root of your project.
-2. Adding default configuration. In the case of a Stylable project, your `snap.config.js` file should look like this:
-
-```js
-const {StylableSnapPlugin} = require('@ui-autotools/snap');
-
-const config = {
-  plugins: [
-    new StylableSnapPlugin(),
-  ]
-};
-
-module.exports = config;
-```
-Snap will automatically look for a `snap.config.js` file under `.autotools`, but if you want to use a config file stored somewhere else or named something different, simply use the `--config` flag.
-
-`autotools-snap --config my-config.js`
-
-#### Snapshots
-
-Snapshots are what Applitools renders on their server before taking screenshots. Snapshots have two components:
-
-1. HTML
-2. Static resources (css, images, fonts, etc.)
-
-This is the `ISnapshot` interface:
-
-```typescript
-interface ISnapshot {
-  html: string;
-  testName: string;
-  staticResources?: ISnapResource[];
-}
-
-interface ISnapResource {
-  data: Buffer;
-  url: string;
-  mimeType: string;
-}
-```
-
-#### Plugins
-
-The basic flow of Snap is as follows: metadata -> snapshots -> test results. Snap handles the last step (snapshots -> test results), but the first step of transforming metadata into snapshots is handled by *plugins*.
-
-A plugin (just a class) can have the following *hooks*:
-
-| Hook       | Provided by Snap                                                | Returned by Hook            |
-|------------|-----------------------------------------------------------------|-----------------------------|
-| Project    | `snapInfo: ISnapInfo`                                           | `Promise<void>`              |
-| Component  | `compSnapInfo: ICompSnapInfo`                                   | `Promise<void>` |
-| Simulation | `simSnapInfo: ISimSnapInfo`                                     | `Promise<void>` |
-| After      | `snapInfo: ISnapInfo, files: ISnapshot[]` | `Promise<void>`             |
-
-
-- Project hooks are run at the beginning, before anything else. This is where a plugin should do any necessary setup (building the project, creating temporary directories, etc.)
-- Component hooks are called once for each component. This is useful if you'd like to render a component with a specific set of props for screenshot testing, instead of rendering each simulation.
-- Simulation hooks are called once for each simulation. This is usually where a plugin would generate snapshots.
-- After hooks are run after Snap has returned with test results. This is where a plugin would usually do any necessary cleanup.
-
-Every hook is asynchronous, and should return a Promise of type `void`. In addition, there is no guaranteed order to hook execution - hooks are responsible for ensuring their own boundaries, i.e. a simulation hook that is written to run on Stylable components must ensure internally that it *only* runs on Stylable components, since conflicts can occur. The metadata `addCustomField` method is recommended for this purpose. Simply export a key from your plugin to use in the metadata, and then verify that such a key exists before generating a snapshot.
-
-Further detail on each hook is provided below, but an example may be more useful to demonstrate Snap plugins. There is an example plugin under `packages/mock-repo/.autotools`, used to test a few components in `mock-repo`.
-
-##### Project Hooks
-
-Project hooks are provided an object of type `ISnapInfo`.
-
-```ts
-interface ISnapInfo {
-  Registry: IRegistry;
-  projectPath: string; // process.cwd()
-  collectFiles: (files: ISnapshot[]) => void;
-}
-
-interface IRegistry<AssetMap = any> {
-  metadata: IMetadata;
-  getComponentMetadata: <Props, State = {}> (comp: ComponentType<Props> | ComponentClass<Props, State>) => IComponentMetadata<Props, State>;
-  clear: () => void;
-}
-```
-
-`collectFiles` is the method a plugin will call in order to "return" a snapshot it has generated to Snap. Since snapshots will be run in parallel, order cannot matter.  
-
-##### Component Hooks
-
-Component hooks are provided an object of type `ICompSnapInfo`.
-
-```ts
-interface ICompSnapInfo extends ISnapInfo {
-  componentMetadata: IComponentMetadata<any, any>;
-}
-```
-
-##### Simulation Hooks
-
-Simulation hooks are provided an object of type `ISimSnapInfo`.
-
-```ts
-interface ISimSnapInfo extends ICompSnapInfo {
-  simulation: ISimulation<any, any>;
-}
-```
-
-##### After Hooks
-
-After hooks are provided `ISnapInfo`, along with the list of files sent to Applitools. 
-
-#### Options
-
-- `skip-on-missing-key`: set this flag if you want to skip testing when `process.env.EYES_API_KEY` or `process.env.APPLITOOLS_API_KEY` variables are not set. By default, snap will fail if either of these keys are not set. Example usage: `snap --skip-on-missing-key`, or, `snap -s`.
-  
 ### Showcase
 
 Creates a static website with documentation, API and demos for all components described in the meta files.

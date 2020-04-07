@@ -15,7 +15,6 @@ program
     .option('-f, --files [pattern]', 'Grep file')
     .action((options) => {
         const metaGlob: string = options.files || defaultMetaGlob;
-        // This code is duplicated and used in snap as well. We may want to find a way to share it
         glob.sync(metaGlob, { absolute: true, cwd: projectPath }).forEach(require);
         ssrTest();
         hydrationTest(projectPath, metaGlob, webpackConfigPath);

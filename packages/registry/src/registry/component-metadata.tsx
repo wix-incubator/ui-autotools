@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IComponentMetadata, ISimulation, IStyleMetadata, IExportInfo, IStaticResource} from './types';
+import {IComponentMetadata, ISimulation, IStyleMetadata, IExportInfo} from './types';
 import {isValidSimulationTitle, getCompWithState} from '../utils';
 
 export class ComponentMetadata<Props, State> implements IComponentMetadata<Props, State> {
@@ -10,7 +10,6 @@ export class ComponentMetadata<Props, State> implements IComponentMetadata<Props
   public nonEventListenerTestCompliant: boolean = false;
   public nonHydrationTestCompliant: boolean = false;
   public exportInfo: IExportInfo | null = null;
-  public staticResources: IStaticResource[] = [];
   public customFields: {[key: string]: any} = {};
 
   public constructor(public component: React.ComponentType<Props>) {}

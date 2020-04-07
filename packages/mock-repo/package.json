@@ -13,9 +13,7 @@
     "build:watch": "run-p build:cjs-watch build:esm-watch",
     "build:cjs-watch": "yarn build:cjs -w",
     "build:esm-watch": "yarn build:esm -w",
-    "test": "mocha \"./test/node/**/*.node-spec.ts?(x)\" && yarn sanity && yarn a11y && yarn snap-if-ci",
-    "snap": "yarn autotools-snap",
-    "snap-if-ci": "node -r @ts-tools/node/r ./snap-if-ci.ts",
+    "test": "mocha \"./test/node/**/*.node-spec.ts?(x)\" && yarn sanity && yarn a11y",
     "a11y": "yarn autotools-a11y",
     "sanity": "yarn autotools-sanity",
     "showcase": "autotools showcase --files src/**/*.meta.ts"
@@ -25,7 +23,6 @@
     "@ui-autotools/a11y": "^2.7.3",
     "@ui-autotools/registry": "^4.1.0",
     "@ui-autotools/sanity": "^2.8.4",
-    "@ui-autotools/snap": "^3.0.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   }

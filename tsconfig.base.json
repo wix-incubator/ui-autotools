@@ -8,12 +8,10 @@
     "declarationMap": true,
     "sourceMap": true,
     "strict": true,
-
     "noUnusedLocals": true,
     "noUnusedParameters": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-
     "moduleResolution": "node",
     "types": [],
     "allowSyntheticDefaultImports": true,

@@ -1,6 +1,6 @@
 # ui-autotools
 
-[![Build Status](https://travis-ci.org/wix-incubator/ui-autotools.svg?branch=master)](https://travis-ci.org/wix-incubator/ui-autotools)
+[![Build Status](https://travis-ci.com/wix-incubator/ui-autotools.svg?branch=master)](https://travis-ci.com/wix-incubator/ui-autotools)
 
 ui-autotools comprises a set of tools designed to automate and improve the process of developing components. These tools consume `*.meta.tsx` files in the project, which are described below. All tools share a similar command pattern:
 

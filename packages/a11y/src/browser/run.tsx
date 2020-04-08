@@ -24,10 +24,9 @@ function createTestsFromSimulations(reactRoot: HTMLElement) {
       for (const sim of meta.simulations) {
         tests.push({
           title: getCompName(Comp) + ' ' + sim.title,
-          render: (container: HTMLElement) =>
-            ReactDOM.render(<Comp {...sim.props} />, container),
+          render: (container: HTMLElement) => ReactDOM.render(<Comp {...sim.props} />, container),
           cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot),
-          impact: meta.impact
+          impact: meta.impact,
         });
       }
     }

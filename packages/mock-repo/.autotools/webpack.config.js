@@ -15,14 +15,12 @@ module.exports = {
       {
         test: /\.css$/,
         exclude: /\.st\.css$/,
-        use: ['style-loader', 'css-loader']
-      }
-    ]
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
   },
-  plugins: [
-    new StylableWebpackPlugin()
-  ]
+  plugins: [new StylableWebpackPlugin()],
 };

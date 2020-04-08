@@ -8,7 +8,9 @@ export interface IProps {
 
 export class BasicComponent extends React.Component<IProps> {
   public static displayName: string;
-  public listener() { return; }
+  public listener() {
+    return;
+  }
 
   public componentDidMount() {
     window.addEventListener('click', this.listener);

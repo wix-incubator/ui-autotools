@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Composite} from './composite/composite';
-import {Modal} from './modal/modal';
-import {PostRenderHook} from './post-render-hook/post-render-hook';
-import {UnsafeLifecycle} from './unsafe-lifecycle/unsafe-lifecycle';
+import { Composite } from './composite/composite';
+import { Modal } from './modal/modal';
+import { PostRenderHook } from './post-render-hook/post-render-hook';
+import { UnsafeLifecycle } from './unsafe-lifecycle/unsafe-lifecycle';
 
 const App: React.FunctionComponent = () => {
   return (
@@ -14,9 +14,7 @@ const App: React.FunctionComponent = () => {
           <span>Hey, I'm in a portal</span>
         </Modal>
       </div>
-      <div>
-        Other Div
-      </div>
+      <div>Other Div</div>
       <Composite />
       <PostRenderHook />
       <UnsafeLifecycle />

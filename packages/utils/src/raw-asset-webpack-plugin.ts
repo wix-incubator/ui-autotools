@@ -4,7 +4,7 @@ export class RawAssetWebpackPlugin {
   private filename: string;
   private data: string;
 
-  public constructor(options: {filename: string, data: string}) {
+  public constructor(options: { filename: string; data: string }) {
     this.filename = options.filename;
     this.data = options.data;
   }
@@ -13,7 +13,7 @@ export class RawAssetWebpackPlugin {
     compiler.hooks.emit.tapAsync('RawAssetPlugin', (compilation, callback) => {
       compilation.assets[this.filename] = {
         source: () => this.data,
-        size: () => this.data.length
+        size: () => this.data.length,
       };
       callback();
     });

@@ -3,11 +3,7 @@ import chalk from 'chalk';
 import webpack from 'webpack';
 
 function clearConsole() {
-  process.stdout.write(
-    process.platform === 'win32' ?
-      '\x1B[2J\x1B[0f' :
-      '\x1B[2J\x1B[3J\x1B[H'
-  );
+  process.stdout.write(process.platform === 'win32' ? '\x1B[2J\x1B[0f' : '\x1B[2J\x1B[3J\x1B[H');
 }
 
 function formatWebpackStats(stats: webpack.Stats) {
@@ -21,7 +17,7 @@ function formatWebpackStats(stats: webpack.Stats) {
     modules: false,
     performance: false,
     timings: false,
-    version: false
+    version: false,
   });
 }
 
@@ -44,7 +40,7 @@ export class Log {
         process.stdout.write(`Compiling ${Math.round(100 * percentage)}%`);
       }
     }
-  }
+  };
 
   public compilationFinished = (stats: webpack.Stats) => {
     if (this.firstRun) {
@@ -62,7 +58,7 @@ export class Log {
     } else if (this.watch) {
       process.stdout.write(chalk.green('Compiled successfully.\n'));
     }
-  }
+  };
 
   public compilationError(error: Error) {
     process.stderr.write(chalk.red('Compilation failed.\n'));
@@ -74,5 +70,5 @@ export class Log {
     if (this.watch) {
       process.stdout.write(`Running on ${chalk.blue(url)}\n`);
     }
-  }
+  };
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import style from './method-table.st.css';
-import {TypeDefinition} from '../type-definition';
+import { TypeDefinition } from '../type-definition';
 
 export interface IMethodTableProps {
   componentSchema: any;
@@ -18,17 +18,15 @@ export class MethodTable extends React.Component<IMethodTableProps> {
             <th className={style.header}>Type</th>
             <th className={style.header}>Description</th>
           </tr>
-          {methods.map(({name, description, schema}) =>
+          {methods.map(({ name, description, schema }) => (
             <tr key={name}>
               <td className={style.methodName}>{name}</td>
               <td className={style.methodType}>
                 <TypeDefinition schema={schema} />
               </td>
-              <td className={style.methodDescription}>
-                {description}
-              </td>
+              <td className={style.methodDescription}>{description}</td>
             </tr>
-          )}
+          ))}
         </tbody>
       </table>
     );
@@ -64,16 +62,13 @@ function getMethods(componentSchema: any): IMethod[] {
     return [];
   }
 
-  const properties: Array<[string, any]> =
-    Object.entries(componentSchema.properties || {});
+  const properties: Array<[string, any]> = Object.entries(componentSchema.properties || {});
 
   return properties
-    .filter(([name, schema]) =>
-      schema.$ref === 'common/function' && !reactComponentMethods.has(name)
-    )
+    .filter(([name, schema]) => schema.$ref === 'common/function' && !reactComponentMethods.has(name))
     .map(([name, schema]) => ({
       name,
       description: schema.description ? schema.description.trim() : '',
-      schema
+      schema,
     }));
 }

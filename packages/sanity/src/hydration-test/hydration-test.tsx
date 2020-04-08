@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Registry, {getCompName} from '@ui-autotools/registry';
-import chai, {expect} from 'chai';
+import Registry, { getCompName } from '@ui-autotools/registry';
+import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
@@ -31,7 +31,9 @@ export const hydrationTest = (): void => {
 
         if (!componentMetadata.nonHydrationTestCompliant) {
           componentMetadata.simulations.forEach((simulation) => {
-            const testMessage = `should ${ReactDOM.hydrate ? 'hydrate' : 'render'} component: "${getCompName(Comp)}"${componentMetadata.nonReactStrictModeCompliant ? '' : ' in strict mode'}, with props of simulation: "${simulation.title}" without errors`;
+            const testMessage = `should ${ReactDOM.hydrate ? 'hydrate' : 'render'} component: "${getCompName(Comp)}"${
+              componentMetadata.nonReactStrictModeCompliant ? '' : ' in strict mode'
+            }, with props of simulation: "${simulation.title}" without errors`;
             it(testMessage, () => {
               // Set root's HTML to the SSR component
               root.innerHTML = componentStrings[index];
@@ -50,7 +52,7 @@ export const hydrationTest = (): void => {
               expect(errorSpy, `console error was called with:\n ${errorArgs}`).to.not.be.called;
             });
           });
-      }
+        }
       });
     });
   });

@@ -1,7 +1,7 @@
 import React from 'react';
-import {getCompName} from '../../src';
-import {expect} from 'chai';
-import {DefaultNameComp, TestComp} from '../fixtures/component-fixtures';
+import { getCompName } from '../../src';
+import { expect } from 'chai';
+import { DefaultNameComp, TestComp } from '../fixtures/component-fixtures';
 
 describe('getCompName', () => {
   it('should return the "displayName" property first, if it exists', () => {

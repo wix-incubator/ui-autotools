@@ -1,22 +1,15 @@
 import '@ts-tools/node/r';
 import path from 'path';
-import {promisify} from 'util';
+import { promisify } from 'util';
 import glob from 'glob';
 import chalk from 'chalk';
 import webpack from 'webpack';
 import Koa from 'koa';
 import koaWebpack from 'koa-webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import {
-  WebpackConfigurator,
-  RawAssetWebpackPlugin,
-  getServerUrl
-} from '@ui-autotools/utils';
-import {
-  getMetadataAndSchemasInDirectory,
-  getComponentNamesFromMetadata
-} from './meta';
-import {getClientData} from './client-data';
+import { WebpackConfigurator, RawAssetWebpackPlugin, getServerUrl } from '@ui-autotools/utils';
+import { getMetadataAndSchemasInDirectory, getComponentNamesFromMetadata } from './meta';
+import { getClientData } from './client-data';
 const StylableWebpackPlugin = require('@stylable/webpack-plugin');
 
 interface IProjectOptions {
@@ -45,28 +38,27 @@ interface IGetWebpackConfigOptions {
 
 const ownPath = path.resolve(__dirname, '../..');
 
-function getWebsiteWebpackConfig(
-  {outputPath, production, projectOptions}: IGetWebpackConfigOptions
-): webpack.Configuration {
+function getWebsiteWebpackConfig({
+  outputPath,
+  production,
+  projectOptions,
+}: IGetWebpackConfigOptions): webpack.Configuration {
   const metadataAndSchemas = getMetadataAndSchemasInDirectory(
     projectOptions.projectPath,
     projectOptions.metadataGlob,
     projectOptions.sourcesGlob
   );
 
-  const componentNames =
-    getComponentNamesFromMetadata(metadataAndSchemas.metadata);
+  const componentNames = getComponentNamesFromMetadata(metadataAndSchemas.metadata);
 
-  const clientData = getClientData(
-    projectOptions.projectPath,
-    metadataAndSchemas
-  );
+  const clientData = getClientData(projectOptions.projectPath, metadataAndSchemas);
 
-  const componentPages = componentNames.map((name) =>
-    new HtmlWebpackPlugin({
-      title: name,
-      filename: `components/${name}/index.html`,
-    })
+  const componentPages = componentNames.map(
+    (name) =>
+      new HtmlWebpackPlugin({
+        title: name,
+        filename: `components/${name}/index.html`,
+      })
   );
 
   return {
@@ -75,7 +67,7 @@ function getWebsiteWebpackConfig(
     entry: [path.resolve(ownPath, 'src/client/website.tsx')],
     output: {
       filename: 'website.js',
-      path: outputPath
+      path: outputPath,
     },
     module: {
       rules: [
@@ -83,95 +75,103 @@ function getWebsiteWebpackConfig(
           test: /\.tsx?$/,
           use: {
             loader: '@ts-tools/webpack-loader',
-          }
-        }
-      ]
+          },
+        },
+      ],
     },
     plugins: [
       new StylableWebpackPlugin(),
       new RawAssetWebpackPlugin({
         filename: 'components.json',
-        data: JSON.stringify(clientData)
+        data: JSON.stringify(clientData),
       }),
       new HtmlWebpackPlugin({
         title: 'Website',
-        filename: 'index.html'
+        filename: 'index.html',
       }),
-      ...componentPages
+      ...componentPages,
     ],
     resolve: {
-      extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
-    }
+      extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+    },
   };
 }
 
-function getMetadataWebpackConfig(
-  {outputPath, production, projectOptions}: IGetWebpackConfigOptions
-): webpack.Configuration {
+function getMetadataWebpackConfig({
+  outputPath,
+  production,
+  projectOptions,
+}: IGetWebpackConfigOptions): webpack.Configuration {
   const metaFiles = glob.sync(projectOptions.metadataGlob, {
     cwd: projectOptions.projectPath,
     absolute: true,
   });
 
-  const config = WebpackConfigurator
-                 .load(projectOptions.webpackConfigPath)
-                 .getConfig();
+  const config = WebpackConfigurator.load(projectOptions.webpackConfigPath).getConfig();
   config.mode = production ? 'production' : 'development';
   config.context = projectOptions.projectPath;
   config.entry = [...metaFiles, path.join(ownPath, 'esm/client/simulation.js')];
   config.output = {
     filename: 'metadata.js',
-    path: outputPath
+    path: outputPath,
   };
   if (!config.plugins) {
     config.plugins = [];
   }
-  config.plugins.push(new HtmlWebpackPlugin({
-    title: 'Simulation',
-    filename: 'simulation.html'
-  }));
+  config.plugins.push(
+    new HtmlWebpackPlugin({
+      title: 'Simulation',
+      filename: 'simulation.html',
+    })
+  );
   return config;
 }
 
-export async function startWebsite(
-  {projectOptions, host, port}: IStartWebsiteOptions
-) {
+export async function startWebsite({ projectOptions, host, port }: IStartWebsiteOptions) {
   const koa = new Koa();
 
-  const websiteCompiler = webpack(getWebsiteWebpackConfig({
-    projectOptions,
-    production: false,
-    outputPath: '/dev/null'
-  }));
+  const websiteCompiler = webpack(
+    getWebsiteWebpackConfig({
+      projectOptions,
+      production: false,
+      outputPath: '/dev/null',
+    })
+  );
 
-  const metadataCompiler = webpack(getMetadataWebpackConfig({
-    projectOptions,
-    production: false,
-    outputPath: '/dev/null'
-  }));
+  const metadataCompiler = webpack(
+    getMetadataWebpackConfig({
+      projectOptions,
+      production: false,
+      outputPath: '/dev/null',
+    })
+  );
 
   const devMiddleware: koaWebpack.Options['devMiddleware'] = {
     publicPath: '/',
-    logLevel: 'warn'
+    logLevel: 'warn',
   };
 
   const hotClient: koaWebpack.Options['hotClient'] = {
-    logLevel: 'warn'
+    logLevel: 'warn',
   };
 
-  koa.use(await koaWebpack({
-    compiler: websiteCompiler,
-    devMiddleware,
-    hotClient
-  }));
+  koa.use(
+    await koaWebpack({
+      compiler: websiteCompiler,
+      devMiddleware,
+      hotClient,
+    })
+  );
 
-  koa.use(await koaWebpack({
-    compiler: metadataCompiler,
-    devMiddleware,
-    hotClient
-  }));
+  koa.use(
+    await koaWebpack({
+      compiler: metadataCompiler,
+      devMiddleware,
+      hotClient,
+    })
+  );
 
-  const server = koa.listen({host, port});
+  const server = koa.listen({ host, port });
 
   server.on('listening', () => {
     const serverUrl = getServerUrl(server);
@@ -179,37 +179,35 @@ export async function startWebsite(
   });
 }
 
-export async function buildWebsite(
-  {projectOptions, outputPath}: IBuildWebsiteOptions
-) {
+export async function buildWebsite({ projectOptions, outputPath }: IBuildWebsiteOptions) {
   try {
     // Compile the metadata first, because if there are type or syntactic errors
     // in the project it's easier to let Webpack catch and report them instead
     // of implementing friendly error reporting in the schema extractor.
 
-    const metadataCompiler = webpack(getMetadataWebpackConfig({
-      projectOptions,
-      production: true,
-      outputPath
-    }));
+    const metadataCompiler = webpack(
+      getMetadataWebpackConfig({
+        projectOptions,
+        production: true,
+        outputPath,
+      })
+    );
 
-    const metadataStats = await promisify(
-      metadataCompiler.run.bind(metadataCompiler)
-    )();
+    const metadataStats = await promisify(metadataCompiler.run.bind(metadataCompiler))();
 
     if (metadataStats.hasErrors()) {
       throw metadataStats.toString();
     }
 
-    const websiteCompiler = webpack(getWebsiteWebpackConfig({
-      projectOptions,
-      production: true,
-      outputPath
-    }));
+    const websiteCompiler = webpack(
+      getWebsiteWebpackConfig({
+        projectOptions,
+        production: true,
+        outputPath,
+      })
+    );
 
-    const websiteStats = await promisify(
-      websiteCompiler.run.bind(websiteCompiler)
-    )();
+    const websiteStats = await promisify(websiteCompiler.run.bind(websiteCompiler))();
 
     if (websiteStats.hasErrors()) {
       throw websiteStats.toString();

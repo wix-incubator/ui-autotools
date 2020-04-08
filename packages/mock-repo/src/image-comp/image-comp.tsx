@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface IProps {
-    src: string;
+  src: string;
 }
 
 export default class ImageComp extends React.Component<IProps> {
@@ -9,9 +9,9 @@ export default class ImageComp extends React.Component<IProps> {
 
   public render() {
     return (
-    <div className="root">
-      <img alt="image of a lonely chair in a lonely room, alone" src={this.props.src} className="image" />
-    </div>
+      <div className="root">
+        <img alt="image of a lonely chair in a lonely room, alone" src={this.props.src} className="image" />
+      </div>
     );
   }
 }

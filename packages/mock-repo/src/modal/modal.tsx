@@ -13,18 +13,16 @@ export class Modal extends React.Component<IModalProps, IModalState> {
   public static displayName = 'Modal';
 
   public state: IModalState = {
-    root: null
+    root: null,
   };
 
   public componentDidMount() {
-    this.setState({root: document.body});
+    this.setState({ root: document.body });
   }
 
   public render() {
-    const {root} = this.state;
+    const { root } = this.state;
 
-    return root ?
-      ReactDOM.createPortal(this.props.children, root) :
-      null;
+    return root ? ReactDOM.createPortal(this.props.children, root) : null;
   }
 }

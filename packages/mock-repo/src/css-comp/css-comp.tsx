@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface IProps {
-    text: string;
+  text: string;
 }
 
 export default class CssComp extends React.Component<IProps> {

@@ -1,6 +1,6 @@
-export {serve, IServeOptions, IServer} from './serve';
-export {WebpackConfigurator} from './webpack';
-export {waitForPageError, logConsoleMessages, runTestsInPuppeteer} from './puppeteer';
+export { serve, IServeOptions, IServer } from './serve';
+export { WebpackConfigurator } from './webpack';
+export { waitForPageError, logConsoleMessages, runTestsInPuppeteer } from './puppeteer';
 export * from './console';
 export * from './get-project-name';
 export * from './http';

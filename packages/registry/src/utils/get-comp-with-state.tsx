@@ -1,12 +1,12 @@
 import * as React from 'react';
-import {ISimulation} from '../registry';
+import { ISimulation } from '../registry';
 
 export function getCompWithState(Comp: React.ComponentClass<any>, simulation: ISimulation<any, any>): JSX.Element {
   // Override the requested component's setState
   const getOverrideState = (state: any) => {
     return {
       ...state,
-      ...simulation.state
+      ...simulation.state,
     };
   };
 

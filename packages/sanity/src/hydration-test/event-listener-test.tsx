@@ -1,18 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Registry, {getCompName} from '@ui-autotools/registry';
+import Registry, { getCompName } from '@ui-autotools/registry';
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
-import {AllEvents} from './all-events';
-import {attachEventListenerLogger} from './override-event-listeners';
-import {Listener} from './listener';
+import { AllEvents } from './all-events';
+import { attachEventListenerLogger } from './override-event-listeners';
+import { Listener } from './listener';
 
 const hydrate = ReactDOM.hydrate || ReactDOM.render;
 
 chai.use(sinonChai);
 
 function leftoverListenerErrors(listeners: Listener[], eventTarget: string) {
-  return listeners.map(({type}) => `A ${type} event was not removed from ${eventTarget}.`);
+  return listeners.map(({ type }) => `A ${type} event was not removed from ${eventTarget}.`);
 }
 
 /**
@@ -64,7 +64,7 @@ export const eventListenerTest = (): void => {
               const errors = [
                 ...leftoverListenerErrors(windowLogger.listeners.getAll(), 'window'),
                 ...leftoverListenerErrors(documentLogger.listeners.getAll(), 'document'),
-                ...leftoverListenerErrors(bodyLogger.listeners.getAll(), 'body')
+                ...leftoverListenerErrors(bodyLogger.listeners.getAll(), 'body'),
               ];
 
               windowLogger.detach();
@@ -78,7 +78,9 @@ export const eventListenerTest = (): void => {
           });
         });
       } else {
-        console.log(`Skipping event listener test for Component: "${componentName}". The "nonEventListenerCheckCompliant" flag was set to true in the metadata.`);
+        console.log(
+          `Skipping event listener test for Component: "${componentName}". The "nonEventListenerCheckCompliant" flag was set to true in the metadata.`
+        );
       }
     });
   });

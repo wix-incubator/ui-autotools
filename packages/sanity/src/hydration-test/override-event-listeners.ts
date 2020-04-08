@@ -1,4 +1,4 @@
-import {ListenerList, Listener} from './listener';
+import { ListenerList, Listener } from './listener';
 
 interface ILogger {
   listeners: ListenerList;
@@ -6,7 +6,7 @@ interface ILogger {
 }
 
 export function attachEventListenerLogger(target: EventTarget): ILogger {
-  const {addEventListener, removeEventListener} = target;
+  const { addEventListener, removeEventListener } = target;
   const listeners = new ListenerList();
 
   const detach = () => {
@@ -24,5 +24,5 @@ export function attachEventListenerLogger(target: EventTarget): ILogger {
     listeners.remove(new Listener(...args));
   };
 
-  return {listeners, detach};
+  return { listeners, detach };
 }

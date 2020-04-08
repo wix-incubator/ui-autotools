@@ -13,10 +13,14 @@ export class MockComp extends React.Component<IProps, IState> {
   public static displayName = 'MockComp';
 
   public state: IState = {
-    stateLabel: 'initial state'
+    stateLabel: 'initial state',
   };
 
   public render() {
-    return (<div {...style('root', {}, this.props)}>Props: {this.props.propsLabel}, State: {this.state.stateLabel}</div>);
+    return (
+      <div {...style('root', {}, this.props)}>
+        Props: {this.props.propsLabel}, State: {this.state.stateLabel}
+      </div>
+    );
   }
 }

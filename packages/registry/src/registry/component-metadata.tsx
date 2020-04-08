@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {IComponentMetadata, ISimulation, IStyleMetadata, IExportInfo} from './types';
-import {isValidSimulationTitle, getCompWithState} from '../utils';
+import { IComponentMetadata, ISimulation, IStyleMetadata, IExportInfo } from './types';
+import { isValidSimulationTitle, getCompWithState } from '../utils';
 
 export class ComponentMetadata<Props, State> implements IComponentMetadata<Props, State> {
   public simulations: Array<ISimulation<Props, State>> = []; // Initialize with "empty" simulation
@@ -10,7 +10,7 @@ export class ComponentMetadata<Props, State> implements IComponentMetadata<Props
   public nonEventListenerTestCompliant: boolean = false;
   public nonHydrationTestCompliant: boolean = false;
   public exportInfo: IExportInfo | null = null;
-  public customFields: {[key: string]: any} = {};
+  public customFields: { [key: string]: any } = {};
 
   public constructor(public component: React.ComponentType<Props>) {}
 

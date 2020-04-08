@@ -1,7 +1,7 @@
 import React from 'react';
-import {TestComp, CopyCatTestComp, InvalidNameComp} from '../fixtures/component-fixtures';
-import Registry, {ComponentMetadata} from '../../src';
-import {expect} from 'chai';
+import { TestComp, CopyCatTestComp, InvalidNameComp } from '../fixtures/component-fixtures';
+import Registry, { ComponentMetadata } from '../../src';
+import { expect } from 'chai';
 
 describe('Registry', () => {
   beforeEach(() => {
@@ -9,7 +9,7 @@ describe('Registry', () => {
   });
 
   describe('The getComponentMetadata method', () => {
-    it('adds a new component\'s metadata to the registry, and returns its meta data', () => {
+    it("adds a new component's metadata to the registry, and returns its meta data", () => {
       const myCompMetadata = Registry.getComponentMetadata(TestComp);
       expect(myCompMetadata).to.be.an.instanceof(ComponentMetadata);
     });

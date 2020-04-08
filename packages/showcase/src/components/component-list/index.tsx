@@ -6,22 +6,16 @@ interface IProps {
   currentComponent?: string;
 }
 
-export const ComponentList: React.FunctionComponent<IProps>  = (props) => {
-  const {components, currentComponent} = props;
+export const ComponentList: React.FunctionComponent<IProps> = (props) => {
+  const { components, currentComponent } = props;
   return (
     <div {...style('root', {}, props)}>
-      <div className={style.header}>
-        Components
-      </div>
-      {components.map((name) =>
-        <a
-          key={name}
-          href={`/components/${name}/`}
-          {...style('link', {selected: name === currentComponent})}
-        >
+      <div className={style.header}>Components</div>
+      {components.map((name) => (
+        <a key={name} href={`/components/${name}/`} {...style('link', { selected: name === currentComponent })}>
           {name}
         </a>
-      )}
+      ))}
     </div>
   );
 };

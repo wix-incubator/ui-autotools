@@ -1,3 +1,3 @@
-import {ssrTest} from '../../src';
+import { ssrTest } from '../../src';
 
 ssrTest();

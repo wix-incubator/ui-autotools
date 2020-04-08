@@ -32,10 +32,7 @@ export interface IExportInfo {
 }
 
 export interface IMetadata {
-  components: Map<
-    ComponentType<any> | ComponentClass<any, any>,
-    IComponentMetadata<any, any>
-  >;
+  components: Map<ComponentType<any> | ComponentClass<any, any>, IComponentMetadata<any, any>>;
 }
 
 export interface IStyleMetadata {

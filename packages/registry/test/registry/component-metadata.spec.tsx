@@ -1,6 +1,6 @@
 import Registry from '../../src';
-import {expect} from 'chai';
-import {TestComp} from '../fixtures/component-fixtures';
+import { expect } from 'chai';
+import { TestComp } from '../fixtures/component-fixtures';
 
 const testSim = {
   title: 'testSim',
@@ -17,12 +17,12 @@ const invalidTitleSim = {
 };
 
 const testStyle = {
-  color: 'red'
+  color: 'red',
 };
 
 const testStyleMetadata = {
   name: 'testStyle',
-  path: 'blah/blah'
+  path: 'blah/blah',
 };
 
 describe('Component Metadata', () => {

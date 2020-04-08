@@ -1,5 +1,5 @@
 import Registry, { ISimulation } from '@ui-autotools/registry';
-import {MockComp} from './fixtures/mock-comp';
+import { MockComp } from './fixtures/mock-comp';
 import style from './fixtures/variant.st.css';
 
 interface IStyle {
@@ -25,41 +25,41 @@ const mockData: IMockData = {
     {
       title: 'mock simulation',
       props: {
-        propsLabel: 'props sim'
+        propsLabel: 'props sim',
       },
       state: {
-        stateLabel: 'state sim'
-      }
-    }
+        stateLabel: 'state sim',
+      },
+    },
   ],
   styles: [
     {
       style,
       name: 'variant',
-      path: 'src/registry/fixtures/variant.st.css'
-    }
-  ]
+      path: 'src/registry/fixtures/variant.st.css',
+    },
+  ],
 };
 
 mockMetadata.exportInfo = {
   baseStylePath: 'src/registry/fixtures/base-style.st.css',
   exportName: 'MockComp',
-  path: 'src/registry/fixtures/mock-comp'
+  path: 'src/registry/fixtures/mock-comp',
 };
 
 mockMetadata.addSim({
   title: 'mock simulation',
   props: {
-    propsLabel: 'props sim'
+    propsLabel: 'props sim',
   },
   state: {
-    stateLabel: 'state sim'
-  }
+    stateLabel: 'state sim',
+  },
 });
 
 mockMetadata.addStyle(style, {
   name: 'variant',
-  path: 'src/registry/fixtures/variant.st.css'
+  path: 'src/registry/fixtures/variant.st.css',
 });
 
-export {Registry as MockRegistry, mockData, mockMetadata, IMockData};
+export { Registry as MockRegistry, mockData, mockMetadata, IMockData };

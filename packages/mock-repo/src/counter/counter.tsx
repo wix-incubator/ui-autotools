@@ -9,14 +9,10 @@ export class Counter extends React.Component<{}, IState> {
   public state = { count: 0 };
 
   public render() {
-    return (
-      <button onClick={this.onClick}>
-        Click me: {this.state.count}
-      </button>
-    );
+    return <button onClick={this.onClick}>Click me: {this.state.count}</button>;
   }
 
   private onClick = () => {
-    this.setState({count: this.state.count + 1});
-  }
+    this.setState({ count: this.state.count + 1 });
+  };
 }

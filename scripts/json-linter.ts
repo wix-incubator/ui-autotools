@@ -1,7 +1,7 @@
-import {join} from 'path';
+import { join } from 'path';
 import process from 'process';
 import chalk from 'chalk';
-import {devDependencyLinter} from './dev-dependency-linter';
+import { devDependencyLinter } from './dev-dependency-linter';
 
 const pathToPackageJson = join(__dirname, '../package.json');
 

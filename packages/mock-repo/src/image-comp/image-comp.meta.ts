@@ -4,13 +4,13 @@ import Registry from '@ui-autotools/registry';
 const metadata = Registry.getComponentMetadata(ImageComp);
 
 metadata.exportInfo = {
-    path: 'src/image-comp/image-comp.tsx',
-    exportName: 'ImageComp'
+  path: 'src/image-comp/image-comp.tsx',
+  exportName: 'ImageComp',
 };
 
 metadata.addSim({
-    title: 'image_sim',
-    props: {
-        src: 'test-image.jpg'
-    }
+  title: 'image_sim',
+  props: {
+    src: 'test-image.jpg',
+  },
 });

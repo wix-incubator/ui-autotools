@@ -1,33 +1,33 @@
 import puppeteer from 'puppeteer';
-import {sleep} from './sleep';
-import {consoleLog} from './index';
-const {patchConsole} = require('../patch-console');
+import { sleep } from './sleep';
+import { consoleLog } from './index';
+const { patchConsole } = require('../patch-console');
 
 export function waitForPageError(page: puppeteer.Page): Promise<never> {
-    // We don't need to handle `disconnected` event because any of the
-    // Puppeteer functions we're awaiting on will throw on disconnect anyway.
+  // We don't need to handle `disconnected` event because any of the
+  // Puppeteer functions we're awaiting on will throw on disconnect anyway.
 
-    return new Promise((_, reject) => {
-        page.on('pageerror', (e) => {
-            reject(e);
-        });
-
-        page.on('error', (e) => {
-            reject(new Error(`Page crashed ${e}`));
-        });
+  return new Promise((_, reject) => {
+    page.on('pageerror', (e) => {
+      reject(e);
     });
+
+    page.on('error', (e) => {
+      reject(new Error(`Page crashed ${e}`));
+    });
+  });
 }
 
 export function logConsoleMessages(page: puppeteer.Page) {
-    page.on('console', async (msg) => {
-        const msgArgs = await Promise.all(msg.args().map((a) => a.jsonValue()));
-        consoleLog(...msgArgs);
-    });
+  page.on('console', async (msg) => {
+    const msgArgs = await Promise.all(msg.args().map((a) => a.jsonValue()));
+    consoleLog(...msgArgs);
+  });
 }
 
 async function loadTestPage(page: puppeteer.Page, testPageUrl: string, timeout: number) {
   await page.evaluateOnNewDocument(patchConsole);
-  await page.goto(testPageUrl, {timeout});
+  await page.goto(testPageUrl, { timeout });
 
   if (await page.evaluate(`typeof mochaStatus === 'undefined'`)) {
     throw new Error(`Variable mochaStatus not found on ${testPageUrl}`);
@@ -53,7 +53,7 @@ async function failIfTestsStall(page: puppeteer.Page, timeout: number) {
   }
 }
 
-export async function runTestsInPuppeteer({testPageUrl, noSandbox}: {testPageUrl: string, noSandbox?: boolean}) {
+export async function runTestsInPuppeteer({ testPageUrl, noSandbox }: { testPageUrl: string; noSandbox?: boolean }) {
   const loadTimeout = 20000;
   const testTimeout = 5000;
   const viewportWidth = 800;
@@ -62,9 +62,9 @@ export async function runTestsInPuppeteer({testPageUrl, noSandbox}: {testPageUrl
   let browser: puppeteer.Browser | undefined;
   try {
     const args = noSandbox ? ['--no-sandbox', '--disable-setuid-sandbox'] : [];
-    browser = await puppeteer.launch({headless: true, args});
+    browser = await puppeteer.launch({ headless: true, args });
     const page = await browser.newPage();
-    await page.setViewport({width: viewportWidth, height: viewportHeight});
+    await page.setViewport({ width: viewportWidth, height: viewportHeight });
 
     page.on('dialog', (dialog) => {
       dialog.dismiss();
@@ -75,11 +75,8 @@ export async function runTestsInPuppeteer({testPageUrl, noSandbox}: {testPageUrl
     const numFailedTests = await Promise.race([
       waitForPageError(page),
       loadTestPage(page, testPageUrl, loadTimeout).then(() =>
-        Promise.race([
-          waitForTestResults(page),
-          failIfTestsStall(page, testTimeout)
-        ])
-      )
+        Promise.race([waitForTestResults(page), failIfTestsStall(page, testTimeout)])
+      ),
     ]);
 
     return numFailedTests;

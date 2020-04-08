@@ -1,6 +1,6 @@
-import {getCompName} from '@ui-autotools/registry';
-import {getProjectName} from '@ui-autotools/utils';
-import {IMetadataAndSchemas, IExportSourceAndSchema} from './meta';
+import { getCompName } from '@ui-autotools/registry';
+import { getProjectName } from '@ui-autotools/utils';
+import { IMetadataAndSchemas, IExportSourceAndSchema } from './meta';
 
 export interface IComponentData {
   name: string;
@@ -14,9 +14,7 @@ export interface IClientData {
   components: IComponentData[];
 }
 
-function formatComponentDataForClient(
-  {metadata, schemasByComponent}: IMetadataAndSchemas
-) {
+function formatComponentDataForClient({ metadata, schemasByComponent }: IMetadataAndSchemas) {
   const result: IComponentData[] = [];
 
   for (const [Comp, compMeta] of metadata.components.entries()) {
@@ -24,18 +22,15 @@ function formatComponentDataForClient(
       name: getCompName(Comp),
       schema: schemasByComponent.get(Comp)!,
       simulationTitles: compMeta.simulations.map((sim) => sim.title),
-      styleTitles: Array.from(compMeta.styles.values()).map(({name}) => name)
+      styleTitles: Array.from(compMeta.styles.values()).map(({ name }) => name),
     });
   }
   return result;
 }
 
-export function getClientData(
-  projectPath: string,
-  metadataAndSchemas: IMetadataAndSchemas
-): IClientData {
+export function getClientData(projectPath: string, metadataAndSchemas: IMetadataAndSchemas): IClientData {
   return {
     projectName: getProjectName(projectPath),
-    components: formatComponentDataForClient(metadataAndSchemas)
+    components: formatComponentDataForClient(metadataAndSchemas),
   };
 }

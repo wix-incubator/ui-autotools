@@ -10,8 +10,9 @@
     "build:watch": "lerna run --parallel build:watch",
     "pretest": "run-s lint build",
     "lint": "node -r @ts-tools/node/r scripts/json-linter",
-    "test": "lerna run test --stream"
-  },
+    "test": "lerna run test --stream",
+    "prettify": "npx prettier \"./**/*.{js,ts,tsx}\" --write"
+    },
   "devDependencies": {
     "@stylable/cli": "^1.4.0",
     "@stylable/core": "^1.4.0",

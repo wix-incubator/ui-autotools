@@ -1,11 +1,11 @@
 import Registry from '@ui-autotools/registry';
-import {UnsafeLifecycle} from './unsafe-lifecycle';
+import { UnsafeLifecycle } from './unsafe-lifecycle';
 
 const meta = Registry.getComponentMetadata(UnsafeLifecycle);
 
 meta.addSim({
   title: 'unsafeLifecycle',
-  props: {}
+  props: {},
 });
 
 meta.nonReactStrictModeCompliant = true;

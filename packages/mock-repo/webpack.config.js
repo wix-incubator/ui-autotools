@@ -24,7 +24,5 @@ module.exports = {
   devServer: {
     disableHostCheck: true,
   },
-  plugins: [
-    new StylableWebpackPlugin()
-  ]
+  plugins: [new StylableWebpackPlugin()],
 };

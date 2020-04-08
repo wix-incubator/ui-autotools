@@ -1,10 +1,9 @@
 import Registry from '@ui-autotools/registry';
-import {Modal} from './modal';
+import { Modal } from './modal';
 
-Registry.getComponentMetadata(Modal)
-  .addSim({
-    title: 'modalSim',
-    props: {
-      children: ['🧒', '👶', '🐊']
-    }
-  });
+Registry.getComponentMetadata(Modal).addSim({
+  title: 'modalSim',
+  props: {
+    children: ['🧒', '👶', '🐊'],
+  },
+});

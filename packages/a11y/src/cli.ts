@@ -12,7 +12,10 @@ const webpackConfigPath = getWebpackConfigPath(projectPath);
 program
   .description('run accessibility tests on components with metadata files that match the given pattern')
   .option('-f, --files [pattern]', 'metadata file pattern')
-  .option('-i, --impact <i>', `Only display issues with impact level <i> and higher. Values are: ${impactLevels.join(', ')}`)
+  .option(
+    '-i, --impact <i>',
+    `Only display issues with impact level <i> and higher. Values are: ${impactLevels.join(', ')}`
+  )
   .action((options) => {
     const entry = glob.sync(path.join(projectPath, options.files ? options.files : defaultMetaGlob));
     const impact = options.impact || 'minor';

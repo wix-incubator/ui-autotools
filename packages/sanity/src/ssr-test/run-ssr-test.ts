@@ -1,3 +1,3 @@
-import {ssrTest} from './ssr-test';
+import { ssrTest } from './ssr-test';
 
 ssrTest();

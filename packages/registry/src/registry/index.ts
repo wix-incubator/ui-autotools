@@ -1,2 +1,2 @@
-export {ComponentMetadata} from './component-metadata';
+export { ComponentMetadata } from './component-metadata';
 export * from './types';

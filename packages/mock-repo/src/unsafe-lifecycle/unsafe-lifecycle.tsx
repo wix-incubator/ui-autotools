@@ -23,7 +23,7 @@ export interface IProps {
   numberArray?: number[];
   mixedArray?: Array<number | string>;
   sillyArray?: Array<3>;
-  object?: {str: string, num?: number, food: IFood, array: Array<1 | 2>};
+  object?: { str: string; num?: number; food: IFood; array: Array<1 | 2> };
   category?: 'aaa' | 'bbb' | 'ccc' | string[] | 12 | Array<1 | 2> | false;
   children?: React.ReactNode;
   food?: IFood;

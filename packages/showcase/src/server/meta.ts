@@ -2,9 +2,9 @@ import '@ts-tools/node/r';
 import React from 'react';
 import path from 'path';
 import glob from 'glob';
-import Registry, {getCompName} from '@ui-autotools/registry';
-import {IComponentMetadata, IMetadata} from '@ui-autotools/registry';
-import {createLinker, IModuleSchema, ICodeSchema } from '@wix/typescript-schema-extract';
+import Registry, { getCompName } from '@ui-autotools/registry';
+import { IComponentMetadata, IMetadata } from '@ui-autotools/registry';
+import { createLinker, IModuleSchema, ICodeSchema } from '@wix/typescript-schema-extract';
 
 export interface IModuleSchemaWithFilename {
   file: string;
@@ -31,7 +31,7 @@ function findComponentSchemas(
 ) {
   const sourceFilenames = glob.sync(sourceGlob, {
     cwd: basePath,
-    absolute: true
+    absolute: true,
   });
 
   const matches: Map<React.ComponentType, IExportSourceAndSchema> = new Map();
@@ -47,16 +47,17 @@ function findComponentSchemas(
   const linker = createLinker(sourceFilenames);
   for (const Comp of componentsMetadata.keys()) {
     const name = getCompName(Comp);
-    const metaFile = sourceFilenames.find((file) =>
-      normalize(path.basename(file)) === normalize(name + '.meta.ts') ||
-      normalize(path.basename(file)) === normalize(name + '.meta.tsx')
+    const metaFile = sourceFilenames.find(
+      (file) =>
+        normalize(path.basename(file)) === normalize(name + '.meta.ts') ||
+        normalize(path.basename(file)) === normalize(name + '.meta.tsx')
     );
     if (!metaFile) {
       continue;
     }
-    const componentFile = sourceFilenames.find((file) => (
-      file.replace(/\.tsx?$/, '') === metaFile.replace(/\.meta\.tsx?$/, '')
-    ));
+    const componentFile = sourceFilenames.find(
+      (file) => file.replace(/\.tsx?$/, '') === metaFile.replace(/\.meta\.tsx?$/, '')
+    );
     if (!componentFile) {
       continue;
     }
@@ -64,7 +65,7 @@ function findComponentSchemas(
     if (!exportSchema) {
       continue;
     }
-    matches.set(Comp, {file: componentFile, name, schema: exportSchema});
+    matches.set(Comp, { file: componentFile, name, schema: exportSchema });
   }
 
   return matches;
@@ -77,19 +78,14 @@ export function getMetadataAndSchemasInDirectory(
 ): IMetadataAndSchemas {
   const metadataFiles = glob.sync(metadataGlob, {
     cwd: basePath,
-    absolute: true
+    absolute: true,
   });
   metadataFiles.forEach(require);
   const metadata = Registry.metadata;
-  const schemasByComponent = findComponentSchemas(
-    metadata.components,
-    basePath,
-    sourceGlob
-  );
-  return {metadata, schemasByComponent};
+  const schemasByComponent = findComponentSchemas(metadata.components, basePath, sourceGlob);
+  return { metadata, schemasByComponent };
 }
 
 export function getComponentNamesFromMetadata(metadata: IMetadata): string[] {
-  return Array.from(metadata.components.values())
-         .map(({component}) => getCompName(component));
+  return Array.from(metadata.components.values()).map(({ component }) => getCompName(component));
 }

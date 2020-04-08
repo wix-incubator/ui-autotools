@@ -4,5 +4,4 @@ export interface IProps {
   className?: string;
 }
 
-export const ChildComp: React.FunctionComponent<IProps> = (props) =>
-  <p>❦ {props.text} ❦</p>;
+export const ChildComp: React.FunctionComponent<IProps> = (props) => <p>❦ {props.text} ❦</p>;

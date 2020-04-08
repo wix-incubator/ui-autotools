@@ -1,4 +1,4 @@
-import Registry, {getCompName, IComponentMetadata} from '@ui-autotools/registry';
+import Registry, { getCompName, IComponentMetadata } from '@ui-autotools/registry';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -8,7 +8,7 @@ function findComponent(compName: string) {
 }
 
 function findSimulation<T, K>(compMeta: IComponentMetadata<T, K>, simName: string) {
-  return compMeta.simulations.find(({title}) => title === simName);
+  return compMeta.simulations.find(({ title }) => title === simName);
 }
 
 function findStyle<T, K>(compMeta: IComponentMetadata<T, K>, styleName: string) {
@@ -46,23 +46,20 @@ const StyledSimulation: React.FunctionComponent<IStyledSimulationProps> = (props
     styleRootClass = style.root;
   }
 
-  const className = sim.props.className ?
-    sim.props.className + ' ' + styleRootClass :
-    styleRootClass;
+  const className = sim.props.className ? sim.props.className + ' ' + styleRootClass : styleRootClass;
 
   return <Comp {...sim.props} className={className} />;
 };
-const {location} = document;
+const { location } = document;
 const url = new URL(location ? location.href : '');
 const root = document.createElement('div');
 document.body.appendChild(root);
 
-ReactDOM.render((
+ReactDOM.render(
   <StyledSimulation
     componentName={url.searchParams.get('component') || ''}
     simulationName={url.searchParams.get('simulation') || ''}
     styleName={url.searchParams.get('style') || ''}
-  />
-  ),
+  />,
   root
 );

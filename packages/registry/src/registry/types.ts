@@ -20,7 +20,6 @@ export interface IComponentMetadata<Props, State> {
   nonEventListenerTestCompliant: boolean;
   nonHydrationTestCompliant: boolean;
   exportInfo: IExportInfo | null;
-  staticResources: IStaticResource[];
   addCustomField: (key: string, field: any) => void;
   customFields: { [key: string]: any };
   impact?: 'minor' | 'moderate' | 'serious' | 'critical';
@@ -30,12 +29,6 @@ export interface IExportInfo {
   path: string; // TODO: add path verification
   exportName: string;
   baseStylePath?: string; // TODO: add path verification
-}
-
-export interface IStaticResource {
-  path: string;
-  url: string;
-  mimeType: string;
 }
 
 export interface IMetadata {
@@ -54,5 +47,4 @@ export interface ISimulation<Props, State> {
   title: string;
   props: Props;
   state?: State;
-  staticResources?: IStaticResource[];
 }

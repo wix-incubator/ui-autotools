@@ -4,7 +4,6 @@ import glob from 'glob';
 import dotenv from 'dotenv';
 import {Command} from 'commander';
 import {hydrationTest} from '@ui-autotools/sanity';
-import {eyesTest} from '@ui-autotools/snap';
 import {a11yTest, impactLevels} from '@ui-autotools/a11y';
 import {buildWebsite, startWebsite} from '@ui-autotools/showcase';
 import ssrTest from './ssr-test/mocha-wrapper';
@@ -42,27 +41,6 @@ program
     throw new Error(`Invalid impact level ${impact}`);
   }
   a11yTest(entry, impact, webpackConfigPath);
-});
-
-program
-.command('snap')
-.description('compare components to the expected appearance using Applitools Eyes')
-.option('-f, --files [pattern]', 'metadata file pattern')
-.option('-s, --skip-on-missing-key [boolean]', 'if flag is set, skip tests when no EYES or APPLITOOLS API key present')
-.option('-c, --config, config file name')
-.action(async (options) => {
-  const metaGlob: string = options.files || defaultMetaGlob;
-  try {
-    // This code is duplicated and used in sanity as well. We may want to find a way to share it
-    glob.sync(metaGlob, { absolute: true, cwd: projectPath }).forEach(require);
-    await eyesTest(projectPath, options.skipOnMissingKey, options.config);
-  } catch (error) {
-    process.exitCode = 1;
-    if (error) {
-      // Without a new-line, the error will not show on certain node versions
-      process.stderr.write(error.toString() + '\n');
-    }
-  }
 });
 
 program.command('showcase')

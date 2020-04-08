@@ -1,10 +1,12 @@
-import {readFile} from 'proper-fs';
-import glob from 'glob';
+import fs from 'fs';
 import path from 'path';
+import glob from 'glob';
 
-type ErrorType = 'Error' | 'Warning';
+const { readFile } = fs.promises;
 
-interface IPackageError {
+export type ErrorType = 'Error' | 'Warning';
+
+export interface IPackageError {
   type: ErrorType;
   packageName: string;
   message: string;
@@ -43,7 +45,7 @@ export async function devDependencyLinter(pathToPackageJson: string) {
       let devDependencies;
 
       try {
-        devDependencies = JSON.parse((await readFile(pathToPkg)).toString()).devDependencies;
+        devDependencies = JSON.parse((await readFile(pathToPkg, 'utf8'))).devDependencies;
       } catch (e) {
         errors.push({type: 'Error', packageName: pathToPkg, message: e});
         return errors;

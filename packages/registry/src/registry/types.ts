@@ -1,6 +1,6 @@
 import { ComponentType, ComponentClass } from 'react';
 
-export interface IRegistry<AssetMap = any> {
+export interface IRegistry {
   metadata: IMetadata;
   getComponentMetadata: <Props, State = {}>(
     comp: ComponentType<Props> | ComponentClass<Props, State>
@@ -26,9 +26,9 @@ export interface IComponentMetadata<Props, State> {
 }
 
 export interface IExportInfo {
-  path: string; // TODO: add path verification
+  path: string;
   exportName: string;
-  baseStylePath?: string; // TODO: add path verification
+  baseStylePath?: string;
 }
 
 export interface IMetadata {

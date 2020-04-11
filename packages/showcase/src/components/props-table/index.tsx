@@ -1,10 +1,11 @@
 import React from 'react';
 import { ICodeSchema, IFunctionSchema, SchemaTypes } from '@wix/typescript-schema-extract';
-import style from './props-table.st.css';
+import { style, classes } from './props-table.st.css';
 import { TypeDefinition } from '../type-definition';
 
 export interface IPropsTableProps {
   componentSchema: ICodeSchema;
+  className?: string;
 }
 
 export class PropsTable extends React.Component<IPropsTableProps> {
@@ -12,22 +13,22 @@ export class PropsTable extends React.Component<IPropsTableProps> {
     const properties = getPropTypes(this.props.componentSchema);
 
     return (
-      <table {...style('root', {}, this.props)}>
+      <table className={style(classes.root, this.props.className)}>
         <tbody>
           <tr>
-            <th className={style.header}>Name</th>
-            <th className={style.header}>Type</th>
-            <th className={style.header}>Default</th>
-            <th className={style.header}>Description</th>
+            <th className={classes.header}>Name</th>
+            <th className={classes.header}>Type</th>
+            <th className={classes.header}>Default</th>
+            <th className={classes.header}>Description</th>
           </tr>
           {properties.map(({ name, description, schema, isRequired }) => (
             <tr key={name}>
-              <td className={style.propName}>{name}</td>
-              <td className={style.propType}>
+              <td className={classes.propName}>{name}</td>
+              <td className={classes.propType}>
                 <TypeDefinition schema={schema} />
               </td>
-              <td className={style.propDefaultValue}>{isRequired ? 'Required' : ''}</td>
-              <td className={style.propDescription}>{description}</td>
+              <td className={classes.propDefaultValue}>{isRequired ? 'Required' : ''}</td>
+              <td className={classes.propDescription}>{description}</td>
             </tr>
           ))}
         </tbody>

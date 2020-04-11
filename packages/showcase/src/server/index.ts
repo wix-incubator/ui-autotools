@@ -7,10 +7,10 @@ import webpack from 'webpack';
 import Koa from 'koa';
 import koaWebpack from 'koa-webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { StylableWebpackPlugin } from '@stylable/webpack-plugin';
 import { WebpackConfigurator, RawAssetWebpackPlugin, getServerUrl } from '@ui-autotools/utils';
 import { getMetadataAndSchemasInDirectory, getComponentNamesFromMetadata } from './meta';
 import { getClientData } from './client-data';
-const StylableWebpackPlugin = require('@stylable/webpack-plugin');
 
 interface IProjectOptions {
   projectPath: string;

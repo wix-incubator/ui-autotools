@@ -19,7 +19,7 @@ export class MockComp extends React.Component<IProps, IState> {
 
   public render() {
     return (
-      <div className={style(classes.root, {}, this.props.className)}>
+      <div className={style(classes.root, this.props.className)}>
         Props: {this.props.propsLabel}, State: {this.state.stateLabel}
       </div>
     );

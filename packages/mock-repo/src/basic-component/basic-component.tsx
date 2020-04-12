@@ -21,7 +21,7 @@ export class BasicComponent extends React.Component<IProps> {
   }
 
   public render() {
-    return <div className={style(classes.root, {}, this.props.className)}>{this.props.text}</div>;
+    return <div className={style(classes.root, this.props.className)}>{this.props.text}</div>;
   }
 }
 

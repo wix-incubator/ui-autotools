@@ -28,7 +28,7 @@ export class Composite extends React.Component<IProps, IState> {
 
   public render() {
     return (
-      <div className={style(classes.root, {}, this.props.className)}>
+      <div className={style(classes.root, this.props.className)}>
         <ChildComp text={this.state.text ? this.state.text : this.props.text} />
       </div>
     );

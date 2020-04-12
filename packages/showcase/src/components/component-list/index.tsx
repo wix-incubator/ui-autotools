@@ -10,7 +10,7 @@ export interface IComponentListProps {
 export const ComponentList: React.FunctionComponent<IComponentListProps> = (props) => {
   const { components, currentComponent } = props;
   return (
-    <div className={style(classes.root, {}, props.className)}>
+    <div className={style(classes.root, props.className)}>
       <div className={classes.header}>Components</div>
       {components.map((name) => (
         <a

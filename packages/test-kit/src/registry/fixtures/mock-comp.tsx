@@ -1,7 +1,8 @@
 import React from 'react';
-import style from './base-style.st.css';
+import { classes, style } from './base-style.st.css';
 
 export interface IProps {
+  className?: string;
   propsLabel: string;
 }
 
@@ -18,7 +19,7 @@ export class MockComp extends React.Component<IProps, IState> {
 
   public render() {
     return (
-      <div {...style('root', {}, this.props)}>
+      <div className={style(classes.root, this.props.className)}>
         Props: {this.props.propsLabel}, State: {this.state.stateLabel}
       </div>
     );

@@ -3,12 +3,13 @@ import { IComponentData } from '../../server/client-data';
 import { ComponentList } from '../component-list';
 import { ComponentInfo } from '../component-info';
 import './global.st.css';
-import style from './website.st.css';
+import { style, classes } from './website.st.css';
 
-interface IWebsiteProps {
+export interface IWebsiteProps {
   route: string;
   projectName: string;
   components: IComponentData[];
+  className?: string;
 }
 
 export class Website extends React.Component<IWebsiteProps> {
@@ -21,12 +22,12 @@ export class Website extends React.Component<IWebsiteProps> {
     const currentComponent = components.find((comp) => comp.name === currentComponentName);
 
     return (
-      <div {...style('root', {}, this.props)}>
-        <nav className={style.sidebar}>
-          <div className={style.projectName}>{projectName}</div>
+      <div className={style(classes.root, this.props.className)}>
+        <nav className={classes.sidebar}>
+          <div className={classes.projectName}>{projectName}</div>
           <ComponentList components={componentNames} currentComponent={currentComponentName} />
         </nav>
-        <main className={style.main}>{currentComponent && <ComponentInfo component={currentComponent} />}</main>
+        <main className={classes.main}>{currentComponent && <ComponentInfo component={currentComponent} />}</main>
       </div>
     );
   }

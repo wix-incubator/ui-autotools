@@ -1,18 +1,23 @@
 import React from 'react';
-import style from './component-list.st.css';
+import { style, classes } from './component-list.st.css';
 
-interface IProps {
+export interface IComponentListProps {
   components: string[];
   currentComponent?: string;
+  className?: string;
 }
 
-export const ComponentList: React.FunctionComponent<IProps> = (props) => {
+export const ComponentList: React.FunctionComponent<IComponentListProps> = (props) => {
   const { components, currentComponent } = props;
   return (
-    <div {...style('root', {}, props)}>
-      <div className={style.header}>Components</div>
+    <div className={style(classes.root, props.className)}>
+      <div className={classes.header}>Components</div>
       {components.map((name) => (
-        <a key={name} href={`/components/${name}/`} {...style('link', { selected: name === currentComponent })}>
+        <a
+          key={name}
+          href={`/components/${name}/`}
+          className={style(classes.link, { selected: name === currentComponent })}
+        >
           {name}
         </a>
       ))}

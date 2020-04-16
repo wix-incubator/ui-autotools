@@ -1,5 +1,5 @@
 import React from 'react';
-import style from './type-definition.st.css';
+import { classes } from './type-definition.st.css';
 
 // TODO: we should instead use the Schema type from schema-extract, but
 // it's currently not complete and many valid combinations of properties don't
@@ -129,7 +129,7 @@ const renderArray: TypeRenderer = (schema) => {
 const renderUnknown: TypeRenderer = (schema) => {
   const renderedType = schema.$ref || schema.definedAt || schema.type || JSON.stringify(schema);
 
-  return <span className={style.typeError}>{renderedType}</span>;
+  return <span className={classes.typeError}>{renderedType}</span>;
 };
 
 const renderType: TypeRenderer = (schema) => {

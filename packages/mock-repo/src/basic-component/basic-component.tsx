@@ -1,5 +1,5 @@
 import React from 'react';
-import style from './basic-component.st.css';
+import { style, classes } from './basic-component.st.css';
 
 export interface IProps {
   text?: React.ReactNode;
@@ -21,7 +21,7 @@ export class BasicComponent extends React.Component<IProps> {
   }
 
   public render() {
-    return <div {...style('root', {}, this.props)}>{this.props.text}</div>;
+    return <div className={style(classes.root, this.props.className)}>{this.props.text}</div>;
   }
 }
 

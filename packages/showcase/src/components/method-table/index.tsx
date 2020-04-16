@@ -1,9 +1,10 @@
 import React from 'react';
-import style from './method-table.st.css';
+import { style, classes } from './method-table.st.css';
 import { TypeDefinition } from '../type-definition';
 
 export interface IMethodTableProps {
   componentSchema: any;
+  className?: string;
 }
 
 export class MethodTable extends React.Component<IMethodTableProps> {
@@ -11,20 +12,20 @@ export class MethodTable extends React.Component<IMethodTableProps> {
     const methods = getMethods(this.props.componentSchema);
 
     return (
-      <table {...style('root', {}, this.props)}>
+      <table className={style(classes.root, this.props.className)}>
         <tbody>
           <tr>
-            <th className={style.header}>Name</th>
-            <th className={style.header}>Type</th>
-            <th className={style.header}>Description</th>
+            <th className={classes.header}>Name</th>
+            <th className={classes.header}>Type</th>
+            <th className={classes.header}>Description</th>
           </tr>
           {methods.map(({ name, description, schema }) => (
             <tr key={name}>
-              <td className={style.methodName}>{name}</td>
-              <td className={style.methodType}>
+              <td className={classes.methodName}>{name}</td>
+              <td className={classes.methodType}>
                 <TypeDefinition schema={schema} />
               </td>
-              <td className={style.methodDescription}>{description}</td>
+              <td className={classes.methodDescription}>{description}</td>
             </tr>
           ))}
         </tbody>

@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/test-kit",
-  "version": "2.4.2",
+  "version": "5.0.0",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
   "scripts": {
@@ -24,7 +24,7 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@ui-autotools/registry": "^4.1.0"
+    "@ui-autotools/registry": "^5.0.0"
   },
   "peerDependencies": {
     "@ui-autotools/registry": ">=3.0.0",

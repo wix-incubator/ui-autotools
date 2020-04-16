@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/a11y",
-  "version": "2.7.3",
+  "version": "5.0.0",
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
   "scripts": {
@@ -25,14 +25,14 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "@ui-autotools/registry": "^4.1.0"
+    "@ui-autotools/registry": "^5.0.0"
   },
   "bin": {
     "autotools-a11y": "bin/cli.js"
   },
   "dependencies": {
-    "@ui-autotools/node-utils": "^1.5.3",
-    "@ui-autotools/utils": "^1.5.4",
+    "@ui-autotools/node-utils": "^5.0.0",
+    "@ui-autotools/utils": "^5.0.0",
     "axe-core": "^3.5.3",
     "chalk": "^4.0.0",
     "commander": "^5.0.0",

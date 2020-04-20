@@ -1010,22 +1010,22 @@
     postcss-value-parser "^4.0.3"
     url-regex "^5.0.0"
 
-"@stylable/module-utils@^3.4.1":
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/@stylable/module-utils/-/module-utils-3.4.1.tgz#dd33ec25e9dd85d1e0785eac0c7848004d849639"
-  integrity sha512-0TZLg7Oa4jJG/diAhk7kDGycbRA2JxPItt6Xm+3Kkp3NobYZmOLCa8KqBEj1oRDrmXVcsrIDt42DG7UdJUk6sA==
+"@stylable/module-utils@^3.4.1", "@stylable/module-utils@^3.4.2":
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/@stylable/module-utils/-/module-utils-3.4.2.tgz#7fbfec2b6349f3a9fca8b1fdbe08247422068030"
+  integrity sha512-2pHQZuwnCcwk0MV1Mmd7oqYHVby88O8unjoZ4ulJCxgJm7JzUE0F8ibPKi7Z/m5dHdaHeKTyBtOT/nrQKogZAA==
   dependencies:
-    "@stylable/core" "^3.4.1"
+    "@stylable/core" "^3.4.2"
 
-"@stylable/node@^3.4.1":
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/@stylable/node/-/node-3.4.1.tgz#5888c45cc0c11d1b92a405d9c1ac19fd73a4cf81"
-  integrity sha512-Fya51fL2iwcT2rJYhrllgSQJovpTA8976GL+5MQpEyjPzNpww7junUh3moRoqO5wGrDaSLQ2PKurfntdd9cvzQ==
+"@stylable/node@^3.4.1", "@stylable/node@^3.4.2":
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/@stylable/node/-/node-3.4.2.tgz#c0fbc0c50f294477259e4cc1b19b4c730a812963"
+  integrity sha512-7J6OfjWvx/zQQWQxe7U6kJwt1WFMiZhdBYoYw+AJJlUFjsmhn5bpfc7wkQZwcShCgTul+4iHTqPrr4W/Q4/atQ==
   dependencies:
-    "@stylable/core" "^3.4.1"
-    "@stylable/module-utils" "^3.4.1"
+    "@stylable/core" "^3.4.2"
+    "@stylable/module-utils" "^3.4.2"
     find-config "^1.0.0"
-    murmurhash "^0.0.2"
+    murmurhash "^1.0.0"
 
 "@stylable/optimizer@^3.4.1":
   version "3.4.1"
@@ -6012,10 +6012,10 @@ multimatch@^3.0.0:
     arrify "^1.0.1"
     minimatch "^3.0.4"
 
-murmurhash@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/murmurhash/-/murmurhash-0.0.2.tgz#6f07bd8a1105e709c26fc89420cb5930c24585fe"
-  integrity sha1-bwe9ihEF5wnCb8iUIMtZMMJFhf4=
+murmurhash@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/murmurhash/-/murmurhash-1.0.0.tgz#d0e4556892317d984af632b6a88d5605beef26a7"
+  integrity sha512-u/NfpXS+viMWAupgU6IkwAVWkVnpvzS+D9bDxNuNRUoQ0BRMZ1DK/dPH6Qrknn7RxMHVQBpYBQQigUt7of6RiQ==
 
 murmurhash@^1.0.0:
   version "1.0.0"

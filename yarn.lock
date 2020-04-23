@@ -989,10 +989,10 @@
     lodash.upperfirst "^4.3.1"
     yargs "^15.3.1"
 
-"@stylable/core@^3.4.2":
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/@stylable/core/-/core-3.4.2.tgz#426574c206230ae12a9110ce7fc83d3ef186724a"
-  integrity sha512-6nk7J2zI8fZPS3oCKVsJBeuwjvA0PuxHZ8aMJ/lWgy6mNfS+GtURoOMtKlY7ZMp62MZ6lP5iHz5MmSxFubPG8g==
+"@stylable/core@^3.4.2", "@stylable/core@^3.4.3":
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/@stylable/core/-/core-3.4.3.tgz#ff0ce9211f555cdcd4c069d0cd4ecc9506b323fb"
+  integrity sha512-zcbXREQIdO5HN+Qrf5imsOCnnZpJz0rizFAe3WIpu3CSRoIgHWDiCHBKG9b/suEAAS1W7kXLghyKNxF5sa6hng==
   dependencies:
     css-selector-tokenizer "^0.7.2"
     deindent "^0.1.0"
@@ -1010,20 +1010,20 @@
     postcss-value-parser "^4.0.3"
     url-regex "^5.0.0"
 
-"@stylable/module-utils@^3.4.2":
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/@stylable/module-utils/-/module-utils-3.4.2.tgz#7fbfec2b6349f3a9fca8b1fdbe08247422068030"
-  integrity sha512-2pHQZuwnCcwk0MV1Mmd7oqYHVby88O8unjoZ4ulJCxgJm7JzUE0F8ibPKi7Z/m5dHdaHeKTyBtOT/nrQKogZAA==
+"@stylable/module-utils@^3.4.2", "@stylable/module-utils@^3.4.3":
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/@stylable/module-utils/-/module-utils-3.4.3.tgz#1c9e63f75899de02ab64b279c6570e9204e7163d"
+  integrity sha512-Nzn+CF2MJR2a/u9G4GJjTW2a+OjybgIcGMBv/ngejHXloVzeBsPe/dfkLXbMZdlr8yiKqA0tfgpu9c/whb456w==
   dependencies:
-    "@stylable/core" "^3.4.2"
+    "@stylable/core" "^3.4.3"
 
-"@stylable/node@^3.4.2":
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/@stylable/node/-/node-3.4.2.tgz#c0fbc0c50f294477259e4cc1b19b4c730a812963"
-  integrity sha512-7J6OfjWvx/zQQWQxe7U6kJwt1WFMiZhdBYoYw+AJJlUFjsmhn5bpfc7wkQZwcShCgTul+4iHTqPrr4W/Q4/atQ==
+"@stylable/node@^3.4.2", "@stylable/node@^3.4.3":
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/@stylable/node/-/node-3.4.3.tgz#2ad6ba07dcc31681c9e2aae663ed5952a4a4e98d"
+  integrity sha512-asKOW5gm3SAMUGQa7detqhQXhsnUUQy1FTODsB6hmbSGk4QG14g7UWvNHEONO4JgJFz39ZhAZzMQOmWgTIrNDg==
   dependencies:
-    "@stylable/core" "^3.4.2"
-    "@stylable/module-utils" "^3.4.2"
+    "@stylable/core" "^3.4.3"
+    "@stylable/module-utils" "^3.4.3"
     find-config "^1.0.0"
     murmurhash "^1.0.0"
 

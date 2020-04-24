@@ -32,7 +32,7 @@
     "@types/sinon": "^9.0.0",
     "@types/sinon-chai": "^3.2.4",
     "@types/webpack": "^4.41.12",
-    "@types/webpack-env": "^1.15.1",
+    "@types/webpack-env": "^1.15.2",
     "chai": "^4.2.0",
     "css-loader": "^3.5.2",
     "glob": "^7.1.6",

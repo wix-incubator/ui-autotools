@@ -34,7 +34,7 @@
     "@types/webpack": "^4.41.12",
     "@types/webpack-env": "^1.15.2",
     "chai": "^4.2.0",
-    "css-loader": "^3.5.2",
+    "css-loader": "^3.5.3",
     "glob": "^7.1.6",
     "html-webpack-plugin": "^4.2.0",
     "jsdom": "^16.2.2",

@@ -28,7 +28,7 @@
     "@ui-autotools/node-utils": "^5.0.0",
     "@ui-autotools/sanity": "^5.0.0",
     "@ui-autotools/showcase": "^5.0.0",
-    "commander": "^5.0.0",
+    "commander": "^5.1.0",
     "dotenv": "^8.2.0",
     "glob": "^7.1.6"
   },

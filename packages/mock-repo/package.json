@@ -1,6 +1,6 @@
 {
   "name": "@ui-autotools/mock-repo",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "private": true,
   "author": "Wix.com",
   "license": "BSD-3-Clause",
@@ -20,9 +20,9 @@
   },
   "dependencies": {
     "@stylable/webpack-plugin": "^3.4.4",
-    "@ui-autotools/a11y": "^5.0.0",
+    "@ui-autotools/a11y": "^5.0.1",
     "@ui-autotools/registry": "^5.0.0",
-    "@ui-autotools/sanity": "^5.0.0",
+    "@ui-autotools/sanity": "^5.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   }

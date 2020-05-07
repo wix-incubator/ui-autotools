@@ -1017,7 +1017,7 @@
   dependencies:
     "@stylable/core" "^3.4.5"
 
-"@stylable/node@^3.4.4", "@stylable/node@^3.4.5":
+"@stylable/node@^3.4.5":
   version "3.4.5"
   resolved "https://registry.yarnpkg.com/@stylable/node/-/node-3.4.5.tgz#8e24bfc37d4d7322a76cd338864cd7940d0be277"
   integrity sha512-YAJjjezjg1f3mKYDA/SpwoUkvw9rYPO2G8PKE29kl700r5+s3v1/6CLalgez6/cKlN43CL+4jdePMZa592f1Ow==
@@ -1027,7 +1027,7 @@
     find-config "^1.0.0"
     murmurhash "^1.0.0"
 
-"@stylable/optimizer@^3.4.4", "@stylable/optimizer@^3.4.5":
+"@stylable/optimizer@^3.4.5":
   version "3.4.5"
   resolved "https://registry.yarnpkg.com/@stylable/optimizer/-/optimizer-3.4.5.tgz#53986bb1eb5de672c352029e65404910d6c9f16b"
   integrity sha512-yJICVeufz9izBoYTbavYTW+U1NaI/Sn51PanMq/qandjKjLF7T7zH4NPpcRvZp5gEvwevg1vwNzyADoh2kkQuQ==
@@ -7130,10 +7130,10 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
-puppeteer@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-3.0.2.tgz#1d08cdb7c0c2666f5e743221b1cb1946fea493f0"
-  integrity sha512-5jS/POFVDW9fqb76O8o0IBpXOnq+Na8ocGMggYtnjCRBRqmAFvX0csmwgLOHkYnQ/vCBcBPYlOq0Pp60z1850Q==
+puppeteer@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-3.0.3.tgz#91c4ce46b3822b849e096413457fe8ced7d5aeca"
+  integrity sha512-sWtx9XezIwXdXHNelvnyPEmMjXXiCAuUulEONZFqRO3l+w0vP7dNcGDUIf2HLr4HLLi6r9hcUuO62s/W6rkD/w==
   dependencies:
     "@types/mime-types" "^2.1.0"
     debug "^4.1.0"

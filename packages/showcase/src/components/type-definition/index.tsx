@@ -83,7 +83,7 @@ const renderFunction: TypeRenderer = (schema) => {
 
   return (
     <>
-      ({commaSeparatedArgs}) => {returnType}
+      ({commaSeparatedArgs}) =&gt; {returnType}
     </>
   );
 };

@@ -31,9 +31,11 @@ export const hydrationTest = (): void => {
 
         if (!componentMetadata.nonHydrationTestCompliant) {
           componentMetadata.simulations.forEach((simulation) => {
-            const testMessage = `should ${ReactDOM.hydrate ? 'hydrate' : 'render'} component: "${getCompName(Comp)}"${
-              componentMetadata.nonReactStrictModeCompliant ? '' : ' in strict mode'
-            }, with props of simulation: "${simulation.title}" without errors`;
+            const testMessage = `should ${'hydrate' in ReactDOM ? 'hydrate' : 'render'} component: "${getCompName(
+              Comp
+            )}"${componentMetadata.nonReactStrictModeCompliant ? '' : ' in strict mode'}, with props of simulation: "${
+              simulation.title
+            }" without errors`;
             it(testMessage, () => {
               // Set root's HTML to the SSR component
               root.innerHTML = componentStrings[index];

@@ -1197,10 +1197,10 @@
   resolved "https://registry.yarnpkg.com/@types/http-assert/-/http-assert-1.5.1.tgz#d775e93630c2469c2f980fc27e3143240335db3b"
   integrity sha512-PGAK759pxyfXE78NbKxyfRcWYA/KwW17X290cNev/qAsn9eQIxkH4shoNBafH37wewhDG/0p1cHPbK6+SzZjWQ==
 
-"@types/jsdom@^16.2.1":
-  version "16.2.1"
-  resolved "https://registry.yarnpkg.com/@types/jsdom/-/jsdom-16.2.1.tgz#9e6eee6a578f74eed5997558ab430dbc11aac753"
-  integrity sha512-KCEq427OsWfpX7FRyEMb3i2XIuz8Pt3XPls4nmX0iMTDJWsHD4Kzoa3v4Uv9c9IDf11ALeHUtPcyAjTz/HV03Q==
+"@types/jsdom@^16.2.3":
+  version "16.2.3"
+  resolved "https://registry.yarnpkg.com/@types/jsdom/-/jsdom-16.2.3.tgz#c6feadfe0836389b27f9c911cde82cd32e91c537"
+  integrity sha512-BREatezSn74rmLIDksuqGNFUTi9HNAWWQXYpFBFLK9U6wlMCO4M0QCa8CMpDsZQuqxSO9XifVLT5Q1P0vgKLqw==
   dependencies:
     "@types/node" "*"
     "@types/parse5" "*"

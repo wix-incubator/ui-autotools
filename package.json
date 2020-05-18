@@ -21,7 +21,7 @@
     "@types/chai": "^4.2.11",
     "@types/chai-dom": "^0.0.9",
     "@types/glob": "^7.1.1",
-    "@types/jsdom": "^16.2.1",
+    "@types/jsdom": "^16.2.3",
     "@types/koa-webpack": "^5.0.1",
     "@types/mocha": "^7.0.2",
     "@types/node": "10",

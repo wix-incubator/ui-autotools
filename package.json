@@ -20,7 +20,7 @@
     "@ts-tools/webpack-loader": "^1.1.4",
     "@types/chai": "^4.2.11",
     "@types/chai-dom": "^0.0.9",
-    "@types/glob": "^7.1.1",
+    "@types/glob": "^7.1.2",
     "@types/jsdom": "^16.2.3",
     "@types/koa-webpack": "^5.0.1",
     "@types/mocha": "^7.0.2",

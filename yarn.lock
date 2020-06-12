@@ -1005,19 +1005,19 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz#8da5c6530915653f3a1f38fd5f101d8c3f8079c5"
   integrity sha512-+iTbntw2IZPb/anVDbypzfQa+ay64MW0Zo8aJ8gZPWMMK6/OubMVb6lUPMagqjOPnmtauXnFCACVl3O7ogjeqQ==
 
-"@stylable/cli@^3.6.2":
-  version "3.6.2"
-  resolved "https://registry.yarnpkg.com/@stylable/cli/-/cli-3.6.2.tgz#af7c330582ebb42355b710394062b0e4e512c004"
-  integrity sha512-l0kUeUtVkZjjw5Hh7WebBKmx7GKIg/QmjY8kNKoc61GIVXSfZv7a0TA3EyPms38+/QRLtb0lCyRX3+cGuV1nMw==
+"@stylable/cli@^3.6.3":
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/@stylable/cli/-/cli-3.6.3.tgz#a4c06c78897155d6f7ca9ea2f446bfd631ee514d"
+  integrity sha512-/5N6+6XQXcyYmV/HKHTvAXFCMf5YiUeTxSwXA5quGy7GN3SwZl4btxSBCzeh0LfOBjrST+39bExIR/CTYIrF5Q==
   dependencies:
-    "@stylable/core" "^3.6.2"
-    "@stylable/node" "^3.6.2"
-    "@stylable/optimizer" "^3.6.2"
+    "@stylable/core" "^3.6.3"
+    "@stylable/node" "^3.6.3"
+    "@stylable/optimizer" "^3.6.3"
     lodash.camelcase "^4.3.0"
     lodash.upperfirst "^4.3.1"
     yargs "^15.3.1"
 
-"@stylable/core@^3.6.2", "@stylable/core@^3.6.3":
+"@stylable/core@^3.6.3":
   version "3.6.3"
   resolved "https://registry.yarnpkg.com/@stylable/core/-/core-3.6.3.tgz#29641a532477fecd4137ab047ae0af48120c0500"
   integrity sha512-+9D6ECpESIy9klukHKLy77xNQeP2K8UqhQFLIduQmbRcXezR2bnue2YoNlEMGhbMWEqx6HOr0L8LWCUk7YvREw==
@@ -1054,12 +1054,12 @@
     "@stylable/module-utils" "^3.6.3"
     find-config "^1.0.0"
 
-"@stylable/optimizer@^3.6.2":
-  version "3.6.2"
-  resolved "https://registry.yarnpkg.com/@stylable/optimizer/-/optimizer-3.6.2.tgz#2beddbdc69fc7b6941e0a079a14d4a42c4512c82"
-  integrity sha512-zPXgUwWlv7nL0TBMInMopK2qGMmT2HhVvtRFfA+uuErsSFpAik7jGwLjDqEKplxIndAYcPEgijGWP47dX633Gg==
+"@stylable/optimizer@^3.6.2", "@stylable/optimizer@^3.6.3":
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/@stylable/optimizer/-/optimizer-3.6.3.tgz#2971687ca49b4d46391a64dfdb0ad353b910b8a9"
+  integrity sha512-rogfMBzx9bW6+hEcJRFCCdBXFX6G4j0lSJp2XOfatXqJBxb7Ika76fueb5YANorj8QFfFBveEIJi5pNjRak4Gg==
   dependencies:
-    "@stylable/core" "^3.6.2"
+    "@stylable/core" "^3.6.3"
     csso "^4.0.3"
     postcss "^7.0.32"
 

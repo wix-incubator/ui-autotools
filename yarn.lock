@@ -1045,7 +1045,7 @@
   dependencies:
     "@stylable/core" "^3.6.3"
 
-"@stylable/node@^3.6.2", "@stylable/node@^3.6.3":
+"@stylable/node@^3.6.3":
   version "3.6.3"
   resolved "https://registry.yarnpkg.com/@stylable/node/-/node-3.6.3.tgz#ab9357ba1eb364a88f9d7e549f3052ca53b82296"
   integrity sha512-IaIp2QzT8hstij1VPBAQxAMM2Uac83RCMDNdVS+BOK9xP0PEJ7SssneBMmLWsINNUuPZwN4XPIu10WK4XT7epw==
@@ -1054,7 +1054,7 @@
     "@stylable/module-utils" "^3.6.3"
     find-config "^1.0.0"
 
-"@stylable/optimizer@^3.6.2", "@stylable/optimizer@^3.6.3":
+"@stylable/optimizer@^3.6.3":
   version "3.6.3"
   resolved "https://registry.yarnpkg.com/@stylable/optimizer/-/optimizer-3.6.3.tgz#2971687ca49b4d46391a64dfdb0ad353b910b8a9"
   integrity sha512-rogfMBzx9bW6+hEcJRFCCdBXFX6G4j0lSJp2XOfatXqJBxb7Ika76fueb5YANorj8QFfFBveEIJi5pNjRak4Gg==
@@ -5418,10 +5418,10 @@ koa-webpack@^5.3.0:
     webpack-dev-middleware "^3.0.0"
     webpack-hot-client "^4.1.0"
 
-koa@^2.12.0:
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/koa/-/koa-2.12.0.tgz#c92bfb42defd86f365c31bf63fe918db11fc5c74"
-  integrity sha512-WlUBj6PXoVhjI5ljMmlyK+eqkbVFW5XQu8twz6bd4WM2E67IwKgPMu5wIFXGxAsZT7sW5xAB54KhY8WAEkLPug==
+koa@^2.12.1:
+  version "2.12.1"
+  resolved "https://registry.yarnpkg.com/koa/-/koa-2.12.1.tgz#a0ab4dcfebe3cc1b6f0875cbfd686edd7e926643"
+  integrity sha512-NuYVKjnBxeEe19VljPO9yNcaKKVrMagcax3jjzZtOlxRY2nThWKQqgnI3Pr1OG7mFtvySoDRixoUWZIt6R9C3A==
   dependencies:
     accepts "^1.3.5"
     cache-content-type "^1.0.0"

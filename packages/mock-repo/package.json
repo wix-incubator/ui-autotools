@@ -19,7 +19,7 @@
     "showcase": "autotools showcase --files src/**/*.meta.ts"
   },
   "dependencies": {
-    "@stylable/webpack-plugin": "^3.6.3",
+    "@stylable/webpack-plugin": "^3.7.0",
     "@ui-autotools/a11y": "^5.0.1",
     "@ui-autotools/registry": "^5.0.0",
     "@ui-autotools/sanity": "^5.0.1",

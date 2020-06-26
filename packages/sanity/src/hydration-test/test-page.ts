@@ -4,23 +4,23 @@ require('mocha/mocha.js');
 mocha.setup({
   ui: 'bdd',
   reporter: 'spec',
-  useColors: true,
+  color: true,
 });
 
 // This needs to be accessible by Puppeteer.
-
-(window as any).mochaStatus = {
-  numCompletedTests: 0,
-  numFailedTests: 0,
+const mochaStatus = {
+  completed: 0,
+  failed: 0,
   finished: false,
 };
 
-// Start Mocha in the next tick because we haven't yet included the test files.
+// save test status on window to access it with puppeteer
+(window as any).mochaStatus = mochaStatus;
 
-setTimeout(() => {
+window.addEventListener('DOMContentLoaded', () => {
   mocha
     .run()
-    .on('test end', () => (window as any).mochaStatus.numCompletedTests++)
-    .on('fail', () => (window as any).mochaStatus.numFailedTests++)
-    .on('end', () => ((window as any).mochaStatus.finished = true));
-}, 0);
+    .on('test end', () => mochaStatus.completed++)
+    .on('fail', () => mochaStatus.failed++)
+    .on('end', () => (mochaStatus.finished = true));
+});

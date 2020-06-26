@@ -9,8 +9,7 @@
   "scripts": {
     "clean": "rimraf ./cjs ./esm",
     "build": "tsc -p src --outDir cjs --module commonjs",
-    "build:watch": "yarn build -w",
-    "test": "mocha \"test/**/*.spec.ts?(x)\""
+    "build:watch": "yarn build -w"
   },
   "files": [
     "cjs",

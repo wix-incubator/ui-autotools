@@ -13,7 +13,7 @@
     "build:watch": "run-p build:cjs-watch build:esm-watch",
     "build:cjs-watch": "yarn build:cjs -w",
     "build:esm-watch": "yarn build:esm -w",
-    "test": "mocha \"./test/node/**/*.node-spec.ts?(x)\" && yarn sanity && yarn a11y",
+    "test": "yarn sanity && yarn a11y",
     "a11y": "yarn autotools-a11y",
     "sanity": "yarn autotools-sanity",
     "showcase": "autotools showcase --files src/**/*.meta.ts"

@@ -1,5 +1,4 @@
 import React from 'react';
-import Registry from '@ui-autotools/registry';
 
 export const FailingComp: React.FC = () => {
   document.createElement('div');
@@ -7,10 +6,3 @@ export const FailingComp: React.FC = () => {
 };
 
 FailingComp.displayName = 'FailingComp';
-
-const meta = Registry.getComponentMetadata(FailingComp);
-
-meta.addSim({
-  title: 'FailingComp Simulation',
-  props: {},
-});

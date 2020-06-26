@@ -1,5 +1,4 @@
 import React from 'react';
-import Registry from '@ui-autotools/registry';
 
 export interface PassingCompProps {
   text?: string;
@@ -10,12 +9,3 @@ export const PassingComp: React.FC<PassingCompProps> = ({ text = '' }) => {
 };
 
 PassingComp.displayName = 'PassingComp';
-
-const meta = Registry.getComponentMetadata(PassingComp);
-
-meta.addSim({
-  title: 'PassingComp Simulation',
-  props: {
-    text: 'wow',
-  },
-});

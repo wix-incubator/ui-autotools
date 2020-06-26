@@ -15,14 +15,14 @@ describe('autotools-sanity', function () {
     });
 
   it('passes with ssr-ready component', () => {
-    const { status, output } = executeAutotoolsSanity(['-f', require.resolve('./fixtures/passing-comp')]);
+    const { status, output } = executeAutotoolsSanity(['-f', require.resolve('./fixtures/passing-comp.meta')]);
 
     expect(output.join('')).to.include('2 passing');
     expect(status, output.join('')).to.equal(0);
   });
 
   it('fails with not ssr-ready component', () => {
-    const { status } = executeAutotoolsSanity(['-f', require.resolve('./fixtures/failing-comp')]);
+    const { status } = executeAutotoolsSanity(['-f', require.resolve('./fixtures/failing-comp.meta')]);
 
     expect(status).to.not.equal(0);
   });

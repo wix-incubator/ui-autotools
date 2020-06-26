@@ -16,7 +16,7 @@
     "test": "yarn sanity && yarn a11y",
     "a11y": "yarn autotools-a11y",
     "sanity": "yarn autotools-sanity",
-    "showcase": "autotools showcase --files src/**/*.meta.ts"
+    "showcase": "autotools showcase"
   },
   "dependencies": {
     "@stylable/webpack-plugin": "^3.7.0",

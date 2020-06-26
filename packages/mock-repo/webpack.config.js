@@ -1,11 +1,8 @@
 const { StylableWebpackPlugin } = require('@stylable/webpack-plugin');
 
 module.exports = {
-  devtool: 'source-map',
-  entry: {
-    main: ['./src/index.tsx'],
-  },
   mode: 'development',
+  devtool: 'source-map',
   module: {
     rules: [
       {
@@ -15,14 +12,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
-  },
-  output: {
-    filename: '[name].js',
-    pathinfo: true,
-  },
-  devServer: {
-    disableHostCheck: true,
+    extensions: ['.ts', '.tsx', '.js', '.json'],
   },
   plugins: [new StylableWebpackPlugin()],
 };

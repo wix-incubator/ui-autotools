@@ -3,9 +3,8 @@ import ReactDOM from 'react-dom';
 import { Composite } from './composite/composite';
 import { Modal } from './modal/modal';
 import { PostRenderHook } from './post-render-hook/post-render-hook';
-import { UnsafeLifecycle } from './unsafe-lifecycle/unsafe-lifecycle';
 
-const App: React.FunctionComponent = () => {
+const App: React.FC = () => {
   return (
     <div>
       <div>
@@ -17,7 +16,6 @@ const App: React.FunctionComponent = () => {
       <div>Other Div</div>
       <Composite />
       <PostRenderHook />
-      <UnsafeLifecycle />
     </div>
   );
 };
@@ -25,4 +23,5 @@ const App: React.FunctionComponent = () => {
 const rootContainer = document.createElement('div');
 rootContainer.id = 'app-root';
 document.body.appendChild(rootContainer);
+
 ReactDOM.render(<App />, rootContainer);

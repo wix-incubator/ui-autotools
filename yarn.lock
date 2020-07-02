@@ -1045,10 +1045,10 @@
   dependencies:
     "@stylable/core" "^3.7.0"
 
-"@stylable/node@^3.7.0":
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/@stylable/node/-/node-3.7.0.tgz#87a5a5839c075d8338102b9ba70329f9de0585da"
-  integrity sha512-EfyjbOTryBIulq0/TZ7dtk3pke/oAl00ecb2NXfOrLRuJY5YkqSZ8FRkswocvFofYfy2Dr1yMefYYxP94bLl0w==
+"@stylable/node@^3.7.0", "@stylable/node@^3.7.1":
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/@stylable/node/-/node-3.7.1.tgz#527e927cfe8a3649b796b3242dc15a1d27e1e24f"
+  integrity sha512-ofheT/ZRJo9+O/0Sce16OHSDFByyZ1Aj47/yTsvisu5Bs5Oqenda2+326ERJEQhwjj9OYD1wwMVCg+ohAuqPfw==
   dependencies:
     "@stylable/core" "^3.7.0"
     "@stylable/module-utils" "^3.7.0"

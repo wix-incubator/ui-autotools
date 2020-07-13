@@ -37,7 +37,7 @@
     "chalk": "^4.1.0",
     "commander": "^5.1.0",
     "glob": "^7.1.6",
-    "puppeteer": "^5.0.0"
+    "puppeteer": "^5.1.0"
   },
   "peerDependencies": {
     "@ui-autotools/registry": ">=3.0.0",

@@ -1017,10 +1017,10 @@
     lodash.upperfirst "^4.3.1"
     yargs "^15.4.1"
 
-"@stylable/core@^3.8.0":
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/@stylable/core/-/core-3.8.0.tgz#3a3db7cd01ac1d7437368b2dea8e3de1a63ae906"
-  integrity sha512-kWrM3RwYaC8fraQtx2Vy0Ey6EhPRaYHLbNUulRiaqBlZW8nRo7biqvsdAdtO310ydiTfmN/7ENY/t+gAcVbryA==
+"@stylable/core@^3.8.0", "@stylable/core@^3.8.1":
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/@stylable/core/-/core-3.8.1.tgz#072936653606a9f1d498e425066676c2c1ab2085"
+  integrity sha512-pvy5NfUlK970MNVBuN665HhxDSWI6Fz2Sii3u0wgq87Y2X+o4dkFO0zsKVjOcNiTk4UVsEStRPKE/VH7uvkp+A==
   dependencies:
     css-selector-tokenizer "^0.7.2"
     deindent "^0.1.0"
@@ -1038,20 +1038,20 @@
     postcss-selector-matches "^4.0.0"
     postcss-value-parser "^4.1.0"
 
-"@stylable/module-utils@^3.8.0":
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/@stylable/module-utils/-/module-utils-3.8.0.tgz#7010af2e5c921b903bb5c602cfdda1abec63e6d6"
-  integrity sha512-4EsIWk8u2bgNNt52mKewdPZmY1UG20HYEabBpFPd6+un21GtqrE4L2uQw71YuGneTb/SrY4bH2ihIMnv/gVGhw==
+"@stylable/module-utils@^3.8.0", "@stylable/module-utils@^3.8.1":
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/@stylable/module-utils/-/module-utils-3.8.1.tgz#169e84c38406197934893a6190657678ce879c86"
+  integrity sha512-vvqhFAJa5SdSwfnc50PVoCNmhjCi+nS6f5OMIynr8wdR+fufSPurq9N36mKy+RnKZ/VCxk/AYBKgyqTr3K/fHg==
   dependencies:
-    "@stylable/core" "^3.8.0"
+    "@stylable/core" "^3.8.1"
 
-"@stylable/node@^3.8.0":
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/@stylable/node/-/node-3.8.0.tgz#2a89231827a44826435269ee25e6c934c15a052c"
-  integrity sha512-uGogPWcDpFBpcddzQuKdr23fUA2o0TTAqD2nY6ofjsgm7eUvt1VK32kjBTPA7EMcqZz50uI7mXNiXBZVU5z5gQ==
+"@stylable/node@^3.8.0", "@stylable/node@^3.8.1":
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/@stylable/node/-/node-3.8.1.tgz#d6ba74fde309bb0695be39bd35b761996d28c805"
+  integrity sha512-G+/Q3kHqKhnuiSgSMxqLxTRiBQB2xb4EftC5nLop7V9DPLOeJl1/0GWQsryXI8kMM/qI6uy86VFTZWAkqyddiA==
   dependencies:
-    "@stylable/core" "^3.8.0"
-    "@stylable/module-utils" "^3.8.0"
+    "@stylable/core" "^3.8.1"
+    "@stylable/module-utils" "^3.8.1"
     find-config "^1.0.0"
 
 "@stylable/optimizer@^3.8.0":

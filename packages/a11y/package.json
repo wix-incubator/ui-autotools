@@ -35,7 +35,7 @@
     "@ui-autotools/utils": "^5.0.1",
     "axe-core": "^3.5.5",
     "chalk": "^4.1.0",
-    "commander": "^5.1.0",
+    "commander": "^6.0.0",
     "glob": "^7.1.6",
     "puppeteer": "^5.2.0"
   },

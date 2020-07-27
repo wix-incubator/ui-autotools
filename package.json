@@ -14,8 +14,8 @@
     "prettify": "npx prettier \"./**/*.{js,ts,tsx}\" --write"
   },
   "devDependencies": {
-    "@stylable/cli": "^3.8.1",
-    "@stylable/core": "^3.8.1",
+    "@stylable/cli": "^3.8.4",
+    "@stylable/core": "^3.8.4",
     "@ts-tools/node": "^2.0.0",
     "@ts-tools/webpack-loader": "^2.0.0",
     "@types/chai": "^4.2.12",
@@ -33,7 +33,7 @@
     "@types/webpack": "^4.41.21",
     "@types/webpack-env": "^1.15.2",
     "chai": "^4.2.0",
-    "css-loader": "^3.6.0",
+    "css-loader": "^4.0.0",
     "glob": "^7.1.6",
     "html-webpack-plugin": "^4.3.0",
     "lerna": "^3.22.1",
@@ -45,7 +45,7 @@
     "rimraf": "^3.0.2",
     "style-loader": "^1.2.1",
     "typescript": "~3.9.7",
-    "webpack": "^4.43.0",
+    "webpack": "^4.44.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
   },

@@ -1017,12 +1017,12 @@
     lodash.upperfirst "^4.3.1"
     yargs "^15.4.1"
 
-"@stylable/core@^3.8.1":
-  version "3.8.1"
-  resolved "https://registry.yarnpkg.com/@stylable/core/-/core-3.8.1.tgz#072936653606a9f1d498e425066676c2c1ab2085"
-  integrity sha512-pvy5NfUlK970MNVBuN665HhxDSWI6Fz2Sii3u0wgq87Y2X+o4dkFO0zsKVjOcNiTk4UVsEStRPKE/VH7uvkp+A==
+"@stylable/core@^3.8.1", "@stylable/core@^3.8.4":
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/@stylable/core/-/core-3.8.4.tgz#636f44a46a29b51e731d5f95d7655649c905877c"
+  integrity sha512-/VxSX6ujKzGw0t1NBfSal26YghKBz/DBZCigHPs4m4fbJNnJ3c21MYM/A5S7G7NXrqjBSwLf4R89SBrLYbBdfw==
   dependencies:
-    css-selector-tokenizer "^0.7.2"
+    css-selector-tokenizer "^0.7.3"
     deindent "^0.1.0"
     enhanced-resolve "^4.3.0"
     is-url-superb "^4.0.0"
@@ -1038,20 +1038,20 @@
     postcss-selector-matches "^4.0.0"
     postcss-value-parser "^4.1.0"
 
-"@stylable/module-utils@^3.8.1":
-  version "3.8.1"
-  resolved "https://registry.yarnpkg.com/@stylable/module-utils/-/module-utils-3.8.1.tgz#169e84c38406197934893a6190657678ce879c86"
-  integrity sha512-vvqhFAJa5SdSwfnc50PVoCNmhjCi+nS6f5OMIynr8wdR+fufSPurq9N36mKy+RnKZ/VCxk/AYBKgyqTr3K/fHg==
+"@stylable/module-utils@^3.8.1", "@stylable/module-utils@^3.8.4":
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/@stylable/module-utils/-/module-utils-3.8.4.tgz#89323901c27c10b0d52bda3a9dfa4bd6619ee591"
+  integrity sha512-xak6EOTc55TFfz5pFBY3Zq+M9tLUjXrk14GUwuZvaO/qzK2lWaM1DA6PmbArtMgQuivm/YtEU16aaa7aJVD1nQ==
   dependencies:
-    "@stylable/core" "^3.8.1"
+    "@stylable/core" "^3.8.4"
 
-"@stylable/node@^3.8.1":
-  version "3.8.1"
-  resolved "https://registry.yarnpkg.com/@stylable/node/-/node-3.8.1.tgz#d6ba74fde309bb0695be39bd35b761996d28c805"
-  integrity sha512-G+/Q3kHqKhnuiSgSMxqLxTRiBQB2xb4EftC5nLop7V9DPLOeJl1/0GWQsryXI8kMM/qI6uy86VFTZWAkqyddiA==
+"@stylable/node@^3.8.1", "@stylable/node@^3.8.4":
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/@stylable/node/-/node-3.8.4.tgz#e25d2fe48021b0456fdb68074a5becabefb40517"
+  integrity sha512-Fs+U/pIqFekjkDSIoCv3TyE206ZzCzYxcI0X/IAqCTrh90C8DkKa++bNiAae8EQ4xJiK7Hf+GIJeoCKQte5NIQ==
   dependencies:
-    "@stylable/core" "^3.8.1"
-    "@stylable/module-utils" "^3.8.1"
+    "@stylable/core" "^3.8.4"
+    "@stylable/module-utils" "^3.8.4"
     find-config "^1.0.0"
 
 "@stylable/optimizer@^3.8.1":
@@ -2955,7 +2955,7 @@ css-select@^1.1.0:
     domutils "1.5.1"
     nth-check "~1.0.1"
 
-css-selector-tokenizer@^0.7.2:
+css-selector-tokenizer@^0.7.3:
   version "0.7.3"
   resolved "https://registry.yarnpkg.com/css-selector-tokenizer/-/css-selector-tokenizer-0.7.3.tgz#735f26186e67c749aaf275783405cf0661fae8f1"
   integrity sha512-jWQv3oCEL5kMErj4wRnK/OPoBi0D+P1FR2cDCKYPaMeD2eW3/mttav8HT4hT1CKopiJI/psEULjkClhvJo4Lvg==

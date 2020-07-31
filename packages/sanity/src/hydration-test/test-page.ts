@@ -1,7 +1,8 @@
-// Mocha officially supports this import in browser environment
-require('mocha/mocha.js');
+import mochaModule from 'mocha/mocha.js';
 
-mocha.setup({
+const mochaInstance: BrowserMocha = mochaModule && 'setup' in mochaModule ? mochaModule : (window as any).mocha;
+
+mochaInstance.setup({
   ui: 'bdd',
   reporter: 'spec',
   color: true,
@@ -18,7 +19,7 @@ const mochaStatus = {
 (window as any).mochaStatus = mochaStatus;
 
 window.addEventListener('DOMContentLoaded', () => {
-  mocha
+  mochaInstance
     .run()
     .on('test end', () => mochaStatus.completed++)
     .on('fail', () => mochaStatus.failed++)

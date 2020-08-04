@@ -33,7 +33,7 @@
   "dependencies": {
     "@ui-autotools/node-utils": "^5.0.1",
     "@ui-autotools/utils": "^5.0.1",
-    "axe-core": "^3.5.5",
+    "axe-core": "^4.0.0",
     "chalk": "^4.1.0",
     "commander": "^6.0.0",
     "glob": "^7.1.6",

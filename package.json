@@ -22,7 +22,7 @@
     "@types/chai-dom": "^0.0.10",
     "@types/glob": "^7.1.3",
     "@types/koa-webpack": "^5.0.1",
-    "@types/mocha": "^8.0.2",
+    "@types/mocha": "^8.0.3",
     "@types/node": "10",
     "@types/puppeteer": "^3.0.1",
     "@types/react": "^16.9.46",

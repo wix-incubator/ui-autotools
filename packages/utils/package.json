@@ -28,7 +28,7 @@
     "chalk": "^4.1.0",
     "html-webpack-plugin": "^4.3.0",
     "koa": "^2.13.0",
-    "koa-webpack": "^5.3.0",
+    "koa-webpack": "^6.0.0",
     "puppeteer": "^5.2.1"
   },
   "peerDependencies": {

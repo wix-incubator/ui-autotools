@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@stylable/cli": "^3.8.4",
-    "@stylable/core": "^3.8.4",
+    "@stylable/core": "^3.9.0",
     "@ts-tools/node": "^2.1.0",
     "@ts-tools/webpack-loader": "^2.1.0",
     "@types/chai": "^4.2.12",

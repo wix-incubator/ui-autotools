@@ -36,7 +36,7 @@
     "@ui-autotools/node-utils": "^5.0.1",
     "@ui-autotools/utils": "^5.0.1",
     "chai": "^4.2.0",
-    "commander": "^6.0.0",
+    "commander": "^6.1.0",
     "glob": "^7.1.6",
     "sinon": "^9.0.3",
     "sinon-chai": "^3.5.0",

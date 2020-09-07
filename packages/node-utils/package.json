@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@stylable/node": "^3.10.0",
-    "@ts-tools/node": "^2.1.0",
+    "@ts-tools/node": "^2.1.1",
     "dotenv": "^8.2.0"
   }
 }

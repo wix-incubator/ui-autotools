@@ -14,8 +14,8 @@
     "prettify": "npx prettier \"./**/*.{js,ts,tsx}\" --write"
   },
   "devDependencies": {
-    "@stylable/cli": "^3.10.0",
-    "@stylable/core": "^3.10.0",
+    "@stylable/cli": "^3.10.1",
+    "@stylable/core": "^3.10.1",
     "@ts-tools/node": "^2.1.1",
     "@ts-tools/webpack-loader": "^2.1.1",
     "@types/chai": "^4.2.12",
@@ -24,7 +24,7 @@
     "@types/koa-webpack": "^6.0.0",
     "@types/mocha": "^8.0.3",
     "@types/node": "10",
-    "@types/puppeteer": "^3.0.1",
+    "@types/puppeteer": "^3.0.2",
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
     "@types/rimraf": "^3.0.0",

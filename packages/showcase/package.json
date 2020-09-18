@@ -40,7 +40,7 @@
     "html-webpack-plugin": "^4.4.1",
     "koa": "^2.13.0",
     "koa-webpack": "^6.0.0",
-    "webpack": "^4.44.1"
+    "webpack": "^4.44.2"
   },
   "peerDependencies": {
     "@ui-autotools/registry": ">=3.0.0",

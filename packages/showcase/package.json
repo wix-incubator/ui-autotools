@@ -37,7 +37,7 @@
     "@wix/typescript-schema-extract": "^1.0.3",
     "chalk": "^4.1.0",
     "glob": "^7.1.6",
-    "html-webpack-plugin": "^4.4.1",
+    "html-webpack-plugin": "^4.5.0",
     "koa": "^2.13.0",
     "koa-webpack": "^6.0.0",
     "webpack": "^4.44.2"

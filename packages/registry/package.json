@@ -14,16 +14,16 @@
     "build:esm-watch": "yarn build:esm -w",
     "test": "mocha \"test/**/*.spec.ts?(x)\""
   },
+  "peerDependencies": {
+    "react": ">=16",
+    "react-dom": ">=16"
+  },
   "files": [
     "cjs",
     "esm"
   ],
   "engines": {
     "node": ">=10"
-  },
-  "peerDependencies": {
-    "react": ">=16",
-    "react-dom": ">=16"
   },
   "repository": "git@github.com:wix-incubator/ui-autotools.git",
   "author": "Wix.com",

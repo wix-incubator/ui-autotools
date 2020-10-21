@@ -4,6 +4,9 @@
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
+  "bin": {
+    "autotools-sanity": "bin/cli.js"
+  },
   "scripts": {
     "clean": "rimraf ./cjs ./esm",
     "build": "run-p build:cjs build:esm",
@@ -13,6 +16,24 @@
     "build:cjs-watch": "yarn build:cjs -w",
     "build:esm-watch": "yarn build:esm -w",
     "test": "mocha \"test/**/*.spec.ts?(x)\""
+  },
+  "peerDependencies": {
+    "@ui-autotools/registry": ">=5",
+    "react": ">=16",
+    "react-dom": ">=16",
+    "webpack": ">=4"
+  },
+  "dependencies": {
+    "@ui-autotools/node-utils": "^5.0.1",
+    "@ui-autotools/utils": "^5.0.1",
+    "chai": "^4.2.0",
+    "commander": "^6.1.0",
+    "glob": "^7.1.6",
+    "sinon": "^9.2.0",
+    "sinon-chai": "^3.5.0"
+  },
+  "devDependencies": {
+    "@ui-autotools/registry": "^5.0.0"
   },
   "files": [
     "bin",
@@ -26,27 +47,6 @@
   "repository": "git@github.com:wix-incubator/ui-autotools.git",
   "author": "Wix.com",
   "license": "BSD-3-Clause",
-  "devDependencies": {
-    "@ui-autotools/registry": "^5.0.0"
-  },
-  "bin": {
-    "autotools-sanity": "bin/cli.js"
-  },
-  "dependencies": {
-    "@ui-autotools/node-utils": "^5.0.1",
-    "@ui-autotools/utils": "^5.0.1",
-    "chai": "^4.2.0",
-    "commander": "^6.1.0",
-    "glob": "^7.1.6",
-    "sinon": "^9.2.0",
-    "sinon-chai": "^3.5.0",
-    "webpack": "^4.44.2"
-  },
-  "peerDependencies": {
-    "@ui-autotools/registry": ">=3.0.0",
-    "react": ">=16",
-    "react-dom": ">=16"
-  },
   "publishConfig": {
     "access": "public"
   }

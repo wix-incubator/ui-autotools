@@ -13,6 +13,16 @@
     "build:cjs-watch": "yarn build:cjs -w",
     "build:esm-watch": "yarn build:esm -w"
   },
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "html-webpack-plugin": "^4.5.0",
+    "koa": "^2.13.0",
+    "koa-webpack": "^6.0.0",
+    "puppeteer": "^5.3.1"
+  },
+  "peerDependencies": {
+    "webpack": ">=4"
+  },
   "files": [
     "cjs",
     "esm",
@@ -24,16 +34,6 @@
   "repository": "git@github.com:wix-incubator/ui-autotools.git",
   "author": "Wix.com",
   "license": "BSD-3-Clause",
-  "dependencies": {
-    "chalk": "^4.1.0",
-    "html-webpack-plugin": "^4.5.0",
-    "koa": "^2.13.0",
-    "koa-webpack": "^6.0.0",
-    "puppeteer": "^5.3.1"
-  },
-  "peerDependencies": {
-    "webpack": ">=4"
-  },
   "publishConfig": {
     "access": "public"
   }

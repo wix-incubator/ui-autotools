@@ -13,6 +13,11 @@
     "build:cjs-watch": "yarn build:cjs -w",
     "build:esm-watch": "yarn build:esm -w"
   },
+  "dependencies": {
+    "@stylable/node": "^3.11.5",
+    "@ts-tools/node": "^2.1.1",
+    "dotenv": "^8.2.0"
+  },
   "files": [
     "cjs",
     "esm"
@@ -25,10 +30,5 @@
   "license": "BSD-3-Clause",
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {
-    "@stylable/node": "^3.11.2",
-    "@ts-tools/node": "^2.1.1",
-    "dotenv": "^8.2.0"
   }
 }

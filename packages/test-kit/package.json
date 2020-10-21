@@ -12,6 +12,14 @@
     "build:cjs-watch": "yarn build:cjs -w",
     "build:esm-watch": "yarn build:esm -w"
   },
+  "peerDependencies": {
+    "@ui-autotools/registry": ">=5",
+    "react": ">=16",
+    "react-dom": ">=16"
+  },
+  "dependencies": {
+    "@ui-autotools/registry": "^5.0.0"
+  },
   "files": [
     "cjs",
     "esm",
@@ -23,14 +31,6 @@
   "repository": "git@github.com:wix/ui-autotools.git",
   "author": "Wix.com",
   "license": "BSD-3-Clause",
-  "dependencies": {
-    "@ui-autotools/registry": "^5.0.0"
-  },
-  "peerDependencies": {
-    "@ui-autotools/registry": ">=3.0.0",
-    "react": ">=16",
-    "react-dom": ">=16"
-  },
   "publishConfig": {
     "access": "public"
   }

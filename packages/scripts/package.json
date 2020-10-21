@@ -11,16 +11,12 @@
     "build": "tsc -p src --outDir cjs --module commonjs",
     "build:watch": "yarn build -w"
   },
-  "files": [
-    "cjs",
-    "bin"
-  ],
-  "engines": {
-    "node": ">=10"
+  "peerDependencies": {
+    "@ui-autotools/registry": ">=5",
+    "mocha": ">=5",
+    "react": ">=16",
+    "react-dom": ">=16"
   },
-  "repository": "git@github.com:wix/ui-autotools.git",
-  "author": "Wix.com",
-  "license": "BSD-3-Clause",
   "dependencies": {
     "@ts-tools/node": "^2.1.1",
     "@ui-autotools/a11y": "^5.0.1",
@@ -34,12 +30,16 @@
   "devDependencies": {
     "@ui-autotools/registry": "^5.0.0"
   },
-  "peerDependencies": {
-    "@ui-autotools/registry": ">=3.0.0",
-    "mocha": ">=5",
-    "react": ">=16",
-    "react-dom": ">=16"
+  "files": [
+    "cjs",
+    "bin"
+  ],
+  "engines": {
+    "node": ">=10"
   },
+  "repository": "git@github.com:wix/ui-autotools.git",
+  "author": "Wix.com",
+  "license": "BSD-3-Clause",
   "publishConfig": {
     "access": "public"
   }

@@ -27,7 +27,7 @@
     "chalk": "^4.1.0",
     "commander": "^6.2.0",
     "glob": "^7.1.6",
-    "puppeteer": "^5.4.0"
+    "puppeteer": "^5.4.1"
   },
   "devDependencies": {
     "@ui-autotools/registry": "^5.0.0"

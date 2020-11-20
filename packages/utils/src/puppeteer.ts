@@ -7,7 +7,7 @@ export function waitForPageError(page: puppeteer.Page): Promise<never> {
   // We don't need to handle `disconnected` event because any of the
   // Puppeteer functions we're awaiting on will throw on disconnect anyway.
 
-  return new Promise((_, reject) => {
+  return new Promise<never>((_, reject) => {
     page.on('pageerror', (e) => {
       reject(e);
     });

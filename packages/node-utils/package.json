@@ -14,7 +14,7 @@
     "build:esm-watch": "yarn build:esm -w"
   },
   "dependencies": {
-    "@stylable/node": "^3.11.5",
+    "@stylable/node": "^3.11.7",
     "@ts-tools/node": "^2.1.1",
     "dotenv": "^8.2.0"
   },

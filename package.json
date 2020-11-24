@@ -31,7 +31,7 @@
     "@types/sinon": "^9.0.8",
     "@types/sinon-chai": "^3.2.5",
     "@types/webpack": "^4.41.25",
-    "@types/webpack-env": "^1.15.3",
+    "@types/webpack-env": "^1.16.0",
     "chai": "^4.2.0",
     "css-loader": "^5.0.1",
     "glob": "^7.1.6",

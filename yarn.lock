@@ -1035,7 +1035,7 @@
     postcss-selector-matches "^4.0.0"
     postcss-value-parser "^4.1.0"
 
-"@stylable/module-utils@^3.11.7", "@stylable/module-utils@^3.11.8":
+"@stylable/module-utils@^3.11.8":
   version "3.11.8"
   resolved "https://registry.yarnpkg.com/@stylable/module-utils/-/module-utils-3.11.8.tgz#cdb14f70803e0d9881ac064cc6d3a45332eb5e33"
   integrity sha512-nYYXmEUquLJPT0CJrNhFoQeiNJ4qjm1VMDk8Pe/U/VozNZHFqqK6VGu5FbHCrnVoZ9mHFz2l3nUJOWLIMmsJBg==
@@ -1060,20 +1060,20 @@
     csso "^4.1.1"
     postcss "^8.1.10"
 
-"@stylable/runtime@^3.11.7":
-  version "3.11.7"
-  resolved "https://registry.yarnpkg.com/@stylable/runtime/-/runtime-3.11.7.tgz#04d5471da99f5f6eb6422fc3310238411b29bfbd"
-  integrity sha512-14U8ee0gOtazwgnt46IWwnrW+bSeyPGP0G2cIKGATOoCoqFzPNeIuSobhiYafdZtU9DCpDnUwzH0JwelTVnqLw==
+"@stylable/runtime@^3.11.8":
+  version "3.11.8"
+  resolved "https://registry.yarnpkg.com/@stylable/runtime/-/runtime-3.11.8.tgz#9c0cc5ac159f6b325fdc7c1b99ce04cce29d3008"
+  integrity sha512-594quA3LGVdz2IdChRwzHSfFPKzFzWMGRMmrukOE+LKxljpbVXZllQ6j8ojyPGn+dqX9S3kqmzbme9QvvH60IA==
 
-"@stylable/webpack-plugin@^3.11.7":
-  version "3.11.7"
-  resolved "https://registry.yarnpkg.com/@stylable/webpack-plugin/-/webpack-plugin-3.11.7.tgz#126bfd84aeb4e7576c93c72eedc482cb1f25e7fd"
-  integrity sha512-2ZeizkMmpjcRa1s8V3oTXqTpKtr5IXvjbEgbFbGhd2pOKjlL50+jUSfvlotnafhCBiLHAlRSmyFWr3UzJHEsWQ==
+"@stylable/webpack-plugin@^3.11.8":
+  version "3.11.8"
+  resolved "https://registry.yarnpkg.com/@stylable/webpack-plugin/-/webpack-plugin-3.11.8.tgz#854baf6d79dc5470a0fe4eabb1a4cc932beed96f"
+  integrity sha512-e0RcOBfmH/VmoIZGIfj9xtrOiUwvIGWYIK4wSacDeye7XJFm1mNeWF+CpkMDRY/21G6OMxrgruBK9s90hoKGUA==
   dependencies:
-    "@stylable/module-utils" "^3.11.7"
-    "@stylable/node" "^3.11.7"
-    "@stylable/optimizer" "^3.11.7"
-    "@stylable/runtime" "^3.11.7"
+    "@stylable/module-utils" "^3.11.8"
+    "@stylable/node" "^3.11.8"
+    "@stylable/optimizer" "^3.11.8"
+    "@stylable/runtime" "^3.11.8"
     find-config "^1.0.0"
     webpack-sources "^2.2.0"
 

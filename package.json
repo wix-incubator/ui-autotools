@@ -6,10 +6,11 @@
   ],
   "scripts": {
     "clean": "rimraf ./packages/*/dist ./scripts/dist",
-    "build": "lerna run build --stream",
-    "build:watch": "lerna run --parallel build:watch",
-    "pretest": "run-s lint build",
-    "lint": "node -r @ts-tools/node/r scripts/json-linter",
+    "build": "yarn build:ts && yarn build:stylable",
+    "build:ts": "tsc --build",
+    "build:stylable": "lerna run --parallel build:stylable",
+    "pretest": "yarn build && yarn lint",
+    "lint": "node ./scripts/dist/json-linter",
     "test": "lerna run test --stream",
     "prettify": "npx prettier . --write"
   },

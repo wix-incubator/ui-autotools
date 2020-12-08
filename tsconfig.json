@@ -1,0 +1,26 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./scripts/src" },
+
+    { "path": "./packages/a11y/src" },
+
+    { "path": "./packages/mock-repo" },
+
+    { "path": "./packages/node-utils/src" },
+
+    { "path": "./packages/registry/src" },
+    { "path": "./packages/registry/test" },
+
+    { "path": "./packages/sanity/src" },
+    { "path": "./packages/sanity/test" },
+
+    { "path": "./packages/scripts/src" },
+
+    { "path": "./packages/showcase/src" },
+
+    { "path": "./packages/test-kit/src" },
+
+    { "path": "./packages/utils/src" }
+  ]
+}

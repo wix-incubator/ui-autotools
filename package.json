@@ -11,7 +11,7 @@
     "pretest": "run-s lint build",
     "lint": "node -r @ts-tools/node/r scripts/json-linter",
     "test": "lerna run test --stream",
-    "prettify": "npx prettier \"./**/*.{js,ts,tsx}\" --write"
+    "prettify": "npx prettier . --write"
   },
   "devDependencies": {
     "@stylable/cli": "^3.11.9",

@@ -22,13 +22,13 @@ Common CLI parameters:
 ## Available Tools
 
 - `sanity` - component sanity test suite, asserts that:
-    - the component can render to string (for SSR compatibility)
-    - hydration in the client works as intended
-    - the component has no errors in <React.StrictMode />
-    - nothing was printed to the console
-    - events were removed after component unmounts
+  - the component can render to string (for SSR compatibility)
+  - hydration in the client works as intended
+  - the component has no errors in <React.StrictMode />
+  - nothing was printed to the console
+  - events were removed after component unmounts
 - `a11y` - accessibility test:
-    - checks component render result for accessibility using axe-core
+  - checks component render result for accessibility using axe-core
 - `showcase` - generates a static website with component documentation, APIs and demos
 
 We encourge anyone to add tools to this repo that utilize metadata. Please open pull requests for any tools and issues with half baked dreams :) .
@@ -50,47 +50,46 @@ const myComponentMetadata = Registry.getComponentMetadata(MyComp);
 
 // Simulations are configurations of component props and state
 myComponentMetadata.addSim({
-    title: 'empty',
-    props: {
-        items:[]
-    }
+  title: 'empty',
+  props: {
+    items: [],
+  },
 });
 
 myComponentMetadata.addSim({
-    title: 'one item',
-    props: {
-        items:['🐊 ']
-    },
-    state: {
-        selectedItem: 0
-    }
+  title: 'one item',
+  props: {
+    items: ['🐊 '],
+  },
+  state: {
+    selectedItem: 0,
+  },
 });
 
 myComponentMetadata.addSim({
-    title: 'many items',
-    props: {
-        items:['🧒 ', '👶 ', '🐊 ']
-    },
-    state: {
-        selectedItem: 1
-    }
+  title: 'many items',
+  props: {
+    items: ['🧒 ', '👶 ', '🐊 '],
+  },
+  state: {
+    selectedItem: 1,
+  },
 });
 
 myComponentMetadata.exportInfo = {
-  path: 'src/my-comp/my-comp',                          // the path to your component, relative to the root, and without file extension
-  exportName: 'MyComp',                                 // the name under which you export your component
-  baseStylePath: 'src/my-comp/my-comp.st.css',          // optional, the path to the base stylesheet for the component (as opposed to themes)
+  path: 'src/my-comp/my-comp', // the path to your component, relative to the root, and without file extension
+  exportName: 'MyComp', // the name under which you export your component
+  baseStylePath: 'src/my-comp/my-comp.st.css', // optional, the path to the base stylesheet for the component (as opposed to themes)
 };
 
 // Themes can be registered like so:
 myComponentMetadata.addStyle(theme1, {
-    name: 'theme1',
-    path: 'src/composite/theme1.st.css'                 // path is relative to the root of the project
+  name: 'theme1',
+  path: 'src/composite/theme1.st.css', // path is relative to the root of the project
 });
-
 ```
 
-Components are assumed by default to be React Strict Mode compliant (meaning that they follow the guidelines described [here](https://reactjs.org/docs/strict-mode.html)). However, if your component is *not* React Strict Mode compliant, you can set a flag in metadata to disable rendering in strict mode, e.g.:
+Components are assumed by default to be React Strict Mode compliant (meaning that they follow the guidelines described [here](https://reactjs.org/docs/strict-mode.html)). However, if your component is _not_ React Strict Mode compliant, you can set a flag in metadata to disable rendering in strict mode, e.g.:
 
 ```ts
 // MyComponent.meta.ts file
@@ -105,7 +104,6 @@ Components are assumed by default to be [axe-core](https://github.com/dequelabs/
 const meta = Registry.getComponentMetadata(MyComponent);
 meta.nonA11yCompliant = true;
 ```
-
 
 One of the tests that sanity runs checks that all events were removed after a component unmounts. If you wish to skip this test, set the `nonEventListenerTestCompliant` flag in the metadata to true.
 
@@ -124,6 +122,7 @@ meta.nonHydrationTestCompliant = true;
 ```
 
 ## CLI Tools
+
 ### Universal Options
 
 - `files`: glob pattern used to match metadata files. Defaults to `src/**/*.meta.ts?(x)`
@@ -145,25 +144,33 @@ Sanity uses puppeteer to test client-side hydration. Results are printed in the 
 Sanity ensures that any events added to window, document, or body during a component's lifecycle are removed once the component has unmounted. This helps prevent easy-to-miss memory leaks.
 
 #### Usage
-First install the package 
+
+First install the package
+
 ```shell
 npm i --save-dev @ui-autotools/sanity
 ```
+
 then run the following command:
+
 ```shell
 autotools-sanity --files ./components/**/*.meta.ts
 ```
 
 ### A11Y
 
-Asserts that components are compatable with axe-core. Allows for varying levels of error impact (one of `minor`, `moderate`, `serious`, or `critical`). Specifying a level of impact specifies *that* level and *above* (so specifying `moderate` would target `moderate`, `serious`, and `critical`).
+Asserts that components are compatable with axe-core. Allows for varying levels of error impact (one of `minor`, `moderate`, `serious`, or `critical`). Specifying a level of impact specifies _that_ level and _above_ (so specifying `moderate` would target `moderate`, `serious`, and `critical`).
 
 #### Usage
-First install the package 
+
+First install the package
+
 ```shell
 npm i --save-dev @ui-autotools/a11y
 ```
+
 then run the following command:
+
 ```shell
 autotools-a11y --files ./components/**/*.meta.ts --impact minor
 ```
@@ -175,17 +182,21 @@ Creates a static website with documentation, API and demos for all components de
 #### Usage
 
 To start the development server:
+
 ```shell
 autotools showcase --files src/**/*.meta.ts
 ```
+
 To build a static website:
+
 ```shell
 autotools showcase --files src/**/*.meta.ts --output build/website
 ```
 
 ## User config
+
 `@ui-autotools` assumes that your code is using [Typescript](http://typescriptlang.org) and [Stylable](https://stylable.io/), and therefor automatically requires hooks to handle such files (`.ts`, `.st.css` etc.). If however you are not using these or you are using different hooks, we support requiring your own hooks.  
-In the root of your project, inside the `.autotools` folder, create a new file named `node-require-hooks.js`, require your hooks and invoke them and `@ui-autotools` will use your config file.  
+In the root of your project, inside the `.autotools` folder, create a new file named `node-require-hooks.js`, require your hooks and invoke them and `@ui-autotools` will use your config file.
 
 **Note:** If you are using your own config file, keep in mind that `@ui-autotools` will **not use its default set of hooks**.
 )

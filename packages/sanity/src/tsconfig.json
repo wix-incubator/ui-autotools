@@ -2,9 +2,6 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "../dist",
-    "types": [
-      "mocha",
-      "chai"
-    ]
+    "types": ["mocha", "chai"]
   }
 }

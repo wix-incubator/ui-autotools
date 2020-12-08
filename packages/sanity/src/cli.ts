@@ -1,8 +1,8 @@
 import glob from 'glob';
 import { Command } from 'commander';
-import { hydrationTest } from './';
-import ssrTest from './ssr-test/mocha-wrapper';
 import { cliInit, defaultMetaGlob, getWebpackConfigPath } from '@ui-autotools/node-utils';
+import ssrTest from './ssr-test/mocha-wrapper';
+import { hydrationTest } from './hydration-test/server';
 
 const projectPath = process.cwd();
 cliInit(projectPath);

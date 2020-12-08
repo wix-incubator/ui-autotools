@@ -1,9 +1,9 @@
 import path from 'path';
+import type axe from 'axe-core';
+import chalk from 'chalk';
 import puppeteer from 'puppeteer';
 import { WebpackConfigurator, serve, IServer, waitForPageError, consoleError, consoleLog } from '@ui-autotools/utils';
-import { IResult } from './browser/run';
-import axe from 'axe-core';
-import chalk from 'chalk';
+import type { IResult } from './browser/run';
 
 const ownPath = path.resolve(__dirname, '..');
 export const impactLevels: axe.ImpactValue[] = ['minor', 'moderate', 'serious', 'critical'];

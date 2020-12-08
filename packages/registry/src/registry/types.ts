@@ -1,15 +1,15 @@
-import { ComponentType, ComponentClass } from 'react';
+import type React from 'react';
 
 export interface IRegistry {
   metadata: IMetadata;
   getComponentMetadata: <Props, State = {}>(
-    comp: ComponentType<Props> | ComponentClass<Props, State>
+    comp: React.ComponentType<Props> | React.ComponentClass<Props, State>
   ) => IComponentMetadata<Props, State>;
   clear: () => void;
 }
 
 export interface IComponentMetadata<Props, State> {
-  component: ComponentType<Props> | ComponentClass<Props, State>;
+  component: React.ComponentType<Props> | React.ComponentClass<Props, State>;
   simulations: Array<ISimulation<Props, State>>;
   styles: Map<any, IStyleMetadata>;
   addSim: (sim: ISimulation<Props, State>) => void;
@@ -32,7 +32,7 @@ export interface IExportInfo {
 }
 
 export interface IMetadata {
-  components: Map<ComponentType<any> | ComponentClass<any, any>, IComponentMetadata<any, any>>;
+  components: Map<React.ComponentType<any> | React.ComponentClass<any, any>, IComponentMetadata<any, any>>;
 }
 
 export interface IStyleMetadata {

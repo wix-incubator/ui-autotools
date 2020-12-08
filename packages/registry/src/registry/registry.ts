@@ -1,5 +1,5 @@
-import { IRegistry } from './types';
-import { ComponentType } from 'react';
+import type React from 'react';
+import type { IRegistry } from './types';
 import { ComponentMetadata } from './component-metadata';
 import Metadata from './metadata';
 import { getCompName } from '../utils/get-comp-name';
@@ -7,7 +7,7 @@ import { isValidComponentName } from '../utils';
 
 const Registry: IRegistry = {
   metadata: new Metadata(),
-  getComponentMetadata<Props, State>(comp: ComponentType<Props>): ComponentMetadata<Props, State> {
+  getComponentMetadata<Props, State>(comp: React.ComponentType<Props>): ComponentMetadata<Props, State> {
     const newCompName = getCompName(comp);
 
     if (!newCompName) {

@@ -1,9 +1,9 @@
-import { IComponentMetadata, IMetadata } from './types';
-import { ComponentType } from 'react';
+import type React from 'react';
+import type { IComponentMetadata, IMetadata } from './types';
 
 export default class Metadata implements IMetadata {
-  public components: Map<ComponentType<any>, IComponentMetadata<any, any>> = new Map<
-    ComponentType<any>,
+  public components: Map<React.ComponentType<any>, IComponentMetadata<any, any>> = new Map<
+    React.ComponentType<any>,
     IComponentMetadata<any, any>
   >();
 }

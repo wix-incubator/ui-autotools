@@ -1,15 +1,15 @@
+import chai from 'chai';
+import sinonChai from 'sinon-chai';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Registry, { getCompName } from '@ui-autotools/registry';
-import chai from 'chai';
-import sinonChai from 'sinon-chai';
 import { AllEvents } from './all-events';
 import { attachEventListenerLogger } from './override-event-listeners';
-import { Listener } from './listener';
-
-const hydrate = ReactDOM.hydrate || ReactDOM.render;
+import type { Listener } from './listener';
 
 chai.use(sinonChai);
+
+const hydrate = ReactDOM.hydrate || ReactDOM.render;
 
 function leftoverListenerErrors(listeners: Listener[], eventTarget: string) {
   return listeners.map(({ type }) => `A ${type} event was not removed from ${eventTarget}.`);

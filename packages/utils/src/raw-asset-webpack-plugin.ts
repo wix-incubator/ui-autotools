@@ -1,4 +1,4 @@
-import webpack from 'webpack';
+import type webpack from 'webpack';
 
 export class RawAssetWebpackPlugin {
   private filename: string;

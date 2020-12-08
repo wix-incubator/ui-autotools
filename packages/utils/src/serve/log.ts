@@ -1,6 +1,6 @@
 import readline from 'readline';
 import chalk from 'chalk';
-import webpack from 'webpack';
+import type webpack from 'webpack';
 
 function clearConsole() {
   process.stdout.write(process.platform === 'win32' ? '\x1B[2J\x1B[0f' : '\x1B[2J\x1B[3J\x1B[H');

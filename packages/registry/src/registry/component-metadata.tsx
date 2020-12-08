@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { IComponentMetadata, ISimulation, IStyleMetadata, IExportInfo } from './types';
+import React from 'react';
+import type { IComponentMetadata, ISimulation, IStyleMetadata, IExportInfo } from './types';
 import { isValidSimulationTitle, getCompWithState } from '../utils';
 
 export class ComponentMetadata<Props, State> implements IComponentMetadata<Props, State> {

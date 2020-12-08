@@ -1,5 +1,5 @@
-import http from 'http';
 import url from 'url';
+import type http from 'http';
 
 export function getServerUrl(server: http.Server): string {
   const address = server.address();

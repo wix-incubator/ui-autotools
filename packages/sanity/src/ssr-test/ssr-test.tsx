@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { renderToString } from 'react-dom/server';
+import ReactDOMServer from 'react-dom/server';
 import Registry, { getCompName } from '@ui-autotools/registry';
 import { expect } from 'chai';
 
@@ -20,7 +20,7 @@ export const ssrTest = (): void => {
             simulation.title
           }" without throwing`, () => {
             expect(
-              () => renderToString(componentMetadata.simulationToJSX(simulation)),
+              () => ReactDOMServer.renderToString(componentMetadata.simulationToJSX(simulation)),
               'RenderToString threw an error'
             ).not.to.throw();
           });

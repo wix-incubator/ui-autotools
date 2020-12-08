@@ -12,6 +12,7 @@
     "noUnusedParameters": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "importsNotUsedAsValues": "error",
     "moduleResolution": "node",
     "types": [],
     "allowSyntheticDefaultImports": true,

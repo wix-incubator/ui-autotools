@@ -1,7 +1,7 @@
+import { expect } from 'chai';
 import React from 'react';
 import { TestComp, CopyCatTestComp, InvalidNameComp } from '../fixtures/component-fixtures';
-import Registry, { ComponentMetadata } from '../../src';
-import { expect } from 'chai';
+import Registry, { ComponentMetadata } from '@ui-autotools/registry';
 
 describe('Registry', () => {
   beforeEach(() => {

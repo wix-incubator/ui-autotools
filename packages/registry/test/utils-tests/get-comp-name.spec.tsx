@@ -1,6 +1,6 @@
-import React from 'react';
-import { getCompName } from '../../src';
 import { expect } from 'chai';
+import React from 'react';
+import { getCompName } from '@ui-autotools/registry';
 import { DefaultNameComp, TestComp } from '../fixtures/component-fixtures';
 
 describe('getCompName', () => {

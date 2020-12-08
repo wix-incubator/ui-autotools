@@ -1,5 +1,5 @@
-import { isValidSimulationTitle, isValidComponentName } from '../../src';
 import { expect } from 'chai';
+import { isValidSimulationTitle, isValidComponentName } from '@ui-autotools/registry';
 
 describe('Verification Methods', () => {
   describe('isValidSimulationTitle', () => {

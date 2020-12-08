@@ -1,5 +1,5 @@
-import Registry from '../../src';
 import { expect } from 'chai';
+import Registry from '@ui-autotools/registry';
 import { TestComp } from '../fixtures/component-fixtures';
 
 const testSim = {

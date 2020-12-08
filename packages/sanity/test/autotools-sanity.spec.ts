@@ -5,7 +5,7 @@ import { expect } from 'chai';
 describe('autotools-sanity', function () {
   this.timeout(15_000);
 
-  const packageRoot = dirname(require.resolve('../package.json'));
+  const packageRoot = dirname(require.resolve('@ui-autotools/sanity/package.json'));
 
   const executeAutotoolsSanity = (cliArgs: string[] = []) =>
     spawnSync('yarn', ['autotools-sanity', ...cliArgs], {

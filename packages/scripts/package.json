@@ -4,7 +4,7 @@
   "main": "cjs/index.js",
   "types": "cjs/index.d.ts",
   "bin": {
-    "autotools": "bin/cli.js"
+    "autotools": "bin/autotools.js"
   },
   "scripts": {
     "clean": "rimraf ./cjs ./esm",

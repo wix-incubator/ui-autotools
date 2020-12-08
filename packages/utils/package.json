@@ -2,10 +2,6 @@
   "name": "@ui-autotools/utils",
   "version": "5.0.1",
   "main": "dist/index.js",
-  "scripts": {
-    "clean": "rimraf ./dist",
-    "build": "tsc -p src"
-  },
   "dependencies": {
     "chalk": "^4.1.0",
     "html-webpack-plugin": "^4.5.0",

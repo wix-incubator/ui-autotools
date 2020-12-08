@@ -3,9 +3,7 @@
   "version": "5.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "clean": "rimraf ./dist",
-    "build": "tsc -p src",
-    "test": "mocha \"test/**/*.spec.ts?(x)\""
+    "test": "mocha \"dist/test/**/*.spec.js\""
   },
   "peerDependencies": {
     "react": ">=16",
@@ -14,6 +12,7 @@
   "files": [
     "dist",
     "src",
+    "!dist/test",
     "!*/tsconfig.{json,tsbuildinfo}"
   ],
   "engines": {

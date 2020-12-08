@@ -6,9 +6,7 @@
     "autotools-sanity": "bin/autotools-sanity.js"
   },
   "scripts": {
-    "clean": "rimraf ./dist",
-    "build": "tsc -p src",
-    "test": "mocha \"test/**/*.spec.ts?(x)\""
+    "test": "mocha \"dist/test/**/*.spec.js\""
   },
   "peerDependencies": {
     "@ui-autotools/registry": ">=5",
@@ -25,14 +23,12 @@
     "sinon": "^9.2.1",
     "sinon-chai": "^3.5.0"
   },
-  "devDependencies": {
-    "@ui-autotools/registry": "^5.0.0"
-  },
   "files": [
     "bin",
     "dist",
     "src",
     "templates",
+    "!dist/test",
     "!*/tsconfig.{json,tsbuildinfo}"
   ],
   "engines": {

@@ -3,9 +3,6 @@
   "version": "5.0.1",
   "main": "dist/index.js",
   "scripts": {
-    "clean": "rimraf ./dist",
-    "build": "yarn build:ts && yarn build:stylable",
-    "build:ts": "tsc -p src",
     "build:stylable": "stc --srcDir src --outDir dist --stcss --cjs=false --useNamespaceReference"
   },
   "peerDependencies": {
@@ -27,12 +24,10 @@
     "koa": "^2.13.0",
     "koa-webpack": "^6.0.0"
   },
-  "devDependencies": {
-    "@ui-autotools/registry": "^5.0.0"
-  },
   "files": [
     "dist",
     "src",
+    "!dist/test",
     "!*/tsconfig.{json,tsbuildinfo}"
   ],
   "engines": {

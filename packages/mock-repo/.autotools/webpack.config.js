@@ -1,7 +1,9 @@
 const path = require('path');
-const packagePath = path.resolve(__dirname, '..');
 const { StylableWebpackPlugin } = require('@stylable/webpack-plugin');
 
+const packagePath = path.resolve(__dirname, '..');
+
+/** @type {import('webpack').Configuration} */
 module.exports = {
   context: packagePath,
   mode: 'development',

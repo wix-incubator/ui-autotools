@@ -5,17 +5,9 @@
   "author": "Wix.com",
   "license": "BSD-3-Clause",
   "scripts": {
-    "start": "webpack-dev-server --progress",
-    "clean": "rimraf ./cjs ./esm",
-    "build": "run-p build:cjs build:esm",
-    "build:cjs": "tsc -p src --outDir cjs --module commonjs",
-    "build:esm": "tsc -p src --outDir esm --module esnext",
-    "build:watch": "run-p build:cjs-watch build:esm-watch",
-    "build:cjs-watch": "yarn build:cjs -w",
-    "build:esm-watch": "yarn build:esm -w",
     "test": "yarn sanity && yarn a11y",
-    "a11y": "yarn autotools-a11y",
     "sanity": "yarn autotools-sanity",
+    "a11y": "yarn autotools-a11y",
     "showcase": "autotools showcase"
   },
   "dependencies": {

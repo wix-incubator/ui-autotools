@@ -5,7 +5,7 @@
     "packages/*"
   ],
   "scripts": {
-    "clean": "lerna run clean --stream --parallel",
+    "clean": "rimraf ./packages/*/dist ./scripts/dist",
     "build": "lerna run build --stream",
     "build:watch": "lerna run --parallel build:watch",
     "pretest": "run-s lint build",

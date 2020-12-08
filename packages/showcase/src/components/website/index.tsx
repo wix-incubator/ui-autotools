@@ -1,5 +1,5 @@
 import React from 'react';
-import { IComponentData } from '../../server/client-data';
+import type { IComponentData } from '../../server/client-data';
 import { ComponentList } from '../component-list';
 import { ComponentInfo } from '../component-info';
 import './global.st.css';

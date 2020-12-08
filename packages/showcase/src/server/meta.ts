@@ -1,9 +1,8 @@
 import '@ts-tools/node/r';
-import React from 'react';
+import type React from 'react';
 import path from 'path';
 import glob from 'glob';
-import Registry, { getCompName } from '@ui-autotools/registry';
-import { IComponentMetadata, IMetadata } from '@ui-autotools/registry';
+import Registry, { getCompName, IComponentMetadata, IMetadata } from '@ui-autotools/registry';
 import { createLinker, IModuleSchema, ICodeSchema } from '@wix/typescript-schema-extract';
 
 export interface IModuleSchemaWithFilename {

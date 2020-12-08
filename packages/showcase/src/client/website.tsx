@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Website } from '../components/website';
-import { IClientData } from '../server/client-data';
+import type { IClientData } from '../server/client-data';
 
 (async () => {
   const { projectName, components }: IClientData = await fetch('/components.json').then((data) => data.json());

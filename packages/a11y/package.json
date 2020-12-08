@@ -1,19 +1,13 @@
 {
   "name": "@ui-autotools/a11y",
   "version": "5.0.1",
-  "main": "cjs/index.js",
-  "types": "cjs/index.d.ts",
+  "main": "dist/index.js",
   "bin": {
     "autotools-a11y": "bin/autotools-a11y.js"
   },
   "scripts": {
-    "clean": "rimraf ./cjs ./esm",
-    "build": "run-p build:cjs build:esm",
-    "build:watch": "run-p build:cjs-watch build:esm-watch",
-    "build:cjs": "tsc -p src --outDir cjs --module commonjs",
-    "build:esm": "tsc -p src --outDir esm --module esnext",
-    "build:cjs-watch": "yarn build:cjs -w",
-    "build:esm-watch": "yarn build:esm -w"
+    "clean": "rimraf ./dist",
+    "build": "tsc -p src"
   },
   "peerDependencies": {
     "@ui-autotools/registry": ">=5",
@@ -34,9 +28,10 @@
   },
   "files": [
     "bin",
-    "cjs",
-    "esm",
-    "templates"
+    "dist",
+    "src",
+    "templates",
+    "!*/tsconfig.{json,tsbuildinfo}"
   ],
   "engines": {
     "node": ">=10"

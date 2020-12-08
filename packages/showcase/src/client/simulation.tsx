@@ -1,6 +1,6 @@
-import Registry, { getCompName, IComponentMetadata } from '@ui-autotools/registry';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Registry, { getCompName, IComponentMetadata } from '@ui-autotools/registry';
 
 function findComponent(compName: string) {
   const comps = Array.from(Registry.metadata.components.keys());

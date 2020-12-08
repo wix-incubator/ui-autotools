@@ -1,25 +1,6 @@
 {
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "es2017",
-    "module": "esnext",
-    "lib": [
-      "es2017",
-      "dom"
-    ],
-    "jsx": "react",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "strict": true,
-
-    "noUnusedLocals": true,
-    "noUnusedParameters": false,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-
-    "moduleResolution": "node",
-    "types": [],
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "outDir": "../dist"
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ICodeSchema, IFunctionSchema, SchemaTypes } from '@wix/typescript-schema-extract';
+import type { ICodeSchema, IFunctionSchema, SchemaTypes } from '@wix/typescript-schema-extract';
 import { style, classes } from './props-table.st.css';
 import { TypeDefinition } from '../type-definition';
 

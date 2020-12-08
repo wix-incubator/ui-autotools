@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import path from 'path';
-import { registerRequireHooks } from './require-hooks/require-hooks';
+import { registerRequireHooks } from './require-hooks';
 
 export function cliInit(projectPath: string): void {
   dotenv.config();

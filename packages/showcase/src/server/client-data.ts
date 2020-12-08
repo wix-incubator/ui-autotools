@@ -1,6 +1,6 @@
 import { getCompName } from '@ui-autotools/registry';
 import { getProjectName } from '@ui-autotools/utils';
-import { IMetadataAndSchemas, IExportSourceAndSchema } from './meta';
+import type { IMetadataAndSchemas, IExportSourceAndSchema } from './meta';
 
 export interface IComponentData {
   name: string;

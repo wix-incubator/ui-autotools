@@ -1,15 +1,13 @@
 {
   "name": "@ui-autotools/scripts",
   "version": "5.0.1",
-  "main": "cjs/index.js",
-  "types": "cjs/index.d.ts",
+  "main": "dist/index.js",
   "bin": {
     "autotools": "bin/autotools.js"
   },
   "scripts": {
-    "clean": "rimraf ./cjs ./esm",
-    "build": "tsc -p src --outDir cjs --module commonjs",
-    "build:watch": "yarn build -w"
+    "clean": "rimraf ./dist",
+    "build": "tsc -p src"
   },
   "peerDependencies": {
     "@ui-autotools/registry": ">=5",
@@ -31,8 +29,10 @@
     "@ui-autotools/registry": "^5.0.0"
   },
   "files": [
-    "cjs",
-    "bin"
+    "bin",
+    "dist",
+    "src",
+    "!*/tsconfig.{json,tsbuildinfo}"
   ],
   "engines": {
     "node": ">=10"

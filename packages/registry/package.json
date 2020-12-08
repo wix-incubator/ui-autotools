@@ -1,17 +1,10 @@
 {
   "name": "@ui-autotools/registry",
   "version": "5.0.0",
-  "main": "cjs/index.js",
-  "module": "esm/index.js",
-  "types": "esm/index.d.ts",
+  "main": "dist/index.js",
   "scripts": {
-    "clean": "rimraf ./cjs ./esm",
-    "build": "run-p build:cjs build:esm",
-    "build:watch": "run-p build:cjs-watch build:esm-watch",
-    "build:cjs": "tsc -p src --outDir cjs --module commonjs",
-    "build:esm": "tsc -p src --outDir esm --module esnext",
-    "build:cjs-watch": "yarn build:cjs -w",
-    "build:esm-watch": "yarn build:esm -w",
+    "clean": "rimraf ./dist",
+    "build": "tsc -p src",
     "test": "mocha \"test/**/*.spec.ts?(x)\""
   },
   "peerDependencies": {
@@ -19,8 +12,9 @@
     "react-dom": ">=16"
   },
   "files": [
-    "cjs",
-    "esm"
+    "dist",
+    "src",
+    "!*/tsconfig.{json,tsbuildinfo}"
   ],
   "engines": {
     "node": ">=10"

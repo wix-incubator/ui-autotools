@@ -1,19 +1,17 @@
-import path from 'path';
 import type axe from 'axe-core';
 import chalk from 'chalk';
 import puppeteer from 'puppeteer';
 import { WebpackConfigurator, serve, IServer, waitForPageError, consoleError, consoleLog } from '@ui-autotools/utils';
 import type { IResult } from './browser/run';
 
-const ownPath = path.resolve(__dirname, '..');
 export const impactLevels: axe.ImpactValue[] = ['minor', 'moderate', 'serious', 'critical'];
 
 function getWebpackConfig(entry: string | string[], webpackConfigPath: string) {
   return WebpackConfigurator.load(webpackConfigPath)
     .setEntry('meta', entry)
-    .addEntry('meta', path.join(ownPath, 'esm/browser/run'))
+    .addEntry('meta', require.resolve('./browser/run'))
     .addHtml({
-      template: path.join(ownPath, '/templates', 'index.template'),
+      template: require.resolve('../templates/index.template'),
       title: 'Accessibility',
     })
     .suppressReactDevtoolsSuggestion()

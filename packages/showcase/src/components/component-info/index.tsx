@@ -1,5 +1,5 @@
 import React from 'react';
-import { IComponentData } from '../../server/client-data';
+import type { IComponentData } from '../../server/client-data';
 import { PropsTable } from '../props-table';
 import { MethodTable } from '../method-table';
 

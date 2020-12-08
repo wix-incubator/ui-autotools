@@ -1,30 +1,13 @@
 {
   "name": "@ui-autotools/showcase",
   "version": "5.0.1",
-  "main": "cjs/index.js",
-  "module": "esm/index.js",
-  "types": "esm/index.d.ts",
+  "main": "dist/index.js",
   "scripts": {
-    "clean": "rimraf ./cjs ./esm",
-    "build": "run-s build:cjs build:esm build:stylable",
-    "build:watch": "run-p build:cjs-watch build:esm-watch",
-    "build:cjs": "tsc -p src --outDir cjs --module commonjs",
-    "build:esm": "tsc -p src --outDir esm --module esnext",
-    "build:cjs-watch": "yarn build:cjs -w",
-    "build:esm-watch": "yarn build:esm -w",
-    "build:stylable": "stc --srcDir src --outDir esm"
+    "clean": "rimraf ./dist",
+    "build": "yarn build:ts && yarn build:stylable",
+    "build:ts": "tsc -p src",
+    "build:stylable": "stc --srcDir src --outDir dist --stcss --cjs=false --useNamespaceReference"
   },
-  "files": [
-    "cjs",
-    "esm",
-    "src"
-  ],
-  "engines": {
-    "node": ">=10"
-  },
-  "repository": "git@github.com:wix-incubator/ui-autotools.git",
-  "author": "Wix.com",
-  "license": "BSD-3-Clause",
   "peerDependencies": {
     "@ui-autotools/registry": ">=5",
     "react": ">=16",
@@ -47,6 +30,17 @@
   "devDependencies": {
     "@ui-autotools/registry": "^5.0.0"
   },
+  "files": [
+    "dist",
+    "src",
+    "!*/tsconfig.{json,tsbuildinfo}"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "repository": "git@github.com:wix-incubator/ui-autotools.git",
+  "author": "Wix.com",
+  "license": "BSD-3-Clause",
   "publishConfig": {
     "access": "public"
   }

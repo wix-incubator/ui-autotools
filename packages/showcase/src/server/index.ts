@@ -1,5 +1,4 @@
 import '@ts-tools/node/r';
-import path from 'path';
 import { promisify } from 'util';
 import glob from 'glob';
 import chalk from 'chalk';
@@ -36,8 +35,6 @@ interface IGetWebpackConfigOptions {
   projectOptions: IProjectOptions;
 }
 
-const ownPath = path.resolve(__dirname, '../..');
-
 function getWebsiteWebpackConfig({
   outputPath,
   production,
@@ -63,8 +60,7 @@ function getWebsiteWebpackConfig({
 
   return {
     mode: production ? 'production' : 'development',
-    context: ownPath,
-    entry: [path.resolve(ownPath, 'src/client/website.tsx')],
+    entry: require.resolve('../client/website'),
     output: {
       filename: 'website.js',
       path: outputPath,
@@ -110,7 +106,7 @@ function getMetadataWebpackConfig({
   const config = WebpackConfigurator.load(projectOptions.webpackConfigPath).getConfig();
   config.mode = production ? 'production' : 'development';
   config.context = projectOptions.projectPath;
-  config.entry = [...metaFiles, path.join(ownPath, 'esm/client/simulation.js')];
+  config.entry = [...metaFiles, require.resolve('../client/simulation')];
   config.output = {
     filename: 'metadata.js',
     path: outputPath,

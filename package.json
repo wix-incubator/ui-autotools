@@ -9,8 +9,7 @@
     "build": "yarn build:ts && yarn build:stylable",
     "build:ts": "tsc --build",
     "build:stylable": "lerna run --parallel build:stylable",
-    "pretest": "yarn build && yarn lint",
-    "lint": "node ./scripts/dist/json-linter",
+    "pretest": "yarn build",
     "test": "lerna run test --stream",
     "prettify": "npx prettier . --write"
   },

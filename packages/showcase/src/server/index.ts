@@ -60,7 +60,7 @@ function getWebsiteWebpackConfig({
 
   return {
     mode: production ? 'production' : 'development',
-    entry: require.resolve('../client/website'),
+    entry: [require.resolve('../client/website')],
     output: {
       filename: 'website.js',
       path: outputPath,

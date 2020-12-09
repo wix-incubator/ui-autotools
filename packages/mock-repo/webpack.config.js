@@ -8,7 +8,13 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
+        exclude: /node_modules/,
         loader: '@ts-tools/webpack-loader',
+      },
+      {
+        test: /\.css$/,
+        exclude: /\.st\.css$/,
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },

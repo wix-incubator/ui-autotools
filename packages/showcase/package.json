@@ -9,7 +9,7 @@
     "@ui-autotools/registry": ">=5",
     "react": ">=16",
     "react-dom": ">=16",
-    "webpack": ">=4"
+    "webpack": "^4.0.0"
   },
   "dependencies": {
     "@stylable/core": "^3.11.9",

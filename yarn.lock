@@ -1020,10 +1020,10 @@
     lodash.upperfirst "^4.3.1"
     yargs "^16.2.0"
 
-"@stylable/core@^3.11.10":
-  version "3.11.10"
-  resolved "https://registry.yarnpkg.com/@stylable/core/-/core-3.11.10.tgz#1456d27d7b5ee4ccd6b2e9eedcb2233417387fe7"
-  integrity sha512-uTb9v+06b2RIQVYh2us2nfvLq06TRoOhXLM/gG18S9vROYPqchvjBf/jLz/sCgfdTLFXEiwIaxl/NgydcnQgqw==
+"@stylable/core@^3.11.10", "@stylable/core@^3.11.13":
+  version "3.11.13"
+  resolved "https://registry.yarnpkg.com/@stylable/core/-/core-3.11.13.tgz#8aa9d7101c947d4aed923b774f2ffc5a26041d57"
+  integrity sha512-IPDKWtgF9BR9tnTjmuv6I/sp1v49GiawfbiQsegEYgoYaAV0B2q6AkQ2l3XnKxTYTcgUla927txsn/f16WkUDg==
   dependencies:
     css-selector-tokenizer "^0.7.3"
     deindent "^0.1.0"
@@ -1034,7 +1034,7 @@
     lodash.clonedeep "^4.5.0"
     lodash.clonedeepwith "^4.5.0"
     murmurhash "^1.0.0"
-    postcss "^8.2.1"
+    postcss "^8.2.2"
     postcss-js "^3.0.3"
     postcss-nested "^5.0.3"
     postcss-safe-parser "^5.0.2"
@@ -6380,10 +6380,10 @@ postcss@^7.0.2:
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
-postcss@^8.1.0, postcss@^8.1.4, postcss@^8.1.6, postcss@^8.2.1:
-  version "8.2.1"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.2.1.tgz#eabc5557c4558059b9d9e5b15bce7ffa9089c2a8"
-  integrity sha512-RhsqOOAQzTgh1UB/IZdca7F9WDb7SUCR2Vnv1x7DbvuuggQIpoDwjK+q0rzoPffhYvWNKX5JSwS4so4K3UC6vA==
+postcss@^8.1.0, postcss@^8.1.4, postcss@^8.1.6, postcss@^8.2.1, postcss@^8.2.2:
+  version "8.2.2"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.2.2.tgz#60613b62297005084fd21024a68637798864fe26"
+  integrity sha512-HM1NDNWLgglJPQQMNwvLxgH2KcrKZklKLi/xXYIOaqQB57p/pDWEJNS83PVICYsn1Dg/9C26TiejNr422/ePaQ==
   dependencies:
     colorette "^1.2.1"
     nanoid "^3.1.20"

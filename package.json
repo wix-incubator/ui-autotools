@@ -30,7 +30,7 @@
     "@types/rimraf": "^3.0.0",
     "@types/sinon": "^9.0.10",
     "@types/sinon-chai": "^3.2.5",
-    "@types/webpack": "^4.41.25",
+    "@types/webpack": "^4.41.26",
     "@types/webpack-env": "^1.16.0",
     "chai": "^4.2.0",
     "css-loader": "^5.0.1",

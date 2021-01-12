@@ -1209,14 +1209,14 @@
   dependencies:
     "@types/koa" "*"
 
-"@types/koa-webpack@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@types/koa-webpack/-/koa-webpack-6.0.0.tgz#984640e80f3fa5ab5970ba5e72531c36443fa28b"
-  integrity sha512-xGHGYRSAUkUmOn6ct1tZl6V4HGSMbaVQvs6B150h9uNp21s+ZAocmpgROXrMuguXNy8dezGyoCPE6r/gpWcFSA==
+"@types/koa-webpack@^6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@types/koa-webpack/-/koa-webpack-6.0.1.tgz#28239b227c413d6860f5e524c32a09146c8390c2"
+  integrity sha512-D3kpzvX+j/43y/FSghR6F0F+wtU5IgeJ07OoWeI/YOq0uxu9a3MxE0q7gHDfNE60ggMGCpY7Y6NuV4b8REBbwQ==
   dependencies:
     "@types/koa" "*"
     "@types/webpack" "*"
-    "@types/webpack-dev-middleware" "*"
+    "@types/webpack-dev-middleware" "^3"
     "@types/webpack-hot-client" "*"
 
 "@types/koa@*":
@@ -1365,10 +1365,10 @@
   dependencies:
     source-map "^0.6.1"
 
-"@types/webpack-dev-middleware@*":
-  version "3.7.2"
-  resolved "https://registry.yarnpkg.com/@types/webpack-dev-middleware/-/webpack-dev-middleware-3.7.2.tgz#31030c7cca7f98d56debfd859bb57f9040f0d3c5"
-  integrity sha512-PvETiS//pjVZBK48aJfbxzT7+9LIxanbnk9eXXYUfefGyPdsCkNrMDxRlOVrBvxukXUhD5B6N/pkPMdWrtuFkA==
+"@types/webpack-dev-middleware@^3":
+  version "3.7.3"
+  resolved "https://registry.yarnpkg.com/@types/webpack-dev-middleware/-/webpack-dev-middleware-3.7.3.tgz#2b0aa70b19f30ead7e6ff8c2789d6930e2298c7b"
+  integrity sha512-g6Q1Gom9kGZv8Sme2gNCrxKdxDi68FX3jW4u2Abntx/5ejX1g2tpI95+3ObdXkTHm8XEFpVcmZbmhlcZbVqEeg==
   dependencies:
     "@types/connect" "*"
     "@types/memory-fs" "*"

@@ -7,7 +7,7 @@
     "html-webpack-plugin": "^4.5.1",
     "koa": "^2.13.1",
     "koa-webpack": "^6.0.0",
-    "puppeteer": "^6.0.0"
+    "puppeteer": "^7.0.0"
   },
   "peerDependencies": {
     "webpack": "^4.0.0"

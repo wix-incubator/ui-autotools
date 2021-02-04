@@ -2,15 +2,15 @@
   "name": "@ui-autotools/utils",
   "version": "5.0.1",
   "main": "dist/index.js",
+  "peerDependencies": {
+    "puppeteer": ">=5",
+    "webpack": "^4.0.0"
+  },
   "dependencies": {
     "chalk": "^4.1.0",
     "html-webpack-plugin": "^4.5.1",
     "koa": "^2.13.1",
-    "koa-webpack": "^6.0.0",
-    "puppeteer": "^7.0.0"
-  },
-  "peerDependencies": {
-    "webpack": "^4.0.0"
+    "koa-webpack": "^6.0.0"
   },
   "files": [
     "dist",

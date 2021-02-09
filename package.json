@@ -33,7 +33,7 @@
     "@types/webpack": "^4.41.26",
     "@types/webpack-env": "^1.16.0",
     "chai": "^4.3.0",
-    "css-loader": "^5.0.1",
+    "css-loader": "^5.0.2",
     "glob": "^7.1.6",
     "html-webpack-plugin": "^4.5.1",
     "lerna": "^3.22.1",

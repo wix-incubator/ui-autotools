@@ -1,6 +1,6 @@
 import type axe from 'axe-core';
 import chalk from 'chalk';
-import puppeteer from 'puppeteer';
+import playwright from 'playwright-core';
 import { WebpackConfigurator, serve, IServer, waitForPageError, consoleError, consoleLog } from '@ui-autotools/utils';
 import type { IResult } from './browser/run';
 
@@ -54,15 +54,16 @@ function formatResults(results: IResult[], impact: axe.ImpactValue): { message: 
 
 export async function a11yTest(entry: string | string[], impact: axe.ImpactValue, webpackConfigPath: string) {
   let server: IServer | null = null;
-  let browser: puppeteer.Browser | null = null;
+  let browser: playwright.Browser | null = null;
   consoleLog('Running a11y test...');
   try {
     server = await serve({
       webpackConfig: getWebpackConfig(entry, webpackConfigPath),
     });
-    browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    const getResults = new Promise<any[]>((resolve) => page.exposeFunction('puppeteerReportResults', resolve));
+    browser = await playwright.chromium.launch();
+    const browserContext = await browser.newContext();
+    const page = await browserContext.newPage();
+    const getResults = new Promise<any[]>((resolve) => page.exposeFunction('reportTestResults', resolve));
     page.on('dialog', (dialog) => {
       dialog.dismiss();
     });

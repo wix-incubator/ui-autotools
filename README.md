@@ -137,7 +137,7 @@ Runs over every simulation and asserts the following:
 - nothing was printed to the console
 - that any events which were added during render are removed after the component is unmounted
 
-Sanity uses puppeteer to test client-side hydration. Results are printed in the terminal.
+Sanity uses playwright to test client-side hydration. Results are printed in the terminal.
 
 #### Event Checking
 

@@ -1,6 +1,6 @@
 import path from 'path';
 import glob from 'glob';
-import { WebpackConfigurator, runTestsInPuppeteer, serve, IServer } from '@ui-autotools/utils';
+import { WebpackConfigurator, testInBrowser, serve, IServer } from '@ui-autotools/utils';
 import { renderMetadata } from './render-metadata';
 
 const packageDir = path.resolve(__dirname, '..');
@@ -25,9 +25,7 @@ export async function hydrationTest(projectPath: string, metaGlob: string, webpa
     server = await serve({
       webpackConfig: getWebpackConfig(projectPath, metaGlob, webpackConfigPath, ssrComps),
     });
-    const numFailedTests = await runTestsInPuppeteer({
-      testPageUrl: server.getUrl(),
-    });
+    const numFailedTests = await testInBrowser(server.getUrl());
     if (numFailedTests) {
       process.exitCode = 1;
     }

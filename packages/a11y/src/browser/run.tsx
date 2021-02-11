@@ -47,7 +47,7 @@ async function test(rootElement: HTMLElement) {
       results.push({ comp: t.title, error, impact: t.impact });
     }
   }
-  (window as any).puppeteerReportResults(results);
+  (window as any).reportTestResults(results);
 }
 
 test(document.getElementById('react-root')!);

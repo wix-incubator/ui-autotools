@@ -7,7 +7,6 @@
   },
   "peerDependencies": {
     "@ui-autotools/registry": ">=5",
-    "puppeteer": ">=5",
     "react": ">=16",
     "react-dom": ">=16"
   },
@@ -17,7 +16,8 @@
     "axe-core": "^4.1.2",
     "chalk": "^4.1.0",
     "commander": "^7.0.0",
-    "glob": "^7.1.6"
+    "glob": "^7.1.6",
+    "playwright-core": "^1.8.1"
   },
   "files": [
     "bin",

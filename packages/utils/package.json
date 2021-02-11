@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "chalk": "^4.1.0",
-    "html-webpack-plugin": "^4.5.1",
+    "html-webpack-plugin": "^5.0.0",
     "koa": "^2.13.1",
     "koa-webpack": "^6.0.0",
     "playwright-core": "^1.8.1"

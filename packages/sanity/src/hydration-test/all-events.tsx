@@ -1,9 +1,9 @@
 import React from 'react';
 
 export class AllEvents extends React.Component {
-  public noop = () => null;
+  public noop = (): null => null;
 
-  public render() {
+  public render(): JSX.Element {
     return (
       <div
         onAbort={this.noop}

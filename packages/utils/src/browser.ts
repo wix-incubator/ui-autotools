@@ -2,7 +2,7 @@ import playwright from 'playwright-core';
 import { sleep } from './sleep';
 import { consoleLog } from './index';
 
-export async function testInBrowser(testPageUrl: string) {
+export async function testInBrowser(testPageUrl: string): Promise<number> {
   const loadTimeout = 20000;
   const testTimeout = 5000;
 
@@ -12,7 +12,7 @@ export async function testInBrowser(testPageUrl: string) {
     const page = await browserContext.newPage();
 
     page.on('dialog', (dialog) => {
-      dialog.dismiss();
+      void dialog.dismiss();
     });
 
     logConsoleMessages(page);
@@ -30,7 +30,7 @@ export async function testInBrowser(testPageUrl: string) {
   }
 }
 
-export function waitForPageError(page: playwright.Page) {
+export function waitForPageError(page: playwright.Page): Promise<never> {
   return new Promise<never>((_, reject) => {
     page.on('pageerror', (e) => reject(e));
     page.on('crash', () => reject(new Error(`Page crashed ${page.url()}`)));
@@ -38,6 +38,7 @@ export function waitForPageError(page: playwright.Page) {
 }
 
 function logConsoleMessages(page: playwright.Page) {
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   page.on('console', async (msg) => {
     const msgArgs = await Promise.all(msg.args().map((a) => a.jsonValue()));
     consoleLog(...msgArgs);
@@ -54,15 +55,16 @@ async function loadTestPage(page: playwright.Page, testPageUrl: string, timeout:
 
 async function waitForTestResults(page: playwright.Page) {
   await page.waitForFunction('mochaStatus.finished');
-  return page.evaluate('mochaStatus.numFailedTests');
+  return page.evaluate<number>('mochaStatus.numFailedTests');
 }
 
-async function failIfTestsStall(page: playwright.Page, timeout: number) {
+async function failIfTestsStall(page: playwright.Page, timeout: number): Promise<never> {
   let numCompletedTests = 0;
 
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     await sleep(timeout);
-    const newVal = (await page.evaluate('mochaStatus.numCompletedTests')) as number;
+    const newVal = await page.evaluate<number>('mochaStatus.numCompletedTests');
     if (newVal > numCompletedTests) {
       numCompletedTests = newVal;
     } else {

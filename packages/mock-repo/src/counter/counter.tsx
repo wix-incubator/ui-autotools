@@ -5,10 +5,10 @@ interface IState {
 }
 
 export class Counter extends React.Component<{}, IState> {
-  public static displayName: string = 'Counter';
+  public static displayName = 'Counter';
   public state = { count: 0 };
 
-  public render() {
+  public render(): JSX.Element {
     return <button onClick={this.onClick}>Click me: {this.state.count}</button>;
   }
 

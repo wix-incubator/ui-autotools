@@ -14,9 +14,10 @@ function findSimulation<T, K>(compMeta: IComponentMetadata<T, K>, simName: strin
 function findStyle<T, K>(compMeta: IComponentMetadata<T, K>, styleName: string) {
   for (const [style, styleMeta] of compMeta.styles) {
     if (styleMeta.name === styleName) {
-      return style;
+      return style as unknown;
     }
   }
+  return;
 }
 
 interface IStyledSimulationProps {
@@ -28,25 +29,27 @@ interface IStyledSimulationProps {
 const StyledSimulation: React.FunctionComponent<IStyledSimulationProps> = (props) => {
   const Comp = findComponent(props.componentName);
   if (!Comp) {
-    return <div>Error: component not found "{props.componentName}"</div>;
+    return <div>Error: component not found {`"${props.componentName}"`}</div>;
   }
 
   const compMeta = Registry.getComponentMetadata(Comp);
   const sim = findSimulation(compMeta, props.simulationName);
   if (!sim) {
-    return <div>Error: simulation not found "{props.simulationName}"</div>;
+    return <div>Error: simulation not found {`"${props.simulationName}"`}</div>;
   }
 
   let styleRootClass = '';
   if (props.styleName) {
     const style = findStyle(compMeta, props.styleName);
     if (!style) {
-      return <div>Error: style not found "{props.styleName}"</div>;
+      return <div>Error: style not found {`"${props.styleName}"`}</div>;
     }
-    styleRootClass = style.root;
+    styleRootClass = (style as { root: string }).root;
   }
 
-  const className = sim.props.className ? sim.props.className + ' ' + styleRootClass : styleRootClass;
+  const className = (sim.props as { className?: string }).className
+    ? (sim.props as { className: string }).className + ' ' + styleRootClass
+    : styleRootClass;
 
   return <Comp {...sim.props} className={className} />;
 };

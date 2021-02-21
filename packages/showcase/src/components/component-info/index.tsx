@@ -8,7 +8,7 @@ interface IComponentInfoProps {
 }
 
 export class ComponentInfo extends React.Component<IComponentInfoProps> {
-  public render() {
+  public render(): JSX.Element {
     const { name, schema, simulationTitles, styleTitles } = this.props.component;
 
     return (
@@ -48,7 +48,7 @@ class Simulations extends React.Component<ISimulationsProps, ISimulationsState> 
     selectedStyle: this.props.styleTitles[0],
   };
 
-  public render() {
+  public render(): React.ReactNode {
     const { componentName, simulationTitles, styleTitles } = this.props;
     if (!simulationTitles.length) {
       return null;

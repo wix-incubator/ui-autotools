@@ -12,7 +12,7 @@ chai.use(sinonChai);
 const hydrate = ReactDOM.hydrate || ReactDOM.render;
 
 function leftoverListenerErrors(listeners: Listener[], eventTarget: string) {
-  return listeners.map(({ type }) => `A ${type} event was not removed from ${eventTarget}.`);
+  return listeners.map(({ type }) => `A ${type!} event was not removed from ${eventTarget}.`);
 }
 
 /**
@@ -28,7 +28,7 @@ export const eventListenerTest = (): void => {
   describe('Event Listener test', () => {
     let index = 0;
     const root = document.getElementById('root') as HTMLElement;
-    const componentStrings = (window as any).components;
+    const componentStrings = ((window as unknown) as { components: string[] }).components;
 
     Registry.metadata.components.forEach((componentMetadata, Comp) => {
       const componentName = getCompName(Comp);
@@ -78,6 +78,7 @@ export const eventListenerTest = (): void => {
           });
         });
       } else {
+        // eslint-disable-next-line no-console
         console.log(
           `Skipping event listener test for Component: "${componentName}". The "nonEventListenerCheckCompliant" flag was set to true in the metadata.`
         );

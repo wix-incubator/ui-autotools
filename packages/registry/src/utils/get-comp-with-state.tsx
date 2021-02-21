@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import React from 'react';
 import type { ISimulation } from '../registry';
 
@@ -21,6 +22,7 @@ export function getCompWithState(Comp: React.ComponentClass<any>, simulation: IS
 
     constructor(props: any) {
       super(props);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       this.state = getOverrideState(this.state);
     }
 

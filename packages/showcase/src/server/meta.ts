@@ -33,7 +33,7 @@ function findComponentSchemas(
     absolute: true,
   });
 
-  const matches: Map<React.ComponentType, IExportSourceAndSchema> = new Map();
+  const matches = new Map<React.ComponentType, IExportSourceAndSchema>();
 
   // TODO: we make too many assumptions here. That the meta file name is the
   // same as the component's displayName, that the meta file and the

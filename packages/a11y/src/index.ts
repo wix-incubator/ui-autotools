@@ -26,7 +26,7 @@ function formatResults(results: IResult[], impact: axe.ImpactValue): { message: 
     msg.push(`${index + 1}. Testing component ${res.comp}...`);
     if (res.error) {
       hasError = true;
-      msg.push(`Error while testing component - ${res.error}`);
+      msg.push(`Error while testing component - ${res.error as string}`);
     } else if (res.result) {
       if (res.result.violations.length) {
         res.result.violations.forEach((violation) => {
@@ -37,7 +37,9 @@ function formatResults(results: IResult[], impact: axe.ImpactValue): { message: 
             violation.nodes.forEach((node) => {
               const selector = node.target.join(' > ');
               const compName = `${res.comp} - ${selector}`;
-              msg[index] += `\n  ${chalk.red(compName)}: (Impact: ${violation.impact})\n  ${node.failureSummary}`;
+              msg[index] += `\n  ${chalk.red(compName)}: (Impact: ${violation.impact as string})\n  ${
+                node.failureSummary as string
+              }`;
             });
           } else {
             msg[index] += ' No errors found.';
@@ -52,7 +54,11 @@ function formatResults(results: IResult[], impact: axe.ImpactValue): { message: 
   return { message: msg.join('\n'), hasError };
 }
 
-export async function a11yTest(entry: string | string[], impact: axe.ImpactValue, webpackConfigPath: string) {
+export async function a11yTest(
+  entry: string | string[],
+  impact: axe.ImpactValue,
+  webpackConfigPath: string
+): Promise<void> {
   let server: IServer | null = null;
   let browser: playwright.Browser | null = null;
   consoleLog('Running a11y test...');
@@ -63,9 +69,11 @@ export async function a11yTest(entry: string | string[], impact: axe.ImpactValue
     browser = await playwright.chromium.launch();
     const browserContext = await browser.newContext();
     const page = await browserContext.newPage();
-    const getResults = new Promise<any[]>((resolve) => page.exposeFunction('reportTestResults', resolve));
+    const getResults = new Promise<IResult[]>((resolve) => {
+      void page.exposeFunction('reportTestResults', resolve);
+    });
     page.on('dialog', (dialog) => {
-      dialog.dismiss();
+      void dialog.dismiss();
     });
     await page.goto(server.getUrl());
     const results = await Promise.race([waitForPageError(page), getResults]);
@@ -76,13 +84,13 @@ export async function a11yTest(entry: string | string[], impact: axe.ImpactValue
     } else {
       consoleLog(message);
     }
-  } catch (error) {
-    consoleError(error.toString());
+  } catch (error: unknown) {
+    consoleError((error as Error).toString());
     process.exitCode = 1;
   } finally {
     if (browser) {
       try {
-        browser!.close();
+        await browser.close();
       } catch (_) {
         // Ignore the error since we're already handling an exception.
       }

@@ -10,7 +10,7 @@ const App: React.FC = () => {
       <div>
         Hey cool person
         <Modal>
-          <span>Hey, I'm in a portal</span>
+          <span>Hey, I&apos;m in a portal</span>
         </Modal>
       </div>
       <div>Other Div</div>

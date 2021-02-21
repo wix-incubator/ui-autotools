@@ -20,6 +20,6 @@ metadata.addSim({
 metadata.addSim({
   title: 'secondSim',
   props: {
-    text: <i>I'm another sim</i>,
+    text: <i>I&apos;m another sim</i>,
   },
 });

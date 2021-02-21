@@ -1,16 +1,15 @@
 import React from 'react';
 
 export class UnmountedEvent extends React.Component {
-  public displayName: string = 'UnmountedEvent';
-  public listener() {
-    return;
+  public displayName = 'UnmountedEvent';
+
+  public componentDidMount(): void {
+    window.addEventListener('click', () => {
+      /**/
+    });
   }
 
-  public componentDidMount() {
-    window.addEventListener('click', this.listener);
-  }
-
-  public render() {
+  public render(): JSX.Element {
     return <div />;
   }
 }

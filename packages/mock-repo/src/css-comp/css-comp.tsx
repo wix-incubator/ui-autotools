@@ -6,7 +6,7 @@ export interface IProps {
 
 export default class CssComp extends React.Component<IProps> {
   public static displayName = 'CssComp';
-  public render() {
+  public render(): JSX.Element {
     return <p className="root">{this.props.text}</p>;
   }
 }

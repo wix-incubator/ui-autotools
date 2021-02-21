@@ -1,6 +1,6 @@
 import Mocha from 'mocha';
 
-const autoSSRTest = () => {
+const autoSSRTest = (): void => {
   const mocha = new Mocha();
   mocha.addFile(require.resolve('./run-ssr-test.js'));
   // Run the ssr-test file

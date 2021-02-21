@@ -5,7 +5,7 @@ import axe from 'axe-core';
 
 interface ITest {
   title: string;
-  render: (container: HTMLElement) => void;
+  render: (container: HTMLElement) => Promise<void>;
   cleanup: () => void;
   impact?: axe.ImpactValue;
 }
@@ -13,7 +13,7 @@ interface ITest {
 export interface IResult {
   comp: string;
   result?: axe.AxeResults;
-  error?: Error;
+  error?: unknown;
   impact?: axe.ImpactValue | undefined;
 }
 
@@ -24,7 +24,10 @@ function createTestsFromSimulations(reactRoot: HTMLElement) {
       for (const sim of meta.simulations) {
         tests.push({
           title: getCompName(Comp) + ' ' + sim.title,
-          render: (container: HTMLElement) => ReactDOM.render(<Comp {...sim.props} />, container),
+          render: (container: HTMLElement) =>
+            new Promise<void>((res) => {
+              ReactDOM.render(<Comp {...sim.props} />, container, res);
+            }),
           cleanup: () => ReactDOM.unmountComponentAtNode(reactRoot),
           impact: meta.impact,
         });
@@ -42,12 +45,13 @@ async function test(rootElement: HTMLElement) {
       await t.render(rootElement);
       const result = await axe.run(rootElement);
       results.push({ comp: t.title, result });
-      await t.cleanup();
-    } catch (error) {
+      t.cleanup();
+    } catch (error: unknown) {
       results.push({ comp: t.title, error, impact: t.impact });
     }
   }
+  // eslint-disable-next-line
   (window as any).reportTestResults(results);
 }
 
-test(document.getElementById('react-root')!);
+void test(document.getElementById('react-root')!);

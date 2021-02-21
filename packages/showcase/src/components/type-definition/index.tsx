@@ -1,16 +1,12 @@
 import React from 'react';
 import { classes } from './type-definition.st.css';
+import type { ICodeSchema, IFunctionSchema } from '@wix/typescript-schema-extract';
 
-// TODO: we should instead use the Schema type from schema-extract, but
-// it's currently not complete and many valid combinations of properties don't
-// typecheck.
-export type Schema = any;
-
-type TypeRenderer = (schema: Schema) => React.ReactNode;
+export type TypeRenderer = (schema: ICodeSchema) => React.ReactNode;
 
 // Ex: intersperse([1, 2, 3, 4], 0)  ⇨  [1, 0, 2, 0, 3, 0, 4]
-function intersperse<T>(items: T[], separator: T) {
-  const result: T[] = [];
+function intersperse<T, U>(items: T[], separator: U) {
+  const result: (T | U)[] = [];
   for (const item of items) {
     result.push(item);
     result.push(separator);
@@ -19,32 +15,32 @@ function intersperse<T>(items: T[], separator: T) {
   return result;
 }
 
-const isAnyType = (schema: Schema) => Object.keys(schema).length === 0;
+const isAnyType = (schema: ICodeSchema) => Object.keys(schema).length === 0;
 
-const isNullType = (schema: Schema) => schema.$ref === 'common/null';
+const isNullType = (schema: ICodeSchema) => schema.$ref === 'common/null';
 
-const isUndefinedType = (schema: Schema) => schema.$ref === 'common/undefined';
+const isUndefinedType = (schema: ICodeSchema) => schema.$ref === 'common/undefined';
 
 const isVoidType = isUndefinedType; // applicable only to return types
 
-const isBooleanType = (schema: Schema) => schema.type === 'boolean' && !schema.enum;
+const isBooleanType = (schema: ICodeSchema) => schema.type === 'boolean' && !schema.enum;
 
-const isNumberType = (schema: Schema) => schema.type === 'number' && !schema.enum;
+const isNumberType = (schema: ICodeSchema) => schema.type === 'number' && !schema.enum;
 
-const isStringType = (schema: Schema) => schema.type === 'string' && !schema.enum;
+const isStringType = (schema: ICodeSchema) => schema.type === 'string' && !schema.enum;
 
-const isArrayType = (schema: Schema) => schema.type === 'array';
+const isArrayType = (schema: ICodeSchema) => schema.type === 'array';
 
-const isObjectType = (schema: Schema) => schema.type === 'object';
+const isObjectType = (schema: ICodeSchema) => schema.type === 'object';
 
-const isPrimitiveUnionType = (schema: Schema) => Boolean(schema.enum);
+const isPrimitiveUnionType = (schema: ICodeSchema) => Boolean(schema.enum);
 
-const isNonPrimitiveUnionType = (schema: Schema) => Boolean(schema.$oneOf);
+const isNonPrimitiveUnionType = (schema: ICodeSchema) => Boolean(schema.oneOf);
 
-const isFunctionType = (schema: Schema) =>
+const isFunctionType = (schema: ICodeSchema): schema is IFunctionSchema =>
   schema.$ref === 'common/function' || schema.$ref === 'common/class_constructor';
 
-const isSimpleType = (schema: Schema) =>
+const isSimpleType = (schema: ICodeSchema) =>
   isAnyType(schema) ||
   isNullType(schema) ||
   isUndefinedType(schema) ||
@@ -53,30 +49,30 @@ const isSimpleType = (schema: Schema) =>
   isStringType(schema);
 
 const renderPrimitiveUnion: TypeRenderer = (schema) => {
-  const parts = schema.enum.map(JSON.stringify);
+  const parts = schema.enum!.map((val) => JSON.stringify(val));
   return intersperse(parts, ' | ');
 };
 
 const renderNonPrimitiveUnion: TypeRenderer = (schema) => {
-  const parts = schema.$oneOf.flatMap((itemSchema: Schema) =>
-    itemSchema.enum ? itemSchema.enum.map(JSON.stringify) : [renderType(itemSchema)]
+  const parts = schema.oneOf!.flatMap((itemSchema) =>
+    itemSchema.enum ? itemSchema.enum.map((val) => JSON.stringify(val)) : [renderType(itemSchema)]
   );
 
   return React.Children.toArray(intersperse(parts, ' | '));
 };
 
-const renderFunction: TypeRenderer = (schema) => {
+const renderFunction = (schema: IFunctionSchema) => {
   const restArg = schema.restArgument;
   const required = schema.requiredArguments || [];
-  const returnType = isVoidType(schema.returns) ? 'void' : renderType(schema.returns);
+  const returnType = isVoidType(schema.returns!) ? 'void' : renderType(schema.returns!);
 
-  const args = schema.arguments.map((arg: Schema) => {
-    const optional = required.includes(arg.name) ? '' : '?';
-    return [arg.name + optional + ': ', renderType(arg)];
+  const args = schema.arguments.map((arg) => {
+    const optional = required.includes(arg.name!) ? '' : '?';
+    return [arg.name! + optional + ': ', renderType(arg)] as [string, React.ReactNode];
   });
 
   if (restArg) {
-    args.push([`...${restArg.name}: `, renderType(restArg)]);
+    args.push([`...${restArg.name!}: `, renderType(restArg)]);
   }
 
   const commaSeparatedArgs = React.Children.toArray(intersperse(args, ', '));
@@ -93,7 +89,7 @@ const renderObjectKey = (key: string): string => (/^[a-z_$][a-z_$0-9]*$/i.test(k
 const renderObject: TypeRenderer = (schema) => {
   const required: string[] = schema.required || [];
 
-  const entries: React.ReactNode[] = Object.entries(schema.properties).map(([key, val]) => {
+  const entries: React.ReactNode[] = Object.entries(schema.properties!).map(([key, val]) => {
     const optional = required.includes(key) ? '' : '?';
     return (
       <React.Fragment key={key}>
@@ -113,9 +109,9 @@ const renderObject: TypeRenderer = (schema) => {
 };
 
 const renderArray: TypeRenderer = (schema) => {
-  const renderedItemType = renderType(schema.items);
+  const renderedItemType = renderType(schema.items as ICodeSchema);
 
-  return isSimpleType(schema.items) ? (
+  return isSimpleType(schema.items as ICodeSchema) ? (
     <>{renderedItemType}[]</>
   ) : (
     <>
@@ -180,6 +176,6 @@ const renderType: TypeRenderer = (schema) => {
   return renderUnknown(schema);
 };
 
-export const TypeDefinition: React.FunctionComponent<{ schema: Schema }> = (props) => {
+export const TypeDefinition: React.FunctionComponent<{ schema: ICodeSchema }> = (props) => {
   return <>{renderType(props.schema)}</>;
 };

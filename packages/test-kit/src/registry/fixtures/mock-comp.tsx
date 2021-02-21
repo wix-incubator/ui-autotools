@@ -17,7 +17,7 @@ export class MockComp extends React.Component<IProps, IState> {
     stateLabel: 'initial state',
   };
 
-  public render() {
+  public render(): JSX.Element {
     return (
       <div className={style(classes.root, this.props.className)}>
         Props: {this.props.propsLabel}, State: {this.state.stateLabel}

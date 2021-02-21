@@ -12,11 +12,11 @@ const webpackConfigPath = getWebpackConfigPath(projectPath);
 program
   .description('run sanity checks on all components with a metadata description')
   .option('-f, --files [pattern]', 'Grep file')
-  .action((options) => {
-    const metaGlob: string = options.files || defaultMetaGlob;
+  .action((options: Record<string, string>) => {
+    const metaGlob = options.files || defaultMetaGlob;
     glob.sync(metaGlob, { absolute: true, cwd: projectPath }).forEach(require);
     ssrTest();
-    hydrationTest(projectPath, metaGlob, webpackConfigPath);
+    void hydrationTest(projectPath, metaGlob, webpackConfigPath);
   });
 
 program.parse(process.argv);

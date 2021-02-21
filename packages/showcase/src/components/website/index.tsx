@@ -13,10 +13,11 @@ export interface IWebsiteProps {
 }
 
 export class Website extends React.Component<IWebsiteProps> {
-  public render() {
+  public render(): JSX.Element {
     const { projectName, components, route } = this.props;
 
     const componentNames = components.map((comp) => comp.name);
+    // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
     const match = route.match(/\/components\/(\w+)/);
     const currentComponentName = match ? match[1] : undefined;
     const currentComponent = components.find((comp) => comp.name === currentComponentName);

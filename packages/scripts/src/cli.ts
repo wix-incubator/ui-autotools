@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import path from 'path';
 import glob from 'glob';
+import type axe from 'axe-core';
 import dotenv from 'dotenv';
 import { Command } from 'commander';
 import { hydrationTest } from '@ui-autotools/sanity';
@@ -22,11 +23,11 @@ program
   .command('sanity')
   .description('run sanity checks on all components with a metadata description')
   .option('-f, --files [pattern]', 'Grep file')
-  .action((options) => {
-    const metaGlob: string = options.files || defaultMetaGlob;
+  .action((options: Record<string, string>) => {
+    const metaGlob = options.files || defaultMetaGlob;
     importMetaFiles(projectPath, metaGlob);
     ssrTest();
-    hydrationTest(projectPath, metaGlob, webpackConfigPath);
+    void hydrationTest(projectPath, metaGlob, webpackConfigPath);
   });
 
 program
@@ -37,13 +38,13 @@ program
     '-i, --impact <i>',
     `Only display issues with impact level <i> and higher. Values are: ${impactLevels.join(', ')}`
   )
-  .action((options) => {
+  .action((options: Record<string, string>) => {
     const entry = glob.sync(path.join(projectPath, options.files ? options.files : defaultMetaGlob));
     const impact = options.impact || 'minor';
-    if (!impactLevels.includes(impact)) {
+    if (!impactLevels.includes(impact as axe.ImpactValue)) {
       throw new Error(`Invalid impact level ${impact}`);
     }
-    a11yTest(entry, impact, webpackConfigPath);
+    void a11yTest(entry, impact as axe.ImpactValue, webpackConfigPath);
   });
 
 program
@@ -51,7 +52,7 @@ program
   .description('create a website that shows component APIs and demos')
   .option('-f, --files [pattern]', 'metadata file pattern')
   .option('--output [dir]', 'output folder for the generated website')
-  .action((options) => {
+  .action((options: Record<string, string>) => {
     const outputPath: string | null = options.output ? path.join(projectPath, options.output) : null;
 
     const metadataGlob: string = options.files || defaultMetaGlob;
@@ -64,12 +65,12 @@ program
     };
 
     if (outputPath) {
-      buildWebsite({
+      void buildWebsite({
         projectOptions,
         outputPath,
       });
     } else {
-      startWebsite({
+      void startWebsite({
         projectOptions,
         host: 'localhost',
         port: 8888,

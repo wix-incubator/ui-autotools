@@ -14,19 +14,19 @@ export interface IState {
 export class Composite extends React.Component<IProps, IState> {
   public static displayName: string;
   public state: IState = { text: '' };
-  public listener() {
-    return;
-  }
+  public listener = (): void => {
+    /* */
+  };
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     window.addEventListener('click', this.listener);
   }
 
-  public componentWillUnmount() {
+  public componentWillUnmount(): void {
     window.removeEventListener('click', this.listener);
   }
 
-  public render() {
+  public render(): JSX.Element {
     return (
       <div className={style(classes.root, this.props.className)}>
         <ChildComp text={this.state.text ? this.state.text : this.props.text} />

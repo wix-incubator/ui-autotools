@@ -4,12 +4,13 @@ import { RawAssetWebpackPlugin } from './raw-asset-webpack-plugin';
 
 export class WebpackConfigurator {
   public static load(path: string): WebpackConfigurator {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     return new WebpackConfigurator(require(path) as webpack.Configuration);
   }
 
   constructor(private config: webpack.Configuration) {}
 
-  public getConfig() {
+  public getConfig(): webpack.Configuration {
     return this.config;
   }
 

@@ -15,7 +15,7 @@ export const hydrationTest = (): void => {
     let errorSpy: sinon.SinonSpy<Parameters<Console['error']>, ReturnType<Console['error']>>;
     const root = document.getElementById('root') as HTMLElement;
     let index = 0;
-    const componentStrings = (window as any).components;
+    const componentStrings = ((window as unknown) as { components: string[] }).components;
 
     Registry.metadata.components.forEach((componentMetadata, Comp) => {
       describe(getCompName(Comp), () => {
@@ -48,8 +48,8 @@ export const hydrationTest = (): void => {
               index++;
               // If args is not a primitive, it's not really of interest to us, since any React errors will be
               // strings. Therefore it's fine to print [object Object] in other cases
-              const consoleArgs = consoleSpy.getCall(0) ? consoleSpy.getCall(0).args[0] : '';
-              const errorArgs = errorSpy.getCall(0) ? errorSpy.getCall(0).args[0] : '';
+              const consoleArgs = consoleSpy.getCall(0) ? (consoleSpy.getCall(0).args[0] as string) : '';
+              const errorArgs = errorSpy.getCall(0) ? (errorSpy.getCall(0).args[0] as string) : '';
               expect(consoleSpy, `console was called with:\n ${consoleArgs}`).to.not.be.called;
               expect(errorSpy, `console error was called with:\n ${errorArgs}`).to.not.be.called;
             });

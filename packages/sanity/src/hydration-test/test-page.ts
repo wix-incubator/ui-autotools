@@ -1,5 +1,6 @@
 import mochaModule from 'mocha/mocha.js';
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 const mochaInstance: BrowserMocha = mochaModule && 'setup' in mochaModule ? mochaModule : (window as any).mocha;
 
 mochaInstance.setup({
@@ -15,6 +16,7 @@ const mochaStatus = {
 };
 
 // save test status on window to access it remotely
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 (window as any).mochaStatus = mochaStatus;
 
 window.addEventListener('DOMContentLoaded', () => {

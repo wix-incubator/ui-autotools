@@ -8,19 +8,19 @@ export interface IProps {
 
 export class BasicComponent extends React.Component<IProps> {
   public static displayName: string;
-  public listener() {
-    return;
-  }
+  public listener = (): void => {
+    /**/
+  };
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     window.addEventListener('click', this.listener);
   }
 
-  public componentWillUnmount() {
+  public componentWillUnmount(): void {
     window.removeEventListener('click', this.listener);
   }
 
-  public render() {
+  public render(): JSX.Element {
     return <div className={style(classes.root, this.props.className)}>{this.props.text}</div>;
   }
 }

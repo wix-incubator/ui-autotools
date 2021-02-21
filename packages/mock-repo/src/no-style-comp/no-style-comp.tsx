@@ -6,7 +6,7 @@ export interface IProps {
 
 export default class NoStyleComp extends React.Component<IProps> {
   public static displayName = 'NoStyleComp';
-  public render() {
+  public render(): JSX.Element {
     return <p>{this.props.text}</p>;
   }
 }

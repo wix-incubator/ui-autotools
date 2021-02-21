@@ -18,7 +18,7 @@ function getWebpackConfig(projectPath: string, metaGlob: string, webpackConfigPa
     .getConfig();
 }
 
-export async function hydrationTest(projectPath: string, metaGlob: string, webpackConfigPath: string) {
+export async function hydrationTest(projectPath: string, metaGlob: string, webpackConfigPath: string): Promise<void> {
   let server: IServer | null = null;
   try {
     const ssrComps = renderMetadata();
@@ -29,10 +29,10 @@ export async function hydrationTest(projectPath: string, metaGlob: string, webpa
     if (numFailedTests) {
       process.exitCode = 1;
     }
-  } catch (error) {
+  } catch (error: unknown) {
     process.exitCode = 1;
     if (error) {
-      process.stderr.write(error.toString() + '\n');
+      process.stderr.write((error as Error).toString() + '\n');
     }
   } finally {
     if (server) {

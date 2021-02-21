@@ -9,7 +9,7 @@ export interface IPropsTableProps {
 }
 
 export class PropsTable extends React.Component<IPropsTableProps> {
-  public render() {
+  public render(): JSX.Element {
     const properties = getPropTypes(this.props.componentSchema);
 
     return (

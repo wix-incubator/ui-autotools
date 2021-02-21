@@ -123,7 +123,7 @@ function getMetadataWebpackConfig({
   return config;
 }
 
-export async function startWebsite({ projectOptions, host, port }: IStartWebsiteOptions) {
+export async function startWebsite({ projectOptions, host, port }: IStartWebsiteOptions): Promise<void> {
   const koa = new Koa();
 
   const websiteCompiler = webpack(
@@ -175,7 +175,7 @@ export async function startWebsite({ projectOptions, host, port }: IStartWebsite
   });
 }
 
-export async function buildWebsite({ projectOptions, outputPath }: IBuildWebsiteOptions) {
+export async function buildWebsite({ projectOptions, outputPath }: IBuildWebsiteOptions): Promise<void> {
   try {
     // Compile the metadata first, because if there are type or syntactic errors
     // in the project it's easier to let Webpack catch and report them instead
@@ -208,7 +208,8 @@ export async function buildWebsite({ projectOptions, outputPath }: IBuildWebsite
     if (websiteStats.hasErrors()) {
       throw websiteStats.toString();
     }
-  } catch (e) {
+  } catch (e: unknown) {
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     process.stderr.write(e + '\n');
     process.exit(1);
   }

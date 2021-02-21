@@ -7,7 +7,7 @@ export interface IProps {
 export default class ImageComp extends React.Component<IProps> {
   public static displayName = 'ImageComp';
 
-  public render() {
+  public render(): JSX.Element {
     return (
       <div className="root">
         <img alt="image of a lonely chair in a lonely room, alone" src={this.props.src} className="image" />

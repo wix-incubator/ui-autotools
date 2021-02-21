@@ -1,6 +1,7 @@
 import React from 'react';
 import { style, classes } from './method-table.st.css';
 import { TypeDefinition } from '../type-definition';
+import type { ICodeSchema } from '@wix/typescript-schema-extract';
 
 export interface IMethodTableProps {
   componentSchema: any;
@@ -8,7 +9,7 @@ export interface IMethodTableProps {
 }
 
 export class MethodTable extends React.Component<IMethodTableProps> {
-  public render() {
+  public render(): JSX.Element {
     const methods = getMethods(this.props.componentSchema);
 
     return (
@@ -37,7 +38,7 @@ export class MethodTable extends React.Component<IMethodTableProps> {
 interface IMethod {
   name: string;
   description: string;
-  schema: any;
+  schema: ICodeSchema;
 }
 
 const reactComponentMethods: Set<string> = new Set([
@@ -58,12 +59,12 @@ const reactComponentMethods: Set<string> = new Set([
   'UNSAFE_componentWillUpdate',
 ]);
 
-function getMethods(componentSchema: any): IMethod[] {
+function getMethods(componentSchema: ICodeSchema): IMethod[] {
   if (componentSchema.$ref === 'common/function') {
     return [];
   }
 
-  const properties: Array<[string, any]> = Object.entries(componentSchema.properties || {});
+  const properties: Array<[string, ICodeSchema]> = Object.entries(componentSchema.properties || {});
 
   return properties
     .filter(([name, schema]) => schema.$ref === 'common/function' && !reactComponentMethods.has(name))

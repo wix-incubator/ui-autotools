@@ -22,9 +22,9 @@ function formatWebpackStats(stats: webpack.Stats) {
 }
 
 export class Log {
-  private firstRun: boolean = true;
-  private listening: boolean = false;
-  private watch: boolean = false;
+  private firstRun = true;
+  private listening = false;
+  private watch = false;
 
   constructor(watch: boolean) {
     this.watch = watch;
@@ -32,7 +32,7 @@ export class Log {
 
   // Postpone progress logging until the server is listening to avoid mixing
   // compiler's and server's output, since they start in parallel.
-  public compilationProgress = (percentage: number) => {
+  public compilationProgress = (percentage: number): void => {
     if (this.listening && this.watch) {
       readline.clearLine(process.stdout, 0);
       readline.cursorTo(process.stdout, 0);
@@ -42,7 +42,7 @@ export class Log {
     }
   };
 
-  public compilationFinished = (stats: webpack.Stats) => {
+  public compilationFinished = (stats: webpack.Stats): void => {
     if (this.firstRun) {
       this.firstRun = false;
     } else if (this.watch) {
@@ -60,12 +60,12 @@ export class Log {
     }
   };
 
-  public compilationError(error: Error) {
+  public compilationError(error: Error): void {
     process.stderr.write(chalk.red('Compilation failed.\n'));
     process.stderr.write(error.toString() + '\n');
   }
 
-  public serverListening = (url: string) => {
+  public serverListening = (url: string): void => {
     this.listening = true;
     if (this.watch) {
       process.stdout.write(`Running on ${chalk.blue(url)}\n`);

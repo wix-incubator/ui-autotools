@@ -6,6 +6,7 @@ interface ILogger {
 }
 
 export function attachEventListenerLogger(target: EventTarget): ILogger {
+  // eslint-disable-next-line @typescript-eslint/unbound-method
   const { addEventListener, removeEventListener } = target;
   const listeners = new ListenerList();
 

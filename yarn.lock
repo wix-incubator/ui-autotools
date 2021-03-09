@@ -1209,10 +1209,10 @@
   dependencies:
     "@types/koa" "*"
 
-"@types/koa-webpack@^6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@types/koa-webpack/-/koa-webpack-6.0.1.tgz#28239b227c413d6860f5e524c32a09146c8390c2"
-  integrity sha512-D3kpzvX+j/43y/FSghR6F0F+wtU5IgeJ07OoWeI/YOq0uxu9a3MxE0q7gHDfNE60ggMGCpY7Y6NuV4b8REBbwQ==
+"@types/koa-webpack@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@types/koa-webpack/-/koa-webpack-6.0.2.tgz#9ea6f4651941ec610289b87aedefde0ab1ee1302"
+  integrity sha512-oZ8a9Rvw3MC+9BEzl84fbmhOWKQhxIvTf+fYpWjItqoIxDW31auwEN8X2LwD7cJp6FJzjFS9/PzXg5po7IZF8w==
   dependencies:
     "@types/koa" "*"
     "@types/webpack" "*"

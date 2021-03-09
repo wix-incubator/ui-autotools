@@ -3,8 +3,8 @@ import { promisify } from 'util';
 import glob from 'glob';
 import chalk from 'chalk';
 import webpack from 'webpack';
-import Koa from 'koa';
-import koaWebpack from 'koa-webpack';
+import express from 'express';
+import webpackDevMiddleware from 'webpack-dev-middleware';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { StylableWebpackPlugin } from '@stylable/webpack-plugin';
 import { WebpackConfigurator, RawAssetWebpackPlugin, getServerUrl } from '@ui-autotools/utils';
@@ -30,8 +30,8 @@ export interface IBuildWebsiteOptions {
 }
 
 interface IGetWebpackConfigOptions {
-  outputPath: string;
-  production: boolean;
+  outputPath?: string;
+  production?: boolean;
   projectOptions: IProjectOptions;
 }
 
@@ -90,6 +90,7 @@ function getWebsiteWebpackConfig({
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
     },
+    stats: 'errors-warnings',
   };
 }
 
@@ -105,6 +106,7 @@ function getMetadataWebpackConfig({
 
   const config = WebpackConfigurator.load(projectOptions.webpackConfigPath).getConfig();
   config.mode = production ? 'production' : 'development';
+  config.stats = 'errors-warnings';
   config.context = projectOptions.projectPath;
   config.entry = [...metaFiles, require.resolve('../client/simulation')];
   config.output = {
@@ -123,8 +125,8 @@ function getMetadataWebpackConfig({
   return config;
 }
 
-export async function startWebsite({ projectOptions, host, port }: IStartWebsiteOptions): Promise<void> {
-  const koa = new Koa();
+export function startWebsite({ projectOptions, host, port }: IStartWebsiteOptions): void {
+  const app = express();
 
   const websiteCompiler = webpack(
     getWebsiteWebpackConfig({
@@ -142,32 +144,10 @@ export async function startWebsite({ projectOptions, host, port }: IStartWebsite
     })
   );
 
-  const devMiddleware: koaWebpack.Options['devMiddleware'] = {
-    publicPath: '/',
-    logLevel: 'warn',
-  };
+  app.use(webpackDevMiddleware(websiteCompiler));
+  app.use(webpackDevMiddleware(metadataCompiler));
 
-  const hotClient: koaWebpack.Options['hotClient'] = {
-    logLevel: 'warn',
-  };
-
-  koa.use(
-    await koaWebpack({
-      compiler: websiteCompiler,
-      devMiddleware,
-      hotClient,
-    })
-  );
-
-  koa.use(
-    await koaWebpack({
-      compiler: metadataCompiler,
-      devMiddleware,
-      hotClient,
-    })
-  );
-
-  const server = koa.listen({ host, port });
+  const server = app.listen({ host, port });
 
   server.on('listening', () => {
     const serverUrl = getServerUrl(server);

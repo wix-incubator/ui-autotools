@@ -19,10 +19,10 @@
     "@ui-autotools/utils": "^5.0.1",
     "@wix/typescript-schema-extract": "^1.0.3",
     "chalk": "^4.1.0",
+    "express": "^4.17.1",
     "glob": "^7.1.6",
     "html-webpack-plugin": "^4.5.2",
-    "koa": "^2.13.1",
-    "koa-webpack": "^6.0.0"
+    "webpack-dev-middleware": "^4.1.0"
   },
   "files": [
     "dist",

@@ -1,6 +1,6 @@
 import webpack from 'webpack';
-import Koa from 'koa';
-import koaWebpack from 'koa-webpack';
+import express from 'express';
+import webpackDevMiddleware from 'webpack-dev-middleware';
 import { Log } from './log';
 import { getServerUrl } from '../http';
 
@@ -17,7 +17,7 @@ export interface IServer {
 }
 
 interface IServerOptions {
-  middleware: Koa.Middleware & koaWebpack.CombinedWebpackMiddleware;
+  middleware: webpackDevMiddleware.WebpackDevMiddleware & express.Handler;
   host: string;
   port: number;
   log: Log;
@@ -27,11 +27,6 @@ interface ICompilerOptions {
   webpackConfig: webpack.Configuration;
   watch: boolean;
   log: Log;
-}
-
-interface IMiddlewareOptions {
-  compiler: webpack.Compiler;
-  watch: boolean;
 }
 
 function createCompiler({ webpackConfig, log, watch }: ICompilerOptions) {
@@ -61,31 +56,13 @@ function createCompiler({ webpackConfig, log, watch }: ICompilerOptions) {
   return { compiler, compilerPromise };
 }
 
-function createMiddleware({ compiler, watch }: IMiddlewareOptions) {
-  return koaWebpack({
-    compiler,
-    devMiddleware: {
-      publicPath: '/',
-      logLevel: 'silent',
-      watchOptions: watch ? {} : { ignored: '**/*' },
-    },
-    hotClient: watch
-      ? {
-          hmr: false,
-          logLevel: 'error',
-          reload: true,
-        }
-      : false,
-  });
-}
-
 function createServer({
   middleware,
   host,
   port,
   log,
 }: IServerOptions): { server: IServer; serverPromise: Promise<unknown> } {
-  const server = new Koa().use(middleware).listen({ host, port });
+  const server = express().use(middleware).listen({ host, port });
   const getUrl = () => getServerUrl(server);
   const close = () => {
     middleware.close();
@@ -120,7 +97,7 @@ export async function serve(options: IServeOptions): Promise<IServer> {
     log,
   });
 
-  const middleware = await createMiddleware({ compiler, watch });
+  const middleware = webpackDevMiddleware(compiler);
 
   const { server, serverPromise } = createServer({
     middleware,

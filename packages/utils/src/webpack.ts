@@ -1,6 +1,5 @@
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import { RawAssetWebpackPlugin } from './raw-asset-webpack-plugin';
 
 export class WebpackConfigurator {
   public static load(path: string): WebpackConfigurator {
@@ -33,11 +32,11 @@ export class WebpackConfigurator {
       throw new Error(`Webpack config doesn't contain '${name}' entry`);
     }
 
-    config.entry[name] = ([] as string[]).concat(config.entry[name], entry);
+    config.entry[name] = ([] as string[]).concat(config.entry[name] as string, entry);
     return this;
   }
 
-  public addPlugin(plugin: webpack.Plugin): this {
+  public addPlugin(plugin: webpack.WebpackPluginInstance): this {
     this.config.plugins = this.config.plugins || [];
     this.config.plugins.push(plugin);
     return this;
@@ -45,16 +44,6 @@ export class WebpackConfigurator {
 
   public addHtml(html: HtmlWebpackPlugin.Options): this {
     this.addPlugin(new HtmlWebpackPlugin(html));
-    return this;
-  }
-
-  public addJson(options: { filename: string; data: any }): this {
-    this.addPlugin(
-      new RawAssetWebpackPlugin({
-        filename: options.filename,
-        data: JSON.stringify(options.data),
-      })
-    );
     return this;
   }
 

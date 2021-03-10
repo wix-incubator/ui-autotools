@@ -10,9 +10,9 @@
   },
   "peerDependencies": {
     "@ui-autotools/registry": ">=5",
-    "react": ">=16",
-    "react-dom": ">=16",
-    "webpack": "^4.0.0"
+    "react": "^16.0.0 || ^17.0.0",
+    "react-dom": "^16.0.0 || ^17.0.0",
+    "webpack": "^4.0.0 || ^5.0.0"
   },
   "dependencies": {
     "@ui-autotools/node-utils": "^5.0.1",

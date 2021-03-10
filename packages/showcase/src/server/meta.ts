@@ -1,4 +1,3 @@
-import '@ts-tools/node/r';
 import type React from 'react';
 import path from 'path';
 import glob from 'glob';

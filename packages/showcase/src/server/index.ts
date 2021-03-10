@@ -1,4 +1,3 @@
-import '@ts-tools/node/r';
 import { promisify } from 'util';
 import glob from 'glob';
 import chalk from 'chalk';

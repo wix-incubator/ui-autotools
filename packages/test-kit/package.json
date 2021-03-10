@@ -4,8 +4,8 @@
   "main": "dist/index.js",
   "peerDependencies": {
     "@ui-autotools/registry": ">=5",
-    "react": ">=16",
-    "react-dom": ">=16"
+    "react": "^16.0.0 || ^17.0.0",
+    "react-dom": "^16.0.0 || ^17.0.0"
   },
   "dependencies": {
     "@ui-autotools/registry": "^5.0.0"

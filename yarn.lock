@@ -999,45 +999,67 @@
     postcss-value-parser "^4.1.0"
     toky "^0.1.0"
 
-"@stylable/module-utils@^3.12.2":
-  version "3.12.2"
-  resolved "https://registry.yarnpkg.com/@stylable/module-utils/-/module-utils-3.12.2.tgz#7330a658fdbda0688bf78b0298959b78ee56b8dc"
-  integrity sha512-IeyJa1y7jBXT1Xt7jRUrFQenUgPnB2ovXp9wPuRAXw/8uj4bzm4cUuawlBb+j+FLFxQERdySsB+RBrxYxkW/Gg==
+"@stylable/core@^3.12.3":
+  version "3.12.3"
+  resolved "https://registry.yarnpkg.com/@stylable/core/-/core-3.12.3.tgz#8826f6a17f0b07a7008fa26fd725c5324eb40c82"
+  integrity sha512-SEa2/SwUxYXnRzhHCRSOC8+tQgl1O7O3fAXVeqof6+1AH+a+6gpATtHPXo382ttNOd7q3jGfEIaElLpFMugTqQ==
   dependencies:
-    "@stylable/core" "^3.12.2"
+    css-selector-tokenizer "^0.7.3"
+    deindent "^0.1.0"
+    enhanced-resolve "^4.5.0"
+    is-url-superb "^5.0.0"
+    is-vendor-prefixed "^4.0.0"
+    jest-docblock "^26.0.0"
+    lodash.clonedeep "^4.5.0"
+    lodash.clonedeepwith "^4.5.0"
+    murmurhash "^1.0.0"
+    postcss "^8.2.6"
+    postcss-js "^3.0.3"
+    postcss-nested "^5.0.3"
+    postcss-safe-parser "^5.0.2"
+    postcss-selector-matches "^4.0.0"
+    postcss-value-parser "^4.1.0"
+    toky "^0.1.0"
 
-"@stylable/node@^3.12.2":
-  version "3.12.2"
-  resolved "https://registry.yarnpkg.com/@stylable/node/-/node-3.12.2.tgz#a83bc924a5178e74972d97206bd282baf0c38cad"
-  integrity sha512-uGp7ZT5ykytfVsKGcqWIShxmVnwj3l9o9hp+vb6NHAfaMLYbnNHTYi3QuMEjkyj4CqHdlUa24LlPI8R1bmK91w==
+"@stylable/module-utils@^3.12.3":
+  version "3.12.3"
+  resolved "https://registry.yarnpkg.com/@stylable/module-utils/-/module-utils-3.12.3.tgz#d6b2c5548383a10c0bf640c9ce2d5bd2bd18e1a1"
+  integrity sha512-qRneiGF5ABFevwesVonZgFjf15nCwxIczXt1gGuXh8p0uf3FUuCwmkAHRyUAbwq1SOdLUvizpvybiRO9dfhZag==
   dependencies:
-    "@stylable/core" "^3.12.2"
-    "@stylable/module-utils" "^3.12.2"
+    "@stylable/core" "^3.12.3"
+
+"@stylable/node@^3.12.2", "@stylable/node@^3.12.3":
+  version "3.12.3"
+  resolved "https://registry.yarnpkg.com/@stylable/node/-/node-3.12.3.tgz#940e5dc55a4c55a57750ca35d65ae3740decf925"
+  integrity sha512-E2u9zxwdXZkpmacNz+TPTV47Nj7Fy7ZF3VWnbrbU51qlDHgT/40oik7qLaCf+BcWBkNw3fhQeAnnsO99G79vuQ==
+  dependencies:
+    "@stylable/core" "^3.12.3"
+    "@stylable/module-utils" "^3.12.3"
     find-config "^1.0.0"
 
-"@stylable/optimizer@^3.12.2":
-  version "3.12.2"
-  resolved "https://registry.yarnpkg.com/@stylable/optimizer/-/optimizer-3.12.2.tgz#eef95c8ab1841d907f78618659ccf7635a22f94f"
-  integrity sha512-Y6BkYJaAYPERjO5l/z/ESnONqYFqqFzpGKwBXMvVcXWREDX+R46Bd/WmC5OiTw5LEPps9Oeube/cGW1qOZ/ENg==
+"@stylable/optimizer@^3.12.2", "@stylable/optimizer@^3.12.3":
+  version "3.12.3"
+  resolved "https://registry.yarnpkg.com/@stylable/optimizer/-/optimizer-3.12.3.tgz#ffd0738b47864bde39fdcff23adb987c0a0f558a"
+  integrity sha512-JzJp0Xq4erUV27fKZpW2imAmiwWpoOzPSD5ykHImKMJPVKiPLA6RH41iTtJoOlN7rDOkHyQOouclmcsQ49ORVA==
   dependencies:
-    "@stylable/core" "^3.12.2"
+    "@stylable/core" "^3.12.3"
     csso "^4.2.0"
     postcss "^8.2.6"
 
-"@stylable/runtime@^3.12.2":
-  version "3.12.2"
-  resolved "https://registry.yarnpkg.com/@stylable/runtime/-/runtime-3.12.2.tgz#8926d7034fea7c9378b88137b2c2ad5baca8008e"
-  integrity sha512-nwxQz6wENf2OcgQZE4Zz9gV4DjHtuvDmIIPBZ3nhLtKvyHac/sz+ws+GKSsuVw9BnQTgUjmS9aRiNRR9wYwFtQ==
+"@stylable/runtime@^3.12.3":
+  version "3.12.3"
+  resolved "https://registry.yarnpkg.com/@stylable/runtime/-/runtime-3.12.3.tgz#87e100c86dc5c7e1cc8788d6daa42a18e1014c57"
+  integrity sha512-yf7rQUphWKImso57OZxOO7/vkwl7B/NTHmn0yowzPdB5vo+jp103u3H9u5nqByUuERDK5xhqjZdwwTmlaZFW3A==
 
-"@stylable/webpack-plugin@^3.12.2":
-  version "3.12.2"
-  resolved "https://registry.yarnpkg.com/@stylable/webpack-plugin/-/webpack-plugin-3.12.2.tgz#327c0d176923f27bd046d48a266efcdcc1b7bed6"
-  integrity sha512-c4NzsX3dKeSOO07MzX2sNIvuUOPv4eNYjqmjkss42rNKoaf3DJsV6p/BCHz7XfNHksgjRjJXzTfJ1yyN1JIVyw==
+"@stylable/webpack-plugin@^3.12.3":
+  version "3.12.3"
+  resolved "https://registry.yarnpkg.com/@stylable/webpack-plugin/-/webpack-plugin-3.12.3.tgz#c924539bcb6d6edf669cb4d5d353aed7bad80061"
+  integrity sha512-7PUZBOt/5NAG6szM6KVrEifZb4MVar5GVhex5u2ZXJ5e+2ZDEpP6hcClgNddeuyP2aYEaky5S5keF9Qw1k52nA==
   dependencies:
-    "@stylable/module-utils" "^3.12.2"
-    "@stylable/node" "^3.12.2"
-    "@stylable/optimizer" "^3.12.2"
-    "@stylable/runtime" "^3.12.2"
+    "@stylable/module-utils" "^3.12.3"
+    "@stylable/node" "^3.12.3"
+    "@stylable/optimizer" "^3.12.3"
+    "@stylable/runtime" "^3.12.3"
     find-config "^1.0.0"
     webpack-sources "^2.2.0"
 

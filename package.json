@@ -31,7 +31,7 @@
     "@types/sinon": "^9.0.11",
     "@types/sinon-chai": "^3.2.5",
     "@types/webpack": "^4.41.26",
-    "@types/webpack-dev-middleware": "^4.1.0",
+    "@types/webpack-dev-middleware": "^4.1.1",
     "@types/webpack-env": "^1.16.0",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",

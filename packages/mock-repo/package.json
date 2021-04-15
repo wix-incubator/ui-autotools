@@ -11,7 +11,7 @@
     "showcase": "autotools showcase"
   },
   "dependencies": {
-    "@stylable/webpack-plugin": "^3.12.3",
+    "@stylable/webpack-plugin": "^3.12.4",
     "@ui-autotools/a11y": "^5.0.1",
     "@ui-autotools/registry": "^5.0.0",
     "@ui-autotools/sanity": "^5.0.1",

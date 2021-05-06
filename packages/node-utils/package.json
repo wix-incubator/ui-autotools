@@ -3,7 +3,7 @@
   "version": "5.0.1",
   "main": "dist/index.js",
   "dependencies": {
-    "@stylable/node": "^3.12.4",
+    "@stylable/node": "^4.2.1",
     "@ts-tools/node": "^2.1.1",
     "dotenv": "^9.0.0"
   },

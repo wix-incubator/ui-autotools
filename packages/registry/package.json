@@ -16,7 +16,7 @@
     "!*/tsconfig.{json,tsbuildinfo}"
   ],
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "repository": "git@github.com:wix-incubator/ui-autotools.git",
   "author": "Wix.com",

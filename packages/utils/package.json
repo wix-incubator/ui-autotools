@@ -9,7 +9,7 @@
     "chalk": "^4.1.1",
     "express": "^4.17.1",
     "html-webpack-plugin": "^4.5.2",
-    "playwright-core": "^1.10.0",
+    "playwright-core": "^1.11.0",
     "webpack-dev-middleware": "^4.1.0"
   },
   "files": [

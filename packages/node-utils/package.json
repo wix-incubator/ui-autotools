@@ -5,7 +5,7 @@
   "dependencies": {
     "@stylable/node": "^3.12.4",
     "@ts-tools/node": "^2.1.1",
-    "dotenv": "^9.0.1"
+    "dotenv": "^9.0.2"
   },
   "files": [
     "dist",

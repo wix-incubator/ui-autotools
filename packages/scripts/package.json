@@ -18,7 +18,7 @@
     "@ui-autotools/sanity": "^5.0.1",
     "@ui-autotools/showcase": "^5.0.1",
     "commander": "^7.2.0",
-    "dotenv": "^9.0.1",
+    "dotenv": "^9.0.2",
     "glob": "^7.1.7"
   },
   "files": [

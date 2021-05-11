@@ -28,7 +28,7 @@ export const eventListenerTest = (): void => {
   describe('Event Listener test', () => {
     let index = 0;
     const root = document.getElementById('root') as HTMLElement;
-    const componentStrings = ((window as unknown) as { components: string[] }).components;
+    const componentStrings = (window as unknown as { components: string[] }).components;
 
     Registry.metadata.components.forEach((componentMetadata, Comp) => {
       const componentName = getCompName(Comp);

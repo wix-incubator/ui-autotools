@@ -56,12 +56,10 @@ function createCompiler({ webpackConfig, log, watch }: ICompilerOptions) {
   return { compiler, compilerPromise };
 }
 
-function createServer({
-  middleware,
-  host,
-  port,
-  log,
-}: IServerOptions): { server: IServer; serverPromise: Promise<unknown> } {
+function createServer({ middleware, host, port, log }: IServerOptions): {
+  server: IServer;
+  serverPromise: Promise<unknown>;
+} {
   const server = express().use(middleware).listen({ host, port });
   const getUrl = () => getServerUrl(server);
   const close = () => {

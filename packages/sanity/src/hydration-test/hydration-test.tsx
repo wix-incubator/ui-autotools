@@ -15,7 +15,7 @@ export const hydrationTest = (): void => {
     let errorSpy: sinon.SinonSpy<Parameters<Console['error']>, ReturnType<Console['error']>>;
     const root = document.getElementById('root') as HTMLElement;
     let index = 0;
-    const componentStrings = ((window as unknown) as { components: string[] }).components;
+    const componentStrings = (window as unknown as { components: string[] }).components;
 
     Registry.metadata.components.forEach((componentMetadata, Comp) => {
       describe(getCompName(Comp), () => {
